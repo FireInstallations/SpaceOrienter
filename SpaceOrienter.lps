@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="9"/>
+    <BuildModes Active="Default"/>
+    <Units Count="42">
+      <Unit0>
+        <Filename Value="SpaceOrienter.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="54" Y="10"/>
+        <UsageCount Value="200"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Frm_Spori"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SpaceOrienter_Haupt"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="306"/>
+        <CursorPos X="2" Y="16"/>
+        <FoldState Value=" T4604 TCFE3 T7MF~F T3o80{34 pjPlX0}c2]A8o40{e[A4LmJ0s015]BSl80l9]91kP04D piZjO0{43]Adl30AB[S4jZ094 T1~324e"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="C:\lazarus\lcl\forms.pp"/>
+        <UnitName Value="Forms"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="729"/>
+        <CursorPos X="3" Y="708"/>
+        <UsageCount Value="8"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="C:\lazarus\lcl\include\customform.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1819"/>
+        <CursorPos Y="1844"/>
+        <UsageCount Value="24"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="644"/>
+        <CursorPos X="14" Y="660"/>
+        <UsageCount Value="35"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\sysstrh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="97"/>
+        <CursorPos X="10" Y="113"/>
+        <UsageCount Value="12"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\sysansih.inc"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="10" Y="20"/>
+        <UsageCount Value="3"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\datih.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="104"/>
+        <CursorPos X="11" Y="122"/>
+        <UsageCount Value="18"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="C:\lazarus\lcl\editbtn.pas"/>
+        <UnitName Value="EditBtn"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="876"/>
+        <CursorPos X="16" Y="903"/>
+        <UsageCount Value="2"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="C:\lazarus\lcl\customtimer.pas"/>
+        <UnitName Value="CustomTimer"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="160"/>
+        <CursorPos X="11" Y="168"/>
+        <UsageCount Value="7"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\sysinth.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="34"/>
+        <CursorPos X="3" Y="57"/>
+        <UsageCount Value="5"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="E:\Destopordner\Privat\Programme\lazarus\fpc\3.0.0\source\rtl\inc\mathh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="77"/>
+        <CursorPos X="115" Y="87"/>
+        <UsageCount Value="4"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="E:\Destopordner\Privat\Programme\lazarus\fpc\3.0.0\source\rtl\objpas\math.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="304"/>
+        <CursorPos X="10" Y="330"/>
+        <UsageCount Value="4"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="C:\lazarus\lcl\include\buttoncontrol.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="39"/>
+        <CursorPos Y="54"/>
+        <UsageCount Value="3"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="C:\lazarus\lcl\include\wincontrol.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="5374"/>
+        <CursorPos Y="5383"/>
+        <UsageCount Value="5"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\inc\systemh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1118"/>
+        <CursorPos X="11" Y="1134"/>
+        <UsageCount Value="26"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="C:\lazarus\lcl\interfaces\win32\win32lclintf.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="725"/>
+        <CursorPos Y="734"/>
+        <UsageCount Value="3"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\filutilh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="109"/>
+        <CursorPos X="10" Y="129"/>
+        <UsageCount Value="2"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win\sysutils.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="49"/>
+        <CursorPos X="19" Y="81"/>
+        <UsageCount Value="1"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\inc\varianth.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="209"/>
+        <CursorPos X="10" Y="224"/>
+        <UsageCount Value="1"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="C:\lazarus\lcl\comctrls.pp"/>
+        <UnitName Value="ComCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1015"/>
+        <CursorPos X="15" Y="1030"/>
+        <UsageCount Value="13"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="spaceorienter_haupt.lfm"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="773"/>
+        <CursorPos X="11" Y="867"/>
+        <UsageCount Value="5"/>
+        <DefaultSyntaxHighlighter Value="LFM"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="C:\lazarus\lcl\dialogs.pp"/>
+        <UnitName Value="Dialogs"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="591"/>
+        <CursorPos X="11" Y="532"/>
+        <UsageCount Value="13"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\diskh.inc"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="10" Y="28"/>
+        <UsageCount Value="2"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="C:\lazarus\lcl\include\control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2723"/>
+        <CursorPos X="28" Y="2729"/>
+        <UsageCount Value="8"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\osutilsh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="14"/>
+        <CursorPos X="11" Y="30"/>
+        <UsageCount Value="6"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win\wininc\redef.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="605"/>
+        <CursorPos X="10" Y="621"/>
+        <UsageCount Value="3"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win\wininc\struct.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="7093"/>
+        <CursorPos X="6" Y="7088"/>
+        <UsageCount Value="11"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win\wininc\defines.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1960"/>
+        <CursorPos X="6" Y="1974"/>
+        <UsageCount Value="3"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="C:\lazarus\lcl\controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2183"/>
+        <CursorPos X="15" Y="2203"/>
+        <UsageCount Value="5"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="C:\lazarus\lcl\interfaces\win32\win32listsl.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="142"/>
+        <CursorPos Y="158"/>
+        <UsageCount Value="5"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="C:\lazarus\lcl\stdctrls.pp"/>
+        <UnitName Value="StdCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="428"/>
+        <CursorPos X="14" Y="428"/>
+        <UsageCount Value="5"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="C:\lazarus\lcl\include\listitem.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="534"/>
+        <CursorPos X="15" Y="652"/>
+        <UsageCount Value="4"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="C:\lazarus\lcl\interfaces\win32\win32callback.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2736"/>
+        <CursorPos Y="2759"/>
+        <UsageCount Value="7"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win32\system.pp"/>
+        <UnitName Value="System"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="234"/>
+        <CursorPos X="2" Y="43"/>
+        <UsageCount Value="19"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="..\ \Ephemerides\demo\pas\PlanEph32.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="387"/>
+        <CursorPos X="109" Y="243"/>
+        <UsageCount Value="9"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="..\ \Ephemerides\lib\PlanEph32.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="219"/>
+        <CursorPos X="17" Y="248"/>
+        <UsageCount Value="10"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="PlanEph32.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="218"/>
+        <CursorPos X="170" Y="240"/>
+        <UsageCount Value="14"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win32\classes.pp"/>
+        <UnitName Value="Classes"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\fpmake.pp"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="16"/>
+        <UsageCount Value="10"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="C:\lazarus\lcl\interfaces\win32\interfaces.pp"/>
+        <UnitName Value="Interfaces"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="10"/>
+        <UsageCount Value="10"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="bc\PlanEph32.lib"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="None"/>
+      </Unit41>
+    </Units>
+    <JumpHistory Count="12" HistoryIndex="11">
+      <Position1>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1435" Column="139" TopLine="1435"/>
+      </Position1>
+      <Position2>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="938" Column="32" TopLine="717"/>
+      </Position2>
+      <Position3>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1146" Column="32" TopLine="1002"/>
+      </Position3>
+      <Position4>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1151" Column="36" TopLine="1002"/>
+      </Position4>
+      <Position5>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1259" Column="36" TopLine="1232"/>
+      </Position5>
+      <Position6>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1252" Column="21" TopLine="1222"/>
+      </Position6>
+      <Position7>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1484" Column="149" TopLine="1474"/>
+      </Position7>
+      <Position8>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1821" TopLine="1680"/>
+      </Position8>
+      <Position9>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="306" TopLine="303"/>
+      </Position9>
+      <Position10>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1264" Column="35" TopLine="1244"/>
+      </Position10>
+      <Position11>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1234"/>
+      </Position11>
+      <Position12>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1263" Column="10" TopLine="1241"/>
+      </Position12>
+    </JumpHistory>
+  </ProjectSession>
+  <Debugging>
+    <Watches Count="1">
+      <Item1>
+        <Expression Value="while"/>
+      </Item1>
+    </Watches>
+  </Debugging>
+</CONFIG>

@@ -1,0 +1,1958 @@
+object Frm_Spori: TFrm_Spori
+  Left = 34
+  Height = 486
+  Top = 71
+  Width = 839
+  AlphaBlend = True
+  AlphaBlendValue = 250
+  Caption = 'SpaceOrienter'
+  ClientHeight = 461
+  ClientWidth = 839
+  Color = 16056319
+  Font.CharSet = ANSI_CHARSET
+  Font.Height = -13
+  Font.Name = '@Arial Unicode MS'
+  Font.Pitch = fpVariable
+  Font.Quality = fqDraft
+  Menu = MnMe
+  OnCreate = FormCreate
+  PopupMenu = PpMe
+  Position = poDesktopCenter
+  LCLVersion = '1.6.0.4'
+  object PgC_Haupt: TPageControl
+    Left = 8
+    Height = 449
+    Top = 8
+    Width = 824
+    ActivePage = TbS_Einst
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -13
+    Font.Name = 'Arial Unicode MS'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    MultiLine = True
+    ParentFont = False
+    TabIndex = 2
+    TabOrder = 0
+    Options = [nboMultiLine, nboKeyboardTabSwitch]
+    object TbS_Inter: TTabSheet
+      Caption = 'Interface'
+      ClientHeight = 420
+      ClientWidth = 816
+      ParentShowHint = False
+      ShowHint = True
+      object Gb_Ist: TGroupBox
+        Left = 496
+        Height = 140
+        Top = 184
+        Width = 240
+        Caption = 'Ist'
+        ClientHeight = 111
+        ClientWidth = 236
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -20
+        Font.Name = 'Arial Narrow'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
+        TabOrder = 4
+        object Ed_Ele_Ist: TEdit
+          Left = 24
+          Height = 39
+          Top = 8
+          Width = 199
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -27
+          Font.Name = 'Arial Narrow'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          NumbersOnly = True
+          ParentFont = False
+          ReadOnly = True
+          TabStop = False
+          TabOrder = 0
+          Text = '0'
+        end
+        object Ed_Azi_Ist: TEdit
+          Left = 24
+          Height = 39
+          Top = 64
+          Width = 199
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -27
+          Font.Name = 'Arial Narrow'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          NumbersOnly = True
+          ParentFont = False
+          ReadOnly = True
+          TabStop = False
+          TabOrder = 1
+          Text = '0'
+        end
+      end
+      object CB_StrMode: TComboBox
+        AnchorSideLeft.Control = Mmo_Bsbg
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = BBt_Anfahren
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TbS_Inter
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = TbS_Inter
+        AnchorSideBottom.Side = asrBottom
+        Left = 661
+        Height = 24
+        Top = 391
+        Width = 130
+        Anchors = [akRight, akBottom]
+        AutoComplete = True
+        AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+        AutoDropDown = True
+        BorderSpacing.Left = 55
+        BorderSpacing.Right = 20
+        BorderSpacing.Around = 5
+        ItemHeight = 16
+        ItemIndex = 0
+        Items.Strings = (
+          'Normal'
+          'Nachführen'
+          'Position'
+          'Suche'
+          'Ort'
+          'Sternbild'
+        )
+        OnChange = CB_StrModeChange
+        ParentShowHint = False
+        Style = csDropDownList
+        TabOrder = 5
+        Text = 'Normal'
+      end
+      object Mmo_Bsbg: TMemo
+        AnchorSideLeft.Control = TbS_Inter
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TbS_Inter
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = TbS_Inter
+        AnchorSideBottom.Side = asrBottom
+        Left = 10
+        Height = 48
+        Hint = 'Beschreibung der Modi'
+        Top = 357
+        Width = 561
+        Anchors = [akLeft, akRight, akBottom]
+        BorderSpacing.Left = 5
+        BorderSpacing.Right = 240
+        BorderSpacing.Bottom = 10
+        BorderSpacing.Around = 5
+        Lines.Strings = (
+          'Peilt den ausgewählten Himmelskörper / die ausgewählte Position an'
+        )
+        ReadOnly = True
+        TabOrder = 7
+        TabStop = False
+      end
+      object Ed_Mswg: TEdit
+        Left = 624
+        Height = 24
+        Top = 45
+        Width = 133
+        ReadOnly = True
+        TabStop = False
+        TabOrder = 8
+        Text = 'Missweisung'
+      end
+      object Ed_Egstn: TEdit
+        Left = 472
+        Height = 24
+        Top = 45
+        Width = 120
+        ReadOnly = True
+        TabStop = False
+        TabOrder = 9
+        Text = 'Eigenschaften'
+      end
+      object CB_StB: TComboBox
+        Left = 280
+        Height = 24
+        Top = 45
+        Width = 158
+        AutoComplete = True
+        AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+        AutoDropDown = True
+        ItemHeight = 16
+        OnEditingDone = CB_StBEditingDone
+        TabOrder = 2
+        Text = 'Sternbild'
+      end
+      object CB_HK: TComboBox
+        Left = 112
+        Height = 24
+        Top = 45
+        Width = 136
+        AutoComplete = True
+        AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+        AutoDropDown = True
+        ItemHeight = 16
+        OnEditingDone = CB_HKEditingDone
+        TabOrder = 1
+        Text = 'Himmelskörper'
+      end
+      object GB_Soll: TGroupBox
+        Left = 192
+        Height = 140
+        Top = 184
+        Width = 240
+        Caption = 'Soll'
+        ClientHeight = 111
+        ClientWidth = 236
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -20
+        Font.Name = 'Arial Narrow'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
+        TabOrder = 6
+        object Ed_Ele_Soll: TEdit
+          Left = 16
+          Height = 39
+          Top = 8
+          Width = 204
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -27
+          Font.Name = 'Arial Narrow'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          NumbersOnly = True
+          ParentFont = False
+          TabStop = False
+          TabOrder = 0
+          Text = '89'
+        end
+        object Ed_Azi_Soll: TEdit
+          Left = 16
+          Height = 39
+          Top = 64
+          Width = 204
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -27
+          Font.Name = 'Arial Narrow'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          NumbersOnly = True
+          ParentFont = False
+          TabStop = False
+          TabOrder = 1
+          Text = '89'
+        end
+      end
+      object Lb_Ele: TLabel
+        Left = 48
+        Height = 35
+        Top = 216
+        Width = 118
+        Caption = 'Elevation'
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -30
+        Font.Name = 'Times New Roman'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lb_Azi: TLabel
+        Left = 48
+        Height = 35
+        Top = 272
+        Width = 91
+        Caption = 'Azimut'
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -30
+        Font.Name = 'Times New Roman'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lb_Nr: TLabel
+        Left = 8
+        Height = 19
+        Top = 16
+        Width = 22
+        Caption = 'Nr.'
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -17
+        Font.Name = 'Times New Roman'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lb_HK: TLabel
+        Left = 96
+        Height = 19
+        Top = 16
+        Width = 119
+        Caption = 'Himmelskörper'
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -17
+        Font.Name = 'Times New Roman'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lb_SK: TLabel
+        Left = 264
+        Height = 19
+        Top = 16
+        Width = 70
+        Caption = 'Sternbild'
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -17
+        Font.Name = 'Times New Roman'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lb_Egnstn: TLabel
+        Left = 448
+        Height = 19
+        Top = 16
+        Width = 103
+        Caption = 'Eigenschaften'
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -17
+        Font.Name = 'Times New Roman'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lb_Mswg: TLabel
+        Left = 600
+        Height = 19
+        Top = 16
+        Width = 97
+        Caption = 'Missweisung'
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -17
+        Font.Name = 'Times New Roman'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Ed_Nr: TEdit
+        AnchorSideLeft.Control = TbS_Inter
+        AnchorSideTop.Control = TbS_Inter
+        Left = 10
+        Height = 24
+        Top = 45
+        Width = 64
+        BorderSpacing.Top = 35
+        BorderSpacing.Around = 10
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -13
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        NumbersOnly = True
+        OnEditingDone = Ed_NrEditingDone
+        ParentFont = False
+        TabOrder = 0
+        Text = '0'
+      end
+      object Lb_Zeit: TLabel
+        Left = 168
+        Height = 61
+        Top = 96
+        Width = 466
+        Caption = '01.01.2017  00:00:00'
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -53
+        Font.Name = 'Times New Roman'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object BBt_Anfahren: TBitBtn
+        AnchorSideLeft.Control = Mmo_Bsbg
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Gb_Ist
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TbS_Inter
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = CB_StrMode
+        Left = 611
+        Height = 40
+        Top = 346
+        Width = 200
+        Anchors = [akRight, akBottom]
+        BorderSpacing.Left = 10
+        BorderSpacing.Top = 20
+        BorderSpacing.Around = 5
+        Caption = '& Position anfahren'
+        Default = True
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clGreen
+        Font.Height = -20
+        Font.Name = 'Times New Roman'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        GlyphShowMode = gsmAlways
+        Kind = bkYes
+        OnClick = BBt_AnfahrenClick
+        ParentFont = False
+        Spacing = 0
+        TabOrder = 3
+      end
+    end
+    object TbS_StLst: TTabSheet
+      Caption = 'Sternenliste'
+      ClientHeight = 420
+      ClientWidth = 816
+      object LV_List: TListView
+        Left = 8
+        Height = 369
+        Top = 48
+        Width = 800
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        AutoSort = False
+        BorderWidth = 2
+        Checkboxes = True
+        Color = 16056319
+        Columns = <        
+          item
+            Caption = 'Nummer'
+            ImageIndex = 0
+            MinWidth = 40
+            Width = 110
+          end        
+          item
+            Caption = 'Himmelskörper'
+            MinWidth = 90
+            Width = 180
+          end        
+          item
+            Caption = 'Latein'
+            MinWidth = 60
+            Width = 150
+          end        
+          item
+            Caption = 'Sternbild'
+            MinWidth = 70
+            Width = 160
+          end        
+          item
+            Caption = 'Eigenschaften'
+            MinWidth = 100
+            Width = 170
+          end        
+          item
+            Caption = 'Rezi °'
+            MinWidth = 50
+            Visible = False
+          end        
+          item
+            Caption = 'Rezi Min'
+            MinWidth = 50
+            Visible = False
+            Width = 70
+          end        
+          item
+            Caption = 'Dekli °'
+            MinWidth = 50
+            Visible = False
+          end        
+          item
+            Caption = 'Dekli Min'
+            MinWidth = 50
+            Visible = False
+            Width = 70
+          end>
+        HideSelection = False
+        PopupMenu = PpMe2
+        ReadOnly = True
+        RowSelect = True
+        ScrollBars = ssAutoVertical
+        TabOrder = 0
+        ViewStyle = vsReport
+        OnDblClick = LV_ListDblClick
+        OnItemChecked = LV_ListItemChecked
+        OnKeyPress = LV_ListKeyPress
+      end
+      object Ed_Such: TEdit
+        Left = 16
+        Height = 24
+        Top = 8
+        Width = 104
+        Anchors = [akTop, akLeft, akRight]
+        AutoSelect = False
+        OnEditingDone = Ed_SuchEditingDone
+        OnEnter = Ed_SuchEnter
+        OnExit = Ed_SuchExit
+        TabOrder = 1
+        Text = 'Suchen...'
+      end
+      object Bt_Start: TButton
+        Left = 688
+        Height = 36
+        Top = 6
+        Width = 120
+        Caption = 'Anfahren'
+        OnClick = Bt_StartClick
+        TabOrder = 2
+      end
+    end
+    object TbS_Einst: TTabSheet
+      Caption = 'Einstellungen'
+      ClientHeight = 420
+      ClientWidth = 816
+      TabVisible = False
+      object GB_Zeit_: TGroupBox
+        Left = 16
+        Height = 174
+        Top = 208
+        Width = 240
+        Caption = 'Zeit'
+        ClientHeight = 153
+        ClientWidth = 236
+        TabOrder = 1
+        object ChkB_TmMd: TCheckBox
+          Left = 16
+          Height = 23
+          Top = 8
+          Width = 129
+          Caption = 'Automatische Zeit'
+          Checked = True
+          OnChange = ChkB_TmMdChange
+          State = cbChecked
+          TabOrder = 0
+        end
+        object TE_Manu: TTimeEdit
+          Left = 128
+          Height = 24
+          Top = 88
+          Width = 97
+          DefaultNow = True
+          OnAcceptTime = TE_ManuAcceptTime
+          ButtonWidth = 23
+          Color = 16056319
+          DirectInput = False
+          NumGlyphs = 1
+          Enabled = False
+          MaxLength = 0
+          TabOrder = 1
+          Text = '00:00:00'
+        end
+        object DE_Manu: TDateEdit
+          Left = 128
+          Height = 24
+          Top = 120
+          Width = 97
+          CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
+          OnAcceptDate = DE_ManuAcceptDate
+          OKCaption = 'OK'
+          CancelCaption = 'Cancel'
+          DefaultToday = True
+          DateOrder = doNone
+          DateFormat = 'DD.MM.YYYY'
+          ButtonWidth = 23
+          DirectInput = False
+          NumGlyphs = 1
+          Enabled = False
+          MaxLength = 0
+          TabOrder = 2
+          Text = '21.05.2017'
+        end
+        object DE_Frhanf: TDateEdit
+          Left = 128
+          Height = 24
+          Top = 48
+          Width = 97
+          CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
+          OnAcceptDate = DE_FrhanfAcceptDate
+          OKCaption = 'OK'
+          CancelCaption = 'Cancel'
+          DateOrder = doNone
+          ButtonWidth = 23
+          DirectInput = False
+          NumGlyphs = 1
+          Enabled = False
+          MaxLength = 0
+          TabOrder = 3
+          Text = '20.03.2017'
+        end
+        object Lb_Frhanf: TLabel
+          Left = 29
+          Height = 16
+          Top = 48
+          Width = 91
+          Caption = 'Frühlingsanfang'
+          ParentColor = False
+        end
+        object Lb_TManu: TLabel
+          Left = 29
+          Height = 16
+          Top = 88
+          Width = 77
+          Caption = 'Manuelle Zeit'
+          ParentColor = False
+        end
+        object Lb_DManu: TLabel
+          Left = 29
+          Height = 16
+          Top = 120
+          Width = 80
+          Caption = 'Manueller Tag'
+          ParentColor = False
+        end
+      end
+      object GB_Ort: TGroupBox
+        AnchorSideLeft.Control = GB_List
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TbS_Einst
+        AnchorSideRight.Control = GB_Up
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = GB_Port
+        Left = 264
+        Height = 176
+        Top = 16
+        Width = 280
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        BorderSpacing.Top = 8
+        BorderSpacing.Right = 244
+        BorderSpacing.Bottom = 8
+        BorderSpacing.Around = 8
+        Caption = 'Ort'
+        ClientHeight = 155
+        ClientWidth = 276
+        TabOrder = 2
+        object CB_Ort: TComboBox
+          Left = 149
+          Height = 24
+          Top = 8
+          Width = 103
+          AutoComplete = True
+          AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+          AutoDropDown = True
+          ItemHeight = 16
+          ItemIndex = 0
+          Items.Strings = (
+            'Zeuthen'
+          )
+          Sorted = True
+          Style = csDropDownList
+          TabOrder = 0
+          Text = 'Zeuthen'
+        end
+        object Ed_Lamda_G: TEdit
+          Left = 128
+          Height = 24
+          Top = 48
+          Width = 132
+          NumbersOnly = True
+          OnEditingDone = Ed_Lamda_GEditingDone
+          TabOrder = 1
+          Text = '13,604'
+        end
+        object Ed_Phi_G: TEdit
+          Left = 128
+          Height = 24
+          Top = 88
+          Width = 132
+          NumbersOnly = True
+          OnEditingDone = Ed_Phi_GEditingDone
+          TabOrder = 2
+          Text = '52,345'
+        end
+        object Ed_MgMswg: TEdit
+          Left = 128
+          Height = 24
+          Top = 128
+          Width = 132
+          NumbersOnly = True
+          OnEditingDone = Ed_MgMswgEditingDone
+          TabOrder = 3
+          Text = '100'
+        end
+        object Lb_Lam: TLabel
+          Left = 24
+          Height = 16
+          Top = 48
+          Width = 7
+          Caption = 'λ'
+          ParentColor = False
+        end
+        object Lb_Gam: TLabel
+          Left = 24
+          Height = 16
+          Top = 88
+          Width = 8
+          Caption = 'φ'
+          ParentColor = False
+        end
+        object Lb_MgMswg: TLabel
+          Left = 24
+          Height = 16
+          Top = 128
+          Width = 75
+          Caption = 'Missweisung'
+          ParentColor = False
+        end
+      end
+      object GB_List: TGroupBox
+        Left = 16
+        Height = 176
+        Top = 16
+        Width = 240
+        Caption = 'SternenListe'
+        ClientHeight = 155
+        ClientWidth = 236
+        TabOrder = 0
+        object Bt_LoList: TButton
+          Left = 16
+          Height = 38
+          Top = 8
+          Width = 169
+          Caption = 'Liste laden'
+          OnClick = Bt_LoListClick
+          TabOrder = 0
+        end
+        object Bt_BebList: TButton
+          Left = 16
+          Height = 38
+          Top = 56
+          Width = 169
+          Caption = 'Liste berarbeiten'
+          OnClick = Bt_BebListClick
+          TabOrder = 1
+        end
+        object Bt_ResList: TButton
+          Left = 16
+          Height = 38
+          Top = 103
+          Width = 169
+          Caption = 'Liste zurücksetzen'
+          OnClick = Bt_ResListClick
+          TabOrder = 2
+        end
+      end
+      object GB_Up: TGroupBox
+        AnchorSideLeft.Control = GB_Ort
+        AnchorSideTop.Control = TbS_Einst
+        AnchorSideRight.Control = TbS_Einst
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = GB_Weiteres
+        Left = 556
+        Height = 176
+        Top = 16
+        Width = 240
+        Anchors = [akTop, akRight, akBottom]
+        BorderSpacing.Left = 282
+        BorderSpacing.Top = 6
+        BorderSpacing.Right = 10
+        BorderSpacing.Bottom = 6
+        BorderSpacing.Around = 10
+        Caption = 'Updates'
+        ClientHeight = 155
+        ClientWidth = 236
+        TabOrder = 3
+        object ChkB_Up: TCheckBox
+          Left = 16
+          Height = 23
+          Top = 8
+          Width = 92
+          Caption = 'AutoUpdate'
+          Checked = True
+          OnChange = ChkB_UpChange
+          State = cbChecked
+          TabOrder = 0
+        end
+        object Bt_Up: TButton
+          Left = 32
+          Height = 38
+          Top = 48
+          Width = 152
+          Caption = 'Nach Updates suchen'
+          OnClick = Bt_UpClick
+          TabOrder = 1
+        end
+      end
+      object GB_Port: TGroupBox
+        Left = 264
+        Height = 174
+        Top = 208
+        Width = 280
+        Caption = 'Verbindung'
+        ClientHeight = 153
+        ClientWidth = 276
+        TabOrder = 4
+        object CkB_Port_Auto: TCheckBox
+          Left = 8
+          Height = 23
+          Top = 24
+          Width = 75
+          Caption = 'AutoPort'
+          OnChange = CkB_Port_AutoChange
+          TabOrder = 0
+        end
+        object ED_Port: TEdit
+          Left = 128
+          Height = 24
+          Top = 64
+          Width = 112
+          NumbersOnly = True
+          OnEditingDone = ED_PortEditingDone
+          TabOrder = 1
+          Text = '0'
+        end
+        object Lb_Port: TLabel
+          Left = 24
+          Height = 16
+          Top = 64
+          Width = 27
+          Caption = 'Com'
+          ParentColor = False
+        end
+      end
+      object GB_Weiteres: TGroupBox
+        Left = 556
+        Height = 174
+        Top = 208
+        Width = 240
+        Caption = 'Weiteres'
+        ClientHeight = 153
+        ClientWidth = 236
+        TabOrder = 5
+        object Bt_EinstZuRS: TButton
+          Left = 32
+          Height = 38
+          Top = 104
+          Width = 184
+          Caption = 'Einstellungen zurücksetzen'
+          OnClick = Bt_EinstZuRSClick
+          TabOrder = 0
+        end
+        object CkB_ManuAnSt: TCheckBox
+          Left = 8
+          Height = 23
+          Top = 56
+          Width = 160
+          Caption = 'Manuelle Werteeingabe'
+          OnChange = CkB_ManuAnStChange
+          TabOrder = 1
+        end
+        object TgB_AutoWert: TToggleBox
+          Left = 32
+          Height = 36
+          Hint = 'Klicke, um den angezeigten Modus zu verwenden.'#13#10'Wenn der Modus HotKey ausgewählt ist (Anzeige = AutoWertübergabe),'#13#10'dann werden nur Daten an den SpaceOrenter gesendet, wenn der Hotkey aktiviert wurde.'
+          Top = 8
+          Width = 184
+          Caption = 'HotKey verwenden'
+          OnChange = TgB_AutoWertChange
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 2
+        end
+      end
+    end
+    object TbS_Lag: TTabSheet
+      Caption = 'Lageberechnung'
+      ClientHeight = 420
+      ClientWidth = 816
+      TabVisible = False
+      object GB_Zeit: TGroupBox
+        Left = 16
+        Height = 152
+        Top = 16
+        Width = 256
+        Caption = 'Zeit'
+        ClientHeight = 131
+        ClientWidth = 252
+        TabOrder = 0
+        object Lb_MEZ_: TLabel
+          Left = 15
+          Height = 16
+          Hint = 'MittelEuropäische Zeit'
+          Top = 7
+          Width = 31
+          Caption = 'MEZ:'
+          ParentColor = False
+        end
+        object Lb_MEZ: TLabel
+          Left = 128
+          Height = 16
+          Top = 7
+          Width = 118
+          Caption = '12.04.2017 16:40:00'
+          ParentColor = False
+        end
+        object Lb_Gmt_: TLabel
+          Left = 15
+          Height = 16
+          Top = 64
+          Width = 28
+          Caption = 'GMT'
+          ParentColor = False
+        end
+        object Lb_OtZ_: TLabel
+          Left = 15
+          Height = 16
+          Top = 96
+          Width = 66
+          Caption = 'OrtsZeit UT'
+          ParentColor = False
+        end
+        object Lb_Gmt: TLabel
+          Left = 128
+          Height = 16
+          Top = 64
+          Width = 118
+          Caption = '12.04.2017 14:40:00'
+          ParentColor = False
+        end
+        object LB_OtZ: TLabel
+          Left = 128
+          Height = 16
+          Top = 96
+          Width = 118
+          Caption = '12.04.2017 15:35:00'
+          ParentColor = False
+        end
+        object Lb_SmrZ_: TLabel
+          Left = 15
+          Height = 16
+          Top = 37
+          Width = 70
+          Caption = 'Sommerzeit'
+          ParentColor = False
+        end
+        object Lb_SmrZ: TLabel
+          Left = 128
+          Height = 16
+          Top = 37
+          Width = 31
+          Caption = 'Wahr'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clGreen
+          Font.Height = -13
+          Font.Name = 'Arial Unicode MS'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
+        end
+      end
+      object Gb_FrPnk: TGroupBox
+        Left = 16
+        Height = 224
+        Top = 184
+        Width = 256
+        Caption = 'FrühlingsPunkt'
+        ClientHeight = 203
+        ClientWidth = 252
+        TabOrder = 1
+        object Lb_FrAnf_: TLabel
+          Left = 16
+          Height = 16
+          Top = 7
+          Width = 88
+          Caption = 'Frühingsanfang'
+          ParentColor = False
+        end
+        object Lb_FrAnf: TLabel
+          Left = 128
+          Height = 16
+          Top = 7
+          Width = 118
+          Caption = '20.03.2017 00:00:00'
+          ParentColor = False
+        end
+        object Lb_Diff_: TLabel
+          Left = 16
+          Height = 16
+          Top = 37
+          Width = 50
+          Caption = 'Differenz'
+          ParentColor = False
+        end
+        object Lb_Diff: TLabel
+          Left = 128
+          Height = 16
+          Top = 37
+          Width = 109
+          Caption = '23,6262458333294'
+          ParentColor = False
+        end
+        object Lb_GSft_: TLabel
+          Left = 16
+          Height = 16
+          Top = 64
+          Width = 52
+          Caption = 'Gradshift'
+          ParentColor = False
+        end
+        object Lb_GSft: TLabel
+          Left = 128
+          Height = 16
+          Top = 64
+          Width = 109
+          Caption = '23,3050300228307'
+          ParentColor = False
+        end
+        object Lb_FrPnk_: TLabel
+          Left = 16
+          Height = 16
+          Top = 96
+          Width = 86
+          Caption = 'Frühjahrspunkt'
+          ParentColor = False
+        end
+        object Lb_FrPnk: TLabel
+          Left = 120
+          Height = 16
+          Top = 96
+          Width = 109
+          Caption = '68,2367618812729'
+          ParentColor = False
+        end
+        object Lb_ZW_: TLabel
+          Left = 16
+          Height = 16
+          Top = 128
+          Width = 57
+          Caption = 'Zeitwinkel'
+          ParentColor = False
+        end
+        object Lb_ZW: TLabel
+          Left = 128
+          Height = 16
+          Top = 128
+          Width = 109
+          Caption = '2,99583333333333'
+          ParentColor = False
+        end
+        object LbAkFrPnk_: TLabel
+          Left = 16
+          Height = 32
+          Top = 160
+          Width = 85
+          Caption = 'Aktueller'#13#10'Frühlingspunkt'
+          ParentColor = False
+        end
+        object LbAkFrPnk: TLabel
+          Left = 120
+          Height = 16
+          Top = 168
+          Width = 109
+          Caption = '71,8228525205434'
+          ParentColor = False
+        end
+      end
+      object GB_Lage: TGroupBox
+        Left = 296
+        Height = 240
+        Top = 16
+        Width = 256
+        Caption = 'SternenLage'
+        ClientHeight = 219
+        ClientWidth = 252
+        TabOrder = 2
+        object Lb_Rtzn_: TLabel
+          Left = 16
+          Height = 16
+          Top = 7
+          Width = 86
+          Caption = 'Rektaszension'
+          ParentColor = False
+        end
+        object Lb_Rtzn_Grd: TLabel
+          Left = 128
+          Height = 16
+          Top = 7
+          Width = 21
+          Caption = '360'
+          ParentColor = False
+        end
+        object Lb_Rtzn_Rd: TLabel
+          Left = 184
+          Height = 16
+          Top = 7
+          Width = 25
+          Caption = '59,9'
+          ParentColor = False
+        end
+        object Lb_Dekli_: TLabel
+          Left = 16
+          Height = 16
+          Top = 37
+          Width = 64
+          Caption = 'Deklination'
+          ParentColor = False
+        end
+        object Lb_Dekli_Grd: TLabel
+          Left = 128
+          Height = 16
+          Top = 37
+          Width = 18
+          Caption = '-90'
+          ParentColor = False
+        end
+        object Lb_Dekli_Rd: TLabel
+          Left = 184
+          Height = 16
+          Top = 37
+          Width = 29
+          Caption = '-59,9'
+          ParentColor = False
+        end
+        object Lb_StWk_: TLabel
+          Left = 16
+          Height = 16
+          Top = 64
+          Width = 85
+          Caption = 'SternenWinkel'
+          ParentColor = False
+        end
+        object Lb_StWk: TLabel
+          Left = 128
+          Height = 16
+          Top = 64
+          Width = 21
+          Caption = '450'
+          ParentColor = False
+        end
+        object Lb_Beta_: TLabel
+          Left = 16
+          Height = 16
+          Top = 128
+          Width = 7
+          Caption = 'β'
+          ParentColor = False
+        end
+        object Lb_Delt_: TLabel
+          Left = 16
+          Height = 16
+          Top = 96
+          Width = 7
+          Caption = 'δ'
+          ParentColor = False
+        end
+        object Lb_Beta: TLabel
+          Left = 128
+          Height = 16
+          Top = 128
+          Width = 48
+          Caption = 'Lb_Beta'
+          ParentColor = False
+        end
+        object Lb_Delt: TLabel
+          Left = 128
+          Height = 16
+          Top = 96
+          Width = 44
+          Caption = 'Lb_Delt'
+          ParentColor = False
+        end
+        object Lb_Grt_: TLabel
+          Left = 16
+          Height = 16
+          Top = 160
+          Width = 21
+          Caption = 'GrT'
+          ParentColor = False
+        end
+        object Lb_Grt: TLabel
+          Left = 128
+          Height = 16
+          Top = 160
+          Width = 39
+          Caption = 'Lb_Grt'
+          ParentColor = False
+        end
+        object Lb_T_: TLabel
+          Left = 16
+          Height = 16
+          Top = 190
+          Width = 7
+          Caption = 'T'
+          ParentColor = False
+        end
+        object Lb_T: TLabel
+          Left = 128
+          Height = 16
+          Top = 190
+          Width = 28
+          Caption = 'Lb_T'
+          ParentColor = False
+        end
+        object Lb_Grd_3: TLabel
+          Left = 160
+          Height = 16
+          Top = 7
+          Width = 5
+          Caption = '°'
+          ParentColor = False
+        end
+        object Lb_Grd_4: TLabel
+          Left = 160
+          Height = 16
+          Top = 37
+          Width = 5
+          Caption = '°'
+          ParentColor = False
+        end
+        object Lb_Min_1: TLabel
+          Left = 224
+          Height = 16
+          Top = 7
+          Width = 21
+          Caption = 'Min'
+          ParentColor = False
+        end
+        object Lb_Min_2: TLabel
+          Left = 224
+          Height = 16
+          Top = 37
+          Width = 21
+          Caption = 'Min'
+          ParentColor = False
+        end
+      end
+      object Gb_Wink: TGroupBox
+        Left = 296
+        Height = 144
+        Top = 264
+        Width = 256
+        Caption = 'Winkel'
+        ClientHeight = 123
+        ClientWidth = 252
+        TabOrder = 3
+        object Lb_Phi: TLabel
+          Left = 16
+          Height = 16
+          Top = 64
+          Width = 8
+          Caption = 'φ'
+          ParentColor = False
+        end
+        object Lb_Lamda: TLabel
+          Left = 16
+          Height = 16
+          Top = 7
+          Width = 7
+          Caption = 'λ'
+          ParentColor = False
+        end
+        object Lb_Lam_G: TLabel
+          Left = 128
+          Height = 16
+          Top = 7
+          Width = 39
+          Caption = '52,345'
+          ParentColor = False
+        end
+        object Lb_Lam_R: TLabel
+          Left = 128
+          Height = 16
+          Top = 37
+          Width = 74
+          Caption = '0,913592597'
+          ParentColor = False
+        end
+        object Lb_Phi_G: TLabel
+          Left = 128
+          Height = 16
+          Top = 64
+          Width = 39
+          Caption = '13,604'
+          ParentColor = False
+        end
+        object Lb_Phi_R: TLabel
+          Left = 128
+          Height = 16
+          Top = 96
+          Width = 109
+          Caption = '0,23743459144130'
+          ParentColor = False
+        end
+      end
+      object Gb_Azi: TGroupBox
+        Left = 568
+        Height = 112
+        Top = 48
+        Width = 240
+        Caption = 'Azimut'
+        ClientHeight = 91
+        ClientWidth = 236
+        TabOrder = 4
+        object Lb_Az_Z_: TLabel
+          Left = 16
+          Height = 16
+          Top = 7
+          Width = 80
+          Caption = 'Azimut Zähler'
+          ParentColor = False
+        end
+        object Lb_Az_N_: TLabel
+          Left = 16
+          Height = 16
+          Top = 48
+          Width = 86
+          Caption = 'Azimut Nenner'
+          ParentColor = False
+        end
+        object Lb_Az_Z: TLabel
+          Left = 124
+          Height = 16
+          Top = 8
+          Width = 73
+          Caption = '0,354081145'
+          ParentColor = False
+        end
+        object Lb_Az_N: TLabel
+          Left = 124
+          Height = 16
+          Top = 48
+          Width = 78
+          Caption = '-0,399245814'
+          ParentColor = False
+        end
+      end
+      object GB_Brnt: TGroupBox
+        Left = 568
+        Height = 144
+        Top = 184
+        Width = 240
+        Caption = 'Berechnet'
+        ClientHeight = 123
+        ClientWidth = 236
+        TabOrder = 5
+        object Lb_Az_: TLabel
+          Left = 8
+          Height = 38
+          Top = 8
+          Width = 76
+          Caption = 'Azimut '#13#10'(berechnet)'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -16
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lb_Az: TLabel
+          Left = 104
+          Height = 17
+          Top = 16
+          Width = 60
+          Caption = '157,4783'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -15
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lb_El_: TLabel
+          Left = 8
+          Height = 38
+          Top = 64
+          Width = 76
+          Caption = 'Elevation '#13#10'(berechnet)'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -16
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lb_El: TLabel
+          Left = 104
+          Height = 17
+          Top = 72
+          Width = 84
+          Caption = '41,22780673'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -15
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lb_Grd_1: TLabel
+          Left = 227
+          Height = 17
+          Top = 16
+          Width = 6
+          Caption = '°'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -15
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lb_Grd_2: TLabel
+          Left = 227
+          Height = 17
+          Top = 72
+          Width = 6
+          Caption = '°'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -15
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+      end
+    end
+    object Ts_Ephi: TTabSheet
+      Caption = 'Ephemeriden'
+      ClientHeight = 420
+      ClientWidth = 816
+      TabVisible = False
+      object GB_Zeit1: TGroupBox
+        Left = 16
+        Height = 376
+        Top = 24
+        Width = 256
+        Caption = 'Zeit'
+        ClientHeight = 355
+        ClientWidth = 252
+        TabOrder = 0
+        object Lb_Day_: TLabel
+          Left = 16
+          Height = 16
+          Top = 136
+          Width = 20
+          Caption = 'Tag'
+          ParentColor = False
+        end
+        object Lb_Day: TLabel
+          Left = 104
+          Height = 16
+          Top = 136
+          Width = 14
+          Caption = '01'
+          ParentColor = False
+        end
+        object Lb_Mon_: TLabel
+          Left = 16
+          Height = 16
+          Top = 176
+          Width = 36
+          Caption = 'Monat'
+          ParentColor = False
+        end
+        object Lb_Mon: TLabel
+          Left = 104
+          Height = 16
+          Top = 176
+          Width = 14
+          Caption = '01'
+          ParentColor = False
+        end
+        object Lb_Jhr_: TLabel
+          Left = 16
+          Height = 16
+          Top = 216
+          Width = 24
+          Caption = 'Jahr'
+          ParentColor = False
+        end
+        object Lb_UTC1: TLabel
+          Left = 104
+          Height = 16
+          Top = 296
+          Width = 60
+          Caption = '2457848,5'
+          ParentColor = False
+        end
+        object Lb_UTC1_: TLabel
+          Left = 16
+          Height = 16
+          Top = 296
+          Width = 32
+          Caption = 'UTC1'
+          ParentColor = False
+        end
+        object Lb_UTC2_: TLabel
+          Left = 16
+          Height = 16
+          Top = 336
+          Width = 32
+          Caption = 'UTC2'
+          ParentColor = False
+        end
+        object Lb_UTC2: TLabel
+          Left = 104
+          Height = 16
+          Top = 336
+          Width = 74
+          Caption = '0,449722222'
+          ParentColor = False
+        end
+        object Lb_Jhr: TLabel
+          Left = 104
+          Height = 16
+          Top = 216
+          Width = 28
+          Caption = '2017'
+          ParentColor = False
+        end
+        object Lb_Hour_: TLabel
+          Left = 16
+          Height = 16
+          Top = 96
+          Width = 41
+          Caption = 'Stunde'
+          ParentColor = False
+        end
+        object Lb_Hour: TLabel
+          Left = 104
+          Height = 16
+          Top = 96
+          Width = 14
+          Caption = '00'
+          ParentColor = False
+        end
+        object Lb_Sek_: TLabel
+          Left = 16
+          Height = 16
+          Top = 16
+          Width = 51
+          Caption = 'Sekunde'
+          ParentColor = False
+        end
+        object Lb_Sek: TLabel
+          Left = 104
+          Height = 16
+          Top = 16
+          Width = 14
+          Caption = '00'
+          ParentColor = False
+        end
+        object Lb_Min_: TLabel
+          Left = 16
+          Height = 16
+          Top = 56
+          Width = 39
+          Caption = 'Minute'
+          ParentColor = False
+        end
+        object Lb_Min: TLabel
+          Left = 104
+          Height = 16
+          Top = 56
+          Width = 14
+          Caption = '00'
+          ParentColor = False
+        end
+        object Lb_SmrZ_1: TLabel
+          Left = 16
+          Height = 16
+          Top = 256
+          Width = 70
+          Caption = 'Sommerzeit'
+          ParentColor = False
+        end
+        object Lb_SmrZ1: TLabel
+          Left = 104
+          Height = 16
+          Top = 256
+          Width = 31
+          Caption = 'Wahr'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clGreen
+          Font.Height = -13
+          Font.Name = 'Arial Unicode MS'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
+        end
+      end
+      object Gb_Wink1: TGroupBox
+        Left = 288
+        Height = 144
+        Top = 232
+        Width = 256
+        Caption = 'Winkel'
+        ClientHeight = 123
+        ClientWidth = 252
+        TabOrder = 1
+        object Lb_Gamma1: TLabel
+          Left = 16
+          Height = 16
+          Top = 64
+          Width = 8
+          Caption = 'φ'
+          ParentColor = False
+        end
+        object Lb_Lamda1: TLabel
+          Left = 16
+          Height = 16
+          Top = 8
+          Width = 7
+          Caption = 'λ'
+          ParentColor = False
+        end
+        object Lb_Lam_G1: TLabel
+          Left = 128
+          Height = 16
+          Top = 7
+          Width = 39
+          Caption = '52,345'
+          ParentColor = False
+        end
+        object Lb_Lam_R1: TLabel
+          Left = 128
+          Height = 16
+          Top = 37
+          Width = 74
+          Caption = '0,913592597'
+          ParentColor = False
+        end
+        object Lb_Phi_G1: TLabel
+          Left = 128
+          Height = 16
+          Top = 64
+          Width = 39
+          Caption = '13,604'
+          ParentColor = False
+        end
+        object Lb_Phi_R1: TLabel
+          Left = 128
+          Height = 16
+          Top = 96
+          Width = 109
+          Caption = '0,23743459144130'
+          ParentColor = False
+        end
+      end
+      object Gb_Mswg: TGroupBox
+        Left = 568
+        Height = 192
+        Top = 24
+        Width = 233
+        Caption = 'Missweisung'
+        ClientHeight = 171
+        ClientWidth = 229
+        TabOrder = 2
+        object Lb_MngMswg_: TLabel
+          Left = 16
+          Height = 32
+          Top = 32
+          Width = 81
+          Caption = 'Mangnetische'#13#10'Missweisung'
+          ParentColor = False
+        end
+        object Lb_MngMswg: TLabel
+          Left = 136
+          Height = 16
+          Top = 40
+          Width = 21
+          Caption = '100'
+          ParentColor = False
+        end
+        object Lb_Ein: TLabel
+          Left = 176
+          Height = 16
+          Top = 40
+          Width = 50
+          Caption = 'height/m'
+          ParentColor = False
+        end
+        object Lb_Mswg1_: TLabel
+          Left = 16
+          Height = 16
+          Top = 104
+          Width = 75
+          Caption = 'Missweisung'
+          ParentColor = False
+        end
+        object Lb_Grd_5: TLabel
+          Left = 212
+          Height = 16
+          Top = 104
+          Width = 5
+          Caption = '°'
+          ParentColor = False
+        end
+        object Lb_Mswg1: TLabel
+          Left = 136
+          Height = 16
+          Top = 104
+          Width = 74
+          Caption = '3,735619027'
+          ParentColor = False
+        end
+      end
+      object GB_Brg: TGroupBox
+        Left = 568
+        Height = 144
+        Top = 232
+        Width = 233
+        Caption = 'Berechnet'
+        ClientHeight = 123
+        ClientWidth = 229
+        TabOrder = 3
+        object Lb_Az_1: TLabel
+          Left = 16
+          Height = 38
+          Top = 8
+          Width = 76
+          Caption = 'Azimut '#13#10'(berechnet)'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -16
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lb_El_1: TLabel
+          Left = 16
+          Height = 38
+          Top = 64
+          Width = 76
+          Caption = 'Elevation '#13#10'(berechnet)'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -16
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lb_Az1: TLabel
+          Left = 133
+          Height = 17
+          Top = 16
+          Width = 60
+          Caption = '157,4783'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -15
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lb_El1: TLabel
+          Left = 133
+          Height = 17
+          Top = 72
+          Width = 84
+          Caption = '41,22780673'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -15
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lb_Az_Grd1: TLabel
+          Left = 220
+          Height = 17
+          Top = 16
+          Width = 6
+          Caption = '°'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -15
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lb_El_Grd_: TLabel
+          Left = 220
+          Height = 17
+          Top = 72
+          Width = 6
+          Caption = '°'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -15
+          Font.Name = 'Times New Roman'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+      end
+    end
+  end
+  object PpMe: TPopupMenu
+    left = 488
+    object MI_Unbek: TMenuItem
+      Caption = 'New Item2'
+    end
+  end
+  object AppProps: TApplicationProperties
+    left = 744
+  end
+  object MnMe: TMainMenu
+    left = 528
+    object M_Dat: TMenuItem
+      Caption = 'Datei'
+      object MI_StnList: TMenuItem
+        Caption = 'SternenListe'
+        object MI_StnList_Load: TMenuItem
+          Caption = 'Liste Laden'
+          OnClick = Bt_LoListClick
+        end
+        object MI_StnList_Chng: TMenuItem
+          Caption = 'Liste bearbeiten'
+          OnClick = Bt_BebListClick
+        end
+        object MI_Stn_Rstt: TMenuItem
+          Caption = 'Liste Zurücksetzen'
+          OnClick = Bt_ResListClick
+        end
+      end
+      object MI_Connection: TMenuItem
+        Caption = 'Verbindung'
+        object MI_VerbEinst: TMenuItem
+          Caption = 'Verbindungseinstellungen'
+          OnClick = MI_VerbEinstClick
+        end
+        object MI_Connect: TMenuItem
+          Caption = 'Verbinden'
+          OnClick = MI_ConnectClick
+        end
+      end
+      object MI_Dar_Quit: TMenuItem
+        Caption = 'Beenden'
+        ShortCut = 16465
+        OnClick = MI_Dar_QuitClick
+      end
+    end
+    object M_Stern: TMenuItem
+      Caption = 'Himmelskörper'
+      object MI_Anfahren: TMenuItem
+        Caption = 'Anfahren'
+        ShortCut = 16449
+        OnClick = BBt_AnfahrenClick
+      end
+      object MI_Such: TMenuItem
+        Caption = 'Suchen...'
+        ShortCut = 16454
+        OnClick = MI_SuchClick
+      end
+    end
+    object M_Sicht: TMenuItem
+      Caption = 'Ansicht'
+      object MI_Sicht_Exp: TMenuItem
+        AutoCheck = True
+        Caption = 'Experten Mode'
+        ShowAlwaysCheckable = True
+        OnClick = MI_Sicht_ExpClick
+      end
+    end
+    object M_Hilf: TMenuItem
+      Caption = 'Hilfe'
+      object MI_Hilf_On: TMenuItem
+        Caption = 'Online Hilfe'
+        OnClick = MI_Hilf_OnClick
+      end
+      object MP_Hilf_Off: TMenuItem
+        Caption = 'Offline Hilfe'
+        OnClick = MP_Hilf_OffClick
+      end
+      object MI_Hilf_Feh: TMenuItem
+        Caption = 'Fehler melden'
+        OnClick = MI_Hilf_FehClick
+      end
+      object MI_Hilf_Up: TMenuItem
+        Caption = 'Update'
+        OnClick = Bt_UpClick
+      end
+      object MI_Ueber: TMenuItem
+        Caption = 'Über'
+        OnClick = MI_UeberClick
+      end
+      object MI_DatSchutz: TMenuItem
+        Caption = 'Datenschutz'
+        OnClick = MI_DatSchutzClick
+      end
+    end
+  end
+  object Tmr_Berech: TTimer
+    Enabled = False
+    Interval = 250
+    OnTimer = Tmr_BerechTimer
+    left = 672
+  end
+  object OpnD: TOpenDialog
+    Title = 'SternenListe laden'
+    DefaultExt = '.StarList.Space'
+    Filter = 'Space Dateien|*.Space;*.Old|Alle Dateien|*.*|Text Dateien|*.txt'
+    InitialDir = 'C:\ProgramData\FireInstallations\SpaceOrienter'
+    left = 600
+  end
+  object PpNt: TPopupNotifier
+    Color = 14483455
+    Icon.Data = {
+      07544269746D617000000000
+    }
+    Text = 'Text'
+    Title = 'Caption'
+    Visible = False
+    left = 776
+  end
+  object PpMe2: TPopupMenu
+    left = 456
+    object MI_Unbe2: TMenuItem
+      Caption = 'New Item2'
+    end
+  end
+  object SaD: TSaveDialog
+    left = 568
+  end
+  object Tmr_Nach: TTimer
+    Enabled = False
+    OnTimer = Tmr_NachTimer
+    left = 704
+  end
+  object FndD: TFindDialog
+    FindText = 'test'
+    Options = [frHideWholeWord, frHideUpDown, frHideEntireScope, frHidePromptOnReplace]
+    OnFind = FndDFind
+    left = 632
+  end
+end
