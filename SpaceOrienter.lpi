@@ -9,6 +9,10 @@
       <Title Value="SpaceOrienter"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
+      <XPManifest>
+        <TextName Value="FireInstall.ProductName.SpaceOrienter"/>
+        <TextDesc Value="Finding Stars and Ephemerides in the nightsky"/>
+      </XPManifest>
       <Icon Value="0"/>
     </General>
     <i18n>
@@ -62,7 +66,8 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      <OtherUnitFiles Value="requirements;requirements/VSOP"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Linking>
       <Options>
