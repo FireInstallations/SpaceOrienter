@@ -70,6 +70,8 @@ __recovery/
 #SpaceOrienter generated generated files
 *.Space
 *.xml
+OldOptions/
+OldStarLists/
 
 #WMM-File
 *.COF

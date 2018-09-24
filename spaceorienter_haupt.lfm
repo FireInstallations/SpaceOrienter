@@ -1,7 +1,7 @@
 object Frm_Spori: TFrm_Spori
-  Left = 196
+  Left = 258
   Height = 420
-  Top = 269
+  Top = 141
   Width = 724
   AlphaBlendValue = 250
   Caption = 'SpaceOrienter'
@@ -2140,7 +2140,7 @@ object Frm_Spori: TFrm_Spori
     Height = 381
     Top = 0
     Width = 712
-    ActivePage = TbS_Einst
+    ActivePage = TbS_Lag
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.CharSet = ANSI_CHARSET
     Font.Height = -13
@@ -2149,7 +2149,7 @@ object Frm_Spori: TFrm_Spori
     Font.Quality = fqDraft
     MultiLine = True
     ParentFont = False
-    TabIndex = 2
+    TabIndex = 3
     TabOrder = 0
     Options = [nboMultiLine, nboKeyboardTabSwitch]
     object TbS_Inter: TTabSheet
@@ -2873,7 +2873,7 @@ object Frm_Spori: TFrm_Spori
         Top = 16
         Width = 240
         Caption = 'SternenListe'
-        ClientHeight = 161
+        ClientHeight = 155
         ClientWidth = 190
         Font.CharSet = ANSI_CHARSET
         Font.Height = -10
@@ -2980,29 +2980,6 @@ object Frm_Spori: TFrm_Spori
           Caption = '12.04.2017 15:35:00'
           ParentColor = False
         end
-        object Lb_SmrZ_: TLabel
-          Left = 15
-          Height = 16
-          Top = 37
-          Width = 70
-          Caption = 'Sommerzeit'
-          ParentColor = False
-        end
-        object Lb_SmrZ: TLabel
-          Left = 128
-          Height = 16
-          Top = 37
-          Width = 31
-          Caption = 'Wahr'
-          Font.CharSet = ANSI_CHARSET
-          Font.Color = clGreen
-          Font.Height = -13
-          Font.Name = 'Arial Unicode MS'
-          Font.Pitch = fpVariable
-          Font.Quality = fqDraft
-          ParentColor = False
-          ParentFont = False
-        end
       end
       object Gb_FrPnk: TGroupBox
         Left = 16
@@ -3091,13 +3068,27 @@ object Frm_Spori: TFrm_Spori
           Caption = 'Aktueller'#13#10'Frühlingspunkt'
           ParentColor = False
         end
-        object LbAkFrPnk: TLabel
-          Left = 120
-          Height = 16
-          Top = 168
-          Width = 109
+        object Lb_AkFrPnk: TLabel
+          Left = 102
+          Height = 13
+          Top = 134
+          Width = 93
           Caption = '71,8228525205434'
           ParentColor = False
+        end
+        object Lb_FrPnk: TLabel
+          Left = 102
+          Height = 13
+          Top = 72
+          Width = 93
+          Caption = '68,2367618812729'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -10
+          Font.Name = 'Arial Unicode MS'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
         end
       end
       object GB_Lage: TGroupBox
@@ -3291,51 +3282,61 @@ object Frm_Spori: TFrm_Spori
         Font.Quality = fqDraft
         ParentFont = False
         TabOrder = 3
-        object Lb_Phi: TLabel
-          Left = 16
-          Height = 16
-          Top = 64
-          Width = 8
-          Caption = 'φ'
+        object Lb_Lat: TLabel
+          Left = 13
+          Height = 13
+          Top = 51
+          Width = 45
+          Caption = 'Lattitude'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -10
+          Font.Name = 'Arial Unicode MS'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
           ParentColor = False
         end
-        object Lb_Lamda: TLabel
-          Left = 16
-          Height = 16
-          Top = 7
-          Width = 7
-          Caption = 'λ'
+        object Lb_Lon: TLabel
+          Left = 13
+          Height = 13
+          Top = 6
+          Width = 49
+          Caption = 'Longitude'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -10
+          Font.Name = 'Arial Unicode MS'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
           ParentColor = False
         end
-        object Lb_Lam_G: TLabel
-          Left = 128
-          Height = 16
-          Top = 7
-          Width = 39
+        object Lb_Lon_G: TLabel
+          Left = 102
+          Height = 13
+          Top = 6
+          Width = 33
           Caption = '52,345'
           ParentColor = False
         end
-        object Lb_Lam_R: TLabel
-          Left = 128
-          Height = 16
-          Top = 37
-          Width = 74
+        object Lb_Lon_R: TLabel
+          Left = 102
+          Height = 13
+          Top = 30
+          Width = 63
           Caption = '0,913592597'
           ParentColor = False
         end
-        object Lb_Phi_G: TLabel
-          Left = 128
-          Height = 16
-          Top = 64
-          Width = 39
+        object Lb_Lat_G: TLabel
+          Left = 102
+          Height = 13
+          Top = 51
+          Width = 33
           Caption = '13,604'
           ParentColor = False
         end
-        object Lb_Phi_R: TLabel
-          Left = 128
-          Height = 16
-          Top = 96
-          Width = 109
+        object Lb_Lat_R: TLabel
+          Left = 102
+          Height = 13
+          Top = 77
+          Width = 93
           Caption = '0,23743459144130'
           ParentColor = False
         end
@@ -3684,51 +3685,61 @@ object Frm_Spori: TFrm_Spori
         ClientHeight = 123
         ClientWidth = 252
         TabOrder = 1
-        object Lb_Gamma1: TLabel
-          Left = 16
-          Height = 16
-          Top = 64
-          Width = 8
-          Caption = 'φ'
+        object Lb_Lat1: TLabel
+          Left = 13
+          Height = 13
+          Top = 51
+          Width = 48
+          Caption = 'Lattiitude'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -10
+          Font.Name = 'Arial Unicode MS'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
           ParentColor = False
         end
-        object Lb_Lamda1: TLabel
-          Left = 16
-          Height = 16
-          Top = 8
-          Width = 7
-          Caption = 'λ'
+        object Lb_Lon1: TLabel
+          Left = 13
+          Height = 13
+          Top = 6
+          Width = 49
+          Caption = 'Londitude'
+          Font.CharSet = ANSI_CHARSET
+          Font.Height = -10
+          Font.Name = 'Arial Unicode MS'
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
           ParentColor = False
         end
-        object Lb_Lam_G1: TLabel
-          Left = 128
-          Height = 16
-          Top = 7
-          Width = 39
+        object Lb_Lon_G1: TLabel
+          Left = 102
+          Height = 13
+          Top = 6
+          Width = 33
           Caption = '52,345'
           ParentColor = False
         end
-        object Lb_Lam_R1: TLabel
-          Left = 128
-          Height = 16
-          Top = 37
-          Width = 74
+        object Lb_Lon_R1: TLabel
+          Left = 102
+          Height = 13
+          Top = 30
+          Width = 63
           Caption = '0,913592597'
           ParentColor = False
         end
-        object Lb_Phi_G1: TLabel
-          Left = 128
-          Height = 16
-          Top = 64
-          Width = 39
+        object Lb_Lat_G1: TLabel
+          Left = 102
+          Height = 13
+          Top = 51
+          Width = 33
           Caption = '13,604'
           ParentColor = False
         end
-        object Lb_Phi_R1: TLabel
-          Left = 128
-          Height = 16
-          Top = 96
-          Width = 109
+        object Lb_Lat_R1: TLabel
+          Left = 102
+          Height = 13
+          Top = 77
+          Width = 93
           Caption = '0,23743459144130'
           ParentColor = False
         end
@@ -3892,20 +3903,6 @@ object Frm_Spori: TFrm_Spori
         end
       end
     end
-  end
-  object Lb_FrPnk: TLabel
-    Left = 96
-    Height = 13
-    Top = 77
-    Width = 93
-    Caption = '68,2367618812729'
-    Font.CharSet = ANSI_CHARSET
-    Font.Height = -10
-    Font.Name = 'Arial Unicode MS'
-    Font.Pitch = fpVariable
-    Font.Quality = fqDraft
-    ParentColor = False
-    ParentFont = False
   end
   object PpMe: TPopupMenu
     left = 488

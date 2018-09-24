@@ -40,8 +40,8 @@ type
     TE_Plan: TDateTimePicker;
     DE_Day: TDateTimePicker;
     TE_Time: TDateTimePicker;
-    FlSpEd_Lam: TFloatSpinEdit;
-    FlSpEd_Phi: TFloatSpinEdit;
+    FlSpEd_Lat: TFloatSpinEdit;
+    FlSpEd_Lon: TFloatSpinEdit;
     Img_ComCon: TImage;
     Img_ComWarn: TImage;
     Img_ComInfo: TImage;
@@ -51,12 +51,12 @@ type
     Img_Auto: TImage;
     Img_CkB_Off: TImage;
     Img_CkB_On: TImage;
-    Img_Info_Lam: TImage;
+    Img_Info_Lat: TImage;
     Img_Info_Baud: TImage;
     Img_Info_ComPort: TImage;
     Img_Info_AutoCon: TImage;
     Img_Info_ManW: TImage;
-    Img_Info_Phi: TImage;
+    Img_Info_Lon: TImage;
     Img_Info_Ort: TImage;
     Img_Info_PortableMode: TImage;
     Img_Info_Exprt: TImage;
@@ -89,8 +89,8 @@ type
     Lbl_Exprt: TLabel;
     Lbl_AutoTime: TLabel;
     Lbl_PortableMode: TLabel;
-    Lbl_Lam: TLabel;
-    Lbl_Phi: TLabel;
+    Lbl_Lat: TLabel;
+    Lbl_Lon: TLabel;
     Lbl_Sw_Redo: TLabel;
     Lbl_am_Plan: TLabel;
     Lbl_Auto: TLabel;
@@ -132,8 +132,8 @@ type
     procedure CBx_TagEditingDone(Sender: TObject);
     procedure DE_DayChange(Sender: TObject);
     procedure DE_DayEditingDone(Sender: TObject);
-    procedure FlSpEd_PhiEditingDone(Sender: TObject);
-    procedure FlSpEd_LamEditingDone(Sender: TObject);
+    procedure FlSpEd_LatEditingDone(Sender: TObject);
+    procedure FlSpEd_LonEditingDone(Sender: TObject);
     procedure FormClose(Sender: TObject; var {%H-}CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure Img_AutoClick(Sender: TObject);
@@ -190,519 +190,519 @@ function TFrm_Config.Koordinaten (Stadt:String):TKoord; //Dynamisch, laden + Spe
     case (Trim(AnsiLowerCase(Stadt))) of
       'none':
         begin
+          Result.Lon := 0;
           Result.Lat  := 0;
-          Result. Lon := 0;
         end;
 
       'aachen':
         begin
-          Result.Lat := 50.775346;
-          Result.Lon := 6.0838870;
+          Result.Lon := 50.775346;
+          Result.Lat := 6.0838870;
          end;
       'augsburg':
         begin
-          Result.Lat := 48.370545;
-          Result.Lon := 10.897790;
+          Result.Lon := 48.370545;
+          Result.Lat := 10.897790;
          end;
       'bamberg':
         begin
-          Result.Lat  := 49.898814;
-          Result.Lon := 10.902764;
+          Result.Lon := 49.898814;
+          Result.Lat := 10.902764;
          end;
       'bergisch gladbach':
         begin
-          Result.Lat  := 50.992309;
-          Result.Lon := 7.1286210;
+          Result.Lon := 50.992309;
+          Result.Lat := 7.1286210;
          end;
       'berlin':
         begin
-          Result.Lat  := 52.520007;
-          Result.Lon := 13.404954;
+          Result.Lon := 52.520007;
+          Result.Lat := 13.404954;
          end;
       'bielefeld':
         begin
-          Result.Lat  := 52.030228;
-          Result.Lon := 8.5324710;
+          Result.Lon := 52.030228;
+          Result.Lat := 8.5324710;
          end;
       'bochum':
         begin
-          Result.Lat  := 51.481845;
-          Result.Lon := 7.2162360;
+          Result.Lon := 51.481845;
+          Result.Lat := 7.2162360;
          end;
       'bonn':
         begin
-          Result.Lat  := 50.737430;
-          Result.Lon := 7.0982070;
+          Result.Lon := 50.737430;
+          Result.Lat := 7.0982070;
          end;
       'bottrop':
         begin
-          Result.Lat  := 51.529086;
-          Result.Lon := 6.9446890;
+          Result.Lon := 51.529086;
+          Result.Lat := 6.9446890;
          end;
       'brünn':
         begin
-          Result.Lat  := 49.195060;
-          Result.Lon := 16.606837;
+          Result.Lon := 49.195060;
+          Result.Lat := 16.606837;
          end;
       'braunschweig':
         begin
-          Result.Lat  := 52.268874;
-          Result.Lon := 10.526770;
+          Result.Lon := 52.268874;
+          Result.Lat := 10.526770;
          end;
       'bremen':
         begin
-          Result.Lat  := 53.079296;
-          Result.Lon := 8.8016940;
+          Result.Lon := 53.079296;
+          Result.Lat := 8.8016940;
          end;
       'bremerhaven':
         begin
-          Result.Lat  := 53.539584;
-          Result.Lon := 8.5809420;
+          Result.Lon := 53.539584;
+          Result.Lat := 8.5809420;
          end;
       'chemnitz':
         begin
-          Result.Lat  := 50.827845;
-          Result.Lon := 12.921370;
+          Result.Lon := 50.827845;
+          Result.Lat := 12.921370;
          end;
       'cottbus':
         begin
-          Result.Lat  := 51.756311;
-          Result.Lon := 14.332868;
+          Result.Lon := 51.756311;
+          Result.Lat := 14.332868;
          end;
       'düsseldorf':
         begin
-          Result.Lat  := 51.227741;
-          Result.Lon := 6.7734560;
+          Result.Lon := 51.227741;
+          Result.Lat := 6.7734560;
          end;
       'darmstadt':
         begin
-          Result.Lat  := 49.872825;
-          Result.Lon := 8.6511930;
+          Result.Lon := 49.872825;
+          Result.Lat := 8.6511930;
          end;
       'dessau-roßlau':
         begin
-          Result.Lat  := 51.842828;
-          Result.Lon := 12.230393;
+          Result.Lon := 51.842828;
+          Result.Lat := 12.230393;
          end;
       'dortmund':
         begin
-          Result.Lat  := 51.513587;
-          Result.Lon := 7.4652980;
+          Result.Lon := 51.513587;
+          Result.Lat := 7.4652980;
          end;
       'dresden':
         begin
-          Result.Lat  := 51.050409;
-          Result.Lon := 13.737262;
+          Result.Lon := 51.050409;
+          Result.Lat := 13.737262;
          end;
       'duisburg':
         begin
-          Result.Lat  := 51.434408;
-          Result.Lon := 6.7623290;
+          Result.Lon := 51.434408;
+          Result.Lat := 6.7623290;
          end;
       'erfurt':
         begin
-          Result.Lat  := 50.984768;
-          Result.Lon := 11.029880;
+          Result.Lon := 50.984768;
+          Result.Lat := 11.029880;
          end;
       'erlangen':
         begin
-          Result.Lat  := 49.589674;
-          Result.Lon := 11.011961;
+          Result.Lon := 49.589674;
+          Result.Lat := 11.011961;
          end;
       'essen':
         begin
-          Result.Lat  := 51.455643;
-          Result.Lon := 7.0115550;
+          Result.Lon := 51.455643;
+          Result.Lat := 7.0115550;
          end;
       'fürth':
         begin
-          Result.Lat  := 49.477117;
-          Result.Lon := 10.988667;
+          Result.Lon := 49.477117;
+          Result.Lat := 10.988667;
          end;
       'flensburg':
         begin
-          Result.Lat  := 54.793743;
-          Result.Lon := 9.4469960;
+          Result.Lon := 54.793743;
+          Result.Lat := 9.4469960;
          end;
       'frankfurt (oder)':
         begin
-          Result.Lat  := 52.347224;
-          Result.Lon := 14.550567;
+          Result.Lon := 52.347224;
+          Result.Lat := 14.550567;
          end;
       'frankfurt am main':
         begin
-          Result.Lat  := 50.110922;
-          Result.Lon := 8.6821270;
+          Result.Lon := 50.110922;
+          Result.Lat := 8.6821270;
          end;
       'freiburg im breisgau':
         begin
-          Result.Lat  := 47.999008;
-          Result.Lon := 7.8421040;
+          Result.Lon := 47.999008;
+          Result.Lat := 7.8421040;
          end;
       'görlitz':
         begin
-          Result.Lat  := 51.150627;
-          Result.Lon := 14.968707;
+          Result.Lon := 51.150627;
+          Result.Lat := 14.968707;
          end;
       'göttingen':
         begin
-          Result.Lat  := 51.541280;
-          Result.Lon := 9.9158040;
+          Result.Lon := 51.541280;
+          Result.Lat := 9.9158040;
          end;
       'gütersloh':
         begin
-          Result.Lat  := 51.903238;
-          Result.Lon := 8.3857530;
+          Result.Lon := 51.903238;
+          Result.Lat := 8.3857530;
          end;
       'gelsenkirchen':
         begin
-          Result.Lat  := 51.517744;
-          Result.Lon := 7.0857170;
+          Result.Lon := 51.517744;
+          Result.Lat := 7.0857170;
          end;
       'gera':
         begin
-          Result.Lat  := 50.885071;
-          Result.Lon := 12.080720;
+          Result.Lon := 50.885071;
+          Result.Lat := 12.080720;
          end;
       'graz':
         begin
-          Result.Lat  := 47.070714;
-          Result.Lon := 15.439504;
+          Result.Lon := 47.070714;
+          Result.Lat := 15.439504;
          end;
       'hagen':
         begin
-          Result.Lat  := 51.367078;
-          Result.Lon := 7.4632840;
+          Result.Lon := 51.367078;
+          Result.Lat := 7.4632840;
          end;
       'halle (saale)':
         begin
-          Result.Lat  := 51.496980;
-          Result.Lon := 11.968803;
+          Result.Lon := 51.496980;
+          Result.Lat := 11.968803;
          end;
       'hamburg':
         begin
-          Result.Lat  := 53.551085;
-          Result.Lon := 9.9936820;
+          Result.Lon := 53.551085;
+          Result.Lat := 9.9936820;
          end;
       'hamm':
         begin
-          Result.Lat  := 51.673858;
-          Result.Lon := 7.8159820;
+          Result.Lon := 51.673858;
+          Result.Lat := 7.8159820;
          end;
       'hannover':
         begin
-          Result.Lat  := 52.375892;
-          Result.Lon := 9.7320100;
+          Result.Lon := 52.375892;
+          Result.Lat := 9.7320100;
          end;
       'haunau':
         begin
-          Result.Lat  := 60.791660;
-          Result.Lon := 22.903331;
+          Result.Lon := 60.791660;
+          Result.Lat := 22.903331;
          end;
       'heidelberg':
         begin
-          Result.Lat  := 49.398752;
-          Result.Lon := 8.6724340;
+          Result.Lon := 49.398752;
+          Result.Lat := 8.6724340;
          end;
       'heilbronn':
         begin
-          Result.Lat  := 49.142693;
-          Result.Lon := 9.2108790;
+          Result.Lon := 49.142693;
+          Result.Lat := 9.2108790;
          end;
       'herne':
         begin
-          Result.Lat  := 51.536895;
-          Result.Lon := 7.2009150;
+          Result.Lon := 51.536895;
+          Result.Lat := 7.2009150;
          end;
       'hildesheim':
         begin
-          Result.Lat  := 52.154778;
-          Result.Lon := 9.9579650;
+          Result.Lon := 52.154778;
+          Result.Lat := 9.9579650;
          end;
       'ingolstadt':
         begin
-          Result.Lat  := 48.766535;
-          Result.Lon := 11.425754;
+          Result.Lon := 48.766535;
+          Result.Lat := 11.425754;
          end;
       'jena':
         begin
-          Result.Lat  := 50.927054;
-          Result.Lon := 11.589237;
+          Result.Lon := 50.927054;
+          Result.Lat := 11.589237;
          end;
       'köln':
         begin
-          Result.Lat  := 50.937531;
-          Result.Lon := 6.9602790;
+          Result.Lon := 50.937531;
+          Result.Lat := 6.9602790;
          end;
       'königs wusterhausen':
         begin
-          Result.Lat  := 52.295891;
-          Result.Lon := 13.622838;
+          Result.Lon := 52.295891;
+          Result.Lat := 13.622838;
          end;
       'kaiserslautern':
         begin
-          Result.Lat  := 49.440066;
-          Result.Lon := 7.7491260;
+          Result.Lon := 49.440066;
+          Result.Lat := 7.7491260;
          end;
       'karlsruhe':
         begin
-          Result.Lat  := 49.006890;
-          Result.Lon := 8.4036530;
+          Result.Lon := 49.006890;
+          Result.Lat := 8.4036530;
          end;
       'kassel':
         begin
-          Result.Lat  := 51.312711;
-          Result.Lon := 9.4797460;
+          Result.Lon := 51.312711;
+          Result.Lat := 9.4797460;
          end;
       'kiel':
         begin
-          Result.Lat  := 54.323293;
-          Result.Lon := 10.122765;
+          Result.Lon := 54.323293;
+          Result.Lat := 10.122765;
          end;
       'koblenz':
         begin
-          Result.Lat  := 50.356943;
-          Result.Lon := 7.5889960;
+          Result.Lon := 50.356943;
+          Result.Lat := 7.5889960;
          end;
       'krefeld':
         begin
-          Result.Lat  := 51.338761;
-          Result.Lon := 6.5853420;
+          Result.Lon := 51.338761;
+          Result.Lat := 6.5853420;
          end;
       'lübeck':
         begin
-          Result.Lat  := 53.865467;
-          Result.Lon := 10.686559;
+          Result.Lon := 53.865467;
+          Result.Lat := 10.686559;
          end;
       'leibzig':
         begin
-          Result.Lat  := 51.339695;
-          Result.Lon := 12.373075;
+          Result.Lon := 51.339695;
+          Result.Lat := 12.373075;
          end;
       'leverkusen':
         begin
-          Result.Lat  := 51.045925;
-          Result.Lon := 7.0192200;
+          Result.Lon := 51.045925;
+          Result.Lat := 7.0192200;
          end;
       'linz':
         begin
-          Result.Lat  := 48.306940;
-          Result.Lon := 14.285830;
+          Result.Lon := 48.306940;
+          Result.Lat := 14.285830;
          end;
       'ludwigsburg':
         begin
-          Result.Lat  := 48.894062;
-          Result.Lon := 9.1954640;
+          Result.Lon := 48.894062;
+          Result.Lat := 9.1954640;
          end;
       'ludwigshafen am rhein':
         begin
-          Result.Lat  := 49.477410;
-          Result.Lon := 8.4451800;
+          Result.Lon := 49.477410;
+          Result.Lat := 8.4451800;
          end;
       'mönchengladbach':
         begin
-          Result.Lat  := 51.180457;
-          Result.Lon := 6.4428040;
+          Result.Lon := 51.180457;
+          Result.Lat := 6.4428040;
          end;
       'mülheim an der ruhr':
         begin
-          Result.Lat  := 51.418568;
-          Result.Lon := 6.8845230;
+          Result.Lon := 51.418568;
+          Result.Lat := 6.8845230;
          end;
       'münchen':
         begin
-          Result.Lat  := 48.135125;
-          Result.Lon := 11.581980;
+          Result.Lon := 48.135125;
+          Result.Lat := 11.581980;
          end;
       'münster':
         begin
-          Result.Lat  := 51.960665;
-          Result.Lon := 7.6261350;
+          Result.Lon := 51.960665;
+          Result.Lat := 7.6261350;
          end;
       'magdeburg':
         begin
-          Result.Lat  := 52.120533;
-          Result.Lon := 11.627624;
+          Result.Lon := 52.120533;
+          Result.Lat := 11.627624;
         end;
       'mainz':
         begin
-          Result.Lat  := 49.992862;
-          Result.Lon := 8.2472530;
+          Result.Lon := 49.992862;
+          Result.Lat := 8.2472530;
          end;
       'mannheim':
         begin
-          Result.Lat  := 49.487459;
-          Result.Lon := 8.4660390;
+          Result.Lon := 49.487459;
+          Result.Lat := 8.4660390;
          end;
       'moers':
         begin
-          Result.Lat  := 51.451604;
-          Result.Lon := 6.6408150;
+          Result.Lon := 51.451604;
+          Result.Lat := 6.6408150;
          end;
       'nürnberg':
         begin
-          Result.Lat  := 49.452102;
-          Result.Lon := 11.076665;
+          Result.Lon := 49.452102;
+          Result.Lat := 11.076665;
          end;
       'neuss':
         begin
-          Result.Lat  := 51.204197;
-          Result.Lon := 6.6879510;
+          Result.Lon := 51.204197;
+          Result.Lat := 6.6879510;
          end;
       'oberhausen':
         begin
-          Result.Lat  := 51.496334;
-          Result.Lon := 6.8637760;
+          Result.Lon := 51.496334;
+          Result.Lat := 6.8637760;
          end;
       'offenbach am main':
         begin
-          Result.Lat  := 50.095636;
-          Result.Lon := 8.7760840;
+          Result.Lon := 50.095636;
+          Result.Lat := 8.7760840;
          end;
       'oldenburg (oldb)':
         begin
-          Result.Lat  := 53.143450;
-          Result.Lon := 8.2145520;
+          Result.Lon := 53.143450;
+          Result.Lat := 8.2145520;
          end;
       'osnabrück':
         begin
-          Result.Lat  := 52.279911;
-          Result.Lon := 8.0471790;
+          Result.Lon := 52.279911;
+          Result.Lat := 8.0471790;
          end;
       'paderborn':
         begin
-          Result.Lat  := 51.718921;
-          Result.Lon := 8.7575090;
+          Result.Lon := 51.718921;
+          Result.Lat := 8.7575090;
          end;
       'pforzheim':
         begin
-          Result.Lat  := 48.892186;
-          Result.Lon := 8.6946290;
+          Result.Lon := 48.892186;
+          Result.Lat := 8.6946290;
          end;
       'pilsen':
         begin
-          Result.Lat  := 49.738431;
-          Result.Lon := 13.373637;
+          Result.Lon := 49.738431;
+          Result.Lat := 13.373637;
          end;
       'plauen':
         begin
-          Result.Lat  := 50.497613;
-          Result.Lon := 12.136868;
+          Result.Lon := 50.497613;
+          Result.Lat := 12.136868;
          end;
       'potsdam':
         begin
-          Result.Lat  := 52.390569;
-          Result.Lon := 13.064473;
+          Result.Lon := 52.390569;
+          Result.Lat := 13.064473;
          end;
       'prag':
         begin
-          Result.Lat  := 50.075538;
-          Result.Lon := 14.437800;
+          Result.Lon := 50.075538;
+          Result.Lat := 14.437800;
          end;
       'recklingshausen':
         begin
-          Result.Lat  := 51.614065;
-          Result.Lon := 7.1979450;
+          Result.Lon := 51.614065;
+          Result.Lat := 7.1979450;
          end;
       'regensburg':
         begin
-          Result.Lat  := 49.013430;
-          Result.Lon := 12.101624;
+          Result.Lon := 49.013430;
+          Result.Lat := 12.101624;
          end;
       'remscheid':
         begin
-          Result.Lat  := 51.178742;
-          Result.Lon := 7.1896960;
+          Result.Lon := 51.178742;
+          Result.Lat := 7.1896960;
          end;
       'reutlingen':
         begin
-          Result.Lat  := 48.506939;
-          Result.Lon := 9.2038040;
+          Result.Lon := 48.506939;
+          Result.Lat := 9.2038040;
          end;
       'rostock':
         begin
-          Result.Lat  := 54.092441;
-          Result.Lon := 12.099147;
+          Result.Lon := 54.092441;
+          Result.Lat := 12.099147;
          end;
       'saarbrücken':
         begin
-          Result.Lat  := 49.240157;
-          Result.Lon := 6.9969330;
+          Result.Lon := 49.240157;
+          Result.Lat := 6.9969330;
          end;
       'salzgitter':
         begin
-          Result.Lat  := 52.137866;
-          Result.Lon := 10.389913;
+          Result.Lon := 52.137866;
+          Result.Lat := 10.389913;
          end;
       'schwerin':
         begin
-          Result.Lat  := 53.635502;
-          Result.Lon := 11.401250;
+          Result.Lon := 53.635502;
+          Result.Lat := 11.401250;
          end;
       'siegen':
         begin
-          Result.Lat  := 50.883849;
-          Result.Lon := 8.0209590;
+          Result.Lon := 50.883849;
+          Result.Lat := 8.0209590;
          end;
       'solingen':
         begin
-          Result.Lat  := 51.165220;
-          Result.Lon := 7.0671160;
+          Result.Lon := 51.165220;
+          Result.Lat := 7.0671160;
          end;
       'stuttgart':
         begin
-          Result.Lat  := 48.775846;
-          Result.Lon := 9.1829320;
+          Result.Lon := 48.775846;
+          Result.Lat := 9.1829320;
          end;
       'ulm':
         begin
-          Result.Lat  := 48.401082;
-          Result.Lon := 9.9876080;
+          Result.Lon := 48.401082;
+          Result.Lat := 9.9876080;
          end;
       'würzburg':
         begin
-          Result.Lat  := 49.791304;
-          Result.Lon := 9.9533550;
+          Result.Lon := 49.791304;
+          Result.Lat := 9.9533550;
          end;
       'weimar':
         begin
-          Result.Lat  := 50.979493;
-          Result.Lon := 11.323544;
+          Result.Lon := 50.979493;
+          Result.Lat := 11.323544;
          end;
       'wien':
         begin
-          Result.Lat  := 48.208174;
-          Result.Lon := 16.373819;
+          Result.Lon := 48.208174;
+          Result.Lat := 16.373819;
          end;
       'wiesbaden':
         begin
-          Result.Lat  := 50.078218;
-          Result.Lon := 8.2397610;
+          Result.Lon := 50.078218;
+          Result.Lat := 8.2397610;
          end;
       'witten':
         begin
-          Result.Lat  := 51.443893;
-          Result.Lon := 7.3531970;
+          Result.Lon := 51.443893;
+          Result.Lat := 7.3531970;
          end;
       'wolfsburg':
         begin
-          Result.Lat  := 52.422650;
-          Result.Lon := 10.786546;
+          Result.Lon := 52.422650;
+          Result.Lat := 10.786546;
          end;
       'wuppertal':
         begin
-          Result.Lat  := 51.256213;
-          Result.Lon := 7.1507640;
+          Result.Lon := 51.256213;
+          Result.Lat := 7.1507640;
          end;
       'zeuthen':
         begin
-          Result.Lat  := 52.347652;
-          Result.Lon := 13.620762;
+          Result.Lon := 52.347652;
+          Result.Lat := 13.620762;
          end;
       'zwickau':
         begin
-          Result.Lat  := 50.710217;
-          Result.Lon := 12.473372;
+          Result.Lon := 50.710217;
+          Result.Lat := 12.473372;
          end;
      else
       raise Exception.Create('Fehler: Konnte Ort nicht finden!');
@@ -753,21 +753,28 @@ procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject);
   var
     StarMode: integer;
     HK: String;
+    PortableMode: boolean;
   begin
     with Frm_Spori do
       begin
         StarMode := CB_StrMode.ItemIndex;
         HK     := Ed_Nr.Text;
+        PortableMode := StrToBool(Options[ON_PortableMode]);
 
         DefaultOptions ();
         LoadOptions ();
 
-        ProgressStarMode(StarMode);
+        Frm_Spori.SetPortableMode(PortableMode);
+
+        Frm_Spori.ProgressStarMode(StarMode);
 
         Ed_Nr.Text := HK;
         ProgressNumber ();
       end;
   end;
+
+//PortableVersion
+//Fix Lat/lon
 
 procedure TFrm_Config.Bt_HtKyClick(Sender: TObject);
 begin
@@ -781,15 +788,15 @@ procedure TFrm_Config.Bt_ConClick(Sender: TObject);
 
 procedure TFrm_Config.CbBx_OrtEditingDone(Sender: TObject);
   var
-    Hilf:TKoord;
+    TempKoord: TKoord;
   begin
-    Hilf             := Koordinaten (CbBx_Ort.Caption);
-    FlSpEd_Lam.Value := Hilf.Lon;
-    FlSpEd_Phi.Value := Hilf.Lat;
+    TempKoord        := Koordinaten (CbBx_Ort.Caption);
+    FlSpEd_Lat.Value := TempKoord.Lat;
+    FlSpEd_Lon.Value := TempKoord.Lon;
 
     Frm_Spori.Options[ON_Place] := CbBx_Ort.Caption;
-    Frm_Spori.Options[ON_Lon]   := FloatToStr(FlSpEd_Phi.Value);
-    Frm_Spori.Options[ON_Lat]   := FloatToStr(FlSpEd_Lam.Value);
+    Frm_Spori.Options[ON_Lon]   := FloatToStr(TempKoord.Lon);
+    Frm_Spori.Options[ON_Lat]   := FloatToStr(TempKoord.Lat);
    end;
 
 procedure TFrm_Config.CBx_RateEditingDone(Sender: TObject);
@@ -814,25 +821,25 @@ procedure TFrm_Config.De_DayEditingDone(Sender: TObject);
     Frm_Spori.NoEntry := false;
    end;
 
-procedure TFrm_Config.FlSpEd_PhiEditingDone(Sender: TObject);
-  begin
-    Frm_Spori.Lb_Phi_G.Caption  := FloatToStr(FlSpEd_Phi.Value);
-    Frm_Spori.Lb_Phi_G1.Caption := FloatToStr(FlSpEd_Phi.Value);
+procedure TFrm_Config.FlSpEd_LatEditingDone(Sender: TObject);
+begin
+  Frm_Spori.Lb_Lat_G.Caption  := FloatToStr(FlSpEd_Lat.Value);
+  Frm_Spori.Lb_Lat_G1.Caption := FloatToStr(FlSpEd_Lat.Value);
 
-    Frm_Spori.Angle();
+  Frm_Spori.Angle ();
 
-    Frm_Spori.Options[ON_Lon] := FloatToStr(FlSpEd_Phi.Value);
-   end;
+  Frm_Spori.Options[ON_Lat] := FloatToStr(FlSpEd_Lat.Value);
+end;
 
-procedure TFrm_Config.FlSpEd_LamEditingDone(Sender: TObject);
-  begin
-    Frm_Spori.Lb_Lam_G.Caption  := FloatToStr(FlSpEd_Lam.Value);
-    Frm_Spori.Lb_Lam_G1.Caption := FloatToStr(FlSpEd_Lam.Value);
+procedure TFrm_Config.FlSpEd_LonEditingDone(Sender: TObject);
+begin
+  Frm_Spori.Lb_Lon_G.Caption  := FloatToStr(FlSpEd_Lon.Value);
+  Frm_Spori.Lb_Lon_G1.Caption := FloatToStr(FlSpEd_Lon.Value);
 
-    Frm_Spori.Angle ();
+  Frm_Spori.Angle ();
 
-    Frm_Spori.Options[ON_Lat] := FloatToStr(FlSpEd_Lam.Value);
-   end;
+  Frm_Spori.Options[ON_Lon] := FloatToStr(FlSpEd_Lon.Value);
+end;
 
 procedure TFrm_Config.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin

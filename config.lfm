@@ -2513,11 +2513,11 @@ object Frm_Config: TFrm_Config
     Top = 72
     Width = 810
     TabStop = False
-    ActivePage = TbSht_Con
+    ActivePage = TbSht_Alg
     Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 150
     ParentBiDiMode = False
-    TabIndex = 3
+    TabIndex = 0
     TabOrder = 1
     TabPosition = tpLeft
     Options = [nboShowCloseButtons, nboHidePageListPopup, nboShowAddTabButton]
@@ -3368,9 +3368,9 @@ object Frm_Config: TFrm_Config
       Caption = 'D'
       ClientHeight = 506
       ClientWidth = 767
-      object FlSpEd_Lam: TFloatSpinEdit
-        AnchorSideLeft.Control = Lbl_Lam
-        AnchorSideTop.Control = Lbl_Lam
+      object FlSpEd_Lat: TFloatSpinEdit
+        AnchorSideLeft.Control = Lbl_Lat
+        AnchorSideTop.Control = Lbl_Lat
         AnchorSideTop.Side = asrBottom
         Left = 73
         Height = 32
@@ -3384,38 +3384,38 @@ object Frm_Config: TFrm_Config
         Increment = 1
         MaxValue = 1000
         MinValue = -1000
-        OnEditingDone = FlSpEd_LamEditingDone
+        OnEditingDone = FlSpEd_LatEditingDone
         ParentFont = False
         TabOrder = 0
         Value = 13.604
       end
-      object Lbl_Lam: TLabel
+      object Lbl_Lat: TLabel
         AnchorSideLeft.Control = Lbl_Ort
         AnchorSideTop.Control = CbBx_Ort
         AnchorSideTop.Side = asrBottom
         Left = 60
         Height = 26
         Top = 137
-        Width = 72
+        Width = 77
         BorderSpacing.Top = 20
-        Caption = 'λ Lamda'
+        Caption = 'Lattitude'
         ParentColor = False
       end
-      object Lbl_Phi: TLabel
-        AnchorSideLeft.Control = Lbl_Lam
-        AnchorSideTop.Control = FlSpEd_Lam
+      object Lbl_Lon: TLabel
+        AnchorSideLeft.Control = Lbl_Lat
+        AnchorSideTop.Control = FlSpEd_Lat
         AnchorSideTop.Side = asrBottom
         Left = 60
         Height = 26
         Top = 230
-        Width = 45
+        Width = 86
         BorderSpacing.Top = 20
-        Caption = 'φ Phi'
+        Caption = 'Londitude'
         ParentColor = False
       end
-      object FlSpEd_Phi: TFloatSpinEdit
-        AnchorSideLeft.Control = Lbl_Phi
-        AnchorSideTop.Control = Lbl_Phi
+      object FlSpEd_Lon: TFloatSpinEdit
+        AnchorSideLeft.Control = Lbl_Lon
+        AnchorSideTop.Control = Lbl_Lon
         AnchorSideTop.Side = asrBottom
         Left = 73
         Height = 32
@@ -3429,19 +3429,19 @@ object Frm_Config: TFrm_Config
         Increment = 1
         MaxValue = 1000
         MinValue = -1000
-        OnEditingDone = FlSpEd_PhiEditingDone
+        OnEditingDone = FlSpEd_LonEditingDone
         ParentFont = False
         TabOrder = 1
         Value = 52.35
       end
-      object Img_Info_Lam: TImage
-        AnchorSideLeft.Control = Lbl_Lam
+      object Img_Info_Lat: TImage
+        AnchorSideLeft.Control = Lbl_Lat
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = Lbl_Lam
+        AnchorSideTop.Control = Lbl_Lat
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = Lbl_Redo
         AnchorSideBottom.Side = asrBottom
-        Left = 141
+        Left = 146
         Height = 16
         Top = 137
         Width = 16
@@ -3553,14 +3553,14 @@ object Frm_Config: TFrm_Config
           99DF5A3BFF0583F5BFE6564DA3BF0000000049454E44AE426082
         }
       end
-      object Img_Info_Phi: TImage
-        AnchorSideLeft.Control = Lbl_Phi
+      object Img_Info_Lon: TImage
+        AnchorSideLeft.Control = Lbl_Lon
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = Lbl_Phi
+        AnchorSideTop.Control = Lbl_Lon
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = Lbl_Redo
         AnchorSideBottom.Side = asrBottom
-        Left = 114
+        Left = 155
         Height = 16
         Top = 230
         Width = 16
