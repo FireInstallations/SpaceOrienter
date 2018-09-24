@@ -1672,15 +1672,18 @@ function wmm_Geomag (Value, Year, Month, Day: integer; Lon, Lat, Height: Real): 
     CoordGeodetic: MAGtype_CoordGeodetic;
     CoordSpherical: MAGtype_CoordSpherical;
   begin
-    TempDecimalSeparator := DecimalSeparator;
-    DecimalSeparator := '.';
-
     if not haveCoeffs then
       begin
 
       fname := (GetCurrentDir + PathDelim +'WMM.COF');
 
+      //to ensure to get the right DecimalSeparator.
+      TempDecimalSeparator := DefaultFormatSettings.DecimalSeparator;
+      DefaultFormatSettings.DecimalSeparator := '.';
+
       MAG_robustReadMagModels (fname, GeomagMagneticModel, epochs);
+
+      DefaultFormatSettings.DecimalSeparator := TempDecimalSeparator;
 
       if not (GeomagMagneticModel.ModelName = '') then
         begin
@@ -1774,8 +1777,6 @@ function wmm_Geomag (Value, Year, Month, Day: integer; Lon, Lat, Height: Real): 
     else
       r := PLERR_WRONGVALUE;
       end;
-
-    DecimalSeparator := TempDecimalSeparator;
 
     if (r = INFINITY) then
       r := 0.0;

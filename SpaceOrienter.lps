@@ -4,13 +4,13 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Default"/>
-    <Units Count="77">
+    <Units Count="79">
       <Unit0>
         <Filename Value="SpaceOrienter.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="16"/>
-        <UsageCount Value="102"/>
+        <UsageCount Value="112"/>
       </Unit0>
       <Unit1>
         <Filename Value="spaceorienter_haupt.pas"/>
@@ -21,12 +21,11 @@
         <UnitName Value="SpaceOrienter_Haupt"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="2332"/>
-        <CursorPos X="30" Y="2338"/>
-        <FoldState Value=" TL62H0N1 TCiKC3 T3qP0{Z4 piblY0{5]J0rEA51318"/>
-        <UsageCount Value="98"/>
+        <TopLine Value="1970"/>
+        <CursorPos X="31" Y="2020"/>
+        <FoldState Value=" TL62H TCiLC3 T3q10{Z012231 p0tH0T023 pl9v20+215 pjSoP4=7@"/>
+        <UsageCount Value="108"/>
         <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="config.pas"/>
@@ -35,9 +34,9 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Config"/>
-        <TopLine Value="962"/>
-        <CursorPos X="68" Y="973"/>
-        <UsageCount Value="98"/>
+        <TopLine Value="1012"/>
+        <CursorPos X="58" Y="1034"/>
+        <UsageCount Value="108"/>
         <Loaded Value="True"/>
       </Unit2>
       <Unit3>
@@ -46,7 +45,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="108"/>
       </Unit3>
       <Unit4>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\classes\classesh.inc"/>
@@ -54,15 +53,14 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="108"/>
       </Unit4>
       <Unit5>
         <Filename Value="requirements/planeph.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="PlanEph"/>
-        <EditorIndex Value="2"/>
-        <CursorPos X="23"/>
-        <UsageCount Value="98"/>
+        <EditorIndex Value="4"/>
+        <UsageCount Value="108"/>
         <Loaded Value="True"/>
       </Unit5>
       <Unit6>
@@ -71,23 +69,22 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="108"/>
       </Unit6>
       <Unit7>
         <Filename Value="requirements/synaser.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="557"/>
         <CursorPos X="20" Y="563"/>
-        <UsageCount Value="98"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="108"/>
       </Unit7>
       <Unit8>
         <Filename Value="C:\lazarus\lcl\editbtn.pas"/>
         <UnitName Value="EditBtn"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="17" Y="48"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="108"/>
       </Unit8>
       <Unit9>
         <Filename Value="C:\lazarus\lcl\customtimer.pas"/>
@@ -96,15 +93,15 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="98"/>
+        <UsageCount Value="108"/>
       </Unit9>
       <Unit10>
         <Filename Value="requirements/wmm.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="1662"/>
-        <CursorPos X="5" Y="1675"/>
-        <UsageCount Value="98"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="1659"/>
+        <CursorPos X="34" Y="1683"/>
+        <UsageCount Value="108"/>
         <Loaded Value="True"/>
       </Unit10>
       <Unit11>
@@ -113,7 +110,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit11>
       <Unit12>
         <Filename Value="E:\Destopordner\Privat\Programme\lazarus\fpc\3.0.0\source\rtl\objpas\math.pp"/>
@@ -121,7 +118,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit12>
       <Unit13>
         <Filename Value="C:\lazarus\lcl\include\buttoncontrol.inc"/>
@@ -129,7 +126,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit13>
       <Unit14>
         <Filename Value="C:\lazarus\lcl\include\wincontrol.inc"/>
@@ -137,7 +134,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit14>
       <Unit15>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\inc\systemh.inc"/>
@@ -145,7 +142,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit15>
       <Unit16>
         <Filename Value="C:\lazarus\lcl\interfaces\win32\win32lclintf.inc"/>
@@ -153,7 +150,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit16>
       <Unit17>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\filutilh.inc"/>
@@ -161,7 +158,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit17>
       <Unit18>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win\sysutils.pp"/>
@@ -169,7 +166,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit18>
       <Unit19>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\inc\varianth.inc"/>
@@ -177,7 +174,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit19>
       <Unit20>
         <Filename Value="C:\lazarus\lcl\comctrls.pp"/>
@@ -186,7 +183,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit20>
       <Unit21>
         <Filename Value="spaceorienter_haupt.lfm"/>
@@ -194,7 +191,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit21>
       <Unit22>
         <Filename Value="C:\lazarus\lcl\dialogs.pp"/>
@@ -203,7 +200,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit22>
       <Unit23>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\diskh.inc"/>
@@ -211,7 +208,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit23>
       <Unit24>
         <Filename Value="C:\lazarus\lcl\include\control.inc"/>
@@ -219,7 +216,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit24>
       <Unit25>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\objpas\sysutils\osutilsh.inc"/>
@@ -227,7 +224,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit25>
       <Unit26>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win\wininc\redef.inc"/>
@@ -235,7 +232,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit26>
       <Unit27>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win\wininc\struct.inc"/>
@@ -243,7 +240,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit27>
       <Unit28>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win\wininc\defines.inc"/>
@@ -251,7 +248,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit28>
       <Unit29>
         <Filename Value="C:\lazarus\lcl\controls.pp"/>
@@ -260,7 +257,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit29>
       <Unit30>
         <Filename Value="C:\lazarus\lcl\interfaces\win32\win32listsl.inc"/>
@@ -268,7 +265,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit30>
       <Unit31>
         <Filename Value="C:\lazarus\lcl\stdctrls.pp"/>
@@ -277,7 +274,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit31>
       <Unit32>
         <Filename Value="C:\lazarus\lcl\include\listitem.inc"/>
@@ -285,7 +282,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit32>
       <Unit33>
         <Filename Value="C:\lazarus\lcl\interfaces\win32\win32callback.inc"/>
@@ -293,7 +290,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit33>
       <Unit34>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win32\system.pp"/>
@@ -302,7 +299,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit34>
       <Unit35>
         <Filename Value="..\ \Ephemerides\demo\pas\PlanEph32.pas"/>
@@ -310,7 +307,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit35>
       <Unit36>
         <Filename Value="..\ \Ephemerides\lib\PlanEph32.pas"/>
@@ -318,7 +315,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit36>
       <Unit37>
         <Filename Value="PlanEph32.pas"/>
@@ -326,7 +323,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit37>
       <Unit38>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\win32\classes.pp"/>
@@ -335,7 +332,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit38>
       <Unit39>
         <Filename Value="C:\lazarus\fpc\3.0.0\source\rtl\fpmake.pp"/>
@@ -343,7 +340,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit39>
       <Unit40>
         <Filename Value="C:\lazarus\lcl\interfaces\win32\interfaces.pp"/>
@@ -352,7 +349,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit40>
       <Unit41>
         <Filename Value="bc\PlanEph32.lib"/>
@@ -360,7 +357,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit41>
       <Unit42>
         <Filename Value="requirements/VSOP/vsopsat.pas"/>
@@ -369,7 +366,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit42>
       <Unit43>
         <Filename Value="requirements/VSOP/vsopsata.pas"/>
@@ -378,7 +375,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit43>
       <Unit44>
         <Filename Value="requirements/VSOP/vsopsatb.pas"/>
@@ -387,7 +384,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit44>
       <Unit45>
         <Filename Value="requirements/VSOP/vsopsatc.pas"/>
@@ -396,7 +393,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit45>
       <Unit46>
         <Filename Value="requirements/VSOP/vsopsatd.pas"/>
@@ -405,7 +402,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit46>
       <Unit47>
         <Filename Value="requirements/VSOP/vsopsate.pas"/>
@@ -414,7 +411,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit47>
       <Unit48>
         <Filename Value="requirements/VSOP/vsopsune.pas"/>
@@ -423,7 +420,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit48>
       <Unit49>
         <Filename Value="requirements/VSOP/vsopura.pas"/>
@@ -432,7 +429,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit49>
       <Unit50>
         <Filename Value="requirements/VSOP/vsopuraa.pas"/>
@@ -441,7 +438,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit50>
       <Unit51>
         <Filename Value="requirements/VSOP/vsopurab.pas"/>
@@ -450,7 +447,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit51>
       <Unit52>
         <Filename Value="requirements/VSOP/vsopurac.pas"/>
@@ -459,7 +456,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit52>
       <Unit53>
         <Filename Value="requirements/VSOP/vsopurad.pas"/>
@@ -468,7 +465,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit53>
       <Unit54>
         <Filename Value="requirements/VSOP/vsopurae.pas"/>
@@ -477,7 +474,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit54>
       <Unit55>
         <Filename Value="requirements/VSOP/vsopven.pas"/>
@@ -486,7 +483,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit55>
       <Unit56>
         <Filename Value="requirements/VSOP/vsopvena.pas"/>
@@ -495,7 +492,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit56>
       <Unit57>
         <Filename Value="requirements/VSOP/vsopvenb.pas"/>
@@ -504,7 +501,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit57>
       <Unit58>
         <Filename Value="requirements/VSOP/vsopvenc.pas"/>
@@ -513,7 +510,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit58>
       <Unit59>
         <Filename Value="requirements/VSOP/vsopvend.pas"/>
@@ -522,7 +519,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit59>
       <Unit60>
         <Filename Value="requirements/VSOP/vsopvene.pas"/>
@@ -531,7 +528,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit60>
       <Unit61>
         <Filename Value="requirements/VSOP/vspopemb.pas"/>
@@ -540,7 +537,7 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="94"/>
+        <UsageCount Value="104"/>
       </Unit61>
       <Unit62>
         <Filename Value="config.lfm"/>
@@ -548,13 +545,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit62>
       <Unit63>
         <Filename Value="spaceorienter_haupt.lfm"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit63>
       <Unit64>
@@ -562,21 +559,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1849"/>
         <CursorPos X="14" Y="1872"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="13"/>
       </Unit64>
       <Unit65>
         <Filename Value="../Laz/fpcsrc/rtl/objpas/sysutils/sysutilh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="5"/>
         <CursorPos X="10" Y="29"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="11"/>
       </Unit65>
       <Unit66>
         <Filename Value="../Laz/fpcsrc/rtl/unix/sysunixh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="8"/>
         <CursorPos X="2" Y="30"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="3"/>
       </Unit66>
       <Unit67>
         <Filename Value="../Laz/lazarus/lcl/dialogs.pp"/>
@@ -584,45 +581,43 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="220"/>
         <CursorPos X="21" Y="46"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit67>
       <Unit68>
         <Filename Value="../Laz/lazarus/lcl/controls.pp"/>
         <UnitName Value="Controls"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="1672"/>
         <CursorPos X="14" Y="1695"/>
-        <UsageCount Value="22"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="23"/>
       </Unit68>
       <Unit69>
         <Filename Value="../Laz/fpcsrc/rtl/objpas/math.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="92"/>
         <CursorPos X="10" Y="116"/>
-        <UsageCount Value="14"/>
+        <UsageCount Value="13"/>
       </Unit69>
       <Unit70>
         <Filename Value="../Laz/fpcsrc/rtl/objpas/sysutils/sysstrh.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="3"/>
-        <CursorPos X="40" Y="27"/>
-        <UsageCount Value="14"/>
+        <TopLine Value="202"/>
+        <CursorPos X="10" Y="217"/>
+        <UsageCount Value="13"/>
       </Unit70>
       <Unit71>
         <Filename Value="../Laz/fpcsrc/rtl/objpas/sysutils/datih.inc"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="98"/>
         <CursorPos X="21" Y="120"/>
-        <UsageCount Value="24"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="25"/>
       </Unit71>
       <Unit72>
         <Filename Value="../Laz/lazarus/lcl/include/application.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2181"/>
         <CursorPos Y="2206"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit72>
       <Unit73>
         <Filename Value="../Laz/lazarus/lcl/lclintf.pas"/>
@@ -630,143 +625,165 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="42"/>
         <CursorPos X="3" Y="57"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="12"/>
       </Unit73>
       <Unit74>
         <Filename Value="../Laz/lazarus/lcl/include/customform.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="915"/>
         <CursorPos Y="940"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="11"/>
       </Unit74>
       <Unit75>
         <Filename Value="../Laz/fpcsrc/packages/rtl-objpas/src/inc/strutils.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="216"/>
         <CursorPos X="10" Y="240"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit75>
       <Unit76>
         <Filename Value="../Laz/fpcsrc/rtl/objpas/sysutils/sysinth.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="133"/>
-        <CursorPos X="3" Y="134"/>
-        <UsageCount Value="9"/>
+        <TopLine Value="22"/>
+        <CursorPos X="5" Y="37"/>
+        <UsageCount Value="10"/>
       </Unit76>
+      <Unit77>
+        <Filename Value="../Laz/fpcsrc/rtl/objpas/sysutils/diskh.inc"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="10" Y="18"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit77>
+      <Unit78>
+        <Filename Value="../Laz/fpcsrc/packages/rtl-extra/src/unix/clocale.pp"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="77"/>
+        <CursorPos X="6" Y="125"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit78>
     </Units>
-    <JumpHistory Count="28" HistoryIndex="27">
+    <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2299" TopLine="2263"/>
+        <Caret Line="1534" Column="57" TopLine="1328"/>
       </Position1>
       <Position2>
-        <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2298" TopLine="2263"/>
+        <Filename Value="config.pas"/>
+        <Caret Line="749" Column="26" TopLine="742"/>
       </Position2>
       <Position3>
-        <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2305" TopLine="2263"/>
+        <Filename Value="config.pas"/>
+        <Caret Line="759" Column="52" TopLine="742"/>
       </Position3>
       <Position4>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2306" TopLine="2264"/>
+        <Caret Line="1598" TopLine="1402"/>
       </Position4>
       <Position5>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="1781" TopLine="1731"/>
+        <Caret Line="2362" Column="80" TopLine="49"/>
       </Position5>
       <Position6>
-        <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2220" TopLine="2195"/>
+        <Filename Value="requirements/planeph.pas"/>
       </Position6>
       <Position7>
-        <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="1990" Column="32" TopLine="1816"/>
+        <Filename Value="requirements/wmm.pas"/>
+        <Caret Line="8" Column="32" TopLine="8"/>
       </Position7>
       <Position8>
-        <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="27" Column="160"/>
+        <Filename Value="requirements/wmm.pas"/>
+        <Caret Line="1683" Column="45" TopLine="1659"/>
       </Position8>
       <Position9>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="223" Column="16" TopLine="183"/>
+        <Caret Line="2349" Column="140" TopLine="303"/>
       </Position9>
       <Position10>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="225" Column="62" TopLine="184"/>
+        <Caret Line="1983" Column="8" TopLine="1965"/>
       </Position10>
       <Position11>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="1882" Column="49" TopLine="1838"/>
+        <Caret Line="1984" Column="7" TopLine="1966"/>
       </Position11>
       <Position12>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="1886" Column="98" TopLine="1845"/>
+        <Caret Line="1989" Column="39" TopLine="1730"/>
       </Position12>
       <Position13>
-        <Filename Value="requirements/planeph.pas"/>
-        <Caret Column="23"/>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1997" Column="16" TopLine="1897"/>
       </Position13>
       <Position14>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="717" Column="11" TopLine="362"/>
+        <Caret Line="1982" Column="33" TopLine="1958"/>
       </Position14>
       <Position15>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="706" Column="30" TopLine="618"/>
+        <Caret Line="359" Column="39" TopLine="332"/>
       </Position15>
       <Position16>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="372" Column="66" TopLine="342"/>
+        <Caret Line="372" Column="35" TopLine="335"/>
       </Position16>
       <Position17>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="706" Column="50" TopLine="349"/>
+        <Caret Line="1335" Column="7" TopLine="518"/>
       </Position17>
       <Position18>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2371" Column="44" TopLine="2329"/>
+        <Caret Line="334" Column="17" TopLine="312"/>
       </Position18>
       <Position19>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2421" Column="23" TopLine="2380"/>
+        <Caret Line="358" Column="52" TopLine="335"/>
       </Position19>
       <Position20>
-        <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2422" Column="23" TopLine="2397"/>
+        <Filename Value="config.pas"/>
+        <Caret Line="759" Column="13" TopLine="742"/>
       </Position20>
       <Position21>
-        <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2421" Column="23" TopLine="2396"/>
+        <Filename Value="config.pas"/>
+        <Caret Line="1035" Column="49" TopLine="1033"/>
       </Position21>
       <Position22>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2427" Column="23" TopLine="2402"/>
+        <Caret Line="58" Column="7" TopLine="34"/>
       </Position22>
       <Position23>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2335" Column="44" TopLine="2331"/>
+        <Caret Line="60" Column="16" TopLine="34"/>
       </Position23>
       <Position24>
-        <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2343" Column="13" TopLine="2331"/>
+        <Filename Value="config.pas"/>
+        <Caret Line="1030" Column="32" TopLine="1012"/>
       </Position24>
       <Position25>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="715" Column="59" TopLine="361"/>
+        <Caret Line="582" Column="36" TopLine="537"/>
       </Position25>
       <Position26>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="711" Column="83" TopLine="361"/>
+        <Caret Line="638" Column="41" TopLine="604"/>
       </Position26>
       <Position27>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2362" Column="23" TopLine="2338"/>
+        <Caret Line="650" Column="45" TopLine="626"/>
       </Position27>
       <Position28>
         <Filename Value="spaceorienter_haupt.pas"/>
-        <Caret Line="2344" Column="63" TopLine="2328"/>
+        <Caret Line="1013" Column="43" TopLine="989"/>
       </Position28>
+      <Position29>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="1202" Column="49" TopLine="1178"/>
+      </Position29>
+      <Position30>
+        <Filename Value="spaceorienter_haupt.pas"/>
+        <Caret Line="2025" Column="19" TopLine="1970"/>
+      </Position30>
     </JumpHistory>
   </ProjectSession>
   <Debugging>

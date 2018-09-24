@@ -297,8 +297,9 @@ type
    {$IfDEF Windows}
      //, windows, ShellApi;
    {$ELSE IFDEF UNIX}
+    , clocale
      //,unix,baseunix
-     //,lclintf;
+     //,lclintf
     ;
   {$ENDIF}
 
@@ -329,7 +330,7 @@ var
       ON_ComPort,
       ON_BaudRate,
       ON_AutoValueMode,
-      ON_AutoCntrlMode,
+      ON_UseHotkey,
       ON_HotKey,
       ON_StarMode,
       ON_Body,
@@ -341,7 +342,6 @@ var
     TFrm_Spori = class(TForm)
         BBt_Anfahren: TBitBtn;
         Bt_BebList: TButton;
-        Bt_EinstZuRS: TButton;
         Bt_LoList: TButton;
         Bt_ResList: TButton;
         Bt_Start: TButton;
@@ -366,7 +366,6 @@ var
         GB_List: TGroupBox;
         Gb_Mswg: TGroupBox;
         GB_Soll: TGroupBox;
-        GB_Weiteres: TGroupBox;
         Gb_Wink: TGroupBox;
         Gb_Wink1: TGroupBox;
         GB_Zeit: TGroupBox;
@@ -504,12 +503,10 @@ var
         TbS_Inter: TTabSheet;
         TbS_Lag: TTabSheet;
         TbS_StLst: TTabSheet;
-        TgB_AutoWert: TToggleBox;
         Tmr_GetData: TTimer;
         Tmr_Nach: TTimer;
         Tmr_Berech: TTimer;
         TbS_Ephi: TTabSheet;
-        procedure Bt_EinstZuRSClick(Sender: TObject);
         procedure Bt_LoListClick(Sender: TObject);
         procedure Bt_ResListClick(Sender: TObject);
         procedure Bt_BebListClick(Sender: TObject);
@@ -544,7 +541,6 @@ var
         procedure Tmr_BerechTimer(Sender: TObject);
         procedure Tmr_GetDataTimer(Sender: TObject);
         procedure Tmr_NachTimer(Sender: TObject);
-        procedure TgB_AutoWertChange(Sender: TObject);
       private
         {Compaires two strings and compute the sameness in percent
         The boolean  does that what it's name say: it determine if StrCompaire is casesensitive}
@@ -563,21 +559,8 @@ var
         {Result is the DefaultValue of the given OptionName.
          Warning: every new Option have to be listed here!}
         function  GetDefaultOption (const OptnName: TOptionNames): String;
-        {Load Saved Options, if there is no file, create default otions will be created.
-         Warning: ervery New Option must loaded here!}
-        function  LoadOptions (const LoadFromFile: Boolean = true): Boolean;
-        {Does what it say, progress messages until the time is over}
-        procedure Delay(Milliseconds: DWORD);
-        {Resets the OptionsFile}
-        procedure DefaultOptions ();
-        {Resets the StarListFile}
-        procedure DefaultList ();
-        {Tell the mainform what starmode was selected}
-        procedure ProgressStarMode (const Mode: byte; Save: Boolean = true);
         {Try to tell the Rest of the mainform what star was selecet by a given Item}
         procedure ProgressList (const Item:TListItem);
-        {Try to tell the Rest of the mainform what star was selecet by a given Number}
-        procedure ProgressNumber (Normal:Boolean = true);
         {calculate the First Point of Aries}
         procedure Fruehpunkt ();
         procedure SternLage();
@@ -586,8 +569,14 @@ var
 
 
         var
+          DefaultPath,
+          DefaultOptionsPath,
+          DefaultOldOptionsPath,
+          DefaultListPath,
+          DefaultOldListPath: String;
+          OwnDir: String;
+
           ser: TBlockSerial;
-          DefaultPath: String;
           FirstRun: Boolean;
       public
         Options: Array[TOptionNames] of String;
@@ -595,17 +584,38 @@ var
         DiffT:       TTime;
         NoEntry:     Boolean;
 
+        {Does what it say, progress messages until the time is over}
+        procedure Delay(Milliseconds: DWORD);
+
+        {Resets the StarListFile}
+        procedure DefaultList ();
+        {Tell the mainform what starmode was selected}
+        procedure ProgressStarMode (const Mode: byte; Save: Boolean = true);
+
+        {Resets the OptionsFile}
+        procedure DefaultOptions ();
+        {Load Saved Options, if there is no file, create default otions will be created.
+         Warning: ervery New Option must loaded here!}
+        function  LoadOptions (const LoadFromFile: Boolean = true): Boolean;
+        {Sets the pathes to ProtableMode and back}
+        procedure SetPortableMode(IsActive: Boolean);
+
         {Try to find all possible ComPorts}
         procedure GetComPorts ();
-        {Try to connect to the Ardoino via comport}
+        {Try to connect to the Arduino via comport}
         function  Connect (TryAll: Boolean = false):Boolean;
+
         {Tell the forms, if ExpertMode was activated}
         procedure ProgressExpertMode (Save: Boolean = true);
+        {Try to tell the Rest of the mainform what star was selecet by a given Number}
+        procedure ProgressNumber (Normal:Boolean = true);
+
         {Update the App; work in progress}
         procedure Update_ ();
         {Transfer lon, lat to Rad}
         procedure Angle ();
 
+        {Sends Data to the Arduino}
         procedure SendData ();
       end;
 
@@ -616,43 +626,9 @@ implementation
 
 {$R *.lfm}
 
-  {
-  #*-+-~-+-*-+-~-{Spaceorienter Options}-~-+-*-+-~-~-*
-  #|Please change only, if you know what you are doing!    |
-  #|                                                       |
-  #|Timeformat: DD.MM.YYYY or SS:NN:HH                     |
-  #|                                                       |
-  #|Note: If you make changes to this file while the       |
-  #|application is running, the changes will be overwritten|
-  #|when the application exits.                            |
-  #*-------------------------------------------------------*
-  #
-"Version":       "0.0.0.2"
-"PortableMode":  "False"
-"ExpertMode":    "False"
-"UpdateMode":    "0"
-"UpdateRate":    "1"
-"UpdateDay":     "6"
-"UpdateTime":    "01:09:55"
-"ReDo":          "True"
-"Place":         "Zeuthen"
-"Lon":           "52,345"
-"Lat":           "13,604"
-"AutoTimeMode":  "True"
-"Date":          "01.01.2018"
-"BackToFuture":  "eslaf"
-"Time":          "01:01:01"
-"AutoComMode":   "False"
-"ComPort":       "0"
-"BaudRate":      "9600"
-"AutoValueMode": "True"
-"AutoCntrlMode": "False"
-"HotKey":        "Q"
-"StarMode":      "0"
-"Body":          "0"
-"Langue":        "German"}
+  { Frm_Spori }
 
-function  TFrm_Spori.StrCompaire (str1, str2: string; const CaseSensitive: Boolean = true): Real;  {$ifdef SYSUTILSINLINE}inline;{$endif}  //Done?
+function  TFrm_Spori.StrCompaire (str1, str2: string; const CaseSensitive: Boolean = true): Real;  //Done?
   type
     TCharList = Record
       Chara: Char;
@@ -809,18 +785,16 @@ function  TFrm_Spori.FindOption(const Str: String): ShortInt; //Done
       end;
   end;
 
-	     if TryStrToInt (Tausch, Help) and TryStrToInt (Merke, Help) then
-	       if StrToInt (Tausch) > StrToInt (Merke) then
-	         begin
-		   Tausch:=Stars[Index_L];
-		   Stars[Index_L]:=Stars[Index_R];
-		   Stars[Index_R]:=Tausch;
-                   Sortet:=false;
-         	  end;
-	     Inc (Index_L);
-            end;
-	 Dec(Index_R);
-       until Sortet;
+procedure TFrm_Spori.GetComPorts (); //ToDo: look Up how Arduino IDE gets the ports
+  var
+    Ports: TStrings;
+    i : integer;
+  begin
+    //initialize
+    Ports := TStringList.create;
+    Ports.Clear;
+    Ports.Delimiter       := ',';
+    Ports.StrictDelimiter := True; // Requires D2006 or newer
 
        for index:=0 to Stars.count-1 do
          if not (Trim(Stars[index])[1] = '#') or (Trim(Stars[index]) = '') then
@@ -835,16 +809,24 @@ function  TFrm_Spori.FindOption(const Str: String): ShortInt; //Done
                  Merke:=Trim(copy(Stars[index],Help+1,Index_L-1-Help));
                  Item.SubItems.Add(Merke);
 
-                 if Index_R = 1 then
-                   if CB_HK.Items.IndexOf(AnsiLowerCase(Merke)) < 0 then
-                     CB_HK.Items.Add(AnsiLowerCase(Merke));
+    // if ports where found, put then into the ComboBox list
+    if (Ports.Count > 0) then
+      with Frm_Config.CmbBx_ComPort.Items do
+        begin
+          BeginUpdate;
+          try
+             AddStrings(Ports, true);
+          finally
+            EndUpdate;
+          end;
+        end;
 
                  if Index_R = 3 then
                    if CB_StB.Items.IndexOf(AnsiLowerCase(Merke)) < 0 then
                      if (Merke <> '-') and (AnsiLowerCase(Merke) <> 'unsichtbar') and (Merke <> '')then
                        CB_StB.Items.Add(AnsiLowerCase(Merke));
 
-function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect Ardoinotype (and if it is the Spori); Test TryAll
+function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect Arduinotype (and if it is the Spori); Test TryAll
   var
     Port: String;
     Baud: integer;
@@ -870,13 +852,13 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
       end;
 
     if not TryStrToInt(Frm_Config.CmbBx_Baud.Caption, Baud) then
-      Baud := 9600; //DefaultValue, shoud work, if there was no change at the Ardoino
+      Baud := 9600; //DefaultValue, shoud work, if there was no change at the Arduino
 
     if TryAll then
       begin
         //ser := TBlockSerial.Create;
 
-        for Port in Frm_Config.CmbBx_ComP.Items do
+        for Port in Frm_Config.CmbBx_ComPort.Items do
           begin
             ser.Connect(Port);
             //ShowMessage(Port);
@@ -887,7 +869,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
 
             if (ser.InstanceActive) then
               begin
-                Frm_Config.CmbBx_ComP.Caption := Port;
+                Frm_Config.CmbBx_ComPort.Caption := Port;
                 break;
               end
             else
@@ -899,7 +881,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
       end
     else
       begin
-        ser.Connect(Frm_Config.CmbBx_ComP.Caption);
+        ser.Connect(Frm_Config.CmbBx_ComPort.Caption);
         //ser.Connect('/dev/ttyACM0');
         Delay(700);
         ser.config(Baud, 8, 'N', SB1, False, False);
@@ -917,7 +899,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
           Img_ComInfo.Visible := false;
           Img_ComWarn.Visible := false;
           Lbl_Ardo.Visible    := true;
-          Lbl_Ardo.Caption     := 'Ardoino Leonardo'; //Defaultvalue
+          Lbl_Ardo.Caption     := 'Arduino Leonardo'; //Defaultvalue
         end
       else
         begin
@@ -966,7 +948,6 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
      Item:   TListItem;
      Sortet: Boolean;
      Tempproperty:  String;
-     DefaultPathList: String;
      BtChoosen: integer = 0;
 
      {If there is no command or emty line and the left Number is bigger swap then.
@@ -1040,12 +1021,11 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
 
   begin
     //initialize
-    DefaultPathList := DefaultPath + PathDelim  + 'StarList.Space';
     Result  := true;
     counter := 0;
     Stars   := TStringlist.create;
 
-    if (Path = DefaultPathList) and not FileExists(DefaultPathList) then
+    if (Path = DefaultListPath) and not FileExists(DefaultListPath) then
       DefaultList ();
 
     try
@@ -1113,19 +1093,19 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
 
            end;
 
-      if (Path <> DefaultPathList) then  //Save it, if it doesnt come forme the defaultpath
+      if (Path <> DefaultListPath) then  //Save it, if it doesnt come forme the defaultpath
             begin
               BTChoosen := 0;
 
               repeat
                 try
-                  if FileExists(DefaultPathList) then
+                  if FileExists(DefaultListPath) then
                     begin
-                      ForceDirectories (Defaultpath + PathDelim + 'OldLists');
-                      RenameFile (DefaultPathList, Defaultpath + PathDelim + 'OldLists' + PathDelim + ' StarList'+formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
+                      ForceDirectories (DefaultOldListPath);
+                      RenameFile (DefaultListPath, DefaultOldListPath + PathDelim + ' StarList'+formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
                     end;
 
-                  Stars.SaveToFile(DefaultPathList);
+                  Stars.SaveToFile(DefaultListPath);
                 except
                   BTChoosen := MessageDlg('Error:' + Slinebreak +   // Let the User decide if we retry or not
                                           ' Fehler beim schreiben der SternenListe!' + slinebreak +
@@ -1154,12 +1134,12 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
       Case BTChoosen of
         mrOk:
           begin
-            if FileExists(DefaultPathList) then
+            if FileExists(DefaultListPath) then
               begin
-                ForceDirectories (Defaultpath + PathDelim + 'OldLists');
-                RenameFile (DefaultPathList, Defaultpath + PathDelim + 'OldLists' + PathDelim + ' StarList'+formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
+                ForceDirectories (DefaultOldListPath);
+                RenameFile (DefaultListPath, DefaultOldListPath + PathDelim + ' StarList'+formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
               end;
-            Result := LoadStarList(DefaultPathList); //it will create a defaultfile by its own
+            Result := LoadStarList(DefaultListPath); //it will create a defaultfile by its own
           end;
         mrAbort:
           Result := false;
@@ -1194,7 +1174,7 @@ function  TFrm_Spori.GetDefaultOption (const OptnName: TOptionNames): String; //
       ON_ComPort:       Result := 'Com0';
       ON_BaudRate:      Result := '9600';
       ON_AutoValueMode: Result := 'True';
-      ON_AutoCntrlMode: Result := 'False';
+      ON_UseHotkey:     Result := 'False';
       ON_HotKey:        Result := 'Q';
       ON_StarMode:      Result := '0';
       ON_Body:          Result := '0';
@@ -1203,7 +1183,7 @@ function  TFrm_Spori.GetDefaultOption (const OptnName: TOptionNames): String; //
 
   end;
 
-function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Update, Version, Hotkey, Langue Comments
+function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Version; Langue; Comments; if one Option was not found set to default
   var
      LoadList: Tstringlist;
 
@@ -1218,20 +1198,19 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
      TempFloat: Real;
 
      ErrorMessage:String = '';
-     DefaultPathO: String;
   begin
     //initialize
-    DefaultPathO := DefaultPath + PathDelim + 'Options.Space';
+
     LoadList := Tstringlist.Create;
     Result      := true;
 
-    if LoadFromFile then
+    if LoadFromFile then //switch, to not load from file, if one special Option was set to default (see below)
       begin
-        if not FileExists (DefaultPathO) then
+        if not FileExists (DefaultOptionsPath) then
             DefaultOptions();
 
         try
-          LoadList.LoadFromFile(DefaultPathO);
+          LoadList.LoadFromFile(DefaultOptionsPath);
 
           for i := LoadList.count -1 downto 0 do //Ignore commants and empty lines
             if (LoadList[i] = '') or (Trim(LoadList[i])[1] = '#') then
@@ -1264,7 +1243,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
 
             ON_PortableMode:
               if TryStrToBool(Options[j], Tempbool) then
-                Frm_Config.Sw_Port.Checked := Tempbool
+                Frm_Config.Sw_PortableMode.Checked := Tempbool
               else
                 ErrorMessage := 'Fehler in PortableMode-Ladevorgang: Falscher Datentyp' + sLineBreak +
                                 Options[j];
@@ -1288,7 +1267,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                       begin
                         Frm_Config.AllUpOff ();
                         Frm_Config.Img_Auto.Picture    := Frm_Config.Img_On.Picture;
-                        //Update_ ();
+                        Update_ ();
                       end;
                     1:
                       begin
@@ -1453,7 +1432,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
 
                     if not Tempbool then
                       if TryStrToInt(Options[ON_ComPort], i) then
-                        Frm_Config.CmbBx_ComP.Caption := Options[ON_ComPort];
+                        Frm_Config.CmbBx_ComPort.Caption := Options[ON_ComPort];
                     //Inc(j);
                   end
                 else
@@ -1474,20 +1453,32 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                 else
                  ErrorMessage := 'Fehler in WerteMode-Ladevorgang: Falscher DatenTyp';
 
-              ON_AutoCntrlMode:
+              ON_UseHotkey:
                 if TryStrToBool(Options[j], Tempbool) then
                   begin
-                    TgB_AutoWert.Checked := Tempbool;
+                    Frm_Config.Sw_HtKy.Checked := Tempbool;
 
                     if TempBool then
-                      TgB_AutoWert.Caption := 'Verwende Hotkey'
+                      begin
+                        Frm_Config.Lbl_Sw_HtKy.Caption := 'Ein';
+                        Frm_Config.Ed_HtKy.Enabled := true;
+                        Frm_Config.Bt_HtKy.Enabled := true;
+                      end
                     else
-                     TgB_AutoWert.Caption := 'Automatische Wertübergabe';
+                      begin
+                        Frm_Config.Lbl_Sw_HtKy.Caption := 'Aus';
+                        Frm_Config.Ed_HtKy.Enabled := false;
+                        Frm_Config.Bt_HtKy.Enabled := false;
+                      end;
                   end
                 else
                  ErrorMessage := 'Fehler in AnsteuerungMode-Ladevorgang: Falscher DatenTyp';
 
-              ON_HotKey:; //Not Implimented yet
+              ON_HotKey:
+               if (length(Options[j]) > 0) then
+                 Frm_Config.Ed_HtKy.Text := Options[j]
+               else
+                 Frm_Config.Ed_HtKy.Text := 'None';
 
               ON_StarMode:
                 if TryStrToInt(Options[j], i) then
@@ -1537,7 +1528,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
 
        if Result then
          begin
-           Result := LoadStarList(Defaultpath + PathDelim + 'StarList.Space');
+           Result := LoadStarList(DefaultListPath);
            ProgressNumber(False);
          end;
 
@@ -1557,6 +1548,26 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
       end;
      end;
    end;
+
+procedure TFrm_Spori.SetPortableMode (IsActive: Boolean); //ToDo: CleanUp after Mode has changed
+  begin
+    if IsActive then //PortableMode uses just the dir where the binary is located
+      DefaultPath := OwnDir
+    else     //while non PortableMode uses a different path, to hide files
+      {$IfDef Windows}
+        DefaultPath := 'C:\ProgramData\FireInstallations\SpaceOrienter';
+      {$Else}
+         DefaultPath := GetAppConfigDir(false);
+      {$EndIf Windows}
+
+    {Sets all the pathes where DefaultPath is used}
+    DefaultOptionsPath    := DefaultPath + PathDelim + 'Options.Space';
+    DefaultOldOptionsPath := DefaultPath + PathDelim + 'OldOptions';
+    DefaultListPath       := DefaultPath + PathDelim + 'StarList.Space';
+    DefaultOldListPath    := DefaultPath + PathDelim + 'OldLists';
+
+    SetCurrentDir(DefaultPath);
+  end;
 
 procedure TFrm_Spori.Delay(Milliseconds: DWORD); //Done
   var
@@ -1600,21 +1611,21 @@ procedure TFrm_Spori.DefaultOptions (); //Done
         end;
 
     try  //Save them
-      if FileExists (DefaultPath + PathDelim + 'Options.Space')  then    //if a file already exits move it
+      if FileExists (DefaultOptionsPath)  then    //if a file already exits move it
         begin
-          ForceDirectories (Defaultpath + PathDelim + 'OldOptions');
-          RenameFile (Defaultpath + PathDelim + 'OldOptions', Defaultpath + PathDelim + 'OldOptions' + PathDelim + 'Options'+formatdatetime('d.m.y-h;n;s;z', Now)+'.old');
+          ForceDirectories (DefaultOldOptionsPath);
+          RenameFile (DefaultOptionsPath, DefaultOldOptionsPath + PathDelim + 'Options'+formatdatetime('d.m.y-h;n;s;z', Now)+'.old');
         end
       else
         ForceDirectories (DefaultPath);
 
-      SaveStrings.SaveToFile (DefaultPath + PathDelim + 'Options.Space');
+      SaveStrings.SaveToFile (DefaultOptionsPath);
     finally
       FreeAndNil(SaveStrings);
     end;
   end;
 
-procedure TFrm_Spori.DefaultList ();  //ToDo: put this into it's own File; Del old lists
+procedure TFrm_Spori.DefaultList ();  //ToDo: put this into it's own File
   var
      List:TStringList;
   begin
@@ -1729,51 +1740,59 @@ procedure TFrm_Spori.DefaultList ();  //ToDo: put this into it's own File; Del o
       List.Add('96;Mond;-;-;Ephemeride;-;-;-;-;');
       List.Add('97;Sonne;-;-;Ephemeride;-;-;-;-;');
 
-      ForceDirectories (DefaultPath);   // and save them
-      List.SaveToFile (DefaultPath + PathDelim + 'StarList.Space');
+
+      if FileExists(DefaultListPath) then  //remove old ones
+        begin
+          ForceDirectories (DefaultOldListPath);
+          RenameFile (DefaultListPath, DefaultOldListPath + PathDelim + 'StarList'+formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
+        end
+      else
+        ForceDirectories (DefaultPath);
+
+      List.SaveToFile (DefaultListPath); // and save them
 
     finally
       List.Free;
      end;
    end;
 
-procedure TFrm_Spori.ProgressStarMode (const Mode: byte; Save: Boolean = true); //TODO: ModeNameToInt  --> implement search; Translate Comments
+procedure TFrm_Spori.ProgressStarMode (const Mode: byte; Save: Boolean = true); //TODO: implement search
 begin
   if Save then  //if a new Mode is seleced save it
     Options[ON_StarMode] := IntToStr(Mode);
 
   case Mode of
-    0: //'normal'
+    0: //normal
       begin
         CB_StrMode.Text  := 'Normal';
         Mmo_Bsbg.Text    := 'Peilt den ausgewählten Himmelskörper / die ausgewählte Position an.';
         Tmr_Nach.Enabled := false;
        end;
-    1: //'nachfuehren'
+    1: // follow
       begin
         CB_StrMode.Text  := 'Nachführen';
         Mmo_Bsbg.Text    := 'Peilt den ausgewählten Himmelskörper an und verfolgt diesen auf dem Himmel';
         Tmr_Nach.Enabled := true;
        end;
-    2: //'erkennen'
+    2: //scan
       begin
         CB_StrMode.Text  := 'Erkennen';
         Mmo_Bsbg.Text    := 'Sobald ein Himmelsköper (manuell) angestuert wurde, wird er identifiziert.';
         Tmr_Nach.Enabled := false;
        end;
-    4: //'ort':
+    4: //place
       begin
         CB_StrMode.Text  := 'Ort';
         Mmo_Bsbg.Text    := 'Gibt den eigenen Ort aus. '+#10+'Hierzu muss ein Himmelskörper angesteuert und richtig benannt werden.';
         Tmr_Nach.Enabled := false;
        end;
-    5: //'zeit'
+    5: //time
       begin
         CB_StrMode.Text  := 'Zeit';
         Mmo_Bsbg.Text    := 'Gibt die aktuelle Zeit aus. '+#10+'Hierzu muss ein Himmelskörper angesteuert und richtig benannt werden.';
         Tmr_Nach.Enabled := false;
        end;
-    6: //'sternbild'
+    6:  //collection
       begin
         if IsConstellation () then
           begin
@@ -1873,13 +1892,13 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
                                       mtError, [mbOk, mbIgnore], 0, mbRetry) of
           mrOk:
             begin
-              if FileExists(Defaultpath + PathDelim + 'StarList.Space') then
+              if FileExists(DefaultListPath) then
                 begin
-                  ForceDirectories (Defaultpath + PathDelim + 'OldLists');
-                  RenameFile (Defaultpath + PathDelim + 'StarList.Space', Defaultpath + PathDelim + 'OldLists' + PathDelim + ' StarList'+formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
+                  ForceDirectories (DefaultOldListPath);
+                  RenameFile (DefaultListPath, DefaultOldListPath + PathDelim + ' StarList'+formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
                 end;
 
-               LoadStarList(Defaultpath + PathDelim + 'StarList.Space'); //it will create a defaultfile by its own
+               LoadStarList(DefaultListPath); //it will create a defaultfile by its own
             end;
           mrIgnore:
             Result := false;
@@ -2191,18 +2210,43 @@ procedure TFrm_Spori.Tmr_BerechTimer(Sender: TObject);   //Reaktion auf manuelle
         Lb_Mon.Caption:= IntToStr(Monat);
         Lb_Jhr.Caption:= IntToStr(Jahr);
 
-procedure TFrm_Spori.FormCreate(Sender: TObject);
+procedure TFrm_Spori.FormCreate(Sender: TObject); //ToDo: are there cases where GetCurrentDir is not the own dir at beginnig?
+  var
+    i: word;
+    OptionsIndex: shortint;
+    TempOptions: TStringList;
+    PortableModeActive: Boolean;
   begin
     ser := TBlockSerial.Create;
     FirstRun := true;
+    OwnDir :=  GetCurrentDir();
 
-    {$IfDef Windows}
-      DefaultPath := 'C:\ProgramData\FireInstallations\SpaceOrienter';
-    {$Else IfDef Unix}
-       DefaultPath := GetAppConfigDir(false);
-    {$EndIf}
+    //if an optionsfile in the same dictionary exits load it and try to find a value for PortableMode
+    if FileExists(GetCurrentDir + PathDelim + 'Options.Space') then
+      begin
+        TempOptions := TStringList.create;
 
-    SetCurrentDir(DefaultPath);
+        Try
+          TempOptions.LoadFromFile(GetCurrentDir + PathDelim + 'Options.Space');
+
+          for i := 0 to pred(TempOptions.count) do
+            begin
+              OptionsIndex := FindOption(FindOptionName(TempOptions[i]));
+
+              if (OptionsIndex >= 0) and (TOptionNames(OptionsIndex) = ON_PortableMode) then   //if OptionName = 'PortableMode' (but this way sould be more robust, but slower though...)
+                begin
+                  if not TryStrToBool(FindOptionValue(TempOptions[i]), PortableModeActive) then
+                    PortableModeActive := false;      //default value;
+
+                  break;
+                end;
+            end
+        finally
+          FreeAndNil(TempOptions);
+        end;
+      end;
+
+    SetPortableMode(PortableModeActive);
 
   end;
 
@@ -2222,7 +2266,7 @@ procedure TFrm_Spori.FormCreate(Sender: TObject);
 
         SaveStrings := TStringlist.create;
 
-        if not FileExists (DefaultPath) then  //Default Options
+        if not FileExists (DefaultOptionsPath) then  //Default Options
           begin
 
             SaveStrings.Add('#*-+-~-+-\*/-+-~-{ Spaceorienter Options }-~-+-\*/-+-~-~+-*');
@@ -2247,7 +2291,7 @@ procedure TFrm_Spori.FormCreate(Sender: TObject);
 
             try
               ForceDirectories (DefaultPath);
-              SaveStrings.SaveToFile (DefaultPath + PathDelim +'Options.Space');
+              SaveStrings.SaveToFile (DefaultOptionsPath);
             finally
               SaveStrings.free;
             end;
@@ -2258,7 +2302,7 @@ procedure TFrm_Spori.FormCreate(Sender: TObject);
             SaveStrings.clear;
 
              try
-               LoadStrings.LoadFromFile(DefaultPath + PathDelim +'Options.Space');
+               LoadStrings.LoadFromFile(DefaultOptionsPath);
 
                for Line in LoadStrings do
                  begin
@@ -2276,7 +2320,7 @@ procedure TFrm_Spori.FormCreate(Sender: TObject);
 
                FreeAndNil(LoadStrings);
 
-               SaveStrings.SaveToFile (DefaultPath + PathDelim + 'Options.Space');
+               SaveStrings.SaveToFile (DefaultOptionsPath);
              finally
                 FreeAndNil(SaveStrings);
              end;
@@ -2537,7 +2581,7 @@ procedure TFrm_Spori.Tmr_GetDataTimer(Sender: TObject);
       begin
        StrIn := ser.Recvstring(20); //EleIst;AziIst;RohEleIst;RohAziIst
 
-      StrIn := StringReplace(StrIn, '.', DecimalSeparator, [rfReplaceAll]);
+      StrIn := StringReplace(StrIn, '.', DefaultFormatSettings.DecimalSeparator, [rfReplaceAll]);
 
       Endpos := Pos(';', StrIn);
       StrOut := Copy(StrIn, 1, pred(Endpos));
@@ -2595,27 +2639,15 @@ procedure TFrm_Spori.Tmr_GetDataTimer(Sender: TObject);
              ProgressList (SternBild[0]);
 
            end;
-          if TgB_AutoWert.Checked then
+          if not Frm_Config.Sw_HtKy.Checked then
             SendData ();
        end;
 
-    procedure TFrm_Spori.TgB_AutoWertChange(Sender: TObject); //Fertig
-      begin
-        if TgB_AutoWert.Checked then
-          begin
-            Options[ON_AutoCntrlMode] := 'True';
-            TgB_AutoWert.Caption := 'Verwende Hotkey';
-           end
-         else
-          begin
-            Options[ON_AutoCntrlMode] := 'False';
-            TgB_AutoWert.Caption := 'Automatische Wertübergabe';
-          end;
-       end;
-
-procedure TFrm_Spori.CB_StBEditingDone(Sender: TObject); //In Procedure Auslagern?
-  begin
-    if IstSternBild () then
+    procedure TFrm_Spori.CB_HKEditingDone(Sender: TObject); //In function auslagern?
+      var
+         Gefunden:Boolean;
+         Index,Index2:Integer;
+         Uebertrag:String;
       begin
         Tmr_Nach.Enabled:=true;
         CB_StrMode.Text:='Sternbild';
@@ -2667,33 +2699,11 @@ procedure TFrm_Spori.DE_FrhanfAcceptDate(Sender: TObject; var ADate: TDateTime; 
       end;
    end;
 
-    procedure TFrm_Spori.Bt_EinstZuRSClick(Sender: TObject); //Fertig
-      var
-         StMode, HK:String;
+    procedure TFrm_Spori.Bt_ResListClick(Sender: TObject); //Fertig
       begin
-        StMode := CB_StrMode.Text;
-        HK     := Ed_Nr.Text;
-
-        ForceDirectories ('C:\ProgramData\FireInstallations\SpaceOrienter\OldOptions');
-        RenameFile ('C:\ProgramData\FireInstallations\SpaceOrienter\Options.Space',
-                    'C:\ProgramData\FireInstallations\SpaceOrienter\OldOptions\Options'
-                    + formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
-        LoadOptions ();
-
-        MI_Sicht_Exp.Checked := true;
-        ProgressExpertMode ();
-
-        ProgressStarMode(StrToInt(StMode));
-
-        Ed_Nr.Text := HK;
-        ProgressNumber ();
+        DefaultList ();
+        LoadStarList (DefaultListPath);
        end;
-   end;
-
-procedure TFrm_Spori.Ed_Lamda_GEditingDone(Sender: TObject); //Fertig
-  begin
-    Lb_Lam_G.Caption:=Ed_Lamda_G.Text;
-    Lb_Lam_G1.Caption:=Ed_Lamda_G.Text;
 
     Winkel ();
 
@@ -2708,7 +2718,7 @@ procedure TFrm_Spori.Ed_Lamda_GEditingDone(Sender: TObject); //Fertig
 
     procedure TFrm_Spori.CB_StrModeChange(Sender: TObject); //Fertig
       begin
-        ProgressStarMode(StrToInt(CB_StrMode.Text));
+        ProgressStarMode(CB_StrMode.ItemIndex);
        end;
 
     procedure TFrm_Spori.CB_StBEditingDone(Sender: TObject); //In Procedure Auslagern?

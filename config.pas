@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, SpinEx, DateTimePicker, {SynEdit,} {SynCompletion,} {RTTICtrls,}
   Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   Buttons, EditBtn, Spin, ExtCtrls, MaskEdit, DBGrids, DbCtrls, ECImageMenu,
-  ECSwitch;
+  ECSwitch, ECEditBtns;
 
 type
 
@@ -21,16 +21,22 @@ type
   { TFrm_Config }
 
   TFrm_Config = class(TForm)
-    BitBtn_: TBitBtn;
+    BitBtn_NwCnfg: TBitBtn;
     Bt_Up: TButton;
     Bt_Con: TButton;
-    Button1: TButton;
+    Bt_HtKy: TButton;
     CBx_Rate: TComboBox;
     CBx_Tag: TComboBox;
     CbBx_Ort: TComboBox;
     CmbBx_Baud: TComboBox;
-    CmbBx_ComP: TComboBox;
-    Label1: TLabel;
+    CmbBx_ComPort: TComboBox;
+    ECEdBtn_Htky: TECSpeedBtnPlus;
+    Ed_HtKy: TEdit;
+    Img_Info_HtKy: TImage;
+    Lbl_HtKy: TLabel;
+    Lbl_NwCnfg: TLabel;
+    Lbl_Sw_HtKy: TLabel;
+    Sw_HtKy: TECSwitch;
     TE_Plan: TDateTimePicker;
     DE_Day: TDateTimePicker;
     TE_Time: TDateTimePicker;
@@ -47,12 +53,12 @@ type
     Img_CkB_On: TImage;
     Img_Info_Lam: TImage;
     Img_Info_Baud: TImage;
-    Img_Info_ComP: TImage;
+    Img_Info_ComPort: TImage;
     Img_Info_AutoCon: TImage;
     Img_Info_ManW: TImage;
     Img_Info_Phi: TImage;
     Img_Info_Ort: TImage;
-    Img_Info_Port: TImage;
+    Img_Info_PortableMode: TImage;
     Img_Info_Exprt: TImage;
     Img_Info_AutoTime: TImage;
     Img_Info_Con: TImage;
@@ -73,16 +79,16 @@ type
     Lbl_Ardo: TLabel;
     Lbl_ComMsg: TLabel;
     Lbl_Baud: TLabel;
-    Lbl_ComP: TLabel;
+    Lbl_ComPort: TLabel;
     Lbl_AutoCon: TLabel;
     Lbl_Con: TLabel;
     Lbl_Ort: TLabel;
-    Lbl_Sw_Port: TLabel;
+    Lbl_Sw_PortableMode: TLabel;
     Lbl_Sw_Exprt: TLabel;
     Lbl_Sw_AutoTime: TLabel;
     Lbl_Exprt: TLabel;
     Lbl_AutoTime: TLabel;
-    Lbl_Port: TLabel;
+    Lbl_PortableMode: TLabel;
     Lbl_Lam: TLabel;
     Lbl_Phi: TLabel;
     Lbl_Sw_Redo: TLabel;
@@ -102,7 +108,7 @@ type
     Pnl_ueber: TPanel;
     PgsB_ComCon: TProgressBar;
     Sw_ManW: TECSwitch;
-    Sw_Port: TECSwitch;
+    Sw_PortableMode: TECSwitch;
     Sw_Exprt: TECSwitch;
     Sw_Redo: TECSwitch;
     Sw_AutoTime: TECSwitch;
@@ -115,7 +121,10 @@ type
     TbSht_Up: TTabSheet;
     UpDn_test: TUpDown;
     UpDn_test1: TUpDown;
+    procedure BitBtn_NwCnfgClick(Sender: TObject);
+    procedure Ed_HtKyEditingDone(Sender: TObject);
     procedure Bt_Con1Click(Sender: TObject);
+    procedure Bt_HtKyClick(Sender: TObject);
     procedure Bt_UpClick(Sender: TObject);
     procedure Bt_ConClick(Sender: TObject);
     procedure CbBx_OrtEditingDone(Sender: TObject);
@@ -139,12 +148,12 @@ type
       {%H-}Shift: TShiftState; {%H-}X, {%H-}Y: Integer);
     procedure Lbl_Sw_AutoTimeClick(Sender: TObject);
     procedure Lbl_Sw_ExprtClick(Sender: TObject);
-    procedure Lbl_Sw_PortClick(Sender: TObject);
+    procedure Lbl_Sw_PortableModeClick(Sender: TObject);
     procedure Lbl_Sw_RedoClick(Sender: TObject);
     procedure Sw_AutoTimeChange(Sender: TObject);
     procedure Sw_ExprtChange(Sender: TObject);
     procedure Sw_ManWChange(Sender: TObject);
-    procedure Sw_PortChange(Sender: TObject);
+    procedure Sw_PortableModeChange(Sender: TObject);
     procedure Sw_AutoConChange(Sender: TObject);
     procedure Sw_RedoChange(Sender: TObject);
     procedure TE_PlanEditingDone(Sender: TObject);
@@ -175,7 +184,7 @@ uses
 // API für übersetzungen anlegen
 // StadtListe
 
-function TFrm_Config.Koordinaten (Stadt:String):TKoord; //Dynamisch, laden + Speichern ermöglichen
+function TFrm_Config.Koordinaten (Stadt:String):TKoord; //Dynamisch, laden + Speichern ermöglichen; own file
   begin
 //    ShowMessage(Stadt);
     case (Trim(AnsiLowerCase(Stadt))) of
@@ -735,6 +744,36 @@ begin
 
 end;
 
+procedure TFrm_Config.Ed_HtKyEditingDone(Sender: TObject);
+begin
+
+end;
+
+procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject);
+  var
+    StarMode: integer;
+    HK: String;
+  begin
+    with Frm_Spori do
+      begin
+        StarMode := CB_StrMode.ItemIndex;
+        HK     := Ed_Nr.Text;
+
+        DefaultOptions ();
+        LoadOptions ();
+
+        ProgressStarMode(StarMode);
+
+        Ed_Nr.Text := HK;
+        ProgressNumber ();
+      end;
+  end;
+
+procedure TFrm_Config.Bt_HtKyClick(Sender: TObject);
+begin
+
+end;
+
 procedure TFrm_Config.Bt_ConClick(Sender: TObject);
   begin
     Frm_Spori.Connect();
@@ -905,17 +944,17 @@ procedure TFrm_Config.Lbl_Sw_ExprtClick(Sender: TObject);
        end;
    end;
 
-procedure TFrm_Config.Lbl_Sw_PortClick(Sender: TObject);
+procedure TFrm_Config.Lbl_Sw_PortableModeClick(Sender: TObject);
   begin
-    if (Sw_Port.Checked) then
+    if (Sw_PortableMode.Checked) then
       begin
-        Sw_Port.Checked     := false;
-        Lbl_Sw_Port.Caption := 'Aus';
+        Sw_PortableMode.Checked     := false;
+        Lbl_Sw_PortableMode.Caption := 'Aus';
       end
      else
        begin
-        Sw_Port.Checked     := true;
-        Lbl_Sw_Port.Caption := 'Ein';
+        Sw_PortableMode.Checked     := true;
+        Lbl_Sw_PortableMode.Caption := 'Ein';
        end;
    end;
 
@@ -991,18 +1030,14 @@ procedure TFrm_Config.Sw_ManWChange(Sender: TObject);
        end;
    end;
 
-procedure TFrm_Config.Sw_PortChange(Sender: TObject);
+procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject);
+
+
   begin
-    if (Sw_Port.Checked) then
-      begin
-        Lbl_Sw_Port.Caption:= 'Ein';
-        Frm_Spori.Options[ON_PortableMode] := 'True';
-       end
-     else
-      begin
-        Lbl_Sw_Port.Caption:= 'Aus';
-        Frm_Spori.Options[ON_PortableMode] := 'False';
-       end;
+    Frm_Spori.Options[ON_PortableMode] := BoolToStr(Sw_PortableMode.Checked, 'True', 'False');
+    Lbl_Sw_PortableMode.Caption := BoolToStr(Sw_PortableMode.Checked, 'Ein', 'Aus');
+
+    Frm_Spori.SetPortableMode(Sw_PortableMode.Checked);
    end;
 
 procedure TFrm_Config.Sw_AutoConChange(Sender: TObject);

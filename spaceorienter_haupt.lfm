@@ -1,7 +1,7 @@
 object Frm_Spori: TFrm_Spori
-  Left = 291
+  Left = 196
   Height = 420
-  Top = 210
+  Top = 269
   Width = 724
   AlphaBlendValue = 250
   Caption = 'SpaceOrienter'
@@ -2134,12 +2134,12 @@ object Frm_Spori: TFrm_Spori
   OnCreate = FormCreate
   PopupMenu = PpMe
   Position = poDesktopCenter
-  LCLVersion = '1.6.0.4'
+  LCLVersion = '1.8.5.0'
   object PgC_Haupt: TPageControl
-    Left = 8
-    Height = 449
-    Top = 8
-    Width = 824
+    Left = 0
+    Height = 381
+    Top = 0
+    Width = 712
     ActivePage = TbS_Einst
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.CharSet = ANSI_CHARSET
@@ -2217,10 +2217,10 @@ object Frm_Spori: TFrm_Spori
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = TbS_Inter
         AnchorSideBottom.Side = asrBottom
-        Left = 661
-        Height = 24
-        Top = 391
-        Width = 130
+        Left = 586
+        Height = 27
+        Top = 329
+        Width = 104
         Anchors = [akRight, akBottom]
         AutoComplete = True
         AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
@@ -2549,10 +2549,10 @@ object Frm_Spori: TFrm_Spori
         AnchorSideRight.Control = TbS_Inter
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = CB_StrMode
-        Left = 611
-        Height = 40
-        Top = 346
-        Width = 200
+        Left = 546
+        Height = 32
+        Top = 293
+        Width = 160
         Anchors = [akRight, akBottom]
         BorderSpacing.Left = 10
         BorderSpacing.Top = 20
@@ -2641,7 +2641,6 @@ object Frm_Spori: TFrm_Spori
         PopupMenu = PpMe2
         ReadOnly = True
         RowSelect = True
-        ScrollBars = ssAutoBoth
         TabOrder = 0
         ViewStyle = vsReport
         OnDblClick = LV_ListDblClick
@@ -2874,8 +2873,14 @@ object Frm_Spori: TFrm_Spori
         Top = 16
         Width = 240
         Caption = 'SternenListe'
-        ClientHeight = 155
-        ClientWidth = 236
+        ClientHeight = 161
+        ClientWidth = 190
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 0
         object Bt_LoList: TButton
           Left = 16
@@ -2905,124 +2910,6 @@ object Frm_Spori: TFrm_Spori
           TabOrder = 2
         end
       end
-      object GB_Up: TGroupBox
-        AnchorSideLeft.Control = GB_Ort
-        AnchorSideTop.Control = TbS_Einst
-        AnchorSideRight.Control = TbS_Einst
-        AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = GB_Weiteres
-        Left = 556
-        Height = 176
-        Top = 16
-        Width = 240
-        Anchors = [akTop, akRight, akBottom]
-        BorderSpacing.Left = 282
-        BorderSpacing.Top = 6
-        BorderSpacing.Right = 10
-        BorderSpacing.Bottom = 6
-        BorderSpacing.Around = 10
-        Caption = 'Updates'
-        ClientHeight = 155
-        ClientWidth = 236
-        TabOrder = 3
-        object ChkB_Up: TCheckBox
-          Left = 16
-          Height = 23
-          Top = 8
-          Width = 92
-          Caption = 'AutoUpdate'
-          Checked = True
-          OnChange = ChkB_UpChange
-          State = cbChecked
-          TabOrder = 0
-        end
-        object Bt_Up: TButton
-          Left = 32
-          Height = 38
-          Top = 48
-          Width = 152
-          Caption = 'Nach Updates suchen'
-          OnClick = Bt_UpClick
-          TabOrder = 1
-        end
-      end
-      object GB_Port: TGroupBox
-        Left = 264
-        Height = 174
-        Top = 208
-        Width = 280
-        Caption = 'Verbindung'
-        ClientHeight = 153
-        ClientWidth = 276
-        TabOrder = 4
-        object CkB_Port_Auto: TCheckBox
-          Left = 8
-          Height = 23
-          Top = 24
-          Width = 75
-          Caption = 'AutoPort'
-          OnChange = CkB_Port_AutoChange
-          TabOrder = 0
-        end
-        object ED_Port: TEdit
-          Left = 128
-          Height = 24
-          Top = 64
-          Width = 112
-          NumbersOnly = True
-          OnEditingDone = ED_PortEditingDone
-          TabOrder = 1
-          Text = '0'
-        end
-        object Lb_Port: TLabel
-          Left = 24
-          Height = 16
-          Top = 64
-          Width = 27
-          Caption = 'Com'
-          ParentColor = False
-        end
-      end
-      object GB_Weiteres: TGroupBox
-        Left = 556
-        Height = 174
-        Top = 208
-        Width = 240
-        Caption = 'Weiteres'
-        ClientHeight = 153
-        ClientWidth = 236
-        TabOrder = 5
-        object Bt_EinstZuRS: TButton
-          Left = 32
-          Height = 38
-          Top = 104
-          Width = 184
-          Caption = 'Einstellungen zurücksetzen'
-          OnClick = Bt_EinstZuRSClick
-          TabOrder = 0
-        end
-        object CkB_ManuAnSt: TCheckBox
-          Left = 8
-          Height = 23
-          Top = 56
-          Width = 160
-          Caption = 'Manuelle Werteeingabe'
-          OnChange = CkB_ManuAnStChange
-          TabOrder = 1
-        end
-        object TgB_AutoWert: TToggleBox
-          Left = 32
-          Height = 36
-          Hint = 'Klicke, um den angezeigten Modus zu verwenden.'#13#10'Wenn der Modus HotKey ausgewählt ist (Anzeige = AutoWertübergabe),'#13#10'dann werden nur Daten an den SpaceOrenter gesendet, wenn der Hotkey aktiviert wurde.'
-          Top = 8
-          Width = 184
-          Caption = 'HotKey verwenden'
-          OnChange = TgB_AutoWertChange
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 2
-        end
-      end
     end
     object TbS_Lag: TTabSheet
       Caption = 'Lageberechnung'
@@ -3035,8 +2922,14 @@ object Frm_Spori: TFrm_Spori
         Top = 16
         Width = 256
         Caption = 'Zeit'
-        ClientHeight = 131
-        ClientWidth = 252
+        ClientHeight = 108
+        ClientWidth = 203
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 0
         object Lb_MEZ_: TLabel
           Left = 15
@@ -3117,8 +3010,14 @@ object Frm_Spori: TFrm_Spori
         Top = 184
         Width = 256
         Caption = 'FrühlingsPunkt'
-        ClientHeight = 203
-        ClientWidth = 252
+        ClientHeight = 165
+        ClientWidth = 203
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 1
         object Lb_FrAnf_: TLabel
           Left = 16
@@ -3207,8 +3106,14 @@ object Frm_Spori: TFrm_Spori
         Top = 16
         Width = 256
         Caption = 'SternenLage'
-        ClientHeight = 219
-        ClientWidth = 252
+        ClientHeight = 178
+        ClientWidth = 203
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 2
         object Lb_Rtzn_: TLabel
           Left = 16
@@ -3377,8 +3282,14 @@ object Frm_Spori: TFrm_Spori
         Top = 264
         Width = 256
         Caption = 'Winkel'
-        ClientHeight = 123
-        ClientWidth = 252
+        ClientHeight = 101
+        ClientWidth = 203
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 3
         object Lb_Phi: TLabel
           Left = 16
@@ -3435,8 +3346,14 @@ object Frm_Spori: TFrm_Spori
         Top = 48
         Width = 240
         Caption = 'Azimut'
-        ClientHeight = 91
-        ClientWidth = 236
+        ClientHeight = 76
+        ClientWidth = 190
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 4
         object Lb_Az_Z_: TLabel
           Left = 16
@@ -3477,8 +3394,14 @@ object Frm_Spori: TFrm_Spori
         Top = 184
         Width = 240
         Caption = 'Berechnet'
-        ClientHeight = 123
-        ClientWidth = 236
+        ClientHeight = 101
+        ClientWidth = 190
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 5
         object Lb_Az_: TLabel
           Left = 8
