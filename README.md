@@ -10,3 +10,4 @@ The SpaceOrienter startet as "JugendForscht"-project back in 2016 and basicly is
 But nevertheless, even without the device is the app not useless as it answers many questions about the nightsky and what is waiting to find up there.
 
 --- descriptions how to use following soon ---
+If you like to code for the App, Lazarus IDE would be recommend and Eye Candy Controls are required (just install it to Lazarus).
