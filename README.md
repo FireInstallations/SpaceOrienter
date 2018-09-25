@@ -11,4 +11,4 @@ But nevertheless, even without the device is the app not useless as it answers m
 
 --- descriptions how to use following soon ---
 
-If you like to code for the App, Lazarus IDE would be recommend and Eye Candy Controls are required (just install it to Lazarus).
+If you like to code for the App, Lazarus IDE would be recommend and Eye Candy Controls is required (just install it to Lazarus).
