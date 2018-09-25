@@ -67,11 +67,8 @@ __recovery/
 # Castalia statistics file (since XE7 Castalia is distributed with Delphi)
 *.stat
 
-#SpaceOrienter generated generated files
+# SpaceOrienter generated generated files
 *.Space
 *.xml
 OldOptions/
 OldStarLists/
-
-#WMM-File
-*.COF
