@@ -4,13 +4,6 @@ unit SpaceOrienter_Haupt;
 
 interface
 
-  //Fixed lon / Lat
-  //PortableMode
-  //Fixed calculation of the stars
-  //Removed unessesary Sringbegin from options
-  //missing Options will now get a default value instad of pushing an error message
-
-
   { <description>
 
 type
@@ -279,16 +272,14 @@ type
       TODO 05 -oFireInstall -cFunc : Siehe unten
       TODO 01 -oFireInstall -cCode : Auf Englisch Formatieren
       TODO 02 -oFireInstall -cCode : Beschreibung hinzufügen bei Lizenz
-      TODO 01 -oFireInstall -cUser : Bilder
       TODO 03 -oFireInstall -cFunc : weitersuchen einstellen
       TODO 02 -oFireInstall -cFunc : Sternbildsuche - Liste
+      TODO 02 -oFireInstall -cBug  : Zeit immer richtig setzen (auch mit Auto), nicht immer 00:00:00
+      TODO 03 -oFireInstall -cFunc : reconnect when lost
+      TODO 03 -oFireInstall -cFunc : load images from list (like ardu con. ones)
+      TODO 01 -oFireInstall -cFunc : Use threads
+      TODO 01 -oFireInstall -cBug  : Scrollbars in Starlist doesn't work
     }
-    // Diese Punkte richtig aufnehmen
-    // Die Zeit immer richtig setzen auch mit Auto und nicht immer nur 00:00:00
-    // Die Missweisung immer richtig berechnen, auch wenn kein Eph. ausgewählt ist
-    //RECONNECTION; WENN LOST
-    //Ardo Bild aus ImgList
-    //Daten lauschen in thread
 
   uses
     Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
@@ -341,10 +332,9 @@ var
 
     TFrm_Spori = class(TForm)
         BBt_Anfahren: TBitBtn;
-        Bt_BebList: TButton;
         Bt_LoList: TButton;
-        Bt_ResList: TButton;
         Bt_Start: TButton;
+        BT_Opt_Temp: TButton;
         CB_HK: TComboBox;
         CB_StrMode: TComboBox;
         CB_StB: TComboBox;
@@ -363,7 +353,6 @@ var
         Gb_FrPnk: TGroupBox;
         Gb_Ist: TGroupBox;
         GB_Lage: TGroupBox;
-        GB_List: TGroupBox;
         Gb_Mswg: TGroupBox;
         GB_Soll: TGroupBox;
         Gb_Wink: TGroupBox;
@@ -491,12 +480,10 @@ var
         M_Dat: TMenuItem;
         MI_Dar_Quit: TMenuItem;
         MI_Unbek: TMenuItem;
-        OpnD: TOpenDialog;
         PgC_Haupt: TPageControl;
         PpNt: TPopupNotifier;
         PpMe: TPopupMenu;
         PpMe2: TPopupMenu;
-        SaD: TSaveDialog;
         TbS_Einst: TTabSheet;
         TbS_Inter: TTabSheet;
         TbS_Lag: TTabSheet;
@@ -505,29 +492,39 @@ var
         Tmr_Nach: TTimer;
         Tmr_Berech: TTimer;
         TbS_Ephi: TTabSheet;
-        procedure Bt_LoListClick(Sender: TObject);
-        procedure Bt_ResListClick(Sender: TObject);
-        procedure Bt_BebListClick(Sender: TObject);
         procedure Bt_StartClick(Sender: TObject);
+        {if this Button was clicked, data wil be sended to the arduino (SendData will be called)}
         procedure BBt_AnfahrenClick(Sender: TObject);
+        {A new Body was selected, tell it (... will be called)}
         procedure CB_HKEditingDone(Sender: TObject);
         procedure CB_StrModeChange(Sender: TObject);
         procedure CB_StBEditingDone(Sender: TObject);
+        {If a vailed number was given, ProgressNumber will be called}
         procedure Ed_NrEditingDone(Sender: TObject);
-        procedure ED_PortEditingDone(Sender: TObject);
+        {If the Text of the Edit was not emty or the default value, search for it}
         procedure Ed_SuchEditingDone(Sender: TObject);
+        {Clears the Edit, if the default value was given, should select all text if not}
         procedure Ed_SuchEnter(Sender: TObject);
+        {Sets the defaultvalue 'Search for...' if the Edit was emty}
         procedure Ed_SuchExit(Sender: TObject);
+        {Opens an FindDialog and searches for the given String in our StarList}
         procedure FndDFind(Sender: TObject);
         {Detect PortableMode and initialize importend global vairiables like the paths.
          The reaon why we can't load the options here is that Frm_Config has to be created first}
         procedure FormCreate(Sender: TObject);
+        {Save the configurations file and  clean up}
         procedure FormDestroy(Sender: TObject);
+        {Load Options once}
         procedure FormShow(Sender: TObject);
+        {Just a temporary way to get to the Config form.}
         procedure Lb_ZeitClick(Sender: TObject);
+        {If a vailed Item was seleceted tell it (call ProgressList)}
         procedure LV_ListDblClick(Sender: TObject);
+        {A vailed Item was seleceted, tell it (call ProgressList)}
         procedure LV_ListItemChecked(Sender: TObject; Item: TListItem);
+        {If Retun was pressed and a vailed Item was seleceted tellwhitch one (call ProgressList)}
         procedure LV_ListKeyPress(Sender: TObject; var Key: char);
+        {Get privacy informations}
         procedure MI_DatSchutzClick(Sender: TObject);
         procedure MI_ConnectClick(Sender: TObject);
         procedure MI_Dar_QuitClick(Sender: TObject);
@@ -540,6 +537,7 @@ var
         procedure MI_Sicht_ExpClick(Sender: TObject);
         procedure Tmr_BerechTimer(Sender: TObject);
         procedure Tmr_GetDataTimer(Sender: TObject);
+        {Follow moving bodys}
         procedure Tmr_NachTimer(Sender: TObject);
       private
         {Compaires two strings and compute the sameness in percent
@@ -554,8 +552,6 @@ var
         function  FindOption(const Str: String): ShortInt;
         {Looks for a choosen constellation up, if it is valid}
         function  IsConstellation ():Boolean;
-        {Load the Starlist by a given path}
-        function  LoadStarList (const Path: String): Boolean;
         {Result is the DefaultValue of the given OptionName.
          Warning: every new Option have to be listed here!}
         function  GetDefaultOption (const OptnName: TOptionNames): String;
@@ -563,26 +559,38 @@ var
         procedure ProgressList (const Item:TListItem);
         {calculate the First Point of Aries}
         procedure ProgressFirstPointOfAries ();
+        {calculate the position of the selected star}
         procedure SternLage();
+        {calculate the position of the selected Ephemedides (PlanEpeh)}
         procedure Ephemeriden ();
         {serches for an Item in the StarList}
         procedure searchStarList (SerchFor: String);
 
 
         var
+          {Importend pathes}
           DefaultPath,
           DefaultOptionsPath,
           DefaultOldOptionsPath,
-          DefaultListPath,
+          //Note: DefaultListPath is now public so FrmConfig can use it too (see below)
+          //DefaultListPath,
           DefaultOldListPath: String;
           OwnDir: String;
 
+          {Handel for the connecteion to the arduino (Synapser)}
           ser: TBlockSerial;
+          {boolean to determine if we have to call LoadOptions (and so on) in FormShow (have a look there for more informations)}
           FirstRun: Boolean;
       public
+        {importend cofigurations, saved in Options.Space at the end}
         Options: Array[TOptionNames] of String;
+        {path to the working area of the App, part of the imported pathes}
+        DefaultListPath: String;
+
+        {Diffrence between Now and the DateTime selected by the user}
         DiffD:       TDate;
         DiffT:       TTime;
+        {Don't Save time while it is on change in Frm_config }
         NoEntry:     Boolean;
 
         {Does what it say, progress messages until the time is over}
@@ -598,6 +606,8 @@ var
         {Load Saved Options, if there is no file, create default otions will be created.
          Warning: ervery New Option must loaded here!}
         function  LoadOptions (const LoadFromFile: Boolean = true): Boolean;
+        {Load the Starlist by a given path}
+        function  LoadStarList (const Path: String): Boolean;
         {Sets the pathes to ProtableMode and back}
         procedure SetPortableMode(IsActive: Boolean);
 
@@ -827,7 +837,7 @@ procedure TFrm_Spori.GetComPorts (); //ToDo: look Up how Arduino IDE gets the po
                      if (Merke <> '-') and (AnsiLowerCase(Merke) <> 'unsichtbar') and (Merke <> '')then
                        CB_StB.Items.Add(AnsiLowerCase(Merke));
 
-function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect Arduinotype (and if it is the Spori); Test TryAll
+function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect Arduinotype (and if it is the Spori); Synapser dosn't find right ports
   var
     Port: String;
     Baud: integer;
@@ -857,12 +867,9 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
 
     if TryAll then
       begin
-        //ser := TBlockSerial.Create;
-
         for Port in Frm_Config.CmbBx_ComPort.Items do
           begin
             ser.Connect(Port);
-            //ShowMessage(Port);
 
             Delay(700);
             ser.config(Baud, 8, 'N', SB1, False, False);
@@ -874,10 +881,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
                 break;
               end
             else
-              begin
-                ser.CloseSocket;
-                //ShowMessage('Error: ' + ser.LastErrorDesc +' '+ Inttostr(ser.LastError));
-              end;
+              ser.CloseSocket;
           end;
       end
     else
@@ -901,6 +905,8 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
           Img_ComWarn.Visible := false;
           Lbl_Ardo.Visible    := true;
           Lbl_Ardo.Caption     := 'Arduino Leonardo'; //Defaultvalue
+
+          Tmr_GetData.Enabled := true; //Read Data
         end
       else
         begin
@@ -911,6 +917,8 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
           Img_ComWarn.Visible := true;
           Lbl_Ardo.Visible    := false;
           ser.CloseSocket;
+
+          Tmr_GetData.Enabled := false; //Don't read Data
         end;
     Application.ProcessMessages;
   end;
@@ -1182,14 +1190,14 @@ function  TFrm_Spori.GetDefaultOption (const OptnName: TOptionNames): String; //
     end;
 
   end;
-       //Options doesn't save the names correctly
+
 function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Version; Langue; Comments
   var
      LoadList: Tstringlist;
 
      i: integer;
      Index: Shortint;
-     NotGottenOptions: set of byte = [0..Ord(high(ToptionNames))];
+     NotGottenOptions: set of ToptionNames = [low(ToptionNames)..high(ToptionNames)];
      j: TOptionNames;
 
      TempBool: Boolean;
@@ -1223,14 +1231,16 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
               if (Index >= 0) then  // if no valid name was fond, -1 was returned
                 begin
                   Options[ToptionNames(Index)] := FindOptionValue(LoadList[i]);
-                  NotGottenOptions := NotGottenOptions - [Index];  //we want to test, if every Option got min. one time a value.
+                  Exclude(NotGottenOptions, ToptionNames(Index));  //we want to test, if every Option got min. one time a value.
                 end;
             end;
 
         finally
           FreeAndNil(LoadList);
         end;
-      end;
+      end
+    else
+      NotGottenOptions := []; // clear set, if we are not loading from file means that we already got ervything
 
       if not (NotGottenOptions = []) then //Test if we got everything
        case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we set the option to default, resett all options or abort
@@ -1240,13 +1250,13 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                              mtError, [mbYes, mbNo, mbAbort], 0, mbYes) of
          mrYes:   //set the missing Options to default
            begin
-             while (NotGottenOptions <> []) do
+             for j in NotGottenOptions do
                begin
-                 i := low(NotGottenOptions);
-                 NotGottenOptions := NotGottenOptions - [i];
+                 ShowMessage(IntToStr(Ord(j)) + ' ' + Copy(GetEnumName(TypeInfo(TOptionNames), Ord(j)), 4, length(GetEnumName(TypeInfo(TOptionNames), Ord(j))) -3));
 
-                 j := TOptionNames(i);
                  Options[j] := GetDefaultOption(j);
+
+                 Exclude(NotGottenOptions, j);
                end;
 
              Result := LoadOptions(false);
@@ -1626,8 +1636,8 @@ procedure TFrm_Spori.DefaultOptions (); //Done
         begin
           TempName := GetEnumName(TypeInfo(TOptionNames), Ord(Option));
           TempName := Copy(TempName, 4, length(TempName) - 3);
-          SaveStrings.Add('"'+TempName+'": "'+GetDefaultOption(Option)+'"');
 
+          SaveStrings.Add('"'+TempName+'": "'+GetDefaultOption(Option)+'"');
         end;
 
     try  //Save them
@@ -1776,7 +1786,7 @@ procedure TFrm_Spori.DefaultList ();  //ToDo: put this into it's own File
      end;
    end;
 
-procedure TFrm_Spori.ProgressStarMode (const Mode: byte; Save: Boolean = true); //TODO: implement searchStarList
+procedure TFrm_Spori.ProgressStarMode (const Mode: byte; Save: Boolean = true); //TODO: implement search
 begin
   if Save then  //if a new Mode is seleced save it
     Options[ON_StarMode] := IntToStr(Mode);
@@ -2069,8 +2079,8 @@ procedure TFrm_Spori.SternLage ();  //ToDo: comments
     Ele, Azimut: Real;
     Az_Z, Az_N: Real;
   begin     ;
-    Lat_G := StrToFloat(Lb_Lat_G.Caption);
-    Lon_R := StrToFloat(Lb_Lon_R.caption);
+    Lat_G     := StrToFloat(Lb_Lat_G.Caption);
+    Lon_R     := StrToFloat(Lb_Lon_R.caption);
 
     Rtzn_Grd  := StrToFloat(Lb_Rtzn_Grd.Caption);
     Rtzn_Rd   := StrToFloat(Lb_Rtzn_Rd.caption);
@@ -2080,13 +2090,13 @@ procedure TFrm_Spori.SternLage ();  //ToDo: comments
 
     AkFrPnk   := StrToFloat(Lb_AkFrPnk.caption);
 
-    StWk            := Rtzn_Grd + Rtzn_Rd/60;
+    StWk      := Rtzn_Grd + Rtzn_Rd/60;
 
-    Beta            := StWk * Pi/180;
+    Beta      := StWk * Pi/180;
 
-    Delta           := (Dekli_Grd + Dekli_Rd/60) * Pi/180;
+    Delta     := (Dekli_Grd + Dekli_Rd/60) * Pi/180;
 
-    Grt             := AkFrPnk + StWk;
+    Grt       := AkFrPnk + StWk;
     if (Grt > 360) then
       Grt -= 360;
 
@@ -2209,54 +2219,65 @@ procedure TFrm_Spori.searchStarList (SerchFor: String); //Done
               LV_List.ItemFocused := LV_List.Items[i];
               LV_List.Items[i].MakeVisible(false);
             end;
-   end;
-
-procedure TFrm_Spori.Ed_NrEditingDone(Sender: TObject); //Done?
-  begin
-    //We got a new body, tell it erverbody else
-    ProgressNumber ();
   end;
 
-    procedure TFrm_Spori.ED_PortEditingDone(Sender: TObject); //Zu neuer Form Connectinfo verarbeiten
-      begin
-        //OptionsChange ('comport', ED_Port.Text);
-       end;
-
-    procedure TFrm_Spori.Ed_SuchEditingDone(Sender: TObject); //Fertig
-      begin
-        if not (Ed_Such.Text = 'Suchen...') and not ( Ed_Such.Text = '') then
-          searchStarList (Trim(Ed_Such.Text));
-       end;
-
-procedure TFrm_Spori.MI_Sicht_ExpClick(Sender: TObject); //Fertig
+procedure TFrm_Spori.Ed_NrEditingDone(Sender: TObject); //Done
+  var
+    Void: integer;
   begin
-    Exp ();
-   end;
+    {$IfNDef Window} //Since NumbersOnly is not working on my Kubuntu, I have to test this condition on my own, but on Win 7 it acts as expected
+    Ed_Nr.Text := Trim(Ed_Nr.Text);
 
-procedure TFrm_Spori.TE_ManuAcceptTime(Sender: TObject; var ATime: TDateTime; var AcceptTime: Boolean); //Fertig
+    if TryStrToInt(Ed_Nr.Text, Void) then
+    {$ENDIF Window}
+      ProgressNumber (); //We got a new body, tell it erverbody else
+  end;
+
+procedure TFrm_Spori.Ed_SuchEditingDone(Sender: TObject); //Done
   begin
-    if AcceptTime then
+    if not (Ed_Such.Text = 'Suchen...') and not (Ed_Such.Text = '') then //if there was input and the input was not empty
+      searchStarList (Trim(Ed_Such.Text)) //serch for the input
+  end;
+
+procedure TFrm_Spori.Ed_SuchEnter(Sender: TObject);  //Bug SelectAll does not work?
+  begin
+    if Ed_Such.Text = 'Suchen...' then
+      Ed_Such.Clear  //nothing was typed yet, so clear up the default value
+     else
       begin
-        DiffT:=StrToTime(TimeToStr(ATime))-Time;
-        OptionsChange(6, TimeToStr(ATime));
+        Ed_Such.SetFocus;
+        Ed_Such.HideSelection := false;
+        Ed_Such.SelectAll;  //should select the last typed text.. but it doesn't work. nether do the following ones, with or whithout autoselect
+
+        //Ed_Such.SelStart := 0;
+        //Ed_Such.SelLength := 2;
+        //Ed_Such.SelText := Ed_Such.Text;
       end;
   end;
 
-procedure TFrm_Spori.Tmr_BerechTimer(Sender: TObject);   //Reaktion auf manuelle Zeit bei Sommerzeit + Utc1 fixen
-  var
-     Jahr, Monat, Tage, Stunden, Minuten, Sekunden, Millisek:Word;
-     ZoneInfo: TTimeZoneInformation;
+procedure TFrm_Spori.Ed_SuchExit(Sender: TObject);  //Done
   begin
-    if ChkB_TmMd.Checked then
-      begin
-        Lb_Zeit.Caption:=DateTimeToStr(Now);
-        Lb_MEZ.Caption:=DateTimeToStr(Now);
+    if (Ed_Such.Text = '') then
+      Ed_Such.Text  := 'Suchen...';
+  end;
 
-        DecodeTime(now, Stunden, Minuten, Sekunden, Millisek);
-        DecodeDate(now, Jahr, Monat, Tage);
+procedure TFrm_Spori.FndDFind(Sender: TObject); //Done
+  var
+     SearchForStr: String;
+  begin
+    //Opens FindDialog ang get String that was searched for
+    SearchForStr := FndD.FindText;
 
-       searchStarList(Uebertrag);
-       end;
+    //make sure case matters as much as the user wants
+    if (frDisableMatchCase in FndD.Options) then
+      SearchForStr := AnsiLowerCase(SearchForStr);
+
+    //clean up
+    FndD.CloseDialog;
+
+    //serch for the given string
+    searchStarList(SearchForStr);
+  end;
 
 procedure TFrm_Spori.FormCreate(Sender: TObject); //ToDo: are there cases where GetCurrentDir is not the own dir at beginnig?
   var
@@ -2298,144 +2319,173 @@ procedure TFrm_Spori.FormCreate(Sender: TObject); //ToDo: are there cases where 
 
   end;
 
-    procedure TFrm_Spori.FormDestroy(Sender: TObject);   //Version Dynamic; Check if all Options where saved
-      var
-         //Help:Integer;
-         Line: String;
-         OptionName: TOptionNames;
-
-         Index: Integer;
-         SaveStrings, LoadStrings: TStringList;
-      begin
-        ser.Purge;
-        ser.CloseSocket;
-        if Assigned(ser) then
-          FreeAndNil(ser);
-
-        SaveStrings := TStringlist.create;
-
-        if not FileExists (DefaultOptionsPath) then  //Default Options
-          begin
-
-            SaveStrings.Add('#*-+-~-+-\*/-+-~-{ Spaceorienter Options }-~-+-\*/-+-~-~+-*');
-            SaveStrings.Add('#|Please change only, if you know what you are doing!     |');
-            SaveStrings.Add('#|                                                        |');
-            SaveStrings.Add('#|Timeformat: DD.MM.YYYY or SS:NN:HH                      |');
-            SaveStrings.Add('#|                                                        |');
-            SaveStrings.Add('#|Note: If you make changes to this file while the        |');
-            SaveStrings.Add('#|application is running, the changes will be overwritten |');
-            SaveStrings.Add('#|when the application exits.                             |');
-            SaveStrings.Add('#*--------------------------------------------------------*');
-            SaveStrings.Add('#');
-            //
-            for OptionName := low(TOptionNames) to High(TOptionNames) do
-              begin
-                Line := GetEnumName(TypeInfo(TOptionNames), Ord(OptionName));
-                Line := Copy(Line, 4, length(Line) -3);
-
-                SaveStrings.Add('"'+ Line +'":   "'+Options[OptionName]+'"');
-              end;
-
-
-            try
-              ForceDirectories (DefaultPath);
-              SaveStrings.SaveToFile (DefaultOptionsPath);
-            finally
-              SaveStrings.free;
-            end;
-           end
-         else
-          begin
-            LoadStrings := TStringList.create;
-            SaveStrings.clear;
-
-             try
-               LoadStrings.LoadFromFile(DefaultOptionsPath);
-
-               for Line in LoadStrings do
-                 begin
-                   Index := 0;
-                   if not (Trim(Line)[1] = '#') or (Trim(Line) = '')  then  //Skip comments and free lines
-                     begin
-                       Index := FindOption(FindOptionName(Line));
-
-                       if (Index >= 0) then
-                         SaveStrings.Add(StringReplace(Line, FindOptionValue(Line), Options[TOptionNames(Index)], [rfIgnoreCase]));
-                     end
-                   else
-                   SaveStrings.Add(Line);
-                 end;
-
-               FreeAndNil(LoadStrings);
-
-               SaveStrings.SaveToFile (DefaultOptionsPath);
-             finally
-                FreeAndNil(SaveStrings);
-             end;
-           end;
-      end;
-
-    procedure TFrm_Spori.FormShow(Sender: TObject);
-      begin
-        if FirstRun then
-          begin
-            FirstRun := false;
-
-           if not LoadOptions() then
-              begin
-                showmessage('Entschuldigung.' + slinebreak +
-                            'Ich war NICHT Erfolgreich den Fehler zu beheben. :(' +
-                            slinebreak + slinebreak +
-                            'Beende Programm. Bitte kontaktiere FireInstallations');
-
-                ser.Purge;
-                ser.CloseSocket;
-                if Assigned(ser) then
-                  FreeAndNil(ser);
-
-                halt;
-              end;
-
-            GetComPorts ();
-            Connect (true);
-
-            {if ChkB_Up.Checked then
-              Update_ (); }
-
-    Lb_UTC2.Caption:=FloatToStrF(((StrToInt(Lb_Hour.Caption) +
-                     StrToInt(Lb_Min.Caption)/60 +
-                     StrToInt(Lb_Sek.Caption)/3600)/24),ffFixed,4,13);
-
-            Tmr_Berech.Enabled := true;
-
-            PgC_Haupt.TabIndex := 0;
-
-          end;
-       end;
-
-procedure TFrm_Spori.Tmr_NachTimer(Sender: TObject); //Fertig
+procedure TFrm_Spori.FormDestroy(Sender: TObject);   //Version Dynamic; Comments
   var
-     Index:Integer;
-     InStBild:Boolean;
+     NotGottenOptions: set of byte = [0..Ord(high(ToptionNames))];
+     Line: String;
+     OptionName: TOptionNames;
+
+     Index: Integer;
+     SaveStrings, LoadStrings: TStringList;
   begin
+    ser.Purge;
+    ser.CloseSocket;
+    if Assigned(ser) then
+      FreeAndNil(ser);
 
-    if CB_StrMode.Text = 'Sternbild' then
+    SaveStrings := TStringlist.create;
+
+    if not FileExists (DefaultOptionsPath) then  //Default Options
       begin
-        if LV_List.SelCount <> 0 then
-          ProgressList (LV_List.Selected);
-       end;
 
-    procedure TFrm_Spori.LV_ListItemChecked(Sender: TObject; Item: TListItem); //Fertig?
+        SaveStrings.Add('#*-+-~-+-\*/-+-~-{ Spaceorienter Options }-~-+-\*/-+-~-~+-*');
+        SaveStrings.Add('#|Please change only, if you know what you are doing!     |');
+        SaveStrings.Add('#|                                                        |');
+        SaveStrings.Add('#|Timeformat: DD.MM.YYYY or SS:NN:HH                      |');
+        SaveStrings.Add('#|                                                        |');
+        SaveStrings.Add('#|Note: If you make changes to this file while the        |');
+        SaveStrings.Add('#|application is running, the changes will be overwritten |');
+        SaveStrings.Add('#|when the application exits.                             |');
+        SaveStrings.Add('#*--------------------------------------------------------*');
+        SaveStrings.Add('#');
+        //
+        for OptionName := low(TOptionNames) to High(TOptionNames) do
+          begin
+            Line := GetEnumName(TypeInfo(TOptionNames), Ord(OptionName));
+            Line := Copy(Line, 4, length(Line) -3);
+
+            SaveStrings.Add('"'+ Line +'":   "'+Options[OptionName]+'"');
+          end;
+
+
+        try
+          ForceDirectories (DefaultPath);
+          SaveStrings.SaveToFile (DefaultOptionsPath);
+        finally
+          SaveStrings.free;
+        end;
+       end
+     else
       begin
-        ProgressList(Item);
-       end;
+        LoadStrings := TStringList.create;
+        SaveStrings.clear;
 
-    procedure TFrm_Spori.LV_ListKeyPress(Sender: TObject; var Key: char); //Fertig
+         try
+           LoadStrings.LoadFromFile(DefaultOptionsPath);
+
+           for Line in LoadStrings do
+             begin
+               Index := 0;
+               if not (Trim(Line)[1] = '#') or (Trim(Line) = '')  then  //Skip comments and free lines
+                 begin
+                   Index := FindOption(FindOptionName(Line));
+
+                   if (Index >= 0) then
+                     begin
+                       SaveStrings.Add(StringReplace(Line, FindOptionValue(Line), Options[TOptionNames(Index)], [rfIgnoreCase]));
+
+                       NotGottenOptions -= [Index];
+                     end;
+                 end
+               else
+               SaveStrings.Add(Line);
+             end;
+
+           if NotGottenOptions <> [] then
+             for Index in NotGottenOptions do
+               begin
+                 Line := GetEnumName(TypeInfo(TOptionNames), Index);
+                 Line := Copy(Line, 4, length(Line) -3);
+
+                 SaveStrings.Add('"'+ Line +'":   "'+Options[TOptionNames(Index)]+'"');
+
+                 Exclude(NotGottenOptions, Index);
+               end;
+
+           SaveStrings.SaveToFile (DefaultOptionsPath);
+         finally
+            FreeAndNil(LoadStrings);
+            FreeAndNil(SaveStrings);
+         end;
+       end;
+  end;
+
+procedure TFrm_Spori.FormShow(Sender: TObject); //ToDo: move Connect to LoadOptions and use Connact to all just if no vailid port was found; Update
+  begin
+    if FirstRun then //we want to it once, but we can't use Form Create, becourse we are using Frm_Config
       begin
-        if ((LV_List.SelCount <> 0) and (Key = #13)) then
-          ProgressList (LV_List.Selected);
-       end;
+        FirstRun := false;
 
+       if not LoadOptions() then //was not able to load the config flie -> clean up
+          begin
+            ser.Purge;
+            ser.CloseSocket;
+
+            if Assigned(ser) then
+              FreeAndNil(ser);
+
+            halt;
+          end;
+
+        //Search for commports and try to
+        GetComPorts ();
+        Connect (true);
+
+       { if ChkB_Up.Checked then
+          Update_ (); }
+
+        //after erverything was loaded fine we can start to calculate star/Ehemedides positions
+        Tmr_Berech.Enabled := true;
+
+        PgC_Haupt.TabIndex := 0; //Well basicky this is a line for development versions, if the form was compiled with open mainpage, as it should in realese versions, we can make it a comment
+
+      end;
+  end;
+
+procedure TFrm_Spori.Lb_ZeitClick(Sender: TObject); //Temporary!
+  begin
+    Frm_Spori.Hide;
+    Frm_Config.Show;
+   end;
+
+procedure TFrm_Spori.LV_ListDblClick(Sender: TObject); //Done?
+  begin
+    if LV_List.SelCount <> 0 then //if an Item was selected, tell it
+      ProgressList (LV_List.Selected);
+  end;
+
+procedure TFrm_Spori.LV_ListItemChecked(Sender: TObject; Item: TListItem); //Done?
+  begin
+    ProgressList(Item); // Tell what Item was selected
+  end;
+
+procedure TFrm_Spori.LV_ListKeyPress(Sender: TObject; var Key: char); //Done
+  begin
+    if ((LV_List.SelCount <> 0) and (Key = #13)) then
+      ProgressList (LV_List.Selected);
+  end;
+
+    procedure TFrm_Spori.MI_DatSchutzClick(Sender: TObject); //ToDo
+      begin
+        Showmessage('Wir von  FireInstallations & Co möchten der gesammten ' +
+                    'Datensammelwut etwas entgegensetzen. ' + //sLineBreak +
+                    'Daher sind all unsere Produkte Open Source und nutzen nur ' +
+                    'Daten, welche zwingend zur Bereitstellung ' + //sLineBreak +
+                    'unserer Dienste notwendig sind. Der Großteil dieser Daten ' +
+                    'verbleibt auf deinen Computer und können unter: ' + //sLineBreak +
+                    'C:\ProgramData\FireInstallations eingesehen werden. Ein Teil ' +
+                    'wird jehdoch zur Bereitstellung unser Onlinedienste ' + //sLineBreak +
+                    'an uns übermittelt. Darunter zählt die jehweilige ' +
+                    'Versionsnummer der Software und die Einstellungen zu den ' +
+                    'Livediesnten.' + sLineBreak +
+                    'Keine dieser Daten kann und wird von uns zu anderen Zwecken ' +
+                    'eingesehen, editiert oder an dritte weitergegeben werden.' +
+                    sLineBreak + sLineBreak +
+                    'Wir behalten jehdoch uns vor, diese Richtlinie in Zukunft zu ' +
+                    'aktualisieren und gegebendenfalls gesetzlichen Bestimmungen ' +
+                    'anzupassen.' + sLineBreak +
+                    'In diesem Fall werden wir dich frühzeitig davon in Kenntnis ' +
+                    'setzen.');
        end;
       if TgB_AutoWert.Checked then
         SendData ();
@@ -2474,29 +2524,40 @@ procedure TFrm_Spori.CB_HKEditingDone(Sender: TObject); //In function auslagern?
                   EintragList (LV_List.Items[Index2]);
                   Gefunden:=true;
 
-                  if CB_StrMode.Caption = 'Sternbild' then
-                    begin
-                      Tmr_Nach.Enabled:=false;
-                      CB_StrMode.Text:='Normal';
-                      Mmo_Bsbg.Text:='Peilt den ausgewählten Himmelskörper / die ausgewählte Position an.';
-                     end;
-                end;
-             end;
-        end;
-    if not Gefunden then
-      EintragNummer ();
-   end;
+    procedure TFrm_Spori.MI_SuchClick(Sender: TObject); //Wenn nicht Last error
+      begin
+        FndD.FindText := CB_HK.Text;
+        FndD.Execute;
+       end;
 
 procedure TFrm_Spori.CkB_ManuAnStChange(Sender: TObject); //Fertig
   begin
     if CkB_ManuAnSt.Checked then
       begin
-        Optionschange(13,'Manuell');
-      end
-     else
-      begin
-        Optionschange(13,'Auto');
+        Showmessage('Sobald ein Astronom versucht, seinen Zuschauern den ' +
+                    'Sternenhimmel zu erklären, hat er die Möglichkeit auf die ' +
+                    'einzelnen Sterneinbilder und Sterne zu zeigen. Doch nicht ' +
+                    'jedes Mitglied wird der gezeigten Richtung folgen können. ' +
+                    'Folglich kommt es immer wieder zu Unklarheiten und Irrtümern. ' +
+                    'Zeigt der Astronom, bei aller Vorsicht, Blendungen zu  ' +
+                    'vermeiden, mit einem Laserpointer auf die entsprechenden ' +
+                    'Objekte, sieht man diesen Strahl über mehrere Kilometer weit ' +
+                    'und die Parallaxe, also die Verschiebung des eigenen Winkels ' +
+                    'zum Stern, ist nahezu ausgeschlossen. Ziel unserer Arbeit war ' +
+                    'es das gleiche in automatisierter Form zu bewirken.');
+        Showmessage('Es ist dabei nicht notwendig, den Space Orienter genau ' +
+                    'auszurichten, da diese Aufgabe von zwei Sensoren übernommen ' +
+                    'wird, ein Beschleunigungssensor und ein Magnetfeldsensor. ' +
+                    'Der Betrieb des Space Orienters erfordert keine weiteren ' +
+                    'Hilfsmittel oder Netzteile als den USB Port eines Laptops.');
        end;
+
+procedure TFrm_Spori.MI_VerbEinstClick(Sender: TObject); //ToDo
+  begin
+    Frm_Spori.Hide;
+
+    Frm_Config.PgCont_Pnl.ActivePage := Frm_Config.TbSht_Con;
+    Frm_Config.Show;
   end;
 
 procedure TFrm_Spori.Bt_UpClick(Sender: TObject); //Fertig
@@ -2527,7 +2588,7 @@ procedure TFrm_Spori.Bt_EinstZuRSClick(Sender: TObject); //Fertig
         ProgressExpertMode ();
        end;
 
-    procedure TFrm_Spori.Tmr_BerechTimer(Sender: TObject);   //Done
+    procedure TFrm_Spori.Tmr_BerechTimer(Sender: TObject);   //ToDo: comments; Lb_Gmt = UTC!
       var
          TZ: integer;
          TempDeviation: String;
@@ -2564,15 +2625,10 @@ procedure TFrm_Spori.Bt_BebListClick(Sender: TObject);  //ToDO
                end;
            end;
 
-procedure TFrm_Spori.CB_StrModeChange(Sender: TObject); //Fertig
-  begin
-    EintragMode(CB_StrMode.Text);
-   end;
-
         TZ := GetLocalTimeOffset() div -60;
         Lb_Gmt.Caption      := DateTimeToStr(StrToDateTime(Lb_MEZ.Caption)- TZ /24);
 
-        LB_OtZ.Caption := DateTimeToStr(StrToDateTime(Lb_Gmt.Caption) + StrToFloat(Lb_Lat_G.Caption)/360)
+        LB_OtZ.Caption := DateTimeToStr(StrToDateTime(Lb_Gmt.Caption) + StrToFloat(Lb_Lat_G.Caption)/360);
 
         ProgressFirstPointOfAries();
 
@@ -2605,7 +2661,7 @@ procedure TFrm_Spori.CB_StrModeChange(Sender: TObject); //Fertig
          Ephemeriden ();
        end;
 
-procedure TFrm_Spori.Tmr_GetDataTimer(Sender: TObject);
+procedure TFrm_Spori.Tmr_GetDataTimer(Sender: TObject); //ToDo: Comments
   var
      TestFloat: Real;
      StrIn, StrOut: String;
@@ -2621,7 +2677,7 @@ procedure TFrm_Spori.Tmr_GetDataTimer(Sender: TObject);
 
     if ser.InstanceActive and ser.CanRead(100) then
       begin
-       StrIn := ser.Recvstring(20); //EleIst;AziIst;RohEleIst;RohAziIst
+       StrIn := ser.Recvstring(20); //EleIst;AziIst;
 
       StrIn := StringReplace(StrIn, '.', DefaultFormatSettings.DecimalSeparator, [rfReplaceAll]);
 
@@ -2642,48 +2698,61 @@ procedure TFrm_Spori.Tmr_GetDataTimer(Sender: TObject);
 
   end;
 
-    procedure TFrm_Spori.Tmr_NachTimer(Sender: TObject); //Fertig
-      var
-         Index:Integer;
-         InStBild:Boolean;
-         Sternbild:Array of TListItem;
+procedure TFrm_Spori.Tmr_NachTimer(Sender: TObject); //ToDo: the collection doesn't work (course there is never a case where 2 Starmodes are active) --> add a new mode
+  var
+     EleNow, EleCalk: Real;
+     AziNow, AziCalk: Real;
+
+     Index: Integer;
+     InCollection: Boolean;
+     Collection: Array of TListItem;
+  begin
+    //If Mode was set to collection
+    if CB_StrMode.Text = 'Sternbild' then
       begin
+        // initialize
+        Setlength(Collection, 0);
+        InCollection  := false;
 
-        if CB_StrMode.Text = 'Sternbild' then
-          begin
-           Setlength(Sternbild,0);
-           InStBild  := false;
+        //Find all stars in the given collection
+        for Index := 0 to LV_List.Items.Count-1 do
+          if AnsilowerCase(Trim(CB_StB.Text)) = AnsilowerCase(LV_List.Items[Index].SubItems[2]) then
+            begin
+              setlength(Collection, length(Collection)+1);
+              Collection[high(Collection)] := LV_List.Items[Index];
+             end;
 
-           for Index := 0 to LV_List.Items.Count-1 do
-             if AnsilowerCase(Trim(CB_StB.Text)) = AnsilowerCase(LV_List.Items[Index].SubItems[2]) then
-               begin
-                 setlength(SternBild, length(SternBild)+1);
-                 SternBild[length(SternBild)-1] := LV_List.Items[Index];
-                end;
+        //Find the Index of the selected star
+        for Index := 0 to high(Collection) do
+          if Ed_Nr.Text = Collection[Index].Caption then
+            begin
+              //Get informations about own and starposition
+              EleNow  := StrToFloat(Ed_Ele_Ist.Text);
+              EleCalk := StrToFloat(Ed_Ele_Soll.Text);
+              AziNow  := StrToFloat(Ed_Azi_Ist.Text);
+              AziCalk := StrToFloat(Ed_Azi_Soll.Text);
 
-                for Index := 0 to (length(SternBild)-1) do
-                  if Ed_Nr.Text = SternBild[Index].Caption then
-                    begin
-                      if ((StrToFloat(Ed_Ele_Ist.Text) - StrToFloat(Ed_Ele_Soll.Text) < 5) and
-                          (StrToFloat(Ed_Ele_Ist.Text) - StrToFloat(Ed_Ele_Soll.Text)  > -5) and
-                          (StrToFloat(Ed_Azi_Ist.Text) - StrToFloat(Ed_Azi_Soll.Text) < 5) and
-                          (StrToFloat(Ed_Azi_Ist.Text) - StrToFloat(Ed_Azi_Soll.Text)  > -5)) then
-                        begin
-                          if Index < length(SternBild)-1 then
-                            ProgressList (SternBild[Index+1])
-                           else
-                            ProgressList (SternBild[0]);
-                         end;
-                      InStBild := true;
-                      break;
-                    end;
-            if (not InStBild) then
-             ProgressList (SternBild[0]);
+              //if the own position is near of the postion of the star get next one
+              if ((EleNow - EleCalk  < 5) and (EleNow - EleCalk  > -5) and
+                  (AziNow - AziCalk  < 5) and (AziNow - AziCalk  > -5)) then
+                ProgressList (Collection[succ(Index) mod high(Collection)])
+              else
+               ProgressList (Collection[0]);
 
-           end;
-          if not Frm_Config.Sw_HtKy.Checked then
-            SendData ();
+              //We found it!
+              InCollection := true;
+              break;
+            end;
+
+        //if no Item was found (strange case) use the first Item on the list
+        if not InCollection then
+         ProgressList (Collection[0]);
        end;
+
+      //If the user doesn't want to to send the data on his/her/it/whatever own
+      if not Frm_Config.Sw_HtKy.Checked then
+        SendData ();
+   end;
 
     procedure TFrm_Spori.CB_HKEditingDone(Sender: TObject); //In function auslagern?
       var
@@ -2722,34 +2791,9 @@ procedure TFrm_Spori.Tmr_GetDataTimer(Sender: TObject);
           ProgressNumber ();
        end;
 
-procedure TFrm_Spori.ChkB_UpChange(Sender: TObject);  //Fertig
+procedure TFrm_Spori.BBt_AnfahrenClick(Sender: TObject); //Done?
   begin
-    if ChkB_Up.Checked then
-      begin
-        SendData ();
-       end;
-
-procedure TFrm_Spori.DE_FrhanfAcceptDate(Sender: TObject; var ADate: TDateTime; var AcceptDate: Boolean);  //Fertig
-  var
-     Uebertrag:String;
-  begin
-    if AcceptDate then
-      begin
-        Uebertrag:=DateTimeToStr(ADate)+' 00:00:00';
-        Lb_FrAnf.caption:=Uebertrag;
-        OptionsChange(7, Uebertrag);
-      end;
-   end;
-
-    procedure TFrm_Spori.Bt_ResListClick(Sender: TObject); //Fertig
-      begin
-        DefaultList ();
-        LoadStarList (DefaultListPath);
-       end;
-
-    Winkel ();
-
-    OptionsChange(8, Ed_Lamda_G.Text);
+    SendData ();
    end;
 
     procedure TFrm_Spori.Bt_StartClick(Sender: TObject); //Fertig?

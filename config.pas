@@ -25,6 +25,9 @@ type
     Bt_Up: TButton;
     Bt_Con: TButton;
     Bt_HtKy: TButton;
+    Bt_LoadStarList: TButton;
+    Bt_ConfStarList: TButton;
+    Bt_ResettStarList: TButton;
     CBx_Rate: TComboBox;
     CBx_Tag: TComboBox;
     CbBx_Ort: TComboBox;
@@ -33,10 +36,15 @@ type
     ECEdBtn_Htky: TECSpeedBtnPlus;
     Ed_HtKy: TEdit;
     Img_Info_HtKy: TImage;
+    LbL_LoadStarList: TLabel;
+    Lbl_ConfStarList: TLabel;
+    Lbl_ResettStarList: TLabel;
     Lbl_HtKy: TLabel;
     Lbl_NwCnfg: TLabel;
     Lbl_Sw_HtKy: TLabel;
+    OpnD_StarList: TOpenDialog;
     Sw_HtKy: TECSwitch;
+    TbSht_StarList: TTabSheet;
     TE_Plan: TDateTimePicker;
     DE_Day: TDateTimePicker;
     TE_Time: TDateTimePicker;
@@ -122,6 +130,9 @@ type
     UpDn_test: TUpDown;
     UpDn_test1: TUpDown;
     procedure BitBtn_NwCnfgClick(Sender: TObject);
+    procedure Bt_ConfStarListClick(Sender: TObject);
+    procedure Bt_LoadStarListClick(Sender: TObject);
+    procedure Bt_ResettStarListClick(Sender: TObject);
     procedure Ed_HtKyEditingDone(Sender: TObject);
     procedure Bt_Con1Click(Sender: TObject);
     procedure Bt_HtKyClick(Sender: TObject);
@@ -764,7 +775,7 @@ procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject);
         DefaultOptions ();
         LoadOptions ();
 
-        Frm_Spori.SetPortableMode(PortableMode);
+        Sw_PortableMode.Checked := PortableMode;  //Since it would be changed if portableMode was active there is no need to call SetPortableMode(PortableMode);
 
         Frm_Spori.ProgressStarMode(StarMode);
 
@@ -773,8 +784,30 @@ procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject);
       end;
   end;
 
-//PortableVersion
-//Fix Lat/lon
+procedure TFrm_Config.Bt_ConfStarListClick(Sender: TObject); //ToDo
+  begin
+
+  end;
+
+procedure TFrm_Config.Bt_LoadStarListClick(Sender: TObject);
+  begin
+    if (OpnD_StarList.Execute) then
+      begin
+        Frm_Spori.LV_List.Items.Clear;
+
+        Frm_Spori.LoadStarList(OpnD_StarList.Files[0]);
+      end;
+  end;
+
+procedure TFrm_Config.Bt_ResettStarListClick(Sender: TObject);
+  begin
+    with Frm_Spori do
+      begin
+        DefaultList ();
+
+        LoadStarList (DefaultListPath);
+      end;
+  end;
 
 procedure TFrm_Config.Bt_HtKyClick(Sender: TObject);
 begin
@@ -898,7 +931,8 @@ procedure TFrm_Config.ImgMnSelectionChange(Sender: TObject; User: boolean);
       2: PgCont_Pnl.ActivePage := TbSht_Con;
       3: PgCont_Pnl.ActivePage := TbSht_Loc;
       4: PgCont_Pnl.ActivePage := TbSht_Time;
-      5: PgCont_Pnl.ActivePage := TbSht_Info;
+      5: PgCont_Pnl.ActivePage := TbSht_StarList;
+      6: PgCont_Pnl.ActivePage := TbSht_Info;
      end;
   end;
 
