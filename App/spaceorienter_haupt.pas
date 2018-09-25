@@ -279,6 +279,7 @@ type
       TODO 03 -oFireInstall -cFunc : load images from list (like ardu con. ones)
       TODO 01 -oFireInstall -cFunc : Use threads
       TODO 01 -oFireInstall -cBug  : Scrollbars in Starlist doesn't work
+      TODO 01 -oFireInstall -User  : Get ExcpertView to work on Frm_Config too
     }
 
   uses
@@ -2591,7 +2592,7 @@ procedure TFrm_Spori.Bt_EinstZuRSClick(Sender: TObject); //Fertig
     procedure TFrm_Spori.Tmr_BerechTimer(Sender: TObject);   //ToDo: comments; Lb_Gmt = UTC!
       var
          TZ: integer;
-         TempDeviation: String;
+         TempMagnVariation: String;
          Jahr, Monat, Tage, Stunden, Minuten, Sekunden, Millisek:Word;
       begin
         if Frm_Config.Sw_AutoTime.Checked then
@@ -2645,14 +2646,14 @@ procedure TFrm_Spori.Bt_BebListClick(Sender: TObject);  //ToDO
 
         // UTC2 := (i + 00/60 + 0/3600)/24; //UTC2 : (Stunde + Minute/60 + Sekunde/3600)/24
 
-        TempDeviation := FloatToStrF(
+        TempMagnVariation := FloatToStrF(
                            wmmGeomag(1, StrToInt(Lb_Jhr.caption),
                              StrToInt(Lb_Mon.caption), StrToInt(Lb_Day.caption),
                              Frm_Config.FlSpEd_Lon.Value, Frm_Config.FlSpEd_Lat.Value, 0),
                            ffFixed, 4, 14);
 
-        Lb_Mswg1.Caption:= TempDeviation;
-        Ed_Mswg.Text    := TempDeviation;
+        Lb_Mswg1.Caption:= TempMagnVariation;
+        Ed_Mswg.Text    := TempMagnVariation;
 
 
         if not (Ansilowercase(Ed_Egstn.Text) = 'ephemeride') then
