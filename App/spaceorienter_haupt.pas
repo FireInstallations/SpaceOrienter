@@ -279,7 +279,8 @@ type
       TODO 03 -oFireInstall -cFunc : load images from list (like ardu con. ones)
       TODO 01 -oFireInstall -cFunc : Use threads
       TODO 01 -oFireInstall -cBug  : Scrollbars in Starlist doesn't work
-      TODO 01 -oFireInstall -User  : Get ExcpertView to work on Frm_Config too
+      TODO 01 -oFireInstall -cUser : Get ExcpertView to work on Frm_Config too
+      TODO 03 -oFireInstall -cFunc : load VSOP from file
     }
 
   uses
