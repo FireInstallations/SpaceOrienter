@@ -163,6 +163,7 @@ type
     procedure Lbl_Sw_RedoClick(Sender: TObject);
     procedure Sw_AutoTimeChange(Sender: TObject);
     procedure Sw_ExprtChange(Sender: TObject);
+    procedure Sw_HtKyChange(Sender: TObject);
     procedure Sw_ManWChange(Sender: TObject);
     procedure Sw_PortableModeChange(Sender: TObject);
     procedure Sw_AutoConChange(Sender: TObject);
@@ -1057,23 +1058,32 @@ procedure TFrm_Config.Sw_ExprtChange(Sender: TObject);
        end;
    end;
 
-procedure TFrm_Config.Sw_ManWChange(Sender: TObject);
+procedure TFrm_Config.Sw_HtKyChange(Sender: TObject);
+    var
+    IsActive: Boolean;
   begin
-    if (Sw_ManW.Checked) then
-      begin
-        Lbl_Sw_ManW.Caption := 'Ein';
-        Frm_Spori.Options[ON_AutoValueMode] := 'False';
-       end
-     else
-      begin
-        Lbl_Sw_ManW.Caption := 'Aus';
-        Frm_Spori.Options[ON_AutoValueMode] := 'True';
-       end;
+    IsActive := Sw_ManW.Checked;
+
+    Lbl_Sw_HtKy.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+
+    Ed_HtKy.Enabled := IsActive;
+    Bt_HtKy.Enabled := IsActive;
+
+    Frm_Spori.Options[ON_UseHotkey] := BoolToStr(not IsActive, 'True', 'False');
+  end;
+
+procedure TFrm_Config.Sw_ManWChange(Sender: TObject);
+  var
+    IsActive: Boolean;
+  begin
+    IsActive := Sw_ManW.Checked;
+
+    Sw_ManW.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+
+    Frm_Spori.Options[ON_AutoValueMode] := BoolToStr(not IsActive, 'True', 'False');
    end;
 
 procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject);
-
-
   begin
     Frm_Spori.Options[ON_PortableMode] := BoolToStr(Sw_PortableMode.Checked, 'True', 'False');
     Lbl_Sw_PortableMode.Caption := BoolToStr(Sw_PortableMode.Checked, 'Ein', 'Aus');
@@ -1096,8 +1106,9 @@ procedure TFrm_Config.Sw_AutoConChange(Sender: TObject);
         //ED_Port.Enabled        := true;
 
         Frm_Spori.Options[ON_AutoComMode] := 'False';
+
+        Frm_Spori.Connect ();
        end;
-    //Frm_Spori.Connect ();
    end;
 
 procedure TFrm_Config.Sw_RedoChange(Sender: TObject);

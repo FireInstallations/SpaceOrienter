@@ -2926,9 +2926,9 @@ object Frm_Config: TFrm_Config
         Left = 60
         Height = 26
         Top = 228
-        Width = 202
+        Width = 207
         BorderSpacing.Top = 22
-        Caption = 'Manuelle Werteeingabe'
+        Caption = 'Manuelle Werte eingabe'
         ParentColor = False
       end
       object Img_Info_ManW: TImage
@@ -2938,7 +2938,7 @@ object Frm_Config: TFrm_Config
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = Lbl_Redo
         AnchorSideBottom.Side = asrBottom
-        Left = 271
+        Left = 276
         Height = 16
         Top = 228
         Width = 16
@@ -3351,7 +3351,7 @@ object Frm_Config: TFrm_Config
         Style = eosFinePanel
         SwitchWidth = 66
         TabOrder = 6
-        OnChange = Sw_ManWChange
+        OnChange = Sw_HtKyChange
       end
       object Lbl_Sw_HtKy: TLabel
         AnchorSideLeft.Control = Sw_HtKy

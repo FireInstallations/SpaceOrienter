@@ -286,12 +286,13 @@ type
   uses
     Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
     Menus, StrUtils, StdCtrls, ComCtrls, ActnList, ExtCtrls, PopupNotifier,
-    EditBtn, Buttons, math, Types, process,  DateUtils,
+    EditBtn, Buttons, math, Types,  DateUtils,
     Config, PlanEph, Utils, synaser, typinfo
    {$IfDEF Windows}
      //, windows, ShellApi;
+    ;
    {$ELSE IFDEF UNIX}
-    , clocale
+    , clocale, process
      //,unix,baseunix
      //,lclintf
     ;
@@ -816,11 +817,15 @@ procedure TFrm_Spori.GetComPorts (); //ToDo: look Up how Arduino IDE gets the po
              Item:=LV_List.Items.Add;
              Item.caption:=Trim(copy(Stars[index],0,Help-1));
 
-             for Index_R:=1 to 8 do
-               begin
-                 Index_L:=PosEx(';',Stars[index],Help+1);
-                 Merke:=Trim(copy(Stars[index],Help+1,Index_L-1-Help));
-                 Item.SubItems.Add(Merke);
+    {$IFDEF Unix} // Well, since GetSerialPortNames dosn't find it on my kubuntu I have to do it my own. I dont know, how it acts on other OS.
+    if (Ports.count = 0) then
+      for i := 0 to 10 do
+        Ports.Add('/dev/ttyACM' + IntToStr(i));
+    {$Else IfDef Windows}
+    if (Ports.count = 0) then
+      for i := 0 to 10 do
+        Ports.Add('COM' + IntToStr(i));
+    {$ENDIF}
 
     // if ports where found, put then into the ComboBox list
     if (Ports.Count > 0) then
