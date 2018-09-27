@@ -2140,7 +2140,7 @@ object Frm_Spori: TFrm_Spori
     Height = 381
     Top = 0
     Width = 712
-    ActivePage = TbS_Inter
+    ActivePage = TbS_Einst
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.CharSet = ANSI_CHARSET
     Font.Height = -13
@@ -2149,7 +2149,7 @@ object Frm_Spori: TFrm_Spori
     Font.Quality = fqDraft
     MultiLine = True
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 0
     Options = [nboMultiLine, nboKeyboardTabSwitch]
     object TbS_Inter: TTabSheet

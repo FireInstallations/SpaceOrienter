@@ -1,4 +1,4 @@
-unit SpaceOrienter_Haupt;
+unit spaceorienter_main;
 
 {$mode objfpc}{$H+}
 
@@ -1860,16 +1860,17 @@ begin
 
 procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate expert options
   begin
+
+    if Save then
+      Options[ON_ExpertMode] := BoolToStr(MI_Sicht_Exp.checked, 'True', 'False');
+
+
     if  MI_Sicht_Exp.Checked then
       begin
-
-        if Save then
-          Options[ON_ExpertMode] := 'true';
-
         Frm_Config.Sw_Exprt.Checked := true;
 
         TbS_Lag.TabVisible          := true;
-        TbS_Einst.TabVisible        := true;
+        //TbS_Einst.TabVisible        := true;
         TbS_Ephi.TabVisible         := true;
 
         LV_List.Column[0].Width     := 60;
@@ -1890,9 +1891,6 @@ procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate
        end
      else
        begin
-         if Save then
-           Options[ON_ExpertMode] := 'false';
-
          Frm_Config.Sw_Exprt.Checked := false;
 
          TbS_Lag.TabVisible          := false;

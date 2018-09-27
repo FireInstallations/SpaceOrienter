@@ -5,7 +5,7 @@ unit Config;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, SpinEx, DateTimePicker, {SynEdit,} {SynCompletion,} {RTTICtrls,}
+  Classes, SysUtils, FileUtil, SpinEx, DateTimePicker,
   Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   Buttons, EditBtn, Spin, ExtCtrls, MaskEdit, DBGrids, DbCtrls, ECImageMenu,
   ECSwitch, ECEditBtns;
@@ -184,7 +184,7 @@ var
 implementation
 
 uses
-  SpaceOrienter_Haupt;
+  spaceorienter_main;
 
 {$R *.lfm}
 

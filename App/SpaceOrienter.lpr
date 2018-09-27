@@ -7,7 +7,8 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, runtimetypeinfocontrols, SpaceOrienter_Haupt;
+  Forms, datetimectrls, lazcontrols,
+  spaceorienter_main, Config;
 
 {$R *.res}
 

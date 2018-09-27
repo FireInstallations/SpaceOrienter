@@ -10,146 +10,64 @@
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
       <XPManifest>
-        <TextName Value="FireInstall.ProductName.SpaceOrienter"/>
-        <TextDesc Value="Finding Stars and Ephemerides in the nightsky"/>
+        <TextName Value="FireInstall.SpOri.SpaceOrienter"/>
+        <TextDesc Value="Finding all kinds of heavenly bodies at the sky"/>
       </XPManifest>
       <Icon Value="0"/>
     </General>
-    <BuildModes Count="5">
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <RevisionNr Value="2"/>
+      <Language Value="0407"/>
+      <Attributes pvaPreRelease="True" pvaPatched="True"/>
+      <StringTable CompanyName="FireInstallations" FileDescription="Finding all kinds of heavenly bodies at the sky" InternalName="SpaceOrienter" LegalCopyright="GNU Lesser General Public License v3.0" ProductName="SpaceOrienter"/>
+    </VersionInfo>
+    <BuildModes Count="2">
       <Item1 Name="Default" Default="True"/>
-      <Item2 Name="Linux32_Release">
-        <MacroValues Count="1">
-          <Macro3 Name="LCLWidgetType" Value="gtk2"/>
-        </MacroValues>
+      <Item2 Name="Debug">
         <CompilerOptions>
           <Version Value="11"/>
           <Target>
-            <Filename Value="Release/SpaceOrienter_$(TargetOS)-$(TargetCPU)"/>
+            <Filename Value="Debug/SpaceOrienter"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
             <OtherUnitFiles Value="requirements;requirements/VSOP"/>
             <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)-$(BuildMode)"/>
           </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <IncludeAssertionCode Value="True"/>
+            </SyntaxOptions>
+          </Parsing>
           <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
-            <TargetCPU Value="i386"/>
-            <TargetOS Value="linux"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-            </Optimizations>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+              <StackChecks Value="True"/>
+            </Checks>
+            <VerifyObjMethodCallValidity Value="True"/>
           </CodeGeneration>
           <Linking>
             <Debugging>
-              <GenerateDebugInfo Value="False"/>
+              <DebugInfoType Value="dsDwarf2Set"/>
+              <UseHeaptrc Value="True"/>
+              <TrashVariables Value="True"/>
+              <UseExternalDbgSyms Value="True"/>
             </Debugging>
-            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
           </Linking>
         </CompilerOptions>
       </Item2>
-      <Item3 Name="Linux64_Release">
-        <MacroValues Count="1">
-          <Macro3 Name="LCLWidgetType" Value="gtk2"/>
-        </MacroValues>
-        <CompilerOptions>
-          <Version Value="11"/>
-          <Target>
-            <Filename Value="Release/SpaceOrienter_$(TargetOS)-$(TargetCPU)"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="requirements;requirements/VSOP"/>
-            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)-$(BuildMode)"/>
-          </SearchPaths>
-          <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
-            <TargetCPU Value="x86_64"/>
-            <TargetOS Value="linux"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-            </Optimizations>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="False"/>
-            </Debugging>
-            <LinkSmart Value="True"/>
-          </Linking>
-        </CompilerOptions>
-      </Item3>
-      <Item4 Name="Win64_Release">
-        <MacroValues Count="1">
-          <Macro2 Name="LCLWidgetType" Value="win32"/>
-        </MacroValues>
-        <CompilerOptions>
-          <Version Value="11"/>
-          <Target>
-            <Filename Value="Release/SpaceOrienter_$(TargetOS)-$(TargetCPU)"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="requirements;requirements/VSOP"/>
-            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)-$(BuildMode)"/>
-          </SearchPaths>
-          <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
-            <TargetCPU Value="x86_64"/>
-            <TargetOS Value="win64"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-            </Optimizations>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="False"/>
-            </Debugging>
-            <LinkSmart Value="True"/>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
-          </Linking>
-        </CompilerOptions>
-      </Item4>
-      <Item5 Name="Win32_Release">
-        <MacroValues Count="1">
-          <Macro2 Name="LCLWidgetType" Value="win32"/>
-        </MacroValues>
-        <CompilerOptions>
-          <Version Value="11"/>
-          <Target>
-            <Filename Value="Release/SpaceOrienter_$(TargetOS)-$(TargetCPU)"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="requirements;requirements/VSOP"/>
-            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)-$(BuildMode)"/>
-          </SearchPaths>
-          <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
-            <TargetCPU Value="i386"/>
-            <TargetOS Value="win32"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-            </Optimizations>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="False"/>
-            </Debugging>
-            <LinkSmart Value="True"/>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
-          </Linking>
-        </CompilerOptions>
-      </Item5>
-      <SharedMatrixOptions Count="2">
-        <Item2 ID="329045115240" Modes="Win64_Release,Win32_Release" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
-        <Item3 ID="157932489175" Modes="Linux64_Release,Linux32_Release" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+      <SharedMatrixOptions Count="3">
+        <Item1 ID="788939849005"/>
+        <Item2 ID="329045115240" Type="IDEMacro" MacroName="LCLWidgetType" Value="win32"/>
+        <Item3 ID="209643945477" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
       </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
@@ -177,12 +95,11 @@
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="spaceorienter_haupt.pas"/>
+        <Filename Value="spaceorienter_main.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Frm_Spori"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="SpaceOrienter_Haupt"/>
       </Unit1>
     </Units>
   </ProjectOptions>
@@ -190,12 +107,12 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="SpaceOrienter"/>
+      <Filename Value="Debug/SpaceOrienter"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
       <OtherUnitFiles Value="requirements;requirements/VSOP"/>
-      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+      <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)-$(BuildMode)"/>
     </SearchPaths>
     <Linking>
       <Options>

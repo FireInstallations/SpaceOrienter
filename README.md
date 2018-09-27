@@ -1,7 +1,7 @@
 # SpaceOrienter
 
 Our universe is gigant and even our nightsky can be confusing big and messy if you are not an expert.
-It become even harder if you try to show heavenly bodies to other people. 
+It's if you try to show heavenly bodies to other people. 
 Or maybe you don't know where to find is what.
 
 The SpaceOrienter project is a small tool and a solution for all problems of this kind.
@@ -13,9 +13,9 @@ But nevertheless, even without the device is the app not useless as it answers m
 
 If you want to use ephemeris you have to place WMM.COF to the working folder of the app (may change in future). More informations at: [WMM.COF](https://github.com/FireInstallations/SpaceOrienter/wiki/WMM.COF) and [portable mode](https://github.com/FireInstallations/SpaceOrienter/wiki/Portable-Mode).
 
-If you like to code for the App, Lazarus IDE would be recommend and Eye Candy Controls is required (just install it to Lazarus). More Informations how to build the app will be found [here](https://github.com/FireInstallations/SpaceOrienter/wiki/Build-the-App).
+If you like to code for the App, Lazarus IDE would be recommend and Eye Candy Controls is required (just install it to Lazarus). More informations how to build the app will be found [here](https://github.com/FireInstallations/SpaceOrienter/wiki/Build-the-App).
 
-If you want to help this project read [How to help](https://github.com/FireInstallations/SpaceOrienter/wiki/How-to-Help)
+If you want to help this project read [How to help](https://github.com/FireInstallations/SpaceOrienter/wiki/How-to-Help).
 
 ***
 
