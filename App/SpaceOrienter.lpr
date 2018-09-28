@@ -8,7 +8,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, datetimectrls, lazcontrols,
-  spaceorienter_main, Config;
+  spaceorienter_main, Config, GetHotkey;
 
 {$R *.res}
 
@@ -16,6 +16,8 @@ begin
   RequireDerivedFormResource:=True;
   Application.Initialize;
   Application.CreateForm(TFrm_Spori, Frm_Spori);
+  Application.CreateForm(TFrm_Config, Frm_Config);
+  Application.CreateForm(TFrm_GetHotKey, Frm_GetHotKey);
   Application.Run;
 end.
 

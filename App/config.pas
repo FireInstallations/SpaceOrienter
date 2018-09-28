@@ -1,5 +1,21 @@
 unit Config;
 
+  {Copyright (C) <2018> <FireInstallations> <kettnerl@hu-berlin.de>
+
+   This programm is free software; you can redistribute it and/or modify it
+   under the terms of the GNU Library General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or (at your
+   option) any later version.
+
+   This program is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+   FITNESS FOR A PARTICULAR PURPOSE. See the GNU Library General Public License
+   for more details.
+
+   You should have received a copy of the GNU Library General Public License
+   along with this library; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.}
+
 {$mode objfpc}{$H+}
 
 interface
@@ -8,7 +24,8 @@ uses
   Classes, SysUtils, FileUtil, SpinEx, DateTimePicker,
   Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   Buttons, EditBtn, Spin, ExtCtrls, MaskEdit, DBGrids, DbCtrls, ECImageMenu,
-  ECSwitch, ECEditBtns;
+  ECSwitch, ECEditBtns, LCLType,
+  GetHotkey;
 
 type
 
@@ -27,7 +44,7 @@ type
     Bt_HtKy: TButton;
     Bt_LoadStarList: TButton;
     Bt_ConfStarList: TButton;
-    Bt_ResettStarList: TButton;
+    Bt_ResetStarList: TButton;
     CBx_Rate: TComboBox;
     CBx_Tag: TComboBox;
     CbBx_Ort: TComboBox;
@@ -38,7 +55,7 @@ type
     Img_Info_HtKy: TImage;
     LbL_LoadStarList: TLabel;
     Lbl_ConfStarList: TLabel;
-    Lbl_ResettStarList: TLabel;
+    Lbl_ResetStarList: TLabel;
     Lbl_HtKy: TLabel;
     Lbl_NwCnfg: TLabel;
     Lbl_Sw_HtKy: TLabel;
@@ -132,7 +149,7 @@ type
     procedure BitBtn_NwCnfgClick(Sender: TObject);
     procedure Bt_ConfStarListClick(Sender: TObject);
     procedure Bt_LoadStarListClick(Sender: TObject);
-    procedure Bt_ResettStarListClick(Sender: TObject);
+    procedure Bt_ResetStarListClick(Sender: TObject);
     procedure Ed_HtKyEditingDone(Sender: TObject);
     procedure Bt_Con1Click(Sender: TObject);
     procedure Bt_HtKyClick(Sender: TObject);
@@ -174,6 +191,7 @@ type
   private
       {private declarations}
   public
+    function KeyToStr (Key: Word): String; inline;
     function Koordinaten (Stadt:String):TKoord;
     procedure AllUpOff ();
   end;
@@ -191,10 +209,228 @@ uses
 { TFrm_Config }
 
 //Usefull: ComboboxEx,  TECTabCtrl
-// --!> Allg. <!--
 // Benachrichtigungen
-// API für übersetzungen anlegen
-// StadtListe
+
+function TFrm_Config.KeyToStr (Key: Word): String; inline; //wandelt einen Key zu Str --> Label für virtuelle
+  begin
+    case Key of
+      VK_HIGHESTVALUE,
+      VK_UNKNOWN,
+      VK_UNDEFINED:  Result := '???';
+
+      VK_0:          Result := '0';
+      VK_1:          Result := '1';
+      VK_2:          Result := '2';
+      VK_3:          Result := '3';
+      VK_4:          Result := '4';
+      VK_5:          Result := '5';
+      VK_6:          Result := '6';
+      VK_7:          Result := '7';
+      VK_8:          Result := '8';
+      VK_9:          Result := '9';
+      VK_A:          Result := 'A';
+      VK_B:          Result := 'B';
+      VK_C:          Result := 'C';
+      VK_D:          Result := 'D';
+      VK_E:          Result := 'E';
+      VK_F:          Result := 'F';
+      VK_G:          Result := 'G';
+      VK_H:          Result := 'H';
+      VK_I:          Result := 'I';
+      VK_J:          Result := 'J';
+      VK_K:          Result := 'K';
+      VK_L:          Result := 'L';
+      VK_M:          Result := 'M';
+      VK_N:          Result := 'N';
+      VK_O:          Result := 'O';
+      VK_P:          Result := 'P';
+      VK_Q:          Result := 'Q';
+      VK_R:          Result := 'R';
+      VK_S:          Result := 'S';
+      VK_T:          Result := 'T';
+      VK_U:          Result := 'U';
+      VK_V:          Result := 'V';
+      VK_W:          Result := 'W';
+      VK_X:          Result := 'X';
+      VK_Y:          Result := 'Y';
+      VK_Z:          Result := 'Z';
+
+      VK_F1:         Result := 'F1';
+      VK_F2:         Result := 'F2';
+      VK_F3:         Result := 'F2';
+      VK_F4:         Result := 'F4';
+      VK_F5:         Result := 'F5';
+      VK_F6:         Result := 'F6';
+      VK_F7:         Result := 'F7';
+      VK_F8:         Result := 'F8';
+      VK_F9:         Result := 'F9';
+      VK_F10:        Result := 'F10';
+      VK_F11:        Result := 'F11';
+      VK_F12:        Result := 'F12';
+      VK_F13:        Result := 'F13';
+      VK_F14:        Result := 'F14';
+      VK_F15:        Result := 'F15';
+      VK_F16:        Result := 'F16';
+      VK_F17:        Result := 'F17';
+      VK_F18:        Result := 'F18';
+      VK_F19:        Result := 'F19';
+      VK_F20:        Result := 'F20';
+      VK_F21:        Result := 'F21';
+      VK_F22:        Result := 'F22';
+      VK_F23:        Result := 'F23';
+      VK_F24:        Result := 'F24';
+
+      VK_TAB:        Result := 'Tab';
+      VK_SHIFT:      Result := 'Shift'; // See also VK_LSHIFT, VK_RSHIFT
+      VK_RETURN:     Result := 'Enter'; // The "Enter" key, also used for a keypad center press
+      VK_BACK:       Result := 'Back';  // The "Backspace" key, dont confuse with the
+                                        // Android BACK key which is mapped to VK_ESCAPE
+      VK_CONTROL:    Result := 'Ctr';   // See also VK_LCONTROL, VK_RCONTROL
+      VK_DELETE:     Result := 'Del';
+      VK_MENU:       Result := 'Alt'; // The ALT key. Also called "Option" in Mac OS X. See also VK_LMENU, VK_RMENU
+      VK_PAUSE:      Result := 'Pause'; // Pause/Break key
+      VK_CAPITAL:    Result := 'Caps'; // CapsLock key
+      VK_SPACE:      Result := 'Space';
+      VK_END:        Result := 'End';
+      VK_HOME:       Result := 'Home';
+      VK_LEFT:       Result := 'Left';
+      VK_UP:         Result := 'Up';
+      VK_RIGHT:      Result := 'Right';
+      VK_DOWN:       Result := 'Down';
+      VK_SELECT:     Result := 'Selct';
+      VK_PRINT:      Result := 'Print'; // PrintScreen key
+      VK_EXECUTE:    Result := 'Execte';
+      VK_SNAPSHOT:   Result := 'Snapsht';
+      VK_INSERT:     Result := 'Insrt';
+      VK_CLEAR:      Result := 'Clear';
+
+      VK_LWIN:       Result := 'LSYS'; // In Mac OS X this is the Apple, or Command key. Windows Key in PC keyboards
+      VK_RWIN:       Result := 'RSYS'; // In Mac OS X this is the Apple, or Command key. Windows Key in PC keyboards
+      VK_ESCAPE:     Result := 'Esc';  // Also used for the hardware Back key in Android
+      VK_PRIOR:      Result := 'PageUp'; // Page Up
+      VK_NEXT:       Result := 'PageDwn'; // Page Down
+      VK_SCROLL:     Result := 'Scrll';
+
+      VK_NUMLOCK:    Result := 'Num';
+      VK_NUMPAD0:    Result := 'Num0';
+      VK_NUMPAD1:    Result := 'Num1';
+      VK_NUMPAD2:    Result := 'Num2';
+      VK_NUMPAD3:    Result := 'Num3';
+      VK_NUMPAD4:    Result := 'Num4';
+      VK_NUMPAD5:    Result := 'Num5';
+      VK_NUMPAD6:    Result := 'Num6';
+      VK_NUMPAD7:    Result := 'Num7';
+      VK_NUMPAD8:    Result := 'Num8';
+      VK_NUMPAD9:    Result := 'Num9';
+      VK_MULTIPLY:   Result := 'Num*'; // VK_MULTIPLY up to VK_DIVIDE are usually in the numeric keypad in PC keyboards
+      VK_ADD:        Result := 'Num+';
+      VK_SEPARATOR:  Result := 'NumEntr';
+      VK_SUBTRACT:   Result := 'Num-';
+      VK_DECIMAL:    Result := 'Num,';
+      VK_DIVIDE:     Result := 'Num/';
+
+      VK_LBUTTON:    Result := 'LBtn';
+      VK_RBUTTON:    Result := 'RBtn';
+      VK_CANCEL:     Result := 'Cncl';
+      VK_MBUTTON:    Result := 'MBtn';
+      VK_XBUTTON1:   Result := 'XBtn1';
+      VK_XBUTTON2:   Result := 'XBtn2';
+
+      VK_OEM_PLUS:   Result := '+'; // For any country/region, the '+' key
+      VK_OEM_COMMA:  Result := ','; // For any country/region, the ',' key
+      VK_OEM_MINUS:  Result := '-'; // For any country/region, the '-' key
+      VK_OEM_PERIOD: Result := '.'; // For any country/region, the '.' key
+
+      //Application.ExtendedKeysSupport
+      VK_LSHIFT:     Result := 'LShift';
+      VK_RSHIFT:     Result := 'RShift';
+      VK_LCONTROL:   Result := 'LCtr';
+      VK_RCONTROL:   Result := 'RCtr';
+      VK_LMENU:      Result := 'LAlt'; // Left ALT key (also named Option in Mac OS X)
+      VK_RMENU:      Result := 'RAlt'; // Right ALT key (also named Option in Mac OS X)
+
+      VK_HELP:       Result := 'Help';
+      VK_APPS:       Result := 'Apps';   // The PopUp key in PC keyboards
+      VK_SLEEP:      Result := 'Sleep';
+
+      VK_PROCESSKEY: Result := 'Prgrss'; // IME Process key
+
+      VK_KANA:       Result := 'Kana';
+      //VK_HANGUL:     Result := 'Hangul';
+      VK_JUNJA:      Result := 'Junja';
+      VK_FINAL:      Result := 'Final';
+      VK_HANJA:      Result := 'Hanja';
+      //VK_KANJI:      Result := 'Kanji';
+      VK_CONVERT:    Result := 'Conrt';
+      VK_NONCONVERT: Result := 'NConrt';
+      VK_ACCEPT:     Result := 'Acc';
+      VK_MODECHANGE: Result := 'MdlCh';
+
+      VK_ATTN:       Result := 'Attn';
+      VK_CRSEL:      Result := 'CrSel';
+      VK_EXSEL:      Result := 'ExSel';
+      VK_EREOF:      Result := 'Ereof';
+      VK_PLAY:       Result := 'Play';
+      VK_ZOOM:       Result := 'Zoom';
+      VK_NONAME:     Result := 'NoName';
+      VK_PA1:        Result := 'Pa1';
+
+      VK_LCL_POWER:  Result := 'Power';
+      VK_LCL_CALL:   Result := 'Call';
+      VK_LCL_ENDCALL:Result := 'EndCall';
+      VK_LCL_AT:     Result := '@'; // Not equivalent to anything < $FF, will only be sent by a primary "@" key
+                                    // but not for a @ key as secondary action of a "2" key for example
+    else
+     Result := '???';
+
+{ Not Used Keys:
+
+    VK_BROWSER_BACK        = $A6;
+    VK_BROWSER_FORWARD     = $A7;
+    VK_BROWSER_REFRESH     = $A8;
+    VK_BROWSER_STOP        = $A9;
+    VK_BROWSER_SEARCH      = $AA;
+    VK_BROWSER_FAVORITES   = $AB;
+    VK_BROWSER_HOME        = $AC;
+    VK_VOLUME_MUTE         = $AD;
+    VK_VOLUME_DOWN         = $AE;
+    VK_VOLUME_UP           = $AF;
+    VK_MEDIA_NEXT_TRACK    = $B0;
+    VK_MEDIA_PREV_TRACK    = $B1;
+    VK_MEDIA_STOP          = $B2;
+    VK_MEDIA_PLAY_PAUSE    = $B3;
+    VK_LAUNCH_MAIL         = $B4;
+    VK_LAUNCH_MEDIA_SELECT = $B5;
+    VK_LAUNCH_APP1         = $B6;
+    VK_LAUNCH_APP2         = $B7;
+
+    // VK_OEM keys are utilized only when Application.ExtendedKeysSupport is false
+
+    VK_OEM_1               = $BA; // Used for miscellaneous characters; it can vary by keyboard.
+                                  // For the US standard keyboard, the ';:' key
+
+    VK_OEM_2               = $BF; // Used for miscellaneous characters; it can vary by keyboard.
+                                  // For the US standard keyboard, the '/?' key
+    VK_OEM_3               = $C0; // Used for miscellaneous characters; it can vary by keyboard.
+                                  // For the US standard keyboard, the '`~' key
+
+    VK_OEM_4               = $DB; // Used for miscellaneous characters; it can vary by keyboard.
+                                  // For the US standard keyboard, the '[{' key
+    VK_OEM_5               = $DC; // Used for miscellaneous characters; it can vary by keyboard.
+                                  // For the US standard keyboard, the '\|' key
+    VK_OEM_6               = $DD; // Used for miscellaneous characters; it can vary by keyboard.
+                                  // For the US standard keyboard, the ']}' key
+    VK_OEM_7               = $DE; // Used for miscellaneous characters; it can vary by keyboard.
+                                  // For the US standard keyboard, the 'single-quote/double-quote' key
+    VK_OEM_8               = $DF; // Used for miscellaneous characters; it can vary by keyboard.
+
+    // $E0 Reserved
+    // $E1 OEM specific
+    VK_OEM_102             = $E2; // Either the angle bracket key or the backslash key on the RT 102-key keyboard
+
+    VK_OEM_CLEAR  = $FE;}
+    end;
+  end;
 
 function TFrm_Config.Koordinaten (Stadt:String):TKoord; //Dynamisch, laden + Speichern ermöglichen; own file
   begin
@@ -202,519 +438,519 @@ function TFrm_Config.Koordinaten (Stadt:String):TKoord; //Dynamisch, laden + Spe
     case (Trim(AnsiLowerCase(Stadt))) of
       'none':
         begin
-          Result.Lon := 0;
-          Result.Lat  := 0;
+          Result.Lat := 0;
+          Result.Lon  := 0;
         end;
 
       'aachen':
         begin
-          Result.Lon := 50.775346;
-          Result.Lat := 6.0838870;
+          Result.Lat := 50.775346;
+          Result.Lon := 6.0838870;
          end;
       'augsburg':
         begin
-          Result.Lon := 48.370545;
-          Result.Lat := 10.897790;
+          Result.Lat := 48.370545;
+          Result.Lon := 10.897790;
          end;
       'bamberg':
         begin
-          Result.Lon := 49.898814;
-          Result.Lat := 10.902764;
+          Result.Lat := 49.898814;
+          Result.Lon := 10.902764;
          end;
       'bergisch gladbach':
         begin
-          Result.Lon := 50.992309;
-          Result.Lat := 7.1286210;
+          Result.Lat := 50.992309;
+          Result.Lon := 7.1286210;
          end;
       'berlin':
         begin
-          Result.Lon := 52.520007;
-          Result.Lat := 13.404954;
+          Result.Lat := 52.520007;
+          Result.Lon := 13.404954;
          end;
       'bielefeld':
         begin
-          Result.Lon := 52.030228;
-          Result.Lat := 8.5324710;
+          Result.Lat := 52.030228;
+          Result.Lon := 8.5324710;
          end;
       'bochum':
         begin
-          Result.Lon := 51.481845;
-          Result.Lat := 7.2162360;
+          Result.Lat := 51.481845;
+          Result.Lon := 7.2162360;
          end;
       'bonn':
         begin
-          Result.Lon := 50.737430;
-          Result.Lat := 7.0982070;
+          Result.Lat := 50.737430;
+          Result.Lon := 7.0982070;
          end;
       'bottrop':
         begin
-          Result.Lon := 51.529086;
-          Result.Lat := 6.9446890;
+          Result.Lat := 51.529086;
+          Result.Lon := 6.9446890;
          end;
       'brünn':
         begin
-          Result.Lon := 49.195060;
-          Result.Lat := 16.606837;
+          Result.Lat := 49.195060;
+          Result.Lon := 16.606837;
          end;
       'braunschweig':
         begin
-          Result.Lon := 52.268874;
-          Result.Lat := 10.526770;
+          Result.Lat := 52.268874;
+          Result.Lon := 10.526770;
          end;
       'bremen':
         begin
-          Result.Lon := 53.079296;
-          Result.Lat := 8.8016940;
+          Result.Lat := 53.079296;
+          Result.Lon := 8.8016940;
          end;
       'bremerhaven':
         begin
-          Result.Lon := 53.539584;
-          Result.Lat := 8.5809420;
+          Result.Lat := 53.539584;
+          Result.Lon := 8.5809420;
          end;
       'chemnitz':
         begin
-          Result.Lon := 50.827845;
-          Result.Lat := 12.921370;
+          Result.Lat := 50.827845;
+          Result.Lon := 12.921370;
          end;
       'cottbus':
         begin
-          Result.Lon := 51.756311;
-          Result.Lat := 14.332868;
+          Result.Lat := 51.756311;
+          Result.Lon := 14.332868;
          end;
       'düsseldorf':
         begin
-          Result.Lon := 51.227741;
-          Result.Lat := 6.7734560;
+          Result.Lat := 51.227741;
+          Result.Lon := 6.7734560;
          end;
       'darmstadt':
         begin
-          Result.Lon := 49.872825;
-          Result.Lat := 8.6511930;
+          Result.Lat := 49.872825;
+          Result.Lon := 8.6511930;
          end;
       'dessau-roßlau':
         begin
-          Result.Lon := 51.842828;
-          Result.Lat := 12.230393;
+          Result.Lat := 51.842828;
+          Result.Lon := 12.230393;
          end;
       'dortmund':
         begin
-          Result.Lon := 51.513587;
-          Result.Lat := 7.4652980;
+          Result.Lat := 51.513587;
+          Result.Lon := 7.4652980;
          end;
       'dresden':
         begin
-          Result.Lon := 51.050409;
-          Result.Lat := 13.737262;
+          Result.Lat := 51.050409;
+          Result.Lon := 13.737262;
          end;
       'duisburg':
         begin
-          Result.Lon := 51.434408;
-          Result.Lat := 6.7623290;
+          Result.Lat := 51.434408;
+          Result.Lon := 6.7623290;
          end;
       'erfurt':
         begin
-          Result.Lon := 50.984768;
-          Result.Lat := 11.029880;
+          Result.Lat := 50.984768;
+          Result.Lon := 11.029880;
          end;
       'erlangen':
         begin
-          Result.Lon := 49.589674;
-          Result.Lat := 11.011961;
+          Result.Lat := 49.589674;
+          Result.Lon := 11.011961;
          end;
       'essen':
         begin
-          Result.Lon := 51.455643;
-          Result.Lat := 7.0115550;
+          Result.Lat := 51.455643;
+          Result.Lon := 7.0115550;
          end;
       'fürth':
         begin
-          Result.Lon := 49.477117;
-          Result.Lat := 10.988667;
+          Result.Lat := 49.477117;
+          Result.Lon := 10.988667;
          end;
       'flensburg':
         begin
-          Result.Lon := 54.793743;
-          Result.Lat := 9.4469960;
+          Result.Lat := 54.793743;
+          Result.Lon := 9.4469960;
          end;
       'frankfurt (oder)':
         begin
-          Result.Lon := 52.347224;
-          Result.Lat := 14.550567;
+          Result.Lat := 52.347224;
+          Result.Lon := 14.550567;
          end;
       'frankfurt am main':
         begin
-          Result.Lon := 50.110922;
-          Result.Lat := 8.6821270;
+          Result.Lat := 50.110922;
+          Result.Lon := 8.6821270;
          end;
       'freiburg im breisgau':
         begin
-          Result.Lon := 47.999008;
-          Result.Lat := 7.8421040;
+          Result.Lat := 47.999008;
+          Result.Lon := 7.8421040;
          end;
       'görlitz':
         begin
-          Result.Lon := 51.150627;
-          Result.Lat := 14.968707;
+          Result.Lat := 51.150627;
+          Result.Lon := 14.968707;
          end;
       'göttingen':
         begin
-          Result.Lon := 51.541280;
-          Result.Lat := 9.9158040;
+          Result.Lat := 51.541280;
+          Result.Lon := 9.9158040;
          end;
       'gütersloh':
         begin
-          Result.Lon := 51.903238;
-          Result.Lat := 8.3857530;
+          Result.Lat := 51.903238;
+          Result.Lon := 8.3857530;
          end;
       'gelsenkirchen':
         begin
-          Result.Lon := 51.517744;
-          Result.Lat := 7.0857170;
+          Result.Lat := 51.517744;
+          Result.Lon := 7.0857170;
          end;
       'gera':
         begin
-          Result.Lon := 50.885071;
-          Result.Lat := 12.080720;
+          Result.Lat := 50.885071;
+          Result.Lon := 12.080720;
          end;
       'graz':
         begin
-          Result.Lon := 47.070714;
-          Result.Lat := 15.439504;
+          Result.Lat := 47.070714;
+          Result.Lon := 15.439504;
          end;
       'hagen':
         begin
-          Result.Lon := 51.367078;
-          Result.Lat := 7.4632840;
+          Result.Lat := 51.367078;
+          Result.Lon := 7.4632840;
          end;
       'halle (saale)':
         begin
-          Result.Lon := 51.496980;
-          Result.Lat := 11.968803;
+          Result.Lat := 51.496980;
+          Result.Lon := 11.968803;
          end;
       'hamburg':
         begin
-          Result.Lon := 53.551085;
-          Result.Lat := 9.9936820;
+          Result.Lat := 53.551085;
+          Result.Lon := 9.9936820;
          end;
       'hamm':
         begin
-          Result.Lon := 51.673858;
-          Result.Lat := 7.8159820;
+          Result.Lat := 51.673858;
+          Result.Lon := 7.8159820;
          end;
       'hannover':
         begin
-          Result.Lon := 52.375892;
-          Result.Lat := 9.7320100;
+          Result.Lat := 52.375892;
+          Result.Lon := 9.7320100;
          end;
       'haunau':
         begin
-          Result.Lon := 60.791660;
-          Result.Lat := 22.903331;
+          Result.Lat := 60.791660;
+          Result.Lon := 22.903331;
          end;
       'heidelberg':
         begin
-          Result.Lon := 49.398752;
-          Result.Lat := 8.6724340;
+          Result.Lat := 49.398752;
+          Result.Lon := 8.6724340;
          end;
       'heilbronn':
         begin
-          Result.Lon := 49.142693;
-          Result.Lat := 9.2108790;
+          Result.Lat := 49.142693;
+          Result.Lon := 9.2108790;
          end;
       'herne':
         begin
-          Result.Lon := 51.536895;
-          Result.Lat := 7.2009150;
+          Result.Lat := 51.536895;
+          Result.Lon := 7.2009150;
          end;
       'hildesheim':
         begin
-          Result.Lon := 52.154778;
-          Result.Lat := 9.9579650;
+          Result.Lat := 52.154778;
+          Result.Lon := 9.9579650;
          end;
       'ingolstadt':
         begin
-          Result.Lon := 48.766535;
-          Result.Lat := 11.425754;
+          Result.Lat := 48.766535;
+          Result.Lon := 11.425754;
          end;
       'jena':
         begin
-          Result.Lon := 50.927054;
-          Result.Lat := 11.589237;
+          Result.Lat := 50.927054;
+          Result.Lon := 11.589237;
          end;
       'köln':
         begin
-          Result.Lon := 50.937531;
-          Result.Lat := 6.9602790;
+          Result.Lat := 50.937531;
+          Result.Lon := 6.9602790;
          end;
       'königs wusterhausen':
         begin
-          Result.Lon := 52.295891;
-          Result.Lat := 13.622838;
+          Result.Lat := 52.295891;
+          Result.Lon := 13.622838;
          end;
       'kaiserslautern':
         begin
-          Result.Lon := 49.440066;
-          Result.Lat := 7.7491260;
+          Result.Lat := 49.440066;
+          Result.Lon := 7.7491260;
          end;
       'karlsruhe':
         begin
-          Result.Lon := 49.006890;
-          Result.Lat := 8.4036530;
+          Result.Lat := 49.006890;
+          Result.Lon := 8.4036530;
          end;
       'kassel':
         begin
-          Result.Lon := 51.312711;
-          Result.Lat := 9.4797460;
+          Result.Lat := 51.312711;
+          Result.Lon := 9.4797460;
          end;
       'kiel':
         begin
-          Result.Lon := 54.323293;
-          Result.Lat := 10.122765;
+          Result.Lat := 54.323293;
+          Result.Lon := 10.122765;
          end;
       'koblenz':
         begin
-          Result.Lon := 50.356943;
-          Result.Lat := 7.5889960;
+          Result.Lat := 50.356943;
+          Result.Lon := 7.5889960;
          end;
       'krefeld':
         begin
-          Result.Lon := 51.338761;
-          Result.Lat := 6.5853420;
+          Result.Lat := 51.338761;
+          Result.Lon := 6.5853420;
          end;
       'lübeck':
         begin
-          Result.Lon := 53.865467;
-          Result.Lat := 10.686559;
+          Result.Lat := 53.865467;
+          Result.Lon := 10.686559;
          end;
       'leibzig':
         begin
-          Result.Lon := 51.339695;
-          Result.Lat := 12.373075;
+          Result.Lat := 51.339695;
+          Result.Lon := 12.373075;
          end;
       'leverkusen':
         begin
-          Result.Lon := 51.045925;
-          Result.Lat := 7.0192200;
+          Result.Lat := 51.045925;
+          Result.Lon := 7.0192200;
          end;
       'linz':
         begin
-          Result.Lon := 48.306940;
-          Result.Lat := 14.285830;
+          Result.Lat := 48.306940;
+          Result.Lon := 14.285830;
          end;
       'ludwigsburg':
         begin
-          Result.Lon := 48.894062;
-          Result.Lat := 9.1954640;
+          Result.Lat := 48.894062;
+          Result.Lon := 9.1954640;
          end;
       'ludwigshafen am rhein':
         begin
-          Result.Lon := 49.477410;
-          Result.Lat := 8.4451800;
+          Result.Lat := 49.477410;
+          Result.Lon := 8.4451800;
          end;
       'mönchengladbach':
         begin
-          Result.Lon := 51.180457;
-          Result.Lat := 6.4428040;
+          Result.Lat := 51.180457;
+          Result.Lon := 6.4428040;
          end;
       'mülheim an der ruhr':
         begin
-          Result.Lon := 51.418568;
-          Result.Lat := 6.8845230;
+          Result.Lat := 51.418568;
+          Result.Lon := 6.8845230;
          end;
       'münchen':
         begin
-          Result.Lon := 48.135125;
-          Result.Lat := 11.581980;
+          Result.Lat := 48.135125;
+          Result.Lon := 11.581980;
          end;
       'münster':
         begin
-          Result.Lon := 51.960665;
-          Result.Lat := 7.6261350;
+          Result.Lat := 51.960665;
+          Result.Lon := 7.6261350;
          end;
       'magdeburg':
         begin
-          Result.Lon := 52.120533;
-          Result.Lat := 11.627624;
+          Result.Lat := 52.120533;
+          Result.Lon := 11.627624;
         end;
       'mainz':
         begin
-          Result.Lon := 49.992862;
-          Result.Lat := 8.2472530;
+          Result.Lat := 49.992862;
+          Result.Lon := 8.2472530;
          end;
       'mannheim':
         begin
-          Result.Lon := 49.487459;
-          Result.Lat := 8.4660390;
+          Result.Lat := 49.487459;
+          Result.Lon := 8.4660390;
          end;
       'moers':
         begin
-          Result.Lon := 51.451604;
-          Result.Lat := 6.6408150;
+          Result.Lat := 51.451604;
+          Result.Lon := 6.6408150;
          end;
       'nürnberg':
         begin
-          Result.Lon := 49.452102;
-          Result.Lat := 11.076665;
+          Result.Lat := 49.452102;
+          Result.Lon := 11.076665;
          end;
       'neuss':
         begin
-          Result.Lon := 51.204197;
-          Result.Lat := 6.6879510;
+          Result.Lat := 51.204197;
+          Result.Lon := 6.6879510;
          end;
       'oberhausen':
         begin
-          Result.Lon := 51.496334;
-          Result.Lat := 6.8637760;
+          Result.Lat := 51.496334;
+          Result.Lon := 6.8637760;
          end;
       'offenbach am main':
         begin
-          Result.Lon := 50.095636;
-          Result.Lat := 8.7760840;
+          Result.Lat := 50.095636;
+          Result.Lon := 8.7760840;
          end;
       'oldenburg (oldb)':
         begin
-          Result.Lon := 53.143450;
-          Result.Lat := 8.2145520;
+          Result.Lat := 53.143450;
+          Result.Lon := 8.2145520;
          end;
       'osnabrück':
         begin
-          Result.Lon := 52.279911;
-          Result.Lat := 8.0471790;
+          Result.Lat := 52.279911;
+          Result.Lon := 8.0471790;
          end;
       'paderborn':
         begin
-          Result.Lon := 51.718921;
-          Result.Lat := 8.7575090;
+          Result.Lat := 51.718921;
+          Result.Lon := 8.7575090;
          end;
       'pforzheim':
         begin
-          Result.Lon := 48.892186;
-          Result.Lat := 8.6946290;
+          Result.Lat := 48.892186;
+          Result.Lon := 8.6946290;
          end;
       'pilsen':
         begin
-          Result.Lon := 49.738431;
-          Result.Lat := 13.373637;
+          Result.Lat := 49.738431;
+          Result.Lon := 13.373637;
          end;
       'plauen':
         begin
-          Result.Lon := 50.497613;
-          Result.Lat := 12.136868;
+          Result.Lat := 50.497613;
+          Result.Lon := 12.136868;
          end;
       'potsdam':
         begin
-          Result.Lon := 52.390569;
-          Result.Lat := 13.064473;
+          Result.Lat := 52.390569;
+          Result.Lon := 13.064473;
          end;
       'prag':
         begin
-          Result.Lon := 50.075538;
-          Result.Lat := 14.437800;
+          Result.Lat := 50.075538;
+          Result.Lon := 14.437800;
          end;
       'recklingshausen':
         begin
-          Result.Lon := 51.614065;
-          Result.Lat := 7.1979450;
+          Result.Lat := 51.614065;
+          Result.Lon := 7.1979450;
          end;
       'regensburg':
         begin
-          Result.Lon := 49.013430;
-          Result.Lat := 12.101624;
+          Result.Lat := 49.013430;
+          Result.Lon := 12.101624;
          end;
       'remscheid':
         begin
-          Result.Lon := 51.178742;
-          Result.Lat := 7.1896960;
+          Result.Lat := 51.178742;
+          Result.Lon := 7.1896960;
          end;
       'reutlingen':
         begin
-          Result.Lon := 48.506939;
-          Result.Lat := 9.2038040;
+          Result.Lat := 48.506939;
+          Result.Lon := 9.2038040;
          end;
       'rostock':
         begin
-          Result.Lon := 54.092441;
-          Result.Lat := 12.099147;
+          Result.Lat := 54.092441;
+          Result.Lon := 12.099147;
          end;
       'saarbrücken':
         begin
-          Result.Lon := 49.240157;
-          Result.Lat := 6.9969330;
+          Result.Lat := 49.240157;
+          Result.Lon := 6.9969330;
          end;
       'salzgitter':
         begin
-          Result.Lon := 52.137866;
-          Result.Lat := 10.389913;
+          Result.Lat := 52.137866;
+          Result.Lon := 10.389913;
          end;
       'schwerin':
         begin
-          Result.Lon := 53.635502;
-          Result.Lat := 11.401250;
+          Result.Lat := 53.635502;
+          Result.Lon := 11.401250;
          end;
       'siegen':
         begin
-          Result.Lon := 50.883849;
-          Result.Lat := 8.0209590;
+          Result.Lat := 50.883849;
+          Result.Lon := 8.0209590;
          end;
       'solingen':
         begin
-          Result.Lon := 51.165220;
-          Result.Lat := 7.0671160;
+          Result.Lat := 51.165220;
+          Result.Lon := 7.0671160;
          end;
       'stuttgart':
         begin
-          Result.Lon := 48.775846;
-          Result.Lat := 9.1829320;
+          Result.Lat := 48.775846;
+          Result.Lon := 9.1829320;
          end;
       'ulm':
         begin
-          Result.Lon := 48.401082;
-          Result.Lat := 9.9876080;
+          Result.Lat := 48.401082;
+          Result.Lon := 9.9876080;
          end;
       'würzburg':
         begin
-          Result.Lon := 49.791304;
-          Result.Lat := 9.9533550;
+          Result.Lat := 49.791304;
+          Result.Lon := 9.9533550;
          end;
       'weimar':
         begin
-          Result.Lon := 50.979493;
-          Result.Lat := 11.323544;
+          Result.Lat := 50.979493;
+          Result.Lon := 11.323544;
          end;
       'wien':
         begin
-          Result.Lon := 48.208174;
-          Result.Lat := 16.373819;
+          Result.Lat := 48.208174;
+          Result.Lon := 16.373819;
          end;
       'wiesbaden':
         begin
-          Result.Lon := 50.078218;
-          Result.Lat := 8.2397610;
+          Result.Lat := 50.078218;
+          Result.Lon := 8.2397610;
          end;
       'witten':
         begin
-          Result.Lon := 51.443893;
-          Result.Lat := 7.3531970;
+          Result.Lat := 51.443893;
+          Result.Lon := 7.3531970;
          end;
       'wolfsburg':
         begin
-          Result.Lon := 52.422650;
-          Result.Lat := 10.786546;
+          Result.Lat := 52.422650;
+          Result.Lon := 10.786546;
          end;
       'wuppertal':
         begin
-          Result.Lon := 51.256213;
-          Result.Lat := 7.1507640;
+          Result.Lat := 51.256213;
+          Result.Lon := 7.1507640;
          end;
       'zeuthen':
         begin
-          Result.Lon := 52.347652;
-          Result.Lat := 13.620762;
+          Result.Lat := 52.347652;
+          Result.Lon := 13.620762;
          end;
       'zwickau':
         begin
-          Result.Lon := 50.710217;
-          Result.Lat := 12.473372;
+          Result.Lat := 50.710217;
+          Result.Lon := 12.473372;
          end;
      else
       raise Exception.Create('Fehler: Konnte Ort nicht finden!');
@@ -756,10 +992,10 @@ begin
 
 end;
 
-procedure TFrm_Config.Ed_HtKyEditingDone(Sender: TObject);
-begin
+procedure TFrm_Config.Ed_HtKyEditingDone(Sender: TObject); //ToDo
+  begin
 
-end;
+  end;
 
 procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject);
   var
@@ -800,7 +1036,7 @@ procedure TFrm_Config.Bt_LoadStarListClick(Sender: TObject);
       end;
   end;
 
-procedure TFrm_Config.Bt_ResettStarListClick(Sender: TObject);
+procedure TFrm_Config.Bt_ResetStarListClick(Sender: TObject);
   begin
     with Frm_Spori do
       begin
@@ -811,9 +1047,9 @@ procedure TFrm_Config.Bt_ResettStarListClick(Sender: TObject);
   end;
 
 procedure TFrm_Config.Bt_HtKyClick(Sender: TObject);
-begin
-
-end;
+  begin
+    Frm_GetHotKey.ShowModal;
+  end;
 
 procedure TFrm_Config.Bt_ConClick(Sender: TObject);
   begin
@@ -1062,14 +1298,14 @@ procedure TFrm_Config.Sw_HtKyChange(Sender: TObject);
     var
     IsActive: Boolean;
   begin
-    IsActive := Sw_ManW.Checked;
+    IsActive := Sw_HtKy.Checked;
 
     Lbl_Sw_HtKy.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
 
     Ed_HtKy.Enabled := IsActive;
     Bt_HtKy.Enabled := IsActive;
 
-    Frm_Spori.Options[ON_UseHotkey] := BoolToStr(not IsActive, 'True', 'False');
+    Frm_Spori.Options[ON_UseHotkey] := BoolToStr(IsActive, 'True', 'False');
   end;
 
 procedure TFrm_Config.Sw_ManWChange(Sender: TObject);
@@ -1091,7 +1327,7 @@ procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject);
     Frm_Spori.SetPortableMode(Sw_PortableMode.Checked);
    end;
 
-procedure TFrm_Config.Sw_AutoConChange(Sender: TObject);
+procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //ToDo: Don't connect if config wasn't loeaded
   begin
     if (Sw_AutoCon).Checked then
       begin
@@ -1107,7 +1343,7 @@ procedure TFrm_Config.Sw_AutoConChange(Sender: TObject);
 
         Frm_Spori.Options[ON_AutoComMode] := 'False';
 
-        Frm_Spori.Connect ();
+        //Frm_Spori.Connect ();
        end;
    end;
 
@@ -1116,12 +1352,12 @@ procedure TFrm_Config.Sw_RedoChange(Sender: TObject);
     if (Sw_Redo.Checked) then
       begin
         Lbl_Sw_Redo.Caption   := 'Ein';
-        Frm_Spori.Options[ON_ReDo] := 'True';
+        Frm_Spori.Options[ON_UpRetry] := 'True';
        end
      else
       begin
         Lbl_Sw_Redo.Caption   := 'Aus';
-        Frm_Spori.Options[ON_ReDo] := 'False';
+        Frm_Spori.Options[ON_UpRetry] := 'False';
        end;
    end;
 

@@ -1,7 +1,7 @@
 object Frm_Config: TFrm_Config
-  Left = 342
+  Left = 0
   Height = 580
-  Top = 407
+  Top = 364
   Width = 960
   AlphaBlendValue = 250
   Caption = 'Einstellungen'
@@ -5948,7 +5948,7 @@ object Frm_Config: TFrm_Config
         Caption = 'Liste bearbeiten'
         ParentColor = False
       end
-      object Lbl_ResettStarList: TLabel
+      object Lbl_ResetStarList: TLabel
         AnchorSideLeft.Control = LbL_LoadStarList
         AnchorSideTop.Control = Bt_ConfStarList
         AnchorSideTop.Side = asrBottom
@@ -5994,9 +5994,9 @@ object Frm_Config: TFrm_Config
         ParentFont = False
         TabOrder = 1
       end
-      object Bt_ResettStarList: TButton
-        AnchorSideLeft.Control = Lbl_ResettStarList
-        AnchorSideTop.Control = Lbl_ResettStarList
+      object Bt_ResetStarList: TButton
+        AnchorSideLeft.Control = Lbl_ResetStarList
+        AnchorSideTop.Control = Lbl_ResetStarList
         AnchorSideTop.Side = asrBottom
         Left = 73
         Height = 33
@@ -6007,7 +6007,7 @@ object Frm_Config: TFrm_Config
         Caption = 'Zurücksetzen'
         Font.Color = clBlack
         Font.Height = -18
-        OnClick = Bt_ResettStarListClick
+        OnClick = Bt_ResetStarListClick
         ParentFont = False
         TabOrder = 2
       end

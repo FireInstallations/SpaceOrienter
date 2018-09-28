@@ -22518,7 +22518,8 @@ procedure iauEpj2jd(const epj: Real; var djm0, djm: Real);
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
 }
   begin
-   djm0 := DJM0;
+   //Added "iausofa." to use the right DJM0 since pascal is not case sensitive.  NOT PART OF THE ORIGAL SOFA!
+   djm0 := iausofa.DJM0;
    djm  := DJM00 + (epj - 2000.0) * 365.25;
 
   end;
@@ -22608,7 +22609,8 @@ procedure iauEpb2jd(const epb: Real; var djm0, djm: Real);
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
 }
   begin
-   djm0 := DJM0;
+   //Added "iausofa." to use the right DJM0 since pascal is not case sensitive.  NOT PART OF THE ORIGAL SOFA!
+   djm0 := iausofa.DJM0;
    djm  :=   15019.81352 + (epb - 1900.0) * DTY;
 
   end;
@@ -25755,7 +25757,7 @@ function  iauCal2jd(const iy, im, id: integer; var djm0, djm: Real): integer;
 
 {  If February in a leap year, 1, otherwise 0.  }
    if ((im = 2) and not ((iy mod 4) <> 0 ) and (((iy mod 100) <> 0) or not ((iy mod 400) <> 0))) then // Had to change this, in pascal boolean and integer are not the same. THIS IS NOT PART OF THE ORGINAL SOFA!
-     ly := 1 // After all I schloud have a look at this if function
+     ly := 1 // After all I should have a look at this if function
    else
     ly := 0;
 
