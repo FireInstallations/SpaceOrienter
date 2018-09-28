@@ -284,7 +284,7 @@ interface
     PlanEph: Test on WMM.COF exitense
     Make Order of procedures and functions more relatable
     Starlist configurator
-    Make Hotkey working --> Key pressed
+    Make Hotkey Editfield working
     FnD --> use defaultpath as default path
     Replace summertime whit time offzeit
     Does comport saving work? (Save it, when connection established)
@@ -332,6 +332,7 @@ interface
     Make the main menue work
     Remove unessesary units from uses list
     There is some kind of bug, when the auto connect swich is flipped by LoadOptions
+    chang order of Application.create form in SpaceOrienter.lpr, so we don't need FormShow anymore  in this Unit
 
     convert "legal" file to md
 
@@ -1590,7 +1591,6 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                             TempStr := Trim(TempStr);
 
                             Options[j] := Options[j].Remove(0, i);
-                            ShowMessage(Options[j]);
                           end
                         else
                           TempStr := Options[j];

@@ -22611,7 +22611,7 @@ procedure iauEpb2jd(const epb: Real; var djm0, djm: Real);
   begin
    //Added "iausofa." to use the right DJM0 since pascal is not case sensitive.  NOT PART OF THE ORIGAL SOFA!
    djm0 := iausofa.DJM0;
-   djm  :=   15019.81352 + (epb - 1900.0) * DTY;
+   djm  := 15019.81352 + (epb - 1900.0) * DTY;
 
   end;
 
@@ -25767,7 +25767,8 @@ function  iauCal2jd(const iy, im, id: integer; var djm0, djm: Real): integer;
 {  Return result.  }
    my := (im - 14) div 12;
    iypmy := (iy + my);
-   djm0 := DJM0;
+   //Added "iausofa." to use the right DJM0 since pascal is not case sensitive.  NOT PART OF THE ORIGAL SOFA!
+   djm0 := iausofa.DJM0;
    djm := (1461 * (iypmy + 4800)) div 4
         + (367 * (im - 2 - 12 * my)) div 12
         - (3 * ((iypmy + 4900) div 100)) div 4

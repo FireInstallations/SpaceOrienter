@@ -103,7 +103,10 @@ procedure TFrm_GetHotKey.FormShow(Sender: TObject);  //Done
 procedure TFrm_GetHotKey.Bt_OkClick(Sender: TObject); //Done
   begin
     //Set Text
-    Frm_Config.Ed_HtKy.Text := Ed_shwHotkey.Text;
+    if (PressedHotKeys = []) then
+      Frm_Config.Ed_HtKy.Text := 'none'
+    else
+      Frm_Config.Ed_HtKy.Text := Ed_shwHotkey.Text;
 
     //Set Hotkeys
     with Frm_Spori do begin
