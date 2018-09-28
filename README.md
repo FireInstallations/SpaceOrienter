@@ -1,7 +1,7 @@
 # SpaceOrienter
 
 Our universe is gigant and even our nightsky can be confusing big and messy if you are not an expert.
-It's if you try to show heavenly bodies to other people. 
+It's even if you try to show heavenly bodies to other people. 
 Or maybe you don't know where to find is what.
 
 The SpaceOrienter project is a small tool and a solution for all problems of this kind.
