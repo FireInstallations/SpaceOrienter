@@ -52,7 +52,10 @@ type
     CmbBx_ComPort: TComboBox;
     ECEdBtn_Htky: TECSpeedBtnPlus;
     Ed_HtKy: TEdit;
+    FlSpEd_Height: TFloatSpinEdit;
     Img_Info_HtKy: TImage;
+    Img_Info_Height: TImage;
+    Lbl_Height: TLabel;
     LbL_LoadStarList: TLabel;
     Lbl_ConfStarList: TLabel;
     Lbl_ResetStarList: TLabel;
@@ -211,7 +214,7 @@ uses
 //Usefull: ComboboxEx,  TECTabCtrl
 // Benachrichtigungen
 
-function TFrm_Config.KeyToStr (Key: Word): String; inline; //wandelt einen Key zu Str --> Label für virtuelle
+function TFrm_Config.KeyToStr (Key: Word): String; inline; //Label for virtuel; own file
   begin
     case Key of
       VK_HIGHESTVALUE,
@@ -326,7 +329,7 @@ function TFrm_Config.KeyToStr (Key: Word): String; inline; //wandelt einen Key z
       VK_ADD:        Result := 'Num+';
       VK_SEPARATOR:  Result := 'NumEntr';
       VK_SUBTRACT:   Result := 'Num-';
-      VK_DECIMAL:    Result := 'Num,';
+      VK_DECIMAL:    Result := 'Num' + DefaultFormatSettings.DecimalSeparator;
       VK_DIVIDE:     Result := 'Num/';
 
       VK_LBUTTON:    Result := 'LBtn';
@@ -997,24 +1000,38 @@ procedure TFrm_Config.Ed_HtKyEditingDone(Sender: TObject); //ToDo
 
   end;
 
+{$IFDEF Debug}
+//Test
+{$ENDIF}
+{$IfDef Release}
+//Test
+{$EndIf}
+
 procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject);
   var
     StarMode: integer;
     HK: String;
     PortableMode: boolean;
+
+    OptName: TOptionNames;
   begin
     with Frm_Spori do
       begin
-        StarMode := CB_StrMode.ItemIndex;
         HK     := Ed_Nr.Text;
         PortableMode := StrToBool(Options[ON_PortableMode]);
 
-        DefaultOptions ();
-        LoadOptions ();
+      //Set default Options
+      for OptName := low(TOptionNames) to High(TOptionNames) do
+        Options[OptName] := GetDefaultOption(OptName);
+
+      //Remove old file
+      if FileExists (OptionsPath)  then
+        begin
+          ForceDirectories (OldOptionsPath);
+          RenameFile (OptionsPath, OldOptionsPath + PathDelim + 'Options'+formatdatetime('d.m.y-h;n;s;z', Now)+'.old');
+        end;
 
         Sw_PortableMode.Checked := PortableMode;  //Since it would be changed if portableMode was active there is no need to call SetPortableMode(PortableMode);
-
-        Frm_Spori.ProgressStarMode(StarMode);
 
         Ed_Nr.Text := HK;
         ProgressNumber ();
@@ -1042,7 +1059,7 @@ procedure TFrm_Config.Bt_ResetStarListClick(Sender: TObject);
       begin
         DefaultList ();
 
-        LoadStarList (DefaultListPath);
+        LoadStarList (ListPath);
       end;
   end;
 
@@ -1096,7 +1113,7 @@ begin
   Frm_Spori.Lb_Lat_G.Caption  := FloatToStr(FlSpEd_Lat.Value);
   Frm_Spori.Lb_Lat_G1.Caption := FloatToStr(FlSpEd_Lat.Value);
 
-  Frm_Spori.Angle ();
+  //Frm_Spori.Angle ();
 
   Frm_Spori.Options[ON_Lat] := FloatToStr(FlSpEd_Lat.Value);
 end;
@@ -1106,7 +1123,7 @@ begin
   Frm_Spori.Lb_Lon_G.Caption  := FloatToStr(FlSpEd_Lon.Value);
   Frm_Spori.Lb_Lon_G1.Caption := FloatToStr(FlSpEd_Lon.Value);
 
-  Frm_Spori.Angle ();
+  //Frm_Spori.Angle ();
 
   Frm_Spori.Options[ON_Lon] := FloatToStr(FlSpEd_Lon.Value);
 end;
@@ -1343,7 +1360,7 @@ procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //ToDo: Don't connect i
 
         Frm_Spori.Options[ON_AutoComMode] := 'False';
 
-        //Frm_Spori.Connect ();
+        Frm_Spori.Connect (true);
        end;
    end;
 

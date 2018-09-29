@@ -16,7 +16,6 @@ begin
   RequireDerivedFormResource:=True;
   Application.Initialize;
   Application.CreateForm(TFrm_Spori, Frm_Spori);
-  Application.CreateForm(TFrm_Config, Frm_Config);
   Application.CreateForm(TFrm_GetHotKey, Frm_GetHotKey);
   Application.Run;
 end.

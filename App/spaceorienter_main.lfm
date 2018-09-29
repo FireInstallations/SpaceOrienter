@@ -3743,15 +3743,8 @@ object Frm_Spori: TFrm_Spori
         end
       end
       object MI_Connection: TMenuItem
-        Caption = 'Verbindung'
-        object MI_VerbEinst: TMenuItem
-          Caption = 'Verbindungseinstellungen'
-          OnClick = MI_VerbEinstClick
-        end
-        object MI_Connect: TMenuItem
-          Caption = 'Verbinden'
-          OnClick = MI_ConnectClick
-        end
+        Caption = 'Verbindung...'
+        OnClick = MI_ConnectionClick
       end
       object MI_Dar_Quit: TMenuItem
         Caption = 'Beenden'

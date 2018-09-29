@@ -117,7 +117,8 @@ uses
   {$ENDIF}
 {$ENDIF}
   synafpc,
-  Classes, SysUtils, synautil;
+  Classes, SysUtils, synautil,
+  Dialogs;
 
 const
   CR = #$0d;
@@ -2341,7 +2342,7 @@ end;
 {$IFNDEF MSWINDOWS}
 function GetSerialPortNames: string;
 var
-  Index: Integer;
+  //Index: Integer;
   Data: string;
   TmpPorts: String;
   sr : TSearchRec;
@@ -2354,10 +2355,12 @@ var
     if FindFirst( ThisRootStr, $FFFFFFFF, sr) = 0 then
     begin
       repeat
+         ShowMessage(sr.Name);
+
         if (sr.Attr and $FFFFFFFF) = Sr.Attr then
         begin
           data := sr.Name;
-          index := length(data);
+          //index := length(data);
           theDevice := '/dev/' + data;
 // try to open the device
        FD := fpopen(thedevice,O_RdWr or O_NonBlock or O_NoCtty);
@@ -2369,8 +2372,8 @@ var
 // device is serial if type is not unknown (if not special device)
               // new parameter special
               if ((Ser.typ <> 0) OR (special) ) then
-               TmpPorts := TmpPorts + '  ' + theDevice;
-               fpclose(FD);
+                TmpPorts := TmpPorts + '  ' + theDevice;
+              fpclose(FD);
              end;
            end;
         end;

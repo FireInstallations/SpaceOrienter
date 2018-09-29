@@ -285,6 +285,7 @@ interface
     Make Order of procedures and functions more relatable
     Starlist configurator
     Make Hotkey Editfield working
+    Add Resett Button on GetHotkey form
     FnD --> use defaultpath as default path
     Replace summertime whit time offzeit
     Does comport saving work? (Save it, when connection established)
@@ -331,8 +332,6 @@ interface
     In MI_SuchClick: Error handeling
     Make the main menue work
     Remove unessesary units from uses list
-    There is some kind of bug, when the auto connect swich is flipped by LoadOptions
-    chang order of Application.create form in SpaceOrienter.lpr, so we don't need FormShow anymore  in this Unit
 
     convert "legal" file to md
 
@@ -518,8 +517,6 @@ var
         Lb_ZW_: TLabel;
         LV_List: TListView;
         MI_DatSchutz: TMenuItem;
-        MI_VerbEinst: TMenuItem;
-        MI_Connect: TMenuItem;
         MI_Ueber: TMenuItem;
         MI_Such: TMenuItem;
         MI_Anfahren: TMenuItem;
@@ -561,6 +558,7 @@ var
         procedure Bt_PilotClick(Sender: TObject);
         {A new Body was selected, tell it (... will be called)}
         procedure CB_HKEditingDone(Sender: TObject);
+        {If a new StarMode was chosen, tell it everybody}
         procedure CB_StrModeChange(Sender: TObject);
         procedure CB_StBEditingDone(Sender: TObject);
         {If a vailed number was given, ProgressNumber will be called}
@@ -597,14 +595,15 @@ var
         procedure LV_ListItemChecked(Sender: TObject; Item: TListItem);
         {If Retun was pressed and a vailed Item was seleceted tellwhitch one (call ProgressList)}
         procedure LV_ListKeyPress(Sender: TObject; var Key: char);
+        {Bring the user to the conncetion configuration page}
+        procedure MI_ConnectionClick(Sender: TObject);
         {Get privacy informations}
         procedure MI_DatSchutzClick(Sender: TObject);
-        procedure MI_ConnectClick(Sender: TObject);
+        {Halt the app}
         procedure MI_Dar_QuitClick(Sender: TObject);
         procedure MI_Hilf_FehClick(Sender: TObject);
         procedure MI_SuchClick(Sender: TObject);
         procedure MI_UeberClick(Sender: TObject);
-        procedure MI_VerbEinstClick(Sender: TObject);
         procedure MP_Hilf_OffClick(Sender: TObject);
         procedure MI_Hilf_OnClick(Sender: TObject);
         procedure MI_Sicht_ExpClick(Sender: TObject);
@@ -625,22 +624,30 @@ var
         function  FindOptionValue (const Line:String):String;
         {Find the indx of a given option, even if it isn't excaly right.
          If nothing was found -1 is returned.}
-        function  FindOption(const Str: String): ShortInt;
+        function  GetOptionIndex(const Str: String): ShortInt;
+        {Resets the OptionsFile}
+        procedure DefaultOptions ();
+        {Load Saved Options, if there is no file, create default otions will be created.
+         Warning: ervery New Option must loaded here!}
+        function  LoadOptions (const LoadFromFile: Boolean = true): Boolean;
         {Looks for a choosen constellation up, if it is valid}
         function  IsConstellation ():Boolean;
-        {Result is the DefaultValue of the given OptionName.
-         Warning: every new Option have to be listed here!}
-        function  GetDefaultOption (const OptnName: TOptionNames): String;
         {Try to tell the Rest of the mainform what star was selecet by a given Item}
         procedure ProgressList (const Item:TListItem);
+        {Transfer lon, lat to Rad}
+        procedure Angle ();
         {calculate the First Point of Aries}
         procedure ProgressFirstPointOfAries ();
+        {Tell the mainform what starmode was selected}
+        procedure ProgressStarMode (const Mode: byte; Save: Boolean = true);
         {calculate the position of the selected star}
         procedure CalculateStarLoc();
         {calculate the position of the selected Ephemedides (PlanEpeh)}
         procedure CalculateEphemerisLoc ();
         {serches for an Item in the StarList}
         procedure searchStarList (SerchFor: String);
+        {Try to find all possible ComPorts}
+        procedure GetComPorts ();
 
 
         var
@@ -648,8 +655,7 @@ var
           DefaultPath,
           DefaultOptionsPath,
           DefaultOldOptionsPath,
-          //Note: DefaultListPath is now public so FrmConfig can use it too (see below)
-          //DefaultListPath,
+          DefaultListPath,
           DefaultOldListPath: String;
           OwnDir: String;
 
@@ -661,43 +667,41 @@ var
 
           {Handel for the connecteion to the arduino (Synapser)}
           ser: TBlockSerial;
-          {boolean to determine if we have to call LoadOptions (and so on) in FormShow (have a look there for more informations)}
-          FirstRun: Boolean;
+          {boolean to determine if we loaded all Options correctly}
+          OptionsLoaded: Boolean;
       public
-        {importend cofigurations, saved in Options.Space at the end}
-        Options: Array[TOptionNames] of String;
         {path to the working area of the App, part of the imported pathes}
-        DefaultListPath: String;
+        property ListPath: String read DefaultListPath;
+        property OptionsPath: String read DefaultOptionsPath;
+        property OldOptionsPath: String read DefaultOldOptionsPath;
 
-        {Diffrence between Now and the DateTime selected by the user}
-        DiffD:       TDate;
-        DiffT:       TTime;
-        {Don't Save time while it is on change in Frm_config }
-        NoEntry:     Boolean;
+        var
+          {importend cofigurations, saved in Options.Space at the end}
+          Options: Array[TOptionNames] of String;
 
-        {Contains the hotkey(s) as a set, will maybe removed in future}
-        HotKey: Set of byte;
+          {Diffrence between Now and the DateTime selected by the user}
+          DiffD:       TDate;
+          DiffT:       TTime;
+          {Don't save time while it is on change in Frm_config }
+          NoEntry:     Boolean;
+
+          {Contains the hotkey(s) as a set, will maybe removed in future}
+          HotKey: Set of byte;
 
         {Does what it say, progress messages until the time is over}
         procedure Delay(Milliseconds: DWORD);
 
+        {Result is the DefaultValue of the given OptionName.
+         Warning: every new Option have to be listed here!}
+        function  GetDefaultOption (const OptnName: TOptionNames): String;
+
         {Resets the StarListFile}
         procedure DefaultList ();
-        {Tell the mainform what starmode was selected}
-        procedure ProgressStarMode (const Mode: byte; Save: Boolean = true);
-
-        {Resets the OptionsFile}
-        procedure DefaultOptions ();
-        {Load Saved Options, if there is no file, create default otions will be created.
-         Warning: ervery New Option must loaded here!}
-        function  LoadOptions (const LoadFromFile: Boolean = true): Boolean;
         {Load the Starlist by a given path}
         function  LoadStarList (const Path: String): Boolean;
         {Sets the pathes to ProtableMode and back}
         procedure SetPortableMode(IsActive: Boolean);
 
-        {Try to find all possible ComPorts}
-        procedure GetComPorts ();
         {Try to connect to the Arduino via comport}
         function  Connect (TryAll: Boolean = false):Boolean;
 
@@ -708,8 +712,6 @@ var
 
         {Update the App; work in progress}
         procedure Update_ ();
-        {Transfer lon, lat to Rad}
-        procedure Angle ();
 
         {Sends Data to the Arduino}
         procedure SendData ();
@@ -770,7 +772,21 @@ function TFrm_Spori.Gleiche (str1, str2: string): Real;  inline; //Fertig?
                Inc(variGleich)
            end;
 
-        while length(Str1) > 0 do
+        //look for same chararkters around of i
+        for i := 0 to pred(MinLength) do
+          if (str1[i] = str2[i]) then
+            Inc(SameChar)
+           else if ((Length(str2) - 1 >= i + 1) and (str1[i] = str2[i + 1])) then
+             Inc(SameChar)
+           else if ((Length(str2) - 1 >= i + 2) and (str1[i] = str2[i + 2])) then
+             Inc(SameChar)
+           else if ((Length(str1) - 1 >= i + 1) and (str1[i + 1] = str2[i])) then
+             Inc(SameChar)
+           else if ((Length(str1) - 1 >= i + 2) and (str1[i + 2] = str2[i])) then
+             Inc(SameChar);
+
+        //count number of different chars in Str1
+        for j := 0 to high(Str1) do //while (length(str1) > 0) do
           begin
             Found:=false;
             for Index:= 0 to length(NumberOfChar1)-1 do
@@ -857,7 +873,7 @@ function  TFrm_Spori.FindOptionValue (const Line:String):String; //ToDo: Version
       Result := '';
    end;
 
-function  TFrm_Spori.FindOption (const Str: String): ShortInt; //Done
+function  TFrm_Spori.GetOptionIndex (const Str: String): ShortInt; //Done
   var
      OptionName: String;
 
@@ -926,95 +942,108 @@ procedure TFrm_Spori.GetComPorts (); //ToDo: look Up how Arduino IDE gets the po
                      if (Merke <> '-') and (AnsiLowerCase(Merke) <> 'unsichtbar') and (Merke <> '')then
                        CB_StB.Items.Add(AnsiLowerCase(Merke));
 
-function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect Arduinotype (and if it is the Spori); Synapser dosn't find right ports
+function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect Arduinotype (and if it is the Spori); Synapser doesn't find right ports
   var
     Port: String;
     Baud: integer;
   begin
-    //Tell the User, we are trying to connect
-    with Frm_Config do
-        begin
-          Lbl_ComMsg.Caption  := 'Verbinde...';
-          PgsB_ComCon.Visible := true;
-          Img_ComCon.Visible  := false;
-          Img_ComInfo.Visible := true;
-          Img_ComWarn.Visible := false;
-          Lbl_Ardo.Visible    := false;
-        end;
-    Application.ProcessMessages;
 
-    //Close Connection if there is one
-    if (ser.InstanceActive) then
+    //to make sure everything was loaded
+    if not OptionsLoaded then
       begin
-        ser.CloseSocket;
-        //empty all buffers
-        ser.Purge;
-      end;
+        //Tell the User, we are trying to connect
+        with Frm_Config do
+            begin
+              Lbl_ComMsg.Caption  := 'Verbinde...';
+              PgsB_ComCon.Visible := true;
+              Img_ComCon.Visible  := false;
+              Img_ComInfo.Visible := true;
+              Img_ComWarn.Visible := false;
+              Lbl_Ardo.Visible    := false;
+            end;
+        Application.ProcessMessages;
 
-    if not TryStrToInt(Frm_Config.CmbBx_Baud.Caption, Baud) then
-      Baud := 9600; //DefaultValue, shoud work, if there was no change at the Arduino
-
-    if TryAll then
-      begin
-        for Port in Frm_Config.CmbBx_ComPort.Items do
+        //Close Connection if there is one
+        if (ser.InstanceActive) then
           begin
-            ser.Connect(Port);
+            ser.CloseSocket;
+            //empty all buffers
+            ser.Purge;
+          end;
 
+        if not TryStrToInt(Frm_Config.CmbBx_Baud.Caption, Baud) then
+          Baud := 9600; //DefaultValue, shoud work, if there was no change at the Arduino
+
+        //Try to connect to all found ports
+        if TryAll then
+          begin
+            for Port in Frm_Config.CmbBx_ComPort.Items do
+              begin
+                //Try to connect
+                ser.Connect(Port);
+                Delay(700);
+
+                //configure
+                ser.config(Baud, 8, 'N', SB1, False, False); //Is this nessesary?
+                Delay(500);
+
+                if (ser.InstanceActive) then
+                  begin
+                    //We are connected, save the active port
+                    Frm_Config.CmbBx_ComPort.Caption := Port;
+                    Options[ON_ComPort] := Port;
+
+                    break;
+                  end
+                else
+                  //It didn't worked, next try
+                  ser.CloseSocket;
+              end;
+          end
+        else
+          begin
+            //Connect to configured port
+            ser.Connect(Frm_Config.CmbBx_ComPort.Caption);
             Delay(700);
             ser.config(Baud, 8, 'N', SB1, False, False);
             Delay(500);
-
-            if (ser.InstanceActive) then
-              begin
-                Frm_Config.CmbBx_ComPort.Caption := Port;
-                break;
-              end
-            else
-              ser.CloseSocket;
           end;
-      end
-    else
-      begin
-        ser.Connect(Frm_Config.CmbBx_ComPort.Caption);
-        //ser.Connect('/dev/ttyACM0');
-        Delay(700);
-        ser.config(Baud, 8, 'N', SB1, False, False);
-        Delay(500);
+
+        Result := ser.InstanceActive;
+
+        with Frm_Config do
+          if Result then
+            begin
+              //Tell the user we are connected
+              Lbl_ComMsg.Caption  := 'Verbnden mit: ';
+              PgsB_ComCon.Visible := false;
+              Img_ComCon.Visible  := true;
+              Img_ComInfo.Visible := false;
+              Img_ComWarn.Visible := false;
+              Lbl_Ardo.Visible    := true;
+              Lbl_Ardo.Caption     := 'Arduino Leonardo'; //Defaultvalue
+
+              Tmr_GetData.Enabled := true; //Read Data
+            end
+          else
+            begin
+              //Tell the user we are not connected
+              Lbl_ComMsg.Caption  := 'Nicht Verbunden';
+              PgsB_ComCon.Visible := false;
+              Img_ComCon.Visible  := false;
+              Img_ComInfo.Visible := false;
+              Img_ComWarn.Visible := true;
+              Lbl_Ardo.Visible    := false;
+              ser.CloseSocket;
+
+              Tmr_GetData.Enabled := false; //Don't read Data
+            end;
+        Application.ProcessMessages;
       end;
-
-    Result := ser.InstanceActive;
-
-    with Frm_Config do
-      if Result then
-        begin
-          Lbl_ComMsg.Caption  := 'Verbnden mit: ';
-          PgsB_ComCon.Visible := false;
-          Img_ComCon.Visible  := true;
-          Img_ComInfo.Visible := false;
-          Img_ComWarn.Visible := false;
-          Lbl_Ardo.Visible    := true;
-          Lbl_Ardo.Caption     := 'Arduino Leonardo'; //Defaultvalue
-
-          Tmr_GetData.Enabled := true; //Read Data
-        end
-      else
-        begin
-          Lbl_ComMsg.Caption  := 'Nicht Verbunden';
-          PgsB_ComCon.Visible := false;
-          Img_ComCon.Visible  := false;
-          Img_ComInfo.Visible := false;
-          Img_ComWarn.Visible := true;
-          Lbl_Ardo.Visible    := false;
-          ser.CloseSocket;
-
-          Tmr_GetData.Enabled := false; //Don't read Data
-        end;
-    Application.ProcessMessages;
   end;
 
 procedure TFrm_Spori.SendData (); //Done?
   begin
-    ShowMessage('Hotkey?');
 
     //If a Connection is active and stable elevation and azimuth to the ArduIno.
     if ser.InstanceActive and ser.CanWrite(200) then
@@ -1174,7 +1203,6 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
                 Index_R      := PosEx(';', Stars[index], Index_R);
                 Tempproperty := Trim(copy(Stars[index], Beginpos, Index_R - Beginpos));
 
-                //ShowMessage(Tempproperty + ' ' + IntToStr(Beginpos) + ' ' + IntToStr(Index_R));
                 Inc(Index_R);
                 Beginpos := Index_R;
 
@@ -1282,7 +1310,7 @@ function  TFrm_Spori.GetDefaultOption (const OptnName: TOptionNames): String; //
 
   end;
 
-function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Version; Langue; Comments; if there was a switch, handle lables
+function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Version; Langue; Comments
   var
      LoadList: Tstringlist;
 
@@ -1291,7 +1319,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
      NotGottenOptions: set of ToptionNames = [low(ToptionNames)..high(ToptionNames)];
      j: TOptionNames;
 
-     TempStr: String;
+     TempStr, TempOption: String;
      TempKey: Integer;
      TempBool: Boolean;
      TempTime: TDateTime;
@@ -1319,7 +1347,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
 
           for i := 0 to pred(LoadList.count) do
             begin
-              Index := FindOption(FindOptionName(LoadList[i])); //Find the Index of a possible Optionname
+              Index := GetOptionIndex(FindOptionName(LoadList[i])); //Find the Index of a possible Optionname
 
               if (Index >= 0) then  // if no valid name was fond, -1 was returned
                 begin
@@ -1335,362 +1363,389 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
     else
       NotGottenOptions := []; // clear set, if we are not loading from file means that we already got ervything
 
-      if not (NotGottenOptions = []) then //Test if we got everything
-       case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we set the option to default, reset all options or abort
-                             ' Konnte nocht alle Optionen finden.' + slinebreak +
-                             ' Die fehlerhafte(n) Option(en) durch Defaultwert(e) ersetzen?' + SlineBreak +
-                             ' (Nein = Einstellungen zurücksetzen)',
-                             mtError, [mbYes, mbNo, mbAbort], 0, mbYes) of
-         mrYes:   //set the missing Options to default
-           begin
-             for j in NotGottenOptions do
-               begin
-                 ShowMessage(IntToStr(Ord(j)) + ' ' + Copy(GetEnumName(TypeInfo(TOptionNames), Ord(j)), 4, length(GetEnumName(TypeInfo(TOptionNames), Ord(j))) -3));
+    
+    //If a portable Optionsfile was found
+    if (OwnDir = Defaultpath) then
+      begin
+        //If portablemode is not set to active or a unknown vlue was given
+        //Set Portablemode fo false
+        //Else use the already loaded Options
+        if not TryStrToBool(Options[ON_PortableMode], Tempbool) then
+          Tempbool := false;
 
-                 Options[j] := GetDefaultOption(j);
-
-                 Exclude(NotGottenOptions, j);
-               end;
-
-             Result := LoadOptions(false);
-           end;
-         mrNo: //reset all Options
-           begin
-             DefaultOptions();
-
-             Result := LoadOptions(false);
-           end;
-         mrAbort:
-           Result := false;
-       end;
-
-    try
-      for j := low(TOptionNames) to high(TOptionNames) do
-        begin
-          case j of
-            ON_Version:;// Todo: Convert older Otions to new ones
-
-            ON_PortableMode:
-              if TryStrToBool(Options[j], Tempbool) then
-                Frm_Config.Sw_PortableMode.Checked := Tempbool
-              else
-                ErrorMessage := 'Fehler in PortableMode-Ladevorgang: Falscher Datentyp' + sLineBreak +
-                                Options[j];
-
-            ON_ExpertMode:
-              if TryStrToBool(Options[j], Tempbool) then
-                begin
-                  MI_Sicht_Exp.Checked := Tempbool;
-                  Frm_Config.Sw_Exprt.Checked := Tempbool;
-
-                  ProgressExpertMode(Tempbool);
-                end
-              else
-                ErrorMessage := 'Fehler in ExpertenMode-Ladevorgang: Falscher Datentyp'   ;
-
-            ON_UpdateMode:
-              if TryStrToInt (Options[j], i) then
-                begin
-                  Case i of
-                    0:
-                      begin
-                        Frm_Config.AllUpOff ();
-                        Frm_Config.Img_Auto.Picture    := Frm_Config.Img_On.Picture;
-                        Update_ ();
-                      end;
-                    1:
-                      begin
-                        Frm_Config.AllUpOff ();
-                        Frm_Config.Img_Msg.Picture     := Frm_Config.Img_On.Picture;
-                      end;
-                    2:
-                      begin
-                        Frm_Config.AllUpOff ();
-                        Frm_Config.Img_tm.Picture      := Frm_Config.Img_On.Picture;
-
-                        Frm_Config.Te_plan.Time        := Time;
-
-                        Frm_Config.Lbl_Plan.Enabled    := true;
-                        Frm_Config.Lbl_am_Plan.Enabled := true;
-                        Frm_Config.Lbl_um_Plan.Enabled := true;
-                        Frm_Config.CBx_Rate.Enabled    := true;
-                        Frm_Config.CBx_Tag.Enabled     := true;
-                        Frm_Config.Sw_Redo.Enabled     := true;
-                        Frm_Config.Lbl_Redo.Enabled    := true;
-                        Frm_Config.Lbl_Sw_Redo.Enabled := true;
-                        Frm_Config.TE_Plan.Enabled     := true;
-                      end;
-                    3:
-                      begin
-                        Frm_Config.AllUpOff ();
-                        Frm_Config.Img_Non.Picture     := Frm_Config.Img_On.Picture;
-                      end;
-                    else
-                      ErrorMessage := 'Fehler in UpdateMode-Ladevorgang: Unbekannter Wert';
-                  end;
-                end
-              else
-                ErrorMessage := 'Fehler in UpdateMode-Ladevorgang: Falscher Datentyp';
-
-            ON_UpdateRate:
-              if TryStrToInt (Options[j], i) then
-                if (i in [0..2]) then
-                  Frm_Config.CBx_Rate.ItemIndex := i
-                else
-                  ErrorMessage := 'Fehler in UpdateRate-Ladevorgang: Unbekannter Wert'
-              else
-                ErrorMessage := 'Fehler in UpdateRate-Ladevorgang: Falscher Datentyp';
-
-            ON_UpdateDay:
-              if TryStrToInt (Options[j], i) then
-                if (i in [0..6]) then
-                  Frm_Config.CBx_Tag.ItemIndex := i
-                else
-                  ErrorMessage := 'Fehler in UpdateTag-Ladevorgang: Unbekannter Wert'
-              else
-                ErrorMessage := 'Fehler in UpdateTag-Ladevorgang: Falscher Datentyp';
-
-            ON_UpdateTime:
-              if TryStrToTime(Options[j], TempTime) then
-                Frm_Config.TE_Plan.Time := TempTime 
-               else
-                ErrorMessage := 'Fehler in UpdateZeit-Ladevorgang: Falscher Datentyp' ;
-
-            ON_UpRetry:
-              if TryStrToBool(Options[j], TempBool)then
-               Frm_Config.Sw_Redo.Checked := TempBool     
-              else
-                ErrorMessage := 'Fehler in UpdateWiederholen-Ladevorgang: Falscher Datentyp';
-
-            On_Place:
-              begin
-                if (Options[j] = 'none') then
-                  begin
-                    //Inc(j);
-                    if TryStrToFloat(Options[ON_Lon], TempFloat) then
-                      begin
-                        Frm_Config.FlSpEd_Lon.Value := TempFloat;
-                        Lb_Lon_G.Caption            := Options[ON_Lon];
-                        Lb_Lon_G1.Caption           := Options[ON_Lon];
-                      end
-                    else
-                      ErrorMessage := 'Fehler in Longitude Ladevorgang: Falscher DatenTyp';
-
-                    //Inc(j);
-                    if TryStrToFloat(Options[ON_Lat], TempFloat) then
-                       begin
-                         Frm_Config.FlSpEd_Lat.Value := TempFloat;
-                         Lb_Lat_G.Caption            := Options[ON_Lat];
-                         Lb_Lat_G1.Caption           := Options[ON_Lat];
-                       end
-                    else
-                      ErrorMessage := 'Fehler in Longitude Ladevorgang: Falscher DatenTyp';
-
-                    Frm_Config.CbBx_Ort.Caption := 'Keine';
-                  end
-                else
-                  begin
-                    Temp_Koord                  := Frm_Config.Koordinaten (Options[j]); //If it is an invailed place an Error is reaised here (may change in future)
-
-                    Frm_Config.FlSpEd_Lon.Value := Temp_Koord.Lon;
-
-                    Frm_Config.FlSpEd_Lat.Value := Temp_Koord.Lat;
-                    Lb_Lat_G.Caption            := FloatToStr(Temp_Koord.Lat);
-                    Lb_Lat_G1.Caption           := FloatToStr(Temp_Koord.Lat);
-
-                    Frm_Config.CbBx_Ort.Caption := Options[j];
-                    //Inc(j);
-                    //Inc(j);
-                  end;
-
-                Angle ();
-              end;
-
-            ON_AutoTimeMode:
-             if TryStrToBool(Options[j], Tempbool) then
-              begin
-                Frm_Config.Sw_AutoTime.checked := Tempbool;
-                Frm_Config.TE_Time.enabled     := not Tempbool;
-                Frm_Config.DE_Day.enabled      := not Tempbool;
-              end
-            else
-              ErrorMessage := 'Fehler in TimeMode-Ladevorgang: Falscher DatenTyp';
-
-            ON_Date:
-              if TryStrToDate(Options[j], TempTime) then
-                begin
-                  DiffD                  := TempTime - Date;
-                  Frm_Config.DE_Day.Date := Date + DiffD;
-                end
-              else
-                ErrorMessage := 'Fehler in Tag-Ladevorgang: Falscher DatenTyp oder Format';
-
-              ON_Time:
-                if TryStrToTime(Options[j], TempTime) then
-                  begin
-                    DiffT                   := TempTime - Time;
-                    Frm_Config.TE_Time.Time := Time + DiffT
-                   end
-                 else
-                  ErrorMessage := 'Fehler in Zeit-Ladevorgang';
-
-              ON_AutoComMode:
-                if TryStrToBool(Options[j], Tempbool) then
-                  begin
-                    Frm_Config.Sw_AutoCon.checked :=  Tempbool;
-
-                    if not Tempbool then
-                      if TryStrToInt(Options[ON_ComPort], i) then
-                        Frm_Config.CmbBx_ComPort.Caption := Options[ON_ComPort];
-                    //Inc(j);
-                  end
-                else
-                  ErrorMessage := 'Fehler in ComMode-Ladevorgang: Falscher DatenTyp';
-
-              ON_BaudRate:
-                if TryStrToInt(Options[j], i) then
-                  if (Frm_Config.CmbBx_Baud.Items.IndexOf(Options[j]) >= 0) then
-                      Frm_Config.CmbBx_Baud.Caption := Options[j]
-                  else
-                    ErrorMessage := 'Fehler in BaudRate-Ladevorgang: Unzulässige Baudrate'
-                else
-                 ErrorMessage := 'Fehler in BaudRate-Ladevorgang: Falscher DatenTyp';
-
-              ON_AutoValueMode:
-                if TryStrToBool(Options[j], Tempbool) then
-                  Frm_Config.Sw_ManW.Checked := not Tempbool
-                else
-                 ErrorMessage := 'Fehler in WerteMode-Ladevorgang: Falscher DatenTyp';
-
-              ON_UseHotkey:
-                if TryStrToBool(Options[j], Tempbool) then
-                  begin
-                    with Frm_Config do begin
-                      Sw_HtKy.Checked := Tempbool;
-                      Ed_HtKy.Enabled := TempBool;
-                      Bt_HtKy.Enabled := TempBool;
-
-                      Lbl_Sw_HtKy.Caption := BoolToStr(Tempbool, 'Ein', 'Aus');
-                    end;
-                  end
-                else
-                 ErrorMessage := 'Fehler in AnsteuerungMode-Ladevorgang: Falscher DatenTyp';
-
-              ON_HotKey:
-                begin
-                  if (length(Options[j]) > 0) then
-                    begin
-                      Frm_Config.Ed_HtKy.Text := '';
-
-                      repeat
-                        i := Pos(',', Options[j]);
-
-                        if (i > 0) then
-                          begin
-                            TempStr := copy (Options[j], 1, pred(i));
-                            TempStr := Trim(TempStr);
-
-                            Options[j] := Options[j].Remove(0, i);
-                          end
-                        else
-                          TempStr := Options[j];
-
-                        if TryStrToInt(TempStr, TempKey) then
-                          begin
-                            TempKey := abs(TempKey);
-                            Include(HotKey, TempKey);
-
-                            with Frm_Config do
-                              begin
-                                if (length(Ed_HtKy.Text) > 0) then
-                                  begin
-                                    TempStr := Ed_HtKy.Text + ' + ' + Frm_Config.KeyToStr(TempKey);
-                                    Ed_HtKy.Text := TempStr;
-                                  end
-                                else
-                                  Ed_HtKy.Text := KeyToStr(TempKey);
-                              end;
-                          end
-                        else
-                          begin
-                            ErrorMessage := 'Fehler in Hotkey-Ladevorgang: Out of Range ';
-                            break;
-                          end;
-
-                      until (i <= 0);
-                    end
-                  else
-                    Frm_Config.Ed_HtKy.Text := 'None';
-                end;
-
-
-              ON_StarMode:
-                if TryStrToInt(Options[j], i) then
-                  begin
-                    CB_StrMode.ItemIndex := i;
-                    ProgressStarMode(i, false);
-                  end
-                else
-                  ErrorMessage := 'Fehler in StarMode-Ladevorgang: Falscher DatenTyp';
-
-              ON_Body:
-                if TryStrToInt (Options[j], i) then
-                  begin
-                    Ed_Nr.Text := Options[j];
-                   end
-                 else
-                  ErrorMessage := 'Fehler in HimmelsKörper-Ladevorgang: Falscher DatenTyp';
-
-              ON_Langue:;
+        if not Tempbool then
+          begin
+            SetPortableMode(false);
+            Result := LoadOptions();
           end;
+      end
+    else
+      //No portablemode was found, just use the loaded Options
+      Tempbool := true;
 
-         if ErrorMessage <> '' then
-           begin
-             case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we retry, reset or abort
-                             ' ' + ErrorMessage + ' (' + Options[j] + ')' + slinebreak +
-                             ' Die fehlerhafte Option durch Defaultwert ersetzen?' + SlineBreak +
-                             ' (Nein = Einstellungen zurücksetzen)',
-                             mtError, [mbYes, mbNo, mbAbort], 0, mbYes) of
-               mrYes:
+    if Tempbool then
+      begin
+        if not (NotGottenOptions = []) then //Test if we got everything
+         case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we set the option to default, reset all options or abort
+                               ' Konnte nicht alle Optionen finden.' + slinebreak +
+                               ' Die fehlerhafte(n) Option(en) durch Defaultwert(e) ersetzen?' + SlineBreak +
+                               ' (Nein = Einstellungen zurücksetzen)',
+                               mtError, [mbYes, mbNo, mbAbort], 0, mbYes) of
+           mrYes:   //set the missing Options to default
+             begin
+               for j in NotGottenOptions do
                  begin
+                   //ShowMessage(IntToStr(Ord(j)) + ' ' + Copy(GetEnumName(TypeInfo(TOptionNames), Ord(j)), 4, length(GetEnumName(TypeInfo(TOptionNames), Ord(j))) -3));
+
                    Options[j] := GetDefaultOption(j);
-                   Result := LoadOptions(false);
-                 end;
-               mrNo:
-                 begin
-                  DefaultOptions();
 
-                   Result := Result and LoadOptions(false);
+                   Exclude(NotGottenOptions, j);
                  end;
-               mrAbort:
-                 Result := false;
+
+               Result := LoadOptions(false);
              end;
+           mrNo: //reset all Options
+             begin
+               DefaultOptions();
 
-             Break;
-           end;
-       end;
-
-       if Result then
-         begin
-           Result := LoadStarList(DefaultListPath);
-           ProgressNumber(False);
+               Result := LoadOptions(false);
+             end;
+           mrAbort:
+             Result := false;
          end;
 
-    except   //Unkown Error
-      case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we, reset or abort
-                      ' Unbekannter Fehler in Optionen-Ladevorgang.' + slinebreak +
-                      ' Optionen zurücksetzen?' + SlineBreak +
-                      ' (Nein = Einstellungen zurücksetzen)',
-                      mtError, [mbYes, mbAbort], 0, mbYes) of
-        mrYes:
-          begin
-            DefaultOptions();
-            Result := LoadOptions ();
+        try
+          for j := low(TOptionNames) to high(TOptionNames) do
+            begin
+              case j of
+                ON_Version:;// Todo: Convert older Otions to new ones
+
+                ON_PortableMode:
+                  if TryStrToBool(Options[j], Tempbool) then
+                    begin
+                      Frm_Config.Sw_PortableMode.Checked := Tempbool;
+                      SetPortableMode(Tempbool);
+                    end
+                  else
+                    ErrorMessage := 'Fehler in PortableMode-Ladevorgang: Falscher Datentyp' + sLineBreak +
+                                    Options[j];
+
+                ON_ExpertMode:
+                  if TryStrToBool(Options[j], Tempbool) then
+                    begin
+                      MI_Sicht_Exp.Checked := Tempbool;
+                      Frm_Config.Sw_Exprt.Checked := Tempbool;
+
+                      ProgressExpertMode(Tempbool);
+                    end
+                  else
+                    ErrorMessage := 'Fehler in ExpertenMode-Ladevorgang: Falscher Datentyp'   ;
+
+                ON_UpdateMode:
+                  if TryStrToInt (Options[j], i) then
+                    begin
+                      Case i of
+                        0:
+                          begin
+                            Frm_Config.AllUpOff ();
+                            Frm_Config.Img_Auto.Picture    := Frm_Config.Img_On.Picture;
+                            Update_ ();
+                          end;
+                        1:
+                          begin
+                            Frm_Config.AllUpOff ();
+                            Frm_Config.Img_Msg.Picture     := Frm_Config.Img_On.Picture;
+                          end;
+                        2:
+                          begin
+                            Frm_Config.AllUpOff ();
+                            Frm_Config.Img_tm.Picture      := Frm_Config.Img_On.Picture;
+
+                            Frm_Config.Te_plan.Time        := Time;
+
+                            Frm_Config.Lbl_Plan.Enabled    := true;
+                            Frm_Config.Lbl_am_Plan.Enabled := true;
+                            Frm_Config.Lbl_um_Plan.Enabled := true;
+                            Frm_Config.CBx_Rate.Enabled    := true;
+                            Frm_Config.CBx_Tag.Enabled     := true;
+                            Frm_Config.Sw_Redo.Enabled     := true;
+                            Frm_Config.Lbl_Redo.Enabled    := true;
+                            Frm_Config.Lbl_Sw_Redo.Enabled := true;
+                            Frm_Config.TE_Plan.Enabled     := true;
+                          end;
+                        3:
+                          begin
+                            Frm_Config.AllUpOff ();
+                            Frm_Config.Img_Non.Picture     := Frm_Config.Img_On.Picture;
+                          end;
+                        else
+                          ErrorMessage := 'Fehler in UpdateMode-Ladevorgang: Unbekannter Wert';
+                      end;
+                    end
+                  else
+                    ErrorMessage := 'Fehler in UpdateMode-Ladevorgang: Falscher Datentyp';
+
+                ON_UpdateRate:
+                  if TryStrToInt (Options[j], i) then
+                    if (i in [0..2]) then
+                      Frm_Config.CBx_Rate.ItemIndex := i
+                    else
+                      ErrorMessage := 'Fehler in UpdateRate-Ladevorgang: Unbekannter Wert'
+                  else
+                    ErrorMessage := 'Fehler in UpdateRate-Ladevorgang: Falscher Datentyp';
+
+                ON_UpdateDay:
+                  if TryStrToInt (Options[j], i) then
+                    if (i in [0..6]) then
+                      Frm_Config.CBx_Tag.ItemIndex := i
+                    else
+                      ErrorMessage := 'Fehler in UpdateTag-Ladevorgang: Unbekannter Wert'
+                  else
+                    ErrorMessage := 'Fehler in UpdateTag-Ladevorgang: Falscher Datentyp';
+
+                ON_UpdateTime:
+                  if TryStrToTime(Options[j], TempTime) then
+                    Frm_Config.TE_Plan.Time := TempTime
+                   else
+                    ErrorMessage := 'Fehler in UpdateZeit-Ladevorgang: Falscher Datentyp' ;
+
+                ON_UpRetry:
+                  if TryStrToBool(Options[j], TempBool)then
+                   Frm_Config.Sw_Redo.Checked := TempBool
+                  else
+                    ErrorMessage := 'Fehler in UpdateWiederholen-Ladevorgang: Falscher Datentyp';
+
+                On_Place:
+                  begin
+                    if (Options[j] = 'none') then
+                      begin
+                        //Inc(j);
+                        if TryStrToFloat(Options[ON_Lon], TempFloat) then
+                          begin
+                            Frm_Config.FlSpEd_Lon.Value := TempFloat;
+                            Lb_Lon_G.Caption            := Options[ON_Lon];
+                            Lb_Lon_G1.Caption           := Options[ON_Lon];
+                          end
+                        else
+                          ErrorMessage := 'Fehler in Longitude Ladevorgang: Falscher DatenTyp';
+
+                        //Inc(j);
+                        if TryStrToFloat(Options[ON_Lat], TempFloat) then
+                           begin
+                             Frm_Config.FlSpEd_Lat.Value := TempFloat;
+                             Lb_Lat_G.Caption            := Options[ON_Lat];
+                             Lb_Lat_G1.Caption           := Options[ON_Lat];
+                           end
+                        else
+                          ErrorMessage := 'Fehler in Longitude Ladevorgang: Falscher DatenTyp';
+
+                        Frm_Config.CbBx_Ort.Caption := 'Keine';
+                      end
+                    else
+                      begin
+                        Temp_Koord                  := Frm_Config.Koordinaten (Options[j]); //If it is an invailed place an Error is reaised here (may change in future)
+
+                        Frm_Config.FlSpEd_Lon.Value := Temp_Koord.Lon;
+
+                        Frm_Config.FlSpEd_Lat.Value := Temp_Koord.Lat;
+                        Lb_Lat_G.Caption            := FloatToStr(Temp_Koord.Lat);
+                        Lb_Lat_G1.Caption           := FloatToStr(Temp_Koord.Lat);
+
+                        Frm_Config.CbBx_Ort.Caption := Options[j];
+                        //Inc(j);
+                        //Inc(j);
+                      end;
+
+                    Angle ();
+                  end;
+
+                ON_AutoTimeMode:
+                 if TryStrToBool(Options[j], Tempbool) then
+                  begin
+                    Frm_Config.Sw_AutoTime.checked := Tempbool;
+                    Frm_Config.TE_Time.enabled     := not Tempbool;
+                    Frm_Config.DE_Day.enabled      := not Tempbool;
+                  end
+                else
+                  ErrorMessage := 'Fehler in TimeMode-Ladevorgang: Falscher DatenTyp';
+
+                ON_Date:
+                  if TryStrToDate(Options[j], TempTime) then
+                    begin
+                      DiffD                  := TempTime - Date;
+                      Frm_Config.DE_Day.Date := Date + DiffD;
+                    end
+                  else
+                    ErrorMessage := 'Fehler in Tag-Ladevorgang: Falscher DatenTyp oder Format';
+
+                  ON_Time:
+                    if TryStrToTime(Options[j], TempTime) then
+                      begin
+                        DiffT                   := TempTime - Time;
+                        Frm_Config.TE_Time.Time := Time + DiffT
+                       end
+                     else
+                      ErrorMessage := 'Fehler in Zeit-Ladevorgang';
+
+                  ON_AutoComMode:
+                    if TryStrToBool(Options[j], Tempbool) then
+                      begin
+                        Frm_Config.Sw_AutoCon.checked :=  Tempbool;
+
+                        if not Tempbool then
+                          if TryStrToInt(Options[ON_ComPort], i) then
+                            Frm_Config.CmbBx_ComPort.Caption := Options[ON_ComPort];
+                        //Inc(j);
+                      end
+                    else
+                      ErrorMessage := 'Fehler in ComMode-Ladevorgang: Falscher DatenTyp';
+
+                  ON_BaudRate:
+                    if TryStrToInt(Options[j], i) then
+                      if (Frm_Config.CmbBx_Baud.Items.IndexOf(Options[j]) >= 0) then
+                          Frm_Config.CmbBx_Baud.Caption := Options[j]
+                      else
+                        ErrorMessage := 'Fehler in BaudRate-Ladevorgang: Unzulässige Baudrate'
+                    else
+                     ErrorMessage := 'Fehler in BaudRate-Ladevorgang: Falscher DatenTyp';
+
+                  ON_AutoValueMode:
+                    if TryStrToBool(Options[j], Tempbool) then
+                      Frm_Config.Sw_ManW.Checked := not Tempbool
+                    else
+                     ErrorMessage := 'Fehler in WerteMode-Ladevorgang: Falscher DatenTyp';
+
+                  ON_UseHotkey:
+                    if TryStrToBool(Options[j], Tempbool) then
+                      begin
+                        with Frm_Config do begin
+                          Sw_HtKy.Checked := Tempbool;
+                          Ed_HtKy.Enabled := TempBool;
+                          Bt_HtKy.Enabled := TempBool;
+
+                          Lbl_Sw_HtKy.Caption := BoolToStr(Tempbool, 'Ein', 'Aus');
+                        end;
+                      end
+                    else
+                     ErrorMessage := 'Fehler in AnsteuerungMode-Ladevorgang: Falscher DatenTyp';
+
+                  ON_HotKey:
+                    begin
+                      if (length(Options[j]) > 0) then
+                        begin
+                          Frm_Config.Ed_HtKy.Text := '';
+                          TempOption :=  Options[j];
+
+                          repeat
+                            i := Pos(',', TempOption);
+
+                            if (i > 0) then
+                              begin
+                                TempStr := copy (TempOption, 1, pred(i));
+                                TempStr := Trim(TempStr);
+
+                                TempOption := TempOption.Remove(0, i);
+                              end
+                            else
+                              TempStr := TempOption;
+
+                            if TryStrToInt(TempStr, TempKey) then
+                              begin
+                                TempKey := abs(TempKey);
+                                Include(HotKey, TempKey);
+
+                                with Frm_Config do
+                                  begin
+                                    if (length(Ed_HtKy.Text) > 0) then
+                                      begin
+                                        TempStr := Ed_HtKy.Text + ' + ' + Frm_Config.KeyToStr(TempKey);
+                                        Ed_HtKy.Text := TempStr;
+                                      end
+                                    else
+                                      Ed_HtKy.Text := KeyToStr(TempKey);
+                                  end;
+                              end
+                            else
+                              begin
+                                ErrorMessage := 'Fehler in Hotkey-Ladevorgang: Out of Range ';
+                                break;
+                              end;
+
+                          until (i <= 0);
+                        end
+                      else
+                        Frm_Config.Ed_HtKy.Text := 'None';
+                    end;
+
+
+                  ON_StarMode:
+                    if TryStrToInt(Options[j], i) then
+                      begin
+                        CB_StrMode.ItemIndex := i;
+                        ProgressStarMode(i, false);
+                      end
+                    else
+                      ErrorMessage := 'Fehler in StarMode-Ladevorgang: Falscher DatenTyp';
+
+                  ON_Body:
+                    if TryStrToInt (Options[j], i) then
+                      begin
+                        Ed_Nr.Text := Options[j];
+                       end
+                     else
+                      ErrorMessage := 'Fehler in HimmelsKörper-Ladevorgang: Falscher DatenTyp';
+
+                  ON_Langue:;
+              end;
+
+             if ErrorMessage <> '' then
+               begin
+                 case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we retry, reset or abort
+                                 ' ' + ErrorMessage + ' (' + Options[j] + ')' + slinebreak +
+                                 ' Die fehlerhafte Option durch Defaultwert ersetzen?' + SlineBreak +
+                                 ' (Nein = Einstellungen zurücksetzen)',
+                                 mtError, [mbYes, mbNo, mbAbort], 0, mbYes) of
+                   mrYes:
+                     begin
+                       Options[j] := GetDefaultOption(j);
+                       Result := LoadOptions(false);
+                     end;
+                   mrNo:
+                     begin
+                      DefaultOptions();
+
+                       Result := Result and LoadOptions(false);
+                     end;
+                   mrAbort:
+                     Result := false;
+                 end;
+
+                 Break;
+               end;
+           end;
+
+           if Result then
+             begin
+               Result := LoadStarList(DefaultListPath);
+               ProgressNumber(False);
+             end;
+
+        except   //Unkown Error
+          case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we, reset or abort
+                          ' Unbekannter Fehler in Optionen-Ladevorgang.' + slinebreak +
+                          ' Optionen zurücksetzen?' + SlineBreak +
+                          ' (Nein = Einstellungen zurücksetzen)',
+                          mtError, [mbYes, mbAbort], 0, mbYes) of
+            mrYes:
+              begin
+                DefaultOptions();
+                Result := LoadOptions ();
+              end;
+            mrAbort:
+              Result := false;
           end;
-        mrAbort:
-          Result := false;
-      end;
-     end;
+         end;
+       end;
    end;
 
 procedure TFrm_Spori.SetPortableMode (IsActive: Boolean); //ToDo: CleanUp after Mode has changed
@@ -1717,8 +1772,10 @@ procedure TFrm_Spori.Delay (Milliseconds: DWORD); //Done
   var
     Yet: DWORD;
   begin
+    //Get time
     Yet := GetTickCount64;
 
+    //while not Milliseconds passed do erverything else
     while (GetTickCount64 < Yet + Milliseconds) and (not Application.Terminated) do//wait until Milliseconds is over
       Application.ProcessMessages; //do erverything else
 
@@ -1965,7 +2022,7 @@ begin
    end;
  end;
 
-procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate expert options in config
+procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate expert options in config; comments
   begin
 
     if Save then
@@ -1977,7 +2034,6 @@ procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate
         Frm_Config.Sw_Exprt.Checked := true;
 
         TbS_Lag.TabVisible          := true;
-        //TbS_Einst.TabVisible        := true;
         TbS_Ephi.TabVisible         := true;
 
         LV_List.Column[0].Width     := 60;
@@ -2001,7 +2057,6 @@ procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate
          Frm_Config.Sw_Exprt.Checked := false;
 
          TbS_Lag.TabVisible          := false;
-         //TbS_Einst.TabVisible        := false;
          TbS_Ephi.TabVisible         := false;
 
          LV_List.Column[0].Width     := 110;
@@ -2392,15 +2447,9 @@ procedure TFrm_Spori.FndDFind (Sender: TObject); //Done
   end;
 
 procedure TFrm_Spori.FormCreate (Sender: TObject); //Done?
-  var
-    i: word;
-    OptionsIndex: shortint;
-    TempOptions: TStringList;
-    PortableModeActive: Boolean;
   begin
     //initialize
     ser := TBlockSerial.Create;
-    FirstRun := true;
     OwnDir :=  GetCurrentDir();
 
     //initialize Hotkey
@@ -2408,33 +2457,33 @@ procedure TFrm_Spori.FormCreate (Sender: TObject); //Done?
     PressedKeys := [];
     HotKey      := [];
 
-    //if an optionsfile in the same dictionary exits load it and try to find a value for PortableMode
+    Application.CreateForm(TFrm_Config, Frm_Config);
+
+    //Tell LoadOptions to try to load from portable  file if it exits
     if FileExists(GetCurrentDir + PathDelim + 'Options.Space') then
-      begin
-        TempOptions := TStringList.create;
+      SetPortableMode(true);
 
-        Try
-          TempOptions.LoadFromFile(GetCurrentDir + PathDelim + 'Options.Space');
+    //Load config file
+    OptionsLoaded := LoadOptions();
 
-          for i := 0 to pred(TempOptions.count) do
-            begin
-              OptionsIndex := FindOption(FindOptionName(TempOptions[i]));
+    if not OptionsLoaded then //was not able to load the config flie -> clean up
+      Halt;
 
-              if (OptionsIndex >= 0) and (TOptionNames(OptionsIndex) = ON_PortableMode) then   //if OptionName = 'PortableMode' (but this way should be more robust, but slower though...)
-                begin
-                  if not TryStrToBool(FindOptionValue(TempOptions[i]), PortableModeActive) then
-                    PortableModeActive := false;      //default value;
+    //Search for commports and try to connect
+    GetComPorts ();
+    Connect (true);
 
-                  break;
-                end;
-            end
-        finally
-          FreeAndNil(TempOptions);
-        end;
-      end;
+    //Search for commports and try to connect
+    GetComPorts ();
+    Connect (true);
 
-    SetPortableMode(PortableModeActive);
+    { if ChkB_Up.Checked then
+      Update_ (); }
 
+    //after erverything was loaded fine we can start to calculate star/Ehemedides positions
+    Tmr_Berech.Enabled := true;
+
+    PgC_Haupt.TabIndex := 0; //Well basicky this is a line for development versions, if the form was compiled with open mainpage, as it should in realese versions, we can make it a comment
   end;
 
 procedure TFrm_Spori.FormDestroy (Sender: TObject);   //Version Dynamic; Comments
@@ -2501,7 +2550,7 @@ procedure TFrm_Spori.FormDestroy (Sender: TObject);   //Version Dynamic; Comment
                Index := 0;
                if not (Trim(Line)[1] = '#') or (Trim(Line) = '')  then  //Skip comments and free lines
                  begin
-                   Index := FindOption(FindOptionName(Line));
+                   Index := GetOptionIndex(FindOptionName(Line));
 
                    //if we got an vailid OptionName replace the old value
                    if (Index >= 0) then
@@ -2577,34 +2626,7 @@ procedure TFrm_Spori.FormKeyUp(Sender: TObject; var Key: Word; //Done
 
 procedure TFrm_Spori.FormShow (Sender: TObject); //ToDo: move Connect to LoadOptions and use Connact to all just if no vailid port was found; Update
   begin
-    if FirstRun then //we want to it once, but we can't use Form Create, becourse we are using Frm_Config
-      begin
-        FirstRun := false;
 
-       if not LoadOptions() then //was not able to load the config flie -> clean up
-          begin
-            ser.Purge;
-            ser.CloseSocket;
-
-            if Assigned(ser) then
-              FreeAndNil(ser);
-
-            halt;
-          end;
-
-        //Search for commports and try to
-        GetComPorts ();
-        Connect (true);
-
-       { if ChkB_Up.Checked then
-          Update_ (); }
-
-        //after erverything was loaded fine we can start to calculate star/Ehemedides positions
-        Tmr_Berech.Enabled := true;
-
-        PgC_Haupt.TabIndex := 0; //Well basicky this is a line for development versions, if the form was compiled with open mainpage, as it should in realese versions, we can make it a comment
-
-      end;
   end;
 
 procedure TFrm_Spori.Lb_ZeitClick (Sender: TObject); //This is just Temporary!
@@ -2628,6 +2650,14 @@ procedure TFrm_Spori.LV_ListKeyPress (Sender: TObject; var Key: char); //Done
   begin
     if ((LV_List.SelCount <> 0) and (Key = #13)) then
       ProgressList (LV_List.Selected);
+  end;
+
+procedure TFrm_Spori.MI_ConnectionClick(Sender: TObject); //ToDo: Remove if new desine is near
+  begin
+    Frm_Spori.Hide;
+
+    Frm_Config.PgCont_Pnl.ActivePage := Frm_Config.TbSht_Con;
+    Frm_Config.Show;
   end;
 
     procedure TFrm_Spori.MI_DatSchutzClick (Sender: TObject); //ToDo
@@ -2656,16 +2686,10 @@ procedure TFrm_Spori.LV_ListKeyPress (Sender: TObject; var Key: char); //Done
         SendData ();
    end;
 
-    procedure TFrm_Spori.MI_ConnectClick (Sender: TObject);  //Fehler verarbeiten
-      begin
-        Connect ();
-       end;
-
-    procedure TFrm_Spori.MI_Dar_QuitClick  (Sender: TObject);  //ToDo: Test if form destroy works correctly here
-      begin
-        OptionsChange(14,'Manuell');
-        TgB_AutoWert.Caption:='Automatische Wertübergabe';
-      end;
+procedure TFrm_Spori.MI_Dar_QuitClick  (Sender: TObject);  //Done
+  begin
+    //Halt the app
+    Halt;
    end;
 
     procedure TFrm_Spori.MI_Hilf_FehClick (Sender: TObject);  //toDo
@@ -2706,14 +2730,6 @@ procedure TFrm_Spori.LV_ListKeyPress (Sender: TObject; var Key: char); //Done
                     'Der Betrieb des Space Orienters erfordert keine weiteren ' +
                     'Hilfsmittel oder Netzteile als den USB Port eines Laptops.');
        end;
-
-procedure TFrm_Spori.MI_VerbEinstClick (Sender: TObject); //ToDo: Remove if new desine is near
-  begin
-    Frm_Spori.Hide;
-
-    Frm_Config.PgCont_Pnl.ActivePage := Frm_Config.TbSht_Con;
-    Frm_Config.Show;
-  end;
 
     procedure TFrm_Spori.MP_Hilf_OffClick (Sender: TObject);  //toDo
       begin
@@ -2954,10 +2970,11 @@ procedure TFrm_Spori.Bt_Pilot_StrLstClick (Sender: TObject); //Comments
     SendData ();
    end;
 
-    procedure TFrm_Spori.CB_StrModeChange (Sender: TObject); //Fertig
-      begin
-        ProgressStarMode(CB_StrMode.ItemIndex);
-       end;
+procedure TFrm_Spori.CB_StrModeChange (Sender: TObject); //Done
+  begin
+    //We got a now mode, tell it everything else
+    ProgressStarMode(CB_StrMode.ItemIndex);
+   end;
 
     procedure TFrm_Spori.CB_StBEditingDone (Sender: TObject); //In Procedure Auslagern?
       begin
