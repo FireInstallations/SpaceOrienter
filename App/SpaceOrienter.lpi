@@ -148,6 +148,7 @@
       <Unit11>
         <Filename Value="requirements/VSOP/vsop87.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="VSOP87"/>
       </Unit11>
       <Unit12>
         <Filename Value="requirements/VSOP/vsopeara.pas"/>

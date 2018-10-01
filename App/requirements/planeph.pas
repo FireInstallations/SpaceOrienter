@@ -1,12 +1,22 @@
 unit PlanEph;
 
-{$mode objfpc}{$H+}
-{$WARN 5057 off : Local variable "$1" does not seem to be initialized}
+{$IfDef FPC}
+  {$mode objfpc}
+  {$inline on}
+
+  {$WARN 5057 off : Local variable "$1" does not seem to be initialized}
+{$EndIf}
+
+
+{$H+}
 interface
 
 uses
-  Classes, SysUtils, Strings, Math,
+  Classes, SysUtils, Math,
   Data, iausofa, utils, wmm, VSOP87;
+
+var
+  JPLDE_BinDirectory: string = 'C:\Astro\Ephemerides\bin';
 
 type
   TRealMatrix13_6 = Array [0..12] of Array [0..5] of Real;
@@ -215,8 +225,8 @@ function nDaysMonth (const Year, Month: integer): integer; inline;
 
 { Ephemerides }
 {=============}
-//function Asteroids(Version, Frame, Value, Adjust: Integer; a, e, i, w, N, M, Epo, utc1, utc2, Lon, Lat, xp, yp, dut1, hm, ra, rb: Double): Double; stdcall;;
-//function Comets(Version, Frame, Value, Adjust: Integer; q,  e, i, w, N, TP, utc1, utc2, Lon, Lat, xp, yp, dut1, hm, ra, rb: Double): Double; stdcall;
+//function Asteroids(Version, Frame, Value, Adjust: Integer; a, e, i, w, N, M, Epo, utc1, utc2, Lon, Lat, xp, yp, dut1, hm, ra, rb: Double): Real;
+//function Comets(Version, Frame, Value, Adjust: Integer; q,  e, i, w, N, TP, utc1, utc2, Lon, Lat, xp, yp, dut1, hm, ra, rb: Double): Real;
 function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; const utc1: Real; utc2, Lon, Lat: Real; const TZ: Real; xp, yp, dut1: Real; const hm, ra, rb: Real): Real;
 function  Houses(const Value: Integer; const TZ, Lon, Lat, Jul: Real): Real;
 function  LightTime(const r: Real):Real;
@@ -311,33 +321,36 @@ var //global Variables uses by Eph
   Data_inited: boolean = false;
 
   fileYear: integer;
-  NRFILE: TStringList;
-  SOLUTION: integer = 0;
+  NRFILE: file of byte;
+  NRASSIGNED: Boolean = false;
   isFilesDir: boolean = false;
+  SOLUTION: integer = 0;
   IRECSZ, NCOEFFS: integer;
   NSOL, NRECL, KSIZE: integer;
   NAMFIL, filesDir: String;
   //DefaultDir: String;
 
   {IYMIN: integer = -4799; }
-  TTL: Array [0..2] of String; //[3][84]
-  CNAM: Array [0..999] of String;   //[1000][6]
-  plAU, EMRAT: Real;
-  SS: Array [0..2] of Real;
-  CVAL: Array [0..999] of Real;
-  {PNUT: Array [0..3] of Real;}
+  TTL: Array [0..2, 0..83] of Byte; //[3][84]
+  CNAM: Array [0..999, 0..5] of Byte;   //[1000][6]
+  plAU, EMRAT: Double;
+  SS: Array [0..2] of Double;
+  CVAL: Array [0..999] of Double;
+  {PNUT: Array [0..3] of Double;}
   PVSUN: Array [0..5] of Real;
   BARY: boolean;
   KM{, DENUM}: boolean;
   NCON, NUMDE{, CENTER}: integer;
   IPT: Array [0..14, 0..2] of integer;
+  dummy: array[0..8191] of Byte; // *** !!! It MUST BE 8192 bytes, because it is the size of a chunk !!! *** //
+                                 // *** !!! otherwise you will have to read 8192 bytes one by one    !!! *** //
 
   plET1: Real = 0.0;
   plET2: Real = 0.0;
   plSOL: integer = 0;
   plARG: integer = 0;
   plCEN: integer = 0;
-  plResult: Array [0..5] of Real = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  plResult: TRealVektor6 = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
 //Check function headers
 // should have a testrun with Data_
@@ -348,6 +361,7 @@ procedure InitData_ ();
   begin
    if not Data_inited then
      begin
+       {$IfDef FPC}
        i := length(Mercury);
        setlength(Data_[0], i);
        for j := 0 to pred(i) do
@@ -388,6 +402,48 @@ procedure InitData_ ();
        for j := 0 to i-1 do
          Data_[7, j] := Neptune[j];
 
+       {$Else}
+       i := length(Mercury);
+       setlength(Data_[0], i);
+       for j := 0 to pred(i) do
+         Data_[0, j] := @Mercury[j];
+
+       i := length(Venus);
+       setlength(Data_[1], i);
+       for j := 0 to pred(i) do
+         Data_[1, j] := @Venus[j];
+
+       i := length(Earth);
+       setlength(Data_[2], i);
+       for j := 0 to pred(i) do
+         Data_[2, j] := @Earth[j];
+
+       i := length(Mars);
+       setlength(Data_[3], i);
+       for j := 0 to pred(i) do
+         Data_[3, j] := @Mars[j];
+
+       i := length(Jupiter);
+       setlength(Data_[4], i);
+       for j := 0 to i-1 do
+         Data_[4, j] := @Jupiter[j];
+
+       i := length(Saturn);
+       setlength(Data_[5], i);
+       for j := 0 to i-1 do
+         Data_[5, j] := @Saturn[j];
+
+       i := length(Uranus);
+       setlength(Data_[6], i);
+       for j := 0 to i-1 do
+         Data_[6, j] := @Uranus[j];
+
+       i := length(Neptune);
+       setlength(Data_[7], i);
+       for j := 0 to i-1 do
+         Data_[7, j] := @Neptune[j];
+       {$EndIf}
+
        Data_inited := true;
      end;
   end;
@@ -418,18 +474,21 @@ function  round_(const InReal: Real): Real; inline;
 
 procedure strrmeol(var str: String); inline;
   var
-    i : integer = 0;
+    i : integer;
   begin
-    for i := 1 to str.length do
+    for i := 1 to length(str) do
       begin
         if (str[i] = #13) then
-            str := str.Remove(i, 1)
+            Delete(str, i, 1)
         else
           if (str[i] = #10) then
-            str := str.Remove(i, 1)
+            Delete(str, i, 1)
+        {$IfDef FPC}
         else
             if (str[i] = LineEnding) then
-              str := str.Remove(i, length(LineEnding));
+              Delete(str, i, length(LineEnding))
+       {$EndIf}
+       ;
       end;
   end;
 
@@ -498,12 +557,19 @@ function  PowerTo(const x, y: Real): Real; inline;
 function  RangeTo(x: Real; const bound: Real): Real;
   begin
     if (bound <= 0.0) then
-      
+      exit(0.0);
 
+    {$IfDef FPC}
     while (x > bound) do
       x -= bound;
     while(x < 0.0) do
       x += bound;
+    {$Else}
+    while (x > bound) do
+      x := x - bound;
+    while(x < 0.0) do
+      x := x + bound;
+    {$EndIf}
 
     Result := x;
   end;
@@ -574,7 +640,11 @@ function  DeltaT(const jd1, jd2: Real): Real;
           e := Jul + 10;
           a := trunc(e / 365.25 - 4712.0);
 
+          {$IfDef FPC}
           e += (abs(a/100)-(abs(a/400)-4))-16;
+          {$Else}
+          e := e + (abs(a/100)-(abs(a/400)-4))-16;
+          {$EndIf}
           a := trunc(e / 365.25 - 4712.0);
 
           if(a < 1620) then
@@ -606,9 +676,15 @@ function  DeltaT(const jd1, jd2: Real): Real;
           t := (Jul - 2415020.5) / 36525.0;
 
           for i :=0 to 10 do
+            {$IfDef FPC}
             d += (dFac18[i]*PowerTo(t,i));
 
           d *= 86400.0;
+            {$Else}
+            d := d + (dFac18[i]*PowerTo(t,i));
+
+          d := d * 86400.0;
+            {$EndIf}
         end
     else
       if (Jul >= 2415020.5) and (Jul<2447161.5) then // 1900 - 1987
@@ -616,9 +692,15 @@ function  DeltaT(const jd1, jd2: Real): Real;
           t := (Jul - 2415020.5) / 36525.0;
 
           for i :=0 to 7 do
+            {$IfDef FPC}
             d += (dFac19[i]*PowerTo(t,i));
 
           d *= 86400.0;
+            {$Else}
+            d := d + (dFac19[i]*PowerTo(t,i));
+
+          d := d * 86400.0;
+            {$EndIf}
         end
     else
       d := -15.0 + PowerTo(Jul - 2382148.0,2) / 41048480.0;
@@ -650,7 +732,11 @@ procedure Tt2Tdb(const tt1, tt2: Real; var tdb1, tdb2: Real);
 
     g := (357.53 + 0.98560028 * ((tt1 - DJ00) + tt2)) * DD2R;
     LLj := (246.11 + 0.90251792 * ((tt1 - DJ00) + tt2)) * DD2R;
+    {$IfDef FPC}
     tdb2 += ((0.001657 * sin(g) + 0.000022 * sin(LLj)) / 86400.0);
+    {$Else}
+    tdb2 := tdb2 + ((0.001657 * sin(g) + 0.000022 * sin(LLj)) / 86400.0);
+    {$Endif}
   end;
 
 function  OrbitalElements(const Body, Value: integer; const jd1, jd2: Real): Real;
@@ -673,7 +759,11 @@ function  OrbitalElements(const Body, Value: integer; const jd1, jd2: Real): Rea
     if(Body = BN_MOON) then
       begin
         for i := 0 to 4 do
+          {$IfDef FPC}
           Result += (Moon[pred(Value)][i] * PowerTo(t,i));
+          {$Else}
+          Result := Result + (Moon[pred(Value)][i] * PowerTo(t,i));
+          {$Endif}
 
         Result := RangeTo(Result, 360.0);
       end
@@ -682,7 +772,11 @@ function  OrbitalElements(const Body, Value: integer; const jd1, jd2: Real): Rea
         InitData_ ();
 
         for i := 0 to 3 do
+          {$IfDef FPC}
           Result += (Data_[pred(Body)][pred(Value)][i] * Power(t,i));
+          {$Else}
+          Result := Result + (Data_[pred(Body)][pred(Value)][i] * Power(t,i));
+          {$EndIf}
 
         if (not((Value = OE_SEMIMAJORAXIS) or (Value = OE_ECCENTRICITY))) then
           Result := RangeTo(Result, 360.0);
@@ -695,19 +789,30 @@ procedure BesselianToJ2000(var pv: TRealMatrix2_3);
     vr, vv: TRealVektor3;
   begin
 
-  iauZp(rr);
-  iauZp(rv);
+    iauZp(rr);
+    iauZp(rv);
 
-  iauZp(vr);
-  iauZp(vv);
+    iauZp(vr);
+    iauZp(vv);
 
-  iauRxp(Mrr, pv[0], rr);
-  iauRxp(Mvr, pv[1], vr);
-  iauRxp(Mrv, pv[0], rv);
-  iauRxp(Mvv, pv[1], vv);
+    {$IfDef FPC}
+    iauRxp(Mrr, pv[0], rr);
+    iauRxp(Mvr, pv[1], vr);
+    iauRxp(Mrv, pv[0], rv);
+    iauRxp(Mvv, pv[1], vv);
 
-  iauPpp(rr, vr, pv[0]);
-  iauPpp(rv, vv, pv[1]);
+    iauPpp(rr, vr, pv[0]);
+    iauPpp(rv, vv, pv[1]);
+    {$Else}
+    iauRxp(TRealMatrix3_3(Mrr), TRealVektor3(pv[0]), rr);
+    iauRxp(TRealMatrix3_3(Mvr), TRealVektor3(pv[1]), vr);
+    iauRxp(TRealMatrix3_3(Mrv), TRealVektor3(pv[0]), rv);
+    iauRxp(TRealMatrix3_3(Mvv), TRealVektor3(pv[1]), vv);
+
+    iauPpp(rr, vr, TRealVektor3(pv[0]));
+    iauPpp(rv, vv, TRealVektor3(pv[1]));
+    {$EndIF}
+
   end;
 
 function  Julian (const Year, Month, Day, Hour, Minute, Second: Integer): Real;
@@ -730,13 +835,23 @@ function  Julian (const Year, Month, Day, Hour, Minute, Second: Integer): Real;
       ju := trunc(365.25 * (Year + 4711.0)) + Day + 365;
 
     for i := 1 to Month-1 do
+      {$IfDef FPC}
       ju += nDaysMonth(Year, i);
+      {$Else}
+      ju := ju + nDaysMonth(Year, i);
+      {$EndIF}
 
     if ((Year > 1582) or ((Year = 1582) and ((Month > 10) or  ((Month = 10) and (Day > 14))))) then
       begin
+        {$IfDef FPC}
         ju += (Year - 1601) div 400;
         ju -= (Year - 1601) div 100;
         ju -= 10;
+        {$Else}
+        ju := ju + (Year - 1601) div 400;
+        ju := ju - (Year - 1601) div 100;
+        ju := ju - 10;
+        {$EndIF}
       end;
 
     Result := (ju + (Hour + Minute / 60.0 + Second / 3600.0) / 24.0 - 0.5);
@@ -756,26 +871,45 @@ procedure Gregorian(const dj1, dj2: Real; var iy, im, id: integer; var fd: Real)
       begin
         iy := trunc(j / 365.25 - 4712.0);
 
+        {$IfDef FPC}
         d -= (iy - 1600) div 400;
         d += (iy-1600) div 100;
 
         j += (d + 10);
+        {$Else}
+        d := d - (iy - 1600) div 400;
+        d := d + (iy-1600) div 100;
+
+        j := j + (d + 10);
+        {$EndIF}
       end;
 
 
     x := j / 365.25 - 4712.0;
     if (x < 0) then
+      {$IfDef FPC}
       x -= 1;
+      {$Else}
+      x := x - 1;
+      {$EndIF}
 
     r := (abs(x) - abs(trunc(x)));
     iy := trunc(x);
 
     n := 337 + nDaysMonth(iy, 2);
 
-    id := trunc(round(r * n));
+    {$IFDef FPC}
+    id := round(r * n);
+    {$Else}
+    id := Integer(round(r * n));
+    {$EndIf}
 
     if (iy < 0) and (id = 0) then
+      {$IfDef FPC}
       iy += 1;
+      {$Else}
+      iy := iy + 1;
+      {$EndIF}
 
     if (x < 0.0) then
       if (id = 0) then
@@ -789,15 +923,25 @@ procedure Gregorian(const dj1, dj2: Real; var iy, im, id: integer; var fd: Real)
     begin
       if (id > n) then
         begin
+          {$IfDef FPC}
           iy += 1;
+          {$Else}
+          iy := iy + 1;
+          {$EndIf}
           id := 1;
         end
       else
         if (j > 2299160.0) then
           begin
+            {$IfDef FPC}
             id -= (iy-1600) div 400;
             id += (iy-1600) div 100;
             id -= d;
+            {$Else}
+            id := id - (iy-1600) div 400;
+            id := id + (iy-1600) div 100;
+            id := id - d;
+            {$EndIf}
           end;
     end;
 
@@ -809,7 +953,11 @@ procedure Gregorian(const dj1, dj2: Real; var iy, im, id: integer; var fd: Real)
       if (dm >= id) then
         break;
 
+      {$IfDef FPC}
       id -= dm;
+      {$Else}
+      id := id - dm;
+      {$EndIf}
     end;
   end;
 
@@ -825,11 +973,19 @@ function  SolveKepler(M: Real; const e: Real): Real; {***** From Roger Sinnott *
         M := abs(M) / (D2Pi);
 
         M := MODF(M, i);
+        {$IfDef FPC}
         M *= D2Pi * F;
+        {$Else}
+        M := M * D2Pi * F;
+        {$EndIf}
       end;
 
     if (M < 0) then
+      {$IfDef FPC}
       M += D2Pi;
+      {$Else}
+      M := M + D2Pi;
+      {$EndIf}
 
     if(M > Pi) then
       begin
@@ -848,10 +1004,17 @@ function  SolveKepler(M: Real; const e: Real): Real; {***** From Roger Sinnott *
         N := M - M1;
         K := sign(N);
 
+        {$IfDef FPC}
         E0 += D * K;
         D /= 2;
       end;
     E0 *= F;
+        {$ELSE}
+        E0 := E0 + D * K;
+        D := D / 2;
+      end;
+    E0 :=  E0 * F;
+        {$EndIF}
 
     Result := E0;
   end;
@@ -871,7 +1034,11 @@ function  Houses(const Value: integer; const TZ, Lon, Lat, Jul: Real): Real;
 
     r := 0.0;
     for i := 0 to 2 do
+      {$IfDef FPC}
       r += k[i] * PowerTo(t, i);
+      {$ELSE}
+      r := r + k[i] * PowerTo(t, i);
+      {$EndIF}
 
     d  := RangeTo(24 * MODF(d, t) - TZ, 24.0);
 
@@ -881,7 +1048,11 @@ function  Houses(const Value: integer; const TZ, Lon, Lat, Jul: Real): Real;
     //e := DD2R * (Obliquity(Jul) + ephNutation(nOBLIQUITY, Jul, 0.0));
     e := iauObl80(DJ00, Jul-DJ00) + ephNutation(nOBLIQUITY, Jul, 0.0);
 
+    {$IfDef FPC}
     TempLat *= DD2R;
+    {$ELSE}
+    TempLat := TempLat * DD2R;
+    {$EndIF}
 
     case Value of
     1, 7:
@@ -903,11 +1074,19 @@ function  Houses(const Value: integer; const TZ, Lon, Lat, Jul: Real): Real;
           else
             c := Pi / 2.0;
 
+        {$IfDef FPC}
         if (c < 0.0) then
           c += Pi;
 
-          if (d < 0.0) then
-            c += Pi;
+        if (d < 0.0) then
+          c += Pi;
+        {$ELSE}
+        if (c < 0.0) then
+          c := c + Pi;
+
+        if (d < 0.0) then
+          c := c + Pi;
+        {$EndIF}
       end;
     2, 8:
       begin
@@ -929,11 +1108,19 @@ function  Houses(const Value: integer; const TZ, Lon, Lat, Jul: Real): Real;
       begin
         c := ATANG2(Tan(r), cos(e));
 
+        {$IfDef FPC}
         if (c < 0.0) then
           c += Pi;
 
         if (r > Pi) then
           c += Pi;
+        {$ELSE}
+        if (c < 0.0) then
+          c := c + Pi;
+
+        if (r > Pi) then
+          c := c + Pi;
+        {$EndIF}
       end;
     5, 11:
       begin
@@ -963,7 +1150,11 @@ function  Houses(const Value: integer; const TZ, Lon, Lat, Jul: Real): Real;
             c := s * sin(r0) * tan(e) * tan(TempLat);
             c := arccos(c);
             if (c < 0.0) then
+              {$IfDef FPC}
               c += Pi;
+              {$Else}
+              c := c + Pi;
+              {$EndIf}
 
             if (s > 0.0) then
               r0 := r + Pi - (c / d)
@@ -973,16 +1164,29 @@ function  Houses(const Value: integer; const TZ, Lon, Lat, Jul: Real): Real;
 
         c := ATANG2(tan(r0), cos(e));
 
+        {$IfDef FPC}
         if(c < 0.0) then
           c += Pi;
         if(sin(r0) < 0.0) then
           c += Pi;
 
         c += t;
+        {$Else}
+        if(c < 0.0) then
+          c := c + Pi;
+        if(sin(r0) < 0.0) then
+          c := c + Pi;
+
+        c := c + t;
+        {$EndIf}
       end;
 
     if (Value = 4) or ((Value > 6) and (Value <> 10)) then
+      {$IfDef FPC}
       c += Pi;
+      {$Else}
+      c := c + Pi;
+      {$EndIf}
 
     Result := (RangeTo(DR2D * c, 360.0));
   end;
@@ -990,8 +1194,10 @@ function  Houses(const Value: integer; const TZ, Lon, Lat, Jul: Real): Real;
 function  EclipticCoords(const Value, Adjust: integer; Asc, Dec: Real; const Jul: Real): Real;
   var
     c, e, x, y: Real;
-
   begin
+    c := 0;
+
+    {$IfDef FPC}
     Asc *= DD2R;
     Dec *= DD2R;
 
@@ -999,6 +1205,15 @@ function  EclipticCoords(const Value, Adjust: integer; Asc, Dec: Real; const Jul
 
     if ((Adjust and 1) <> 0) then
       e += ephNutation(nOBLIQUITY, Jul, 0.0);
+    {$Else}
+    Asc := Asc * DD2R;
+    Dec := Dec * DD2R;
+
+    e := iauObl80(DJ00, Jul-DJ00);
+
+    if ((Adjust and 1) <> 0) then
+      e := e + ephNutation(nOBLIQUITY, Jul, 0.0);
+    {$EndIf}
 
     if (Value = CV_LON) then
       begin
@@ -1023,8 +1238,13 @@ function  HorizontalCoords(const Value: integer; const Asc: Real; Dec: Real; con
   var
     c, h: Real;
   begin
+    {$IFDef FPC}
     Dec *= DD2R;
     Lat *= DD2R;
+    {$Else}
+    Dec := Dec * DD2R;
+    Lat := Lat * DD2R;
+    {$EndIf}
 
     h := DD2R * RangeTo(DR2D * iauGmst82(DJ00, Jul- DJ00) + Lon - Asc, 360.0);
 
@@ -1043,11 +1263,17 @@ function  EquatorialCoords(const Value, Adjust, Origin: integer; LonAzi, LatEle,
   var
     c, e: Real;
   begin
+    {$IFDef FPC}
     LonAzi *= DD2R;
     LatEle *= DD2R;
     LonEcu *= DD2R;
     LatEcu *= DD2R;
-
+    {$Else}
+    LonAzi := LonAzi * DD2R;
+    LatEle := LatEle * DD2R;
+    LonEcu := LonEcu * DD2R;
+    LatEcu := LatEcu * DD2R;
+    {$EndIf}
 
   case Origin of
     COR_ECLIPTICS :
@@ -1055,7 +1281,11 @@ function  EquatorialCoords(const Value, Adjust, Origin: integer; LonAzi, LatEle,
         e := iauObl80(DJ00, Jul-DJ00);
 
         if ((Adjust and 8) <> 0) then
+          {$IFDef FPC}
           e += ephNutation(nOBLIQUITY, Jul, 0.0);
+          {$Else}
+          e := e + ephNutation(nOBLIQUITY, Jul, 0.0);
+          {$EndIf}
 
         if (Value = CV_ASC) or (Value = CV_HOR) then
           begin
@@ -1104,19 +1334,33 @@ function  EnsureSequentiality(bound: Real; var v1, v2, v3: Real): boolean;
     q1 := bound / 4.0;
     q3 := bound - q1;
 
-  if (v2 < q1) and (v1 > q3) then
-    v2 += bound;
+    {$IfDef FPC}
+    if (v2 < q1) and (v1 > q3) then
+      v2 += bound;
 
-  if (v3 < q1) and (v2 > q3) then
-    v3 += bound;
+    if (v3 < q1) and (v2 > q3) then
+      v3 += bound;
 
-  if (v2 < q1) and (v3 > q3) then
-    v2 += bound;
+    if (v2 < q1) and (v3 > q3) then
+      v2 += bound;
 
-  if (v1 < q1) and (v2 > q3) then
-    v1 += bound;
+    if (v1 < q1) and (v2 > q3) then
+      v1 += bound;
+    {$Else}
+    if (v2 < q1) and (v1 > q3) then
+      v2 := v2 + bound;
 
-  Result := (v1 > v2) and (v2 > v3);
+    if (v3 < q1) and (v2 > q3) then
+      v3 := v3 + bound;
+
+    if (v2 < q1) and (v3 > q3) then
+      v2 := v2 + bound;
+
+    if (v1 < q1) and (v2 > q3) then
+      v1 := v1 + bound;
+    {$EndIf}
+
+    Result := (v1 > v2) and (v2 > v3);
   end;
 
 // Test Passage for an event
@@ -1130,7 +1374,7 @@ function  PassageTest(const v, i: integer; const s, c, z, k1, t0, a0, d0: Real; 
     h0 := l0 - a0;
     h2 := l2 - a2;
 
-    h1 := ( h2 + h0) / 2.0; // hour angle
+    h1 := (h2 + h0) / 2.0; // hour angle
     d1 := (d2 + d0) / 2.0; // dec
 
     if (v = GV_PASSAGE) then
@@ -1140,7 +1384,12 @@ function  PassageTest(const v, i: integer; const s, c, z, k1, t0, a0, d0: Real; 
 
         if (h0 > h2) then
           begin
+            {$IfDef FPC}
             h2 += D2Pi;
+            {$Else}
+            h2 := h2 + D2Pi;
+            {$EndIf}
+
             e := (D2Pi - h0) / (h2 - h0);
           end
         else
@@ -1198,7 +1447,11 @@ function  Passage(const Version: integer; Frame: integer; const Body, Value: int
   begin
 
     r := 6378100.0;
+    {$IfDef FPC}
     utc2 -= (TZ / 24.0);
+    {$Else}
+    utc2 := utc2 - (TZ / 24.0);
+    {$EndIf}
 
     if (Body = BN_EARTH) or (Body < BN_MERCURY) or (Body > BN_SUN) then
       exit(PLERR_WRONGOBJECT);
@@ -1223,7 +1476,11 @@ function  Passage(const Version: integer; Frame: integer; const Body, Value: int
       h := -0.5667;
 
     if (Height > 0.0) then
+      {$IfDef FPC}
       h -= (0.00527778 * sqrt(Height) + DR2D * arccos(r / (r + Height)));
+      {$Else}
+      h := h - (0.00527778 * sqrt(Height) + DR2D * arccos(r / (r + Height)));
+      {$EndIf}
 
     JulianDateToDateAndTime(utc1, utc2, jd, t);
 
@@ -1234,9 +1491,15 @@ function  Passage(const Version: integer; Frame: integer; const Body, Value: int
     s := sin(phi);
     c := cos(phi);
     k1 := 15.0 * DD2R * 1.0027379;
-    //hl := PassageLST(t, Lon / 360.0, TZ / 24.0); t -= TZ / 24.0;
+    //hl := PassageLST(t, Lon / 360.0, TZ / 24.0);
+    //t := t - TZ / 24.0;
     hl := iauGmst82(DJ00, t) - k1 * TZ + DD2R * Lon;
+
+    {$IfDef FPC}
     t -= TZ / 24.0;
+    {$Else}
+    t := t - TZ / 24.0;
+    {$EndIf}
 
     a1 := DD2R * Ephem(Version, Frame, Body, GV_RIGHTASCENSION, 5, DJ00, t+0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     a2 := DD2R * Ephem(Version, Frame, Body, GV_RIGHTASCENSION, 5, DJ00, t+0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -1358,7 +1621,6 @@ function  CoordToUTM(const Value, Datum: integer; const Lon: Real; Lat, a_, b_: 
         end
     else
       begin
-
         ZoneCM := 6 * ZoneH - 183;
 
        if (Datum > 0) and (Datum < 24) then
@@ -1373,7 +1635,11 @@ function  CoordToUTM(const Value, Datum: integer; const Lon: Real; Lat, a_, b_: 
         e_ := sqrt(1.0 - power(b_ / a_, 2));
         e2 := e_*e_ / (1.0 - e_*e_);
         n := (a_ - b_) / (a_ + b_);
+        {$IfDef FPC}
         Lat *= DD2R;
+        {$Else}
+        Lat := Lat * DD2R;
+        {$EndIf}
         //rho := a_ * (1.0 - e*e) / power(1.0 - power(e * sin(Lat), 2), 3.0 / 2.0);
         nu := a_ / sqrt(1 - power(e_ * sin(Lat), 2));
         p := DD2R * (Lon - ZoneCM);
@@ -1510,17 +1776,29 @@ function  UTMToCoord(Value: integer; const Datum, ZoneH: integer; ZoneV: Char; N
       if not (Value in [1..9]) then
         exit(0.0);
 
+
       if not (Version in [0..5]) then // Try to converd to 0..5
         if (Version = Ord('0')) then
           Version := 0
         else
+        {$IfDef FPC}
           if (Version in [Ord('A')..Ord('E')]) then
             Version -= (Ord('A') -1)
         else
           if (Version in [Ord('a')..Ord('e')]) then
             Version -= (Ord('a') -1)
         else
-            exit (0.0);
+          exit (0.0);
+        {$Else}
+          if (Version in [Ord('A')..Ord('E')]) then
+            Version := Version - (Ord('A') -1)
+        else
+          if (Version in [Ord('a')..Ord('e')]) then
+            Version := Version - (Ord('a') -1)
+        else
+          exit (0.0);
+        {$EndIf}
+
 
       if (Version = 0) and (Value > 6) then
         exit(0.0);
@@ -1624,14 +1902,17 @@ function  UTMToCoord(Value: integer; const Datum, ZoneH: integer; ZoneV: Char; N
       a, b, e, x, y, z, r, n, i, w, t, v: Real;
     begin
       t := Centuries(tdb1, tdb2);
+      e := 0.0;
 
       if(Body = BN_EARTH) and (Value < GV_LONGITUDE) then
         begin
-          e := 0.0;
-
           InitData_();
           for j := 0 to 3 do
+            {$IfDef FPC}
             e += Data_[pred(Body)][pred(Value)][j] * PowerTo(t,j); // body could be used as const
+            {$Else}
+            e := e + Data_[pred(Body)][pred(Value)][j] * PowerTo(t,j); // body could be used as const
+            {$EndIf}
 
           if not ((Value = OE_SEMIMAJORAXIS) or (Value = OE_ECCENTRICITY)) then
             e := RangeTo(e, 360.0);
@@ -1692,8 +1973,14 @@ function  UTMToCoord(Value: integer; const Datum, ZoneH: integer; ZoneV: Char; N
           t := SolveKepler(DD2R*(r - b), e);
 
           w := DD2R * RangeTo(b - n, 360.0);
+
+          {$IfDef FPC}
           n *= DD2R;
           i *= DD2R;
+          {$Else}
+          n := n * DD2R;
+          i := i * DD2R;
+          {$EndIf}
 
           x := a * (cos(t) - e);
           y := a * (sqrt(1.0 - sqr(e)) * sin(t));
@@ -1759,6 +2046,8 @@ procedure EphemMoon(const tdb1, tdb2: Real; var l, b, r: Real);
     l := 0.0;
     r := 0.0;
 
+
+    {$IfDef FPC}
     for i := 0 to 59 do
       begin
          q := rlMoon[i][0] * d[1] + rlMoon[i][1] * d[2] +
@@ -1777,14 +2066,40 @@ procedure EphemMoon(const tdb1, tdb2: Real; var l, b, r: Real);
     b += (-0.002235 * sin(d[0]) + 0.000382 * sin(a[2]) + 0.000175 * sin(a[0]-d[4]) +
           0.000175 * sin(a[0]+d[4]) + 0.000127 * sin(d[0]-d[3]) - 0.000115 * sin(d[0]+d[3]));
 
+    while(b < -90.0) do
+      b += 90.0;
+
+    while(b > 90.0) do
+      b -= 90.0;
+    {$Else}
+    for i := 0 to 59 do
+      begin
+         q := rlMoon[i][0] * d[1] + rlMoon[i][1] * d[2] +
+              rlMoon[i][2] * d[3] + rlMoon[i][3] * d[4];
+
+         l := l + (clrMoon[i][0]) * sin(q) * PowerTo(e, abs(rlMoon[i][1]));
+         r := r + (clrMoon[i][1]) * cos(q) * PowerTo(e, abs(rlMoon[i][1]));
+
+         q := bMoon[i][0] * d[1] + bMoon[i][1] * d[2] +
+             bMoon[i][2] * d[3] + bMoon[i][3] * d[4];
+
+         b := b + (cbMoon[i]) * sin(q) * PowerTo(e, abs(bMoon[i][1]));
+      end;
+
+    l := l +  (0.003958 * sin(a[0]) + 0.000318 * sin(a[1]) + 0.001962 * sin(d[0]-d[4]));
+    b := b + (-0.002235 * sin(d[0]) + 0.000382 * sin(a[2]) + 0.000175 * sin(a[0]-d[4]) +
+          0.000175 * sin(a[0]+d[4]) + 0.000127 * sin(d[0]-d[3]) - 0.000115 * sin(d[0]+d[3]));
+
+    while(b < -90.0) do
+      b := b + 90.0;
+
+    while(b > 90.0) do
+      b := b - 90.0;
+    {$EndIf}
+
     r := (r + 385000.56) / 149504201.0;
     l := RangeTo(l + DR2D*d[0], 360.0);
 
-   while(b < -90.0) do
-     b += 90.0;
-
-   while(b > 90.0) do
-     b -= 90.0;
   end;
 
 {******************************************************************
@@ -1797,66 +2112,81 @@ procedure EphemMoon(const tdb1, tdb2: Real; var l, b, r: Real);
 * using frequency analysis :
 * J. Chapront, 1995, Astron. Atrophys. Sup. Ser., 109, 181.
 *******************************************************************
-DOUBLE STDCALL EphemPluto(int Value, DOUBLE tdb1, DOUBLE tdb2) // Valids between: [01/01/1700-24/01/2100].
+function EphemPluto(const Value: integer; const tdb1, tdb2: Real): Real; // Valids between: [01/01/1700-24/01/2100].
+  const
+    tdeb = 2341972.5;
+  //tfin = 2488092.5;
+    dt = 146120.0;
   var
-  DOUBLE tdeb = 2341972.5;
-//DOUBLE tfin = 2488092.5;
-  DOUBLE x,f,fx,wx,cf,sf;
-  DOUBLE v[3],w[3],r[3];
-  DOUBLE dt = 146120.0;
-  int imax,imin;
-  int i,m;
-begin
-
-//Check up the date
-//if((tdb1+tdb2)<tdeb||(tdb1+tdb2)>tfin) return(0.0);
-
-  for(i=0; i<3; i++) r[i] = 0.0;
-//Change variable
-  x = 2.0 * ((tdb1+tdb2)-tdeb) / dt - 1.0; fx = x * dt / 2.0;
-//Compute the positions (secular terms)
-  wx = 1.0;
-  v[0] = v[1] = v[2] = 0.0;
-  for(i=0; i<4; i++) do
+    x, f, fx, wx, cf, sf: Real;;
+    v, w, r: TRealVektor3;
+    imax, imin: integer;
+    i, m: byte;
   begin
-    v[0] += axPluto[i] * wx;
-    v[1] += ayPluto[i] * wx;
-    v[2] += azPluto[i] * wx;
-    wx = wx * x;
-  end
-//Compute the positions (periodic and Poisson terms)
-  imax = 0;
-  wx = 1.0;
-  for(m=0; m<3; m++) do
-  begin
-    for(i=0; i<3; i++) w[i] = 0.0;
-    imin = imax + 1;
-    imax = imax + nfPluto[m];
-    for(i=imin; i<=imax; i++) do
-    begin
-      f  = fqPluto[i-1] * fx; cf = cos(f); sf = sin(f);
-      w[0] += cxPluto[i-1] * cf + sxPluto[i-1] * sf;
-      w[1] += cyPluto[i-1] * cf + syPluto[i-1] * sf;
-      w[2] += czPluto[i-1] * cf + szPluto[i-1] * sf;
+
+  //Check up the date
+  //if ((tdb1+tdb2)<tdeb) or ((tdb1+tdb2)>tfin)) then
+    exit(0.0);
+
+    for i := 0 to 2 do
+      r[i] := 0.0;
+
+  //Change variable
+    x := 2.0 * ((tdb1+tdb2)-tdeb) / dt - 1.0; fx = x * dt / 2.0;
+  //Compute the positions (secular terms)
+    wx := 1.0;
+    v[0] = v[1] = v[2] = 0.0;
+
+    for i := 0 to 3 do
+      begin
+        v[0] := v[0] + axPluto[i] * wx;
+        v[1] := v[1] + ayPluto[i] * wx;
+        v[2] := v[2] + azPluto[i] * wx;
+        wx := wx * x;
+      end
+
+  //Compute the positions (periodic and Poisson terms)
+    imax := 0;
+    wx := 1.0;
+    for m := 0 to 2 do
+      begin
+        for i := 0 to 2 do
+          w[i] = 0.0;
+
+        imin := imax + 1;
+        imax := imax + nfPluto[m];
+
+        for i := imin to imax do
+          begin
+            f  := fqPluto[i-1] * fx; cf = cos(f); sf = sin(f);
+            w[0] += cxPluto[i-1] * cf + sxPluto[i-1] * sf;
+            w[1] += cyPluto[i-1] * cf + syPluto[i-1] * sf;
+            w[2] += czPluto[i-1] * cf + szPluto[i-1] * sf;
+          end;
+
+        for i := 0 to 2 do
+          v[i] :=  v[i] + w[i] * wx;
+
+        wx := wx * x;
+      end;
+
+    for i := 0  to 2 do
+      begin
+        r[i] := v[i] / 100000.0;
+        r[i] := r[i] / 100000.0;
+      end;
+
+    case Value of
+      LATITUDE: Result := (DR2D*ATANG2(r[2], sqrt(r[0]*r[0] + r[1]*r[1])));
+      LONGITUDE: Result := (RangeTo(DR2D*ATANG2(r[1], r[0]), 360.0));
+      RADIUS: Result := (sqrt(r[0]*r[0] + r[1]*r[1] + r[2]*r[2]));
+      POS_X: Result := (r[0]);
+      POS_Y: Result := (r[1]);
+      POS_Z: Result := (r[2]);
+      else
+        Result := 0.0;
     end;
-    for(i=0; i < 3; i++) v[i] += w[i] * wx;
-    wx = wx * x;
   end;
-  for(i=0;i<3;i++) do
-  begin
-    r[i] = v[i] / 100000.0;
-    r[i] = r[i] / 100000.0;
-  end;
-  case Value of
-    LATITUDE: return(DR2D*ATANG2(r[2], sqrt(r[0]*r[0] + r[1]*r[1])));
-    LONGITUDE: return(RangeTo(DR2D*ATANG2(r[1], r[0]), 360.0));
-    RADIUS: return(sqrt(r[0]*r[0] + r[1]*r[1] + r[2]*r[2]));
-    POS_X: return(r[0]);
-    POS_Y: return(r[1]);
-    POS_Z: return(r[2]);
-  end;
-  return(0.0);
-end;
 **************************************************************************}
 
 {*************************************************************************/
@@ -1881,6 +2211,7 @@ procedure EphemPluto(const tdb1, tdb2: Real; var l, b, r: Real); // Validas entr
     s := DD2R * (50.08 + 1222.1138 * t);
     p := DD2R * (238.96 + 144.9600 * t);
 
+    {$IfDef FPC}
     for i := 0 to 42 do
       begin
         a := nPluto[i][0] * j + nPluto[i][1] * s + nPluto[i][2] * p;
@@ -1892,6 +2223,20 @@ procedure EphemPluto(const tdb1, tdb2: Real; var l, b, r: Real); // Validas entr
     b -= 3.908202;
     r += 40.7247248;
     l += (238.956786 + 144.96 * t);
+    {$Else}
+    for i := 0 to 42 do
+      begin
+        a := nPluto[i][0] * j + nPluto[i][1] * s + nPluto[i][2] * p;
+        l := l + (cPluto[i][0] * sin(a) + cPluto[i][1] * cos(a));
+        b := b + (cPluto[i][2] * sin(a) + cPluto[i][3] * cos(a));
+        r := r + (cPluto[i][4] * sin(a) + cPluto[i][5] * cos(a));
+      end;
+
+    b := b - 3.908202;
+    r := r + 40.7247248;
+    l := l + (238.956786 + 144.96 * t);
+    {$EndIf}
+
     l := RangeTo(l, 360.0);
   end;
 
@@ -1901,8 +2246,8 @@ function  GetFilesDir():boolean;
     fi: TStringList;
     line: String;
   begin
-    fi := TStringList.create;
     filesDir := '';
+    fi := TStringList.create;
     line := GetCurrentDir + PathDelim + 'PlanEph.cfg';
 
     if FileExists(line) then
@@ -1922,13 +2267,17 @@ function  GetFilesDir():boolean;
 
               line := trim(line);
 
+              {$IfDef FPC}
               if line.StartsWith('binaries', true) then
+              {$Else}
+              if Copy(line, 1, 8) = 'binaries' then
+              {$EndIf}
                 begin
                   p := pos(line, '=');
 
                   if (p <> 0) then
                     begin
-                      filesDir := copy(line, p + 1, line.length - 1 - p);
+                      filesDir := copy(line, p + 1, Length(line) - 1 - p);
                       break;
                     end;
                 end;
@@ -1938,11 +2287,16 @@ function  GetFilesDir():boolean;
         end;
     end;
 
-    l := filesDir.length;
+    l := Length(filesDir);
     if (l = 0) then
+      //filesDir := 'C:\Astro\Ephemerides\bin' + PathDelim
       filesDir := GetCurrentDir + PathDelim + 'bin' + PathDelim
     else
+      {$IfDef FPC}
       if not (filesDir.EndsWith(PathDelim)) then
+      {$Else}
+      if not (Copy(filesDir, Length(filesDir)-Length(PathDelim), Length(PathDelim)) = PathDelim) then
+      {$EndIf}
            filesDir += PathDelim;
 
     Result := true;
@@ -1950,13 +2304,17 @@ function  GetFilesDir():boolean;
 
 function  GetDEValue(const Value: String): Real;
   var
-    i,n: integer;
+    s: String;
+    i: integer;
   begin
-    n := length(Value);
-
     for i := 0 to NCON-1 do
-      if(strlicomp(PCHAR(CNAM[i]), PChar(Value), n) = 0) then
-        exit(CVAL[i]);
+       begin
+         SetString(s, PCHAR(@CNAM[i]), 6);
+         s := Trim(s);
+
+         if (s = Value) then
+           exit(CVAL[i]);
+       end;
 
     Result := 0.0;
   end;
@@ -1966,9 +2324,9 @@ function  InitPlanetEphem(deNum: integer): boolean;
     KM := false;
     NRECL := 4;
     BARY := true;
-    NRFILE := nil;
     SOLUTION := deNum;
     fileYear := -100000;
+    NRASSIGNED := false;
 
     NAMFIL := '';
 
@@ -2013,25 +2371,30 @@ function  InitPlanetEphem(deNum: integer): boolean;
 
 procedure EndPlanetEphem();
   begin
-    if Assigned(NRFILE) then
-      FreeAndNil(NRFILE);
+    if NRASSIGNED then
+      CloseFile(NRFILE);
+
+    NRASSIGNED := False;
 
     fileYear := -100000;
   end;
 
 function  CheckBinaryFileHeader(const deSolution: integer; const ET: Real): integer;  //Read
   var
-    i, y, headSize: integer;
+    y, headSize: integer;
     sg: char;
   begin
 
     if not (SOLUTION = deSolution) then
       begin
-           if (NRFILE.count <> 0) then
-             NRFILE.free;
+        if NRASSIGNED then
+          begin
+            CloseFile(NRFILE);
+            NRASSIGNED := False;
+          end;
 
-           if not (InitPlanetEphem(deSolution))then
-             exit(PLERR_UNKNOWNSOLUTION);
+       if not (InitPlanetEphem(deSolution))then
+         exit(PLERR_UNKNOWNSOLUTION);
       end;
 
     y := SolutionFiles[NSOL][1];
@@ -2047,8 +2410,11 @@ function  CheckBinaryFileHeader(const deSolution: integer; const ET: Real): inte
         {iau_CAL2JD(y + SolutionFiles[NSOL][3], 1, 1, &J1, &J2, &e);
         if ((J1 + J2) > ET) then
           break; }
-
+        {$IfDef FPC}
         y += SolutionFiles[NSOL][3];
+        {$Else}
+        y := y + SolutionFiles[NSOL][3];
+        {$EndIf}
     end;
 
     if (y = fileYear) then
@@ -2057,8 +2423,11 @@ function  CheckBinaryFileHeader(const deSolution: integer; const ET: Real): inte
     headSize := 0;
     fileYear := -100000;
 
-    if (NRFILE.count <> 0) then
-      NRFILE.free;
+    if NRASSIGNED then
+      begin
+        CloseFile(NRFILE);
+        NRASSIGNED := False;
+      end;
 
     if (y < 0) then
       sg := 'm'
@@ -2091,98 +2460,129 @@ function  CheckBinaryFileHeader(const deSolution: integer; const ET: Real): inte
     else
       NAMFIL := filesDir + 'de' + IntToStr(SOLUTION) + PathDelim + 'bin' + sg + FormatFloat('0000', abs(y)) + '.' + IntToStr(SOLUTION);
 
-    NRFILE  := TStringList.create;
-
     Try
-      NRFILE.LoadFromFile(NAMFIL);
+      AssignFile(NRFILE, NAMFIL);
+      Reset(NRFILE);
+
+      NRASSIGNED := True;
     except
-      NRFILE.free;                //Could course Errors, but to not free it is even worse
+      NRASSIGNED := False;      //Could course Errors, but to not free it is even worse
       exit(PLERR_NOFILE);
     end;
 
     fileYear := y;
 
-    try
-      for i := 0 to length(TTL)-1 do   // read is probably broken
-        begin
-          TTL[i] := NRFILE[i];
-        end;
-      headSize += sizeof(TTL);
 
-      {
-      fread(CNAM  , 2400         , 1, NRFILE);
-      headSize += 2400;  }
+    {$IfDef FPC}
+    BlockRead(NRFILE, TTL    , sizeof(TTL)       );
+    headSize += sizeof(TTL);
+    BlockRead(NRFILE, CNAM   , 2400              );
+    headSize += 2400;
+    BlockRead(NRFILE, SS     , sizeof(SS)        );
+    headSize += sizeof(SS);
+    BlockRead(NRFILE, NCON   , sizeof(NCON)      );
+    headSize += sizeof(NCON);
+    BlockRead(NRFILE, plAU   , sizeof(plAU)      );
+    headSize += sizeof(plAU);
+    BlockRead(NRFILE, EMRAT  , sizeof(EMRAT)     );
+    headSize += sizeof(EMRAT);
+    BlockRead(NRFILE, IPT    , 36*sizeof(integer));
+    headSize += 36*sizeof(integer);
+    BlockRead(NRFILE, NUMDE  , sizeof(NUMDE)     );
+    headSize += sizeof(NUMDE);
+    BlockRead(NRFILE, IPT[12], 3*sizeof(integer) );
+    headSize += 3*sizeof(integer);
 
-      for i := 0 to length(SS)-1 do
-        begin
-          SS[i] := strToFloat(NRFILE[i + 3 {+ length(CNAM)}]);
-        end;
-      headSize += sizeof(SS);// length = 3
+    if (NUMDE < 100) then
+      begin
+        BlockRead(NRFILE, NCOEFFS, sizeof(Integer));
+        headSize += sizeof(integer);
+        BlockRead(NRFILE, IPT[13], 3*sizeof(integer));
+        headSize += 3*sizeof(integer);
 
-
-
-      {fread(NCON , sizeof(NCON) , 1, NRFILE);
-      headSize += sizeof(NCON);
-
-      fread(plAU , sizeof(plAU) , 1, NRFILE);
-      headSize += sizeof(plAU);
-
-      fread(EMRAT, sizeof(EMRAT), 1, NRFILE);
-      headSize += sizeof(EMRAT);
-
-      fread(IPT   , sizeof(integer)  ,36, NRFILE);
-      headSize += 36 * sizeof(integer);
-
-      fread(NUMDE, sizeof(NUMDE), 1, NRFILE);
-      headSize += sizeof(NUMDE);
-
-      fread(((int *)IPT)+36, sizeof(int), 3, NRFILE); }
-      headSize += 3*sizeof(integer);
-
-      if (NUMDE < 100) then
-        begin
-          {fread(NCOEFFS, sizeof(int), 1, NRFILE);
-          headSize += sizeof(int);
-
-          fread(((int *)IPT) + 39, sizeof(int), 3, NRFILE);
-          headSize += 3*sizeof(int);}
-
-          KSIZE := NCOEFFS * 2;
-          IRECSZ := NRECL * KSIZE;
-       end;
+        KSIZE := NCOEFFS * 2;
+        IRECSZ := NRECL * KSIZE;
+      end;
 
       if (NCON > 400) then
         begin
-          {fread(CNAM[400], 6*(NCON-400), 1, NRFILE);
-          headSize += 6*(NCON-400); }
+          BlockRead(NRFILE, CNAM[400], 6*(NCON-400));
+          headSize += 6*(NCON-400);
         end;
+
       if (SOLUTION > 430) then
         begin
-          if (headSize <= (IRECSZ - 3* sizeof(integer))) then
+          if (headSize <= (IRECSZ - 3*sizeof(integer))) then
             begin
-              {fread(((int *)IPT)+39, sizeof(int), 3, NRFILE);
-              headSize += 3 * sizeof(int); }
+              BlockRead(NRFILE, IPT[13], 3*sizeof(integer));
+              headSize += 3*sizeof(integer);
             end;
 
-          if (headSize <= (IRECSZ - 3* sizeof(integer))) then
+          if (headSize <= (IRECSZ - 3*sizeof(integer))) then
             begin
-              {fread(((int *)IPT) + 42, sizeof(int), 3, NRFILE);
-              headSize += 3*sizeof(int); }
+              BlockRead(NRFILE, IPT[14], 3*sizeof(integer));
+              headSize += 3*sizeof(integer);
             end;
         end;
+    {$Else}
+    BlockRead(NRFILE, TTL    , sizeof(TTL)       );
+    headSize := headSize + sizeof(TTL);
+    BlockRead(NRFILE, CNAM   , 2400              );
+    headSize := headSize + 2400;
+    BlockRead(NRFILE, SS     , sizeof(SS)        );
+    headSize := headSize + sizeof(SS);
+    BlockRead(NRFILE, NCON   , sizeof(NCON)      );
+    headSize := headSize + sizeof(NCON);
+    BlockRead(NRFILE, plAU   , sizeof(plAU)      );
+    headSize := headSize + sizeof(plAU);
+    BlockRead(NRFILE, EMRAT  , sizeof(EMRAT)     );
+    headSize := headSize + sizeof(EMRAT);
+    BlockRead(NRFILE, IPT    , 36*sizeof(integer));
+    headSize := headSize + 36*sizeof(integer);
+    BlockRead(NRFILE, NUMDE  , sizeof(NUMDE)     );
+    headSize := headSize + sizeof(NUMDE);
+    BlockRead(NRFILE, IPT[12], 3*sizeof(integer) );
+    headSize := headSize + 3*sizeof(integer);
 
-      {fread(dummy , IRECSZ - headSize, 1, NRFILE);
+    if (NUMDE < 100) then
+      begin
+        BlockRead(NRFILE, NCOEFFS, sizeof(Integer));
+        headSize := headSize + sizeof(integer);
+        BlockRead(NRFILE, IPT[13], 3*sizeof(integer));
+        headSize := headSize + 3*sizeof(integer);
 
-      fread(CVAL  , 8*NCON       , 1, NRFILE);           }
-    //  fread(dummy , IRECSZ-8*NCON, 1, NRFILE);
+        KSIZE := NCOEFFS * 2;
+        IRECSZ := NRECL * KSIZE;
+      end;
 
-    //CENTER = GetDEValue("CENTER");
-    //BARY := (CENTER = 11);
-  except
-    NRFILE.free;
-  end;
+    if (NCON > 400) then
+      begin
+        BlockRead(NRFILE, CNAM[400], 6*(NCON-400));
+        headSize := headSize + 6*(NCON-400);
+      end;
 
-    result := 1;
+    if (SOLUTION > 430) then
+      begin
+        if (headSize <= (IRECSZ - 3*sizeof(integer))) then
+          begin
+            BlockRead(NRFILE, IPT[13], 3*sizeof(integer));
+            headSize := headSize + 3*sizeof(integer);
+          end;
+
+        if (headSize <= (IRECSZ - 3*sizeof(integer))) then
+          begin
+            BlockRead(NRFILE, IPT[14], 3*sizeof(integer));
+            headSize := headSize + 3*sizeof(integer);
+          end;
+      end;
+    {$EndIf}
+
+    BlockRead(NRFILE, dummy , IRECSZ-headSize);
+
+    BlockRead(NRFILE, CVAL  , 8*NCON       );
+    BlockRead(NRFILE, dummy , IRECSZ-8*NCON);
+
+    Result := 1;
   end;
 
 //IMPLICIT double PRECISION (A-H,O-Z)
@@ -2193,19 +2593,24 @@ Procedure SPLIT(const TT: Real; var FR0, Fr1: Real);
 
   if not ((TT >= 0.0 ) or (FR1 = 0.0)) then
     begin
+      {$IfDef FPC}
       FR0 -= 1.0;
       FR1 += 1.0;
+      {$Else}
+      FR0 := FR0 - 1.0;
+      FR1 := FR1 + 1.0;
+      {$EndIf}
     end;
   end;
 
 //IMPLICIT DOUBLE PRECISION (A-H,O-Z)
 //DOUBLE PRECISION BUF(NCF,NCM,*),T(2),PV(NCM,*),PC(18),VC(18)
-procedure INTERP(const BUF: Array of Real; const T: TRealVektor2; const NCF, NCM, NA, IFL: integer; var PV: Array of Real);
+procedure INTERP(BUF: PDouble; const T: TRealVektor2; const NCF, NCM, NA, IFL: integer; var PV: Array of Real);
   var
     i, j, L, NP, NV, DT1: integer;
     PC, VC: Array [0..17] of Real;
     TC, DNA, TWOT, TEMP, VFAC: Real;
-
+    Ptr: PDouble;
   begin
     TWOT := 0.0;
     VC[1] := 1.0;
@@ -2238,7 +2643,17 @@ procedure INTERP(const BUF: Array of Real; const T: TRealVektor2; const NCF, NCM
       begin
         PV[i] := 0.0;
         for j:= pred(NCF) downto 0 do
-          PV[i] +=  PC[j] * BUF[L*NCM*NCF + i*NCF + j];
+          begin
+            {$IfDef FPC}
+            //PV[i] := PC[j] * PDouble(PByte(BUF) + (L*NCM*NCF + i*NCF + j) * SizeOf(Double))^;
+            Ptr   := PDouble(PByte(BUF) + (L*NCM*NCF + i*NCF + j) * SizeOf(Double));
+            PV[i] += PC[j] * Ptr^;
+            {$Else}
+            //PV[i] := PV[i] + PC[j] * PDouble(PByte(BUF) + (L*NCM*NCF + i*NCF + j) * SizeOf(Double))^;
+            Ptr   := PDouble(PByte(BUF) + (L*NCM*NCF + i*NCF + j) * SizeOf(Double));
+            PV[i] := PV[i] + PC[j] * Ptr^;
+            {$EndIf}
+          end;
       end;
     if (IFL <= 1) then
       exit;
@@ -2255,25 +2670,40 @@ procedure INTERP(const BUF: Array of Real; const T: TRealVektor2; const NCF, NCM
       begin
         PV[NCM + i] := 0.0;
 
+        {$IfDef FPC}
         for j := NCF-1 downto 0 do
-          PV [NCM + i] += VC[j] * BUF[L*NCM*NCF + i*NCF + j];
+          begin
+            //PV[NCM + i] += VC[j] * PDouble(PByte(BUF) + (L*NCM*NCF + i*NCF + j) * SizeOf(Double))^;
+
+            Ptr := PDouble(PByte(BUF) + (L*NCM*NCF + i*NCF + j) * SizeOf(Double));
+            PV[NCM + i] += VC[j] * Ptr^;
+          end;
 
         PV[NCM + i] *= VFAC;
+        {$Else}
+        for j := NCF-1 downto 0 do
+          begin
+            //PV[NCM + i] := PV[NCM + i] + VC[j] * PDouble(PByte(BUF) + (L*NCM*NCF + i*NCF + j) * SizeOf(Double))^;
+
+            Ptr := PDouble(PByte(BUF) + (L*NCM*NCF + i*NCF + j) * SizeOf(Double));
+            PV[NCM + i] := PV[NCM + i] + VC[j] * Ptr^;
+          end;
+
+        PV[NCM + i] := PV[NCM + i] * VFAC;
+        {$EndIf}
       end;
   end;
 
 function  STATE(const ET: TRealVektor2; const LIST: TIntVektor14; var PV: TRealMatrix13_6; var PNUT: TRealVektor6): integer;
   var
     i, j, NR: integer;
-    frmt: String = '';
-    Pointers: Array of Pointer;
-    length: integer;
-    tmp1,tmp2: Real;
     S,AUFAC: Real;
     T: TRealVektor2;
     PJD: TRealVektor4;
-    BUF: Array of Real; // [0..1499]
-    BUFpart: Array of Real;
+    tmp1,tmp2: Real;
+    //BUF: Array of Real;          //************************************************//
+    BUF: Array[0..1499] of Double; //!!! *** It must be Double no matter what *** !!!//
+    Ptr: PDouble;                  //************************************************//
 
   begin
     if (ET[0] = 0.0) then
@@ -2284,12 +2714,21 @@ function  STATE(const ET: TRealVektor2; const LIST: TIntVektor14; var PV: TRealM
     SPLIT(S, PJD[0], PJD[1]);
     SPLIT(ET[1], PJD[2], PJD[3]);
 
+    {$IfDef FPC}
     PJD[0] += PJD[2] + 0.5;
     PJD[1] += PJD[3];
 
     SPLIT(PJD[1], PJD[2], PJD[3]);
 
     PJD[0] += PJD[2];
+    {$Else}
+    PJD[0] := PJD[0] + PJD[2] + 0.5;
+    PJD[1] := PJD[1] + PJD[3];
+
+    SPLIT(PJD[1], PJD[2], PJD[3]);
+
+    PJD[0] := PJD[0] + PJD[2];
+    {$EndIf}
 
   //ERROR RETURN FOR EPOCH OUT OF RANGE
     if ((PJD[0]+PJD[3]) < SS[0]) or ((PJD[0]+PJD[3]) > SS[1]) then
@@ -2305,25 +2744,8 @@ function  STATE(const ET: TRealVektor2; const LIST: TIntVektor14; var PV: TRealM
     T[0] := (tmp2 + PJD[3]) / SS[2];
 
     //READ CORRECT RECORD IF NOT IN CORE
-    length := (NR-1)*IRECSZ; //fseek(NRFILE, (NR-1)*IRECSZ, SEEK_SET);
-    while (length > 0) do
-      begin
-        if (NRFILE[0].length > 0) then
-          begin
-            NRFILE[0].Remove(1, 1);
-            Dec(length);
-          end
-        else
-          NRFILE.Delete(0);
-      end;
-    for i := 1 to NCOEFFS do //fread(BUF, sizeof(double), NCOEFFS, NRFILE);
-      frmt += '%f';
-    Setlength(Pointers, NCOEFFS);
-    sscanf(NRFILE.Text, frmt, Pointers);  // dose that work ?
-    Setlength(BUF, succ(high(Pointers)));
-    for i := 0 to high(Buf) do
-      Buf[i] := PFloat(Pointers[i])^; //and that?
-    FreeAndNil(Pointers);
+    Seek(NRFILE, (NR-1)*IRECSZ);
+    BlockRead(NRFILE, BUF, NCOEFFS*sizeof(double));
 
     if (KM) then
       begin
@@ -2338,8 +2760,8 @@ function  STATE(const ET: TRealVektor2; const LIST: TIntVektor14; var PV: TRealM
        end;
 
   //INTERPOLATE SSBARY SUN
-    BufPart := copy(BUF, IPT[10][0]-1, high(Buf) - (IPT[10][0]-1));
-    INTERP(BufPart, T, IPT[10][1], 3, IPT[10][2], 2, PVSUN);
+    Ptr := PDouble(PByte(@BUF) + (IPT[10][0]-1) * SizeOf(Double));
+    INTERP(Ptr, T, IPT[10][1], 3, IPT[10][2], 2, PVSUN);
     for i := 0 to 5 do
       PVSUN[i] := PVSUN[i] * AUFAC;
 
@@ -2349,8 +2771,8 @@ function  STATE(const ET: TRealVektor2; const LIST: TIntVektor14; var PV: TRealM
         if (LIST[i] = 0) then
           continue;
 
-        BufPart := copy(BUF, IPT[i][0]-1, high(BUF) - (IPT[i][0])-1);
-        INTERP(BufPart, T, IPT[i][1], 3, IPT[i][2], LIST[i], PV[i]);
+        Ptr := PDouble(PByte(@BUF) + (IPT[i][0]-1) * SizeOf(Double));
+        INTERP(Ptr, T, IPT[i][1], 3, IPT[i][2], LIST[i], PV[i]);
 
         for j := 0 to 5 do
           PV[i][j] := PV[i][j] * AUFAC;
@@ -2363,39 +2785,40 @@ function  STATE(const ET: TRealVektor2; const LIST: TIntVektor14; var PV: TRealM
   //DO NUTATIONS IF REQUESTED (AND IF ON FILE)
     if (LIST[10] > 0) and (IPT[11][1] > 0) then
       begin
-        BufPart := copy(BUF, IPT[11][0] - 1, high(BUF) - (IPT[11][0] - 1));
-        INTERP(BufPart , T, IPT[11][1], 2, IPT[11][2], LIST[10], PNUT);
+        Ptr := PDouble(PByte(@BUF) + (IPT[11][0]-1) * SizeOf(Double));
+        INTERP(Ptr , T, IPT[11][1], 2, IPT[11][2], LIST[10], PNUT);
       end;
 
   //GET LIBRATIONS IF REQUESTED (AND IF ON FILE)
     if (LIST[11] > 0) and (IPT[12][1] > 0) then
       begin
-        BufPart := copy(BUF, IPT[12][0]-1, high(BUF) - (IPT[12][0]-1));
-        INTERP(BufPart, T, IPT[12][1], 3, IPT[12][2], LIST[11], PV[10]);
+        Ptr := PDouble(PByte(@BUF) + (IPT[12][0]-1) * SizeOf(Double));
+        INTERP(Ptr, T, IPT[12][1], 3, IPT[12][2], LIST[11], PV[10]);
       end;
 
   //GET TT-TDB OR TCG-TCB OR LUNAR EULER ANGEL RATES IF REQUESTED (AND IF ON FILE)
     if (LIST[12] > 0) and (IPT[13][1] > 0) then
       begin
-        BufPart := copy(BUF, IPT[13][0]-1, high(Buf) - (IPT[13][0] - 1));
-        INTERP(BUFpart, T, IPT[13][1], 3, IPT[13][2], LIST[12], PV[11]);
+        Ptr := PDouble(PByte(@BUF) + (IPT[13][0]-1) * SizeOf(Double));
+        INTERP(Ptr, T, IPT[13][1], 3, IPT[13][2], LIST[12], PV[11]);
       end;
   //GET JPL TT-TDB IF REQUESTED (AND IF ON FILE)
     if (LIST[13] > 0) and (IPT[14][1] > 0) then
       begin
-        BufPart := copy(BUF, IPT[14][0] - 1, high(Buf) - (IPT[14][0] - 1));
-        INTERP(BUFpart, T, IPT[14][1],3,IPT[14][2],LIST[13],PV[12]);
+        Ptr := PDouble(PByte(@BUF) + (IPT[14][0]-1) * SizeOf(Double));
+        INTERP(Ptr, T, IPT[14][1],3,IPT[14][2],LIST[13],PV[12]);
       end;
-    Result :=1;
+
+    Result := 1;
   end;
 
 //IMPLICIT double PRECISION (A-H,O-Z)
 function  plEph(const deSOL: integer; const ET1, ET2: Real; const NTARG, NCENT: integer; var RRD: TRealVektor6): integer;
   var
     i,j,r,K: Integer;
-    LIST: Array [0..13] of integer;
-    ET: Array [0..1] of Real;
-    PV: Array[0..12] of Array [0..5] of Real;
+    LIST: TIntVektor14;
+    ET: TRealVektor2;
+    PV: TRealMatrix13_6;
   begin
 
     if (NTARG = NCENT) then
@@ -2424,8 +2847,8 @@ function  plEph(const deSOL: integer; const ET1, ET2: Real; const NTARG, NCENT: 
         if(IPT[11][1] > 0) then
           begin
            LIST[10] := 2;
-
            r := STATE(ET, LIST, PV, RRD);
+
            if(r <= -10000) then
              exit(r);
 
@@ -2483,7 +2906,7 @@ function  plEph(const deSOL: integer; const ET1, ET2: Real; const NTARG, NCENT: 
           begin
             LIST[13] := 2;
 
-            STATE(ET,LIST,PV,RRD);
+            STATE(ET, LIST, PV, RRD);
 
             for i := 0 to 5 do
               RRD[i] := PV[11][i];
@@ -2502,14 +2925,14 @@ function  plEph(const deSOL: integer; const ET1, ET2: Real; const NTARG, NCENT: 
         else
           K := NCENT - 1;
 
+        if (K = 2) then
+          LIST[9] := 2;
+
         if (K <= 9) then
-          LIST[K] := 2
-        else
-          if(K = 9) or (K = 12) then
-            LIST[2] := 2
-        else
-          if(K = 2) then
-            LIST[9] := 2;
+          LIST[K] := 2;
+
+        if(K = 9) or (K = 12) then
+          LIST[2] := 2;
       end;
 
     r := STATE(ET, LIST, PV, RRD);
@@ -2567,7 +2990,7 @@ function  jplEph(const deSOL: integer; const ET1, ET2: Real; const NTARG, NCENT,
     Result := plResult[NVAL-1];
   end;
 
-function  ephObliquity(const Version, Frame: integer; tt1, tt2: Real): Real;
+function ephObliquity(const Version, Frame: integer; tt1, tt2: Real): Real;
   var
     obl,dpsi,deps: Real;
   begin
@@ -2592,13 +3015,22 @@ function  ephObliquity(const Version, Frame: integer; tt1, tt2: Real): Real;
         else
           iauNut80(tt1, tt2, dpsi, deps);
 
+        {$IfDef FPC}
         obl += deps;
+        {$Else}
+        obl := obl + deps;
+        {$EndIf}
       end;
 
     if ((Version > 7) and (Version < 100)) or ((Version > 400) and (Version < 423)) then
       begin
         iauPr00(tt1, tt2, dpsi, deps);
+
+        {$IfDef FPC}
         obl += deps;
+        {$Else}
+        obl := obl + deps;
+        {$EndIf}
       end;
 
     Result := obl;
@@ -2625,9 +3057,16 @@ function  rLightDeflectionAA(var e, p: TRealVektor3): Real;
     qde := iauPdp(qn, en);
 
     k := 0.01720209895; // Gauss
+
+    {$IfDef FPC}
     k *= 2.0 * k / (DC * DC * er);
     k /= (1.0 + qde);
     k *= iauPm(pn);
+    {$Else}
+    k := k * 2.0 * k / (DC * DC * er);
+    k := k / (1.0 + qde);
+    k := k * iauPm(pn);
+    {$EndIf}
 
     iauSxp(pdq, en, en);
     iauSxp(edp, qn, qn);
@@ -2755,9 +3194,15 @@ procedure rPolarMotion(const xp, yp, sp, longitude: Real; var p: TRealVektor3);
 
 procedure rDiurnalParallax(const obpv: TRealMatrix2_3; var p: TRealVektor3);
   begin
+    {$IfDef FPC}
     p[0] -= obpv[0][0];
     p[1] -= obpv[0][1];
     p[2] -= obpv[0][2];
+    {$Else}
+    p[0] := p[0] - obpv[0][0];
+    p[1] := p[1] - obpv[0][1];
+    p[2] := p[2] - obpv[0][2];
+    {$EndIf}
   end;
 
 procedure rDiurnalParallaxAA(const er, sp, era: Real; lon, lat: Real; var obpv: TRealMatrix2_3; var p: TRealVektor3);
@@ -2768,8 +3213,12 @@ procedure rDiurnalParallaxAA(const er, sp, era: Real; lon, lat: Real; var obpv: 
     iauC2s(p, ra, dc);
 
     ha := era + sp + lon - ra;
-
+    {$IfDef FPC}
     ot := iauPm(obpv[0]);
+    {$Else}
+    ot := iauPm(TRealvektor3(obpv[0]));
+    {$EndIf}
+
     //iauZp(ob);
     iauC2s(p, lon, lat);// I tryed to fix that, since it would only set lon and at to 0 when ob would be used
 
@@ -2778,7 +3227,7 @@ procedure rDiurnalParallaxAA(const er, sp, era: Real; lon, lat: Real; var obpv: 
     rp := ra - ot * COS(lat) * COS(ha) / COS(dc);
 
     //iauS2c(rp, dp, p);
-    //iauPn(p, &rt, p);
+    //iauPn(p, rt, p);
     iauS2c(rp, dp, p);
     iauSxp(rt, p, p);
   end;
@@ -2787,7 +3236,12 @@ procedure rDiurnalAberrationAA(const lt: Real; var obpv: TRealMatrix2_3; var p: 
   var
     t: TRealVektor3;
   begin
+    {$IfDef FPC}
     iauSxp(lt, obpv[1], t);
+    {$Else}
+    iauSxp(lt, TRealvektor3(obpv[1]), t);
+    {$EndIf}
+
     iauPpp(p, t, p);
   end;
 
@@ -2800,8 +3254,13 @@ procedure rDiurnalAberration(var obpv: TRealMatrix2_3; var p: TRealVektor3);
     diurab := sqrt(obpv[1][0]*obpv[1][0] + obpv[1][1]*obpv[1][1]) / CMPS;
     f := 1.0 - diurab * p[1];
 
+    {$IfDef FPC}
     p[0] *= f;
     p[2] *= f;
+    {$Else}
+    p[0] := p[0] * f;
+    p[2] := p[2] * f;
+    {$EndIf}
     p[1] := f * (p[1] + diurab);
 
     iauSxp(r, p, p);
@@ -2835,8 +3294,14 @@ procedure rRefraction(const refA, refB: Real; var p: TRealVektor3);
     f := cosd - d * zm / r;
 
     p[2] := p[2] * cosd + d * r;
+
+    {$IfDef FPC}
     p[0] *= f;
     p[1] *= f;
+    {$Else}
+    p[0] := p[0] * f;
+    p[1] := p[1] * f;
+    {$EndIf}
   end;
 
 procedure rEquatorialToHorizontal(const e: TRealVektor3; const lat: Real; var h: TRealVektor3);
@@ -2898,11 +3363,6 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
 
     if(Version > 7) then
       begin
-
-        for i := 0 to 1 do
-          for j :=0 to 2 do
-            HelpVektor[i*3 + j] := pv[i][j];
-
         r := plEph(Version, tdb1, tdb2, Body, 11, HelpVektor);
         if (r <= PLERR_NOFILE) then
           exit(Trunc(r));
@@ -2928,14 +3388,24 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
           else
             if (Body = BN_EARTH) then
               begin
+                {$IfDef FPC}
                 iauCp(epvh[0], pv[0]);
                 iauCp(epvh[1], pv[1]);
+                {$Else}
+                iauCp(TRealvektor3(epvh[0]), TRealvektor3(pv[0]));
+                iauCp(TRealvektor3(epvh[1]), TRealvektor3(pv[1]));
+                {$EndIf}
               end
           else
             if (Body = BN_SSB) then
               begin
+                {$IfDef FPC}
                 iauPmp(epvh[0], epvb[0], pv[0]);
                 iauPmp(epvh[1], epvb[1], pv[1]);
+                {$Else}
+                iauPmp(TRealvektor3(epvh[0]), TRealvektor3(epvb[0]), TRealvektor3(pv[0]));
+                iauPmp(TRealvektor3(epvh[1]), TRealvektor3(epvb[1]), TRealvektor3(pv[1]));
+                {$EndIf}
               end
           else
             begin
@@ -2950,45 +3420,77 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
         begin
           EphemMoon(tdb1, tdb2, l, b, r);
 
+          {$IfDef FPC}
           l *= DD2R;
           b *= DD2R;
+          {$Else}
+          l := l * DD2R;
+          b := b * DD2R;
+          {$EndIf}
 
           pv[0][2] := r * sin(b);
           pv[0][1] := r * sin(l) * cos(b);
           pv[0][0] := r * cos(l) * cos(b);
 
+          iauPmat76(tdb1, tdb2, rp);
+          iauTr(rp, rp);
+
           obl := ephObliquity(Version, FR_J2000, DJ00, 0.0);
+          {$IfDef FPC}
           RotVX(-obl, pv[0]);
 
-          iauPmat76(tdb1, tdb2, rp); iauTr(rp, rp);
           iauRxp(rp, pv[0], pv[0]);
-
           iauPpp(pv[0], epvh[0], pv[0]);
+          {$Else}
+          RotVX(-obl, TRealvektor3(pv[0]));
+
+          iauRxp(rp, TRealvektor3(pv[0]), TRealvektor3(pv[0]));
+          iauPpp(TRealvektor3(pv[0]), TRealvektor3(epvh[0]), TRealvektor3(pv[0]));
+          {$EndIf}
 
           if (Value > 3) and (Value < 7) then
             begin
               EphemMoon(tdb1, tdb2+d, l, b, r);
 
+              {$IfDef FPC}
               l *= DD2R;
               b *= DD2R;
+              {$Else}
+              l := l * DD2R;
+              b := b * DD2R;
+              {$EndIf}
 
               pv[1][2] := r * sin(b);
               pv[1][0] := r * cos(l) * cos(b);
               pv[1][1] := r * sin(l) * cos(b);
 
-              iauRxp(rp, pv[1], pv[1]);
               EphemMoon(tdb1, tdb2-d, l, b, r);
+
+              {$IfDef FPC}
+              iauRxp(rp, pv[1], pv[1]); 
 
               l *= DD2R;
               b *= DD2R;
+              {$Else}
+              iauRxp(rp, TRealvektor3(pv[1]), TRealvektor3(pv[1]));
+
+              l := l * DD2R;
+              b := b * DD2R;
+              {$EndIf}
 
               p[2] := r * sin(b);
               p[0] := r * cos(l) * cos(b);
               p[1] := r * sin(l) * cos(b);
 
               iauRxp(rp, p, p);
+
+              {$IfDef FPC}
               iauPmp(pv[1], p, pv[1]);
               iauPpp(pv[1], epvh[1], pv[1]);
+              {$Else}
+              iauPmp(TRealvektor3(pv[1]), p, TRealvektor3(pv[1]));
+              iauPpp(TRealvektor3(pv[1]), TRealvektor3(epvh[1]), TRealvektor3(pv[1]));
+              {$EndIf}
             end;
         end
     else
@@ -2996,8 +3498,13 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
         begin
           EphemPluto(tdb1, tdb2, l, b, r);
 
+          {$IfDef FPC}
           l *= DD2R;
           b *= DD2R;
+          {$Else}
+          l := l * DD2R;
+          b := b * DD2R;
+          {$EndIf}
 
           pv[0][2] := r * sin(b);
           pv[0][1] := r * sin(l) * cos(b);
@@ -3005,31 +3512,53 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
 
           obl := ephObliquity(Version, FR_J2000, DJ00, 0.0);
 
+          {$IfDef FPC}
           RotVX(-obl, pv[0]);
+          {$Else}
+          RotVX(-obl, TRealvektor3(pv[1]));
+          {$EndIf}
 
           if (Value > 3) and (Value < 7) then
             begin
               EphemPluto(tdb1, tdb2+d, l, b, r);
 
+              {$IfDef FPC}
               l *= DD2R;
               b *= DD2R;
+              {$Else}
+              l := l * DD2R;
+              b := b * DD2R;
+              {$EndIf}
 
               pv[1][2] := r * sin(b);
               pv[1][0] := r * cos(l) * cos(b);
               pv[1][1] := r * sin(l) * cos(b);
 
-              RotVX(-obl, pv[1]);
               EphemPluto(tdb1, tdb2-d, l, b, r);
+
+              {$IfDef FPC}
+              RotVX(-obl, pv[1]);
 
               l *= DD2R;
               b *= DD2R;
+              {$Else}
+              RotVX(-obl, TRealVektor3(pv[1]));
+
+              l := l * DD2R;
+              b := b * DD2R;
+              {$EndIf}
 
               p[0] := (r * cos(l) * cos(b));
               p[1] := (r * sin(l) * cos(b));
               p[2] := (r * sin(b));
 
               RotVX(-obl, p);
+
+              {$IfDef FPC}
               iauPmp(pv[1], p, pv[1]);
+              {$Else}
+              iauPmp(TRealvektor3(pv[1]), p, TRealvektor3(pv[1]));
+              {$EndIf}
             end;
       end
     else
@@ -3047,14 +3576,23 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
               pv[1][1] := VSOP87_all(5, 9, GV_POS_Y, tdb1, tdb2+d);
               pv[1][2] := VSOP87_all(5, 9, GV_POS_Z, tdb1, tdb2+d);
 
+              {$IfDef FPC}
               RotVX(-obl, pv[1]);
+              {$Else}
+              RotVX(-obl, TRealvektor3(pv[1]));
+              {$EndIf}
 
               p[0] := VSOP87_all(5, 9, GV_POS_X, tdb1, tdb2-d);
               p[1] := VSOP87_all(5, 9, GV_POS_Y, tdb1, tdb2-d);
               p[2] := VSOP87_all(5, 9, GV_POS_Z, tdb1, tdb2-d);
 
               RotVX(-obl, p);
+
+              {$IfDef FPC}
               iauPmp(pv[1], p, pv[1]);
+              {$Else}
+              iauPmp(TRealvektor3(pv[1]), p, TRealvektor3(pv[1]));
+              {$EndIf}
             end;
       end
     else
@@ -3066,7 +3604,11 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
           pv[0][1] := VSOP87_all(1, 9, GV_POS_Y, tdb1, tdb2);
           pv[0][2] := VSOP87_all(1, 9, GV_POS_Z, tdb1, tdb2);
 
+          {$IfDef FPC}
           RotVX(-obl, pv[0]);
+          {$Else}
+          RotVX(-obl, TRealvektor3(pv[0]));
+          {$EndIf}
 
           if (Value > 3) and (Value < 7) then
             begin
@@ -3074,14 +3616,23 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
               pv[1][1] := VSOP87_all(1, 9, GV_POS_Y, tdb1, tdb2+d);
               pv[1][2] := VSOP87_all(1, 9, GV_POS_Z, tdb1, tdb2+d);
 
+              {$IfDef FPC}
               RotVX(-obl, pv[1]);
+              {$Else}
+              RotVX(-obl, TRealvektor3(pv[1]));
+              {$EndIf}
 
               p[0] := VSOP87_all(1, 9, GV_POS_X, tdb1, tdb2-d);
               p[1] := VSOP87_all(1, 9, GV_POS_Y, tdb1, tdb2-d);
               p[2] := VSOP87_all(1, 9, GV_POS_Z, tdb1, tdb2-d);
 
               RotVX(-obl, p);
+
+              {$IfDef FPC}
               iauPmp(pv[1], p, pv[1]);
+              {$Else}
+              iauPmp(TRealvektor3(pv[1]), p, TRealvektor3(pv[1]));
+              {$EndIf}
             end;
         end
     else
@@ -3093,7 +3644,11 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
           pv[0][1] := EphemHelio0(Body, VSOP870_POS_Y, tdb1, tdb2);
           pv[0][2] := EphemHelio0(Body, VSOP870_POS_Z, tdb1, tdb2);
 
+          {$IfDef FPC}
           RotVX(-obl, pv[0]);
+          {$Else}
+          RotVX(-obl, TRealvektor3(pv[0]));
+          {$EndIf}
 
           if (Value > 3) and (Value < 7) then
             begin
@@ -3101,14 +3656,23 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
               pv[1][1] := EphemHelio0(Body, VSOP870_POS_Y, tdb1, tdb2+d);
               pv[1][2] := EphemHelio0(Body, VSOP870_POS_Z, tdb1, tdb2+d);
 
+              {$IfDef FPC}
               RotVX(-obl, pv[1]);
+              {$Else}
+              RotVX(-obl, TRealvektor3(pv[1]));
+              {$EndIf}
 
               p[0] := EphemHelio0(Body, VSOP870_POS_X, tdb1, tdb2-d);
               p[1] := EphemHelio0(Body, VSOP870_POS_Y, tdb1, tdb2-d);
               p[2] := EphemHelio0(Body, VSOP870_POS_Z, tdb1, tdb2-d);
 
               RotVX(-obl, p);
+
+              {$IfDef FPC}
               iauPmp(pv[1], p, pv[1]);
+              {$Else}
+              iauPmp(TRealvektor3(pv[1]), p, TRealvektor3(pv[1]));
+              {$EndIf}
             end;
         end
     else
@@ -3120,7 +3684,11 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
           pv[0][1] := VSOP87_all(Version,Body,GV_POS_Y,tdb1,tdb2) - VSOP87_all(Version,9,GV_POS_Y,tdb1,tdb2);
           pv[0][2] := VSOP87_all(Version,Body,GV_POS_Z,tdb1,tdb2) - VSOP87_all(Version,9,GV_POS_Z,tdb1,tdb2);
 
+          {$IfDef FPC}
           RotVX(-obl, pv[0]);
+          {$Else}
+          RotVX(-obl, TRealvektor3(pv[0]));
+          {$EndIf}
 
           if (Value > 3) and (Value < 7) then
             begin
@@ -3128,14 +3696,23 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
               pv[1][1] := VSOP87_all(Version,Body,GV_POS_Y,tdb1,tdb2+d) - VSOP87_all(Version,9,GV_POS_Y,tdb1,tdb2+d);
               pv[1][2] := VSOP87_all(Version,Body,GV_POS_Z,tdb1,tdb2+d) - VSOP87_all(Version,9,GV_POS_Z,tdb1,tdb2+d);
 
+              {$IfDef FPC}
               RotVX(-obl, pv[1]);
+              {$Else}
+              RotVX(-obl, TRealvektor3(pv[1]));
+              {$EndIf}
 
               p[0] := VSOP87_all(Version,Body,GV_POS_X,tdb1,tdb2-d) - VSOP87_all(Version,9,GV_POS_X,tdb1,tdb2-d);
               p[1] := VSOP87_all(Version,Body,GV_POS_Y,tdb1,tdb2-d) - VSOP87_all(Version,9,GV_POS_Y,tdb1,tdb2-d);
               p[2] := VSOP87_all(Version,Body,GV_POS_Z,tdb1,tdb2-d) - VSOP87_all(Version,9,GV_POS_Z,tdb1,tdb2-d);
 
               RotVX(-obl, p);
+
+              {$IfDef FPC}
               iauPmp(pv[1], p, pv[1]);
+              {$Else}
+              iauPmp(TRealvektor3(pv[1]), p, TRealvektor3(pv[1]));
+              {$EndIf}
             end;
         end
     else
@@ -3155,10 +3732,16 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
           pv[0][1] := VSOP87_all(Version, Body, GV_POS_Y, tdb1, tdb2);
           pv[0][2] := VSOP87_all(Version, Body, GV_POS_Z, tdb1, tdb2);
 
+          {$IfDef FPC}
           RotVX(-obl, pv[0]);
 
           if (Version = 3) then
             iauRxp(rp, pv[0], pv[0]);
+          {$Else}
+          RotVX(-obl, TRealvektor3(pv[1]));
+          if (Version = 3) then
+            iauRxp(rp, TRealvektor3(pv[0]), TRealvektor3(pv[0]));
+          {$Endif}
 
           if (Value > 3) and (Value < 7) then
             begin
@@ -3166,10 +3749,17 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
               pv[1][1] := VSOP87_all(Version, Body, GV_POS_Y, tdb1, tdb2+d);
               pv[1][2] := VSOP87_all(Version, Body, GV_POS_Z, tdb1, tdb2+d);
 
+              {$IfDef FPC}
               RotVX(-obl, pv[1]);
 
               if (Version = 3) then
                 iauRxp(rp, pv[1], pv[1]);
+              {$Else}
+              RotVX(-obl, TRealvektor3(pv[1]));
+
+              if (Version = 3) then
+                iauRxp(rp, TRealvektor3(pv[1]), TRealvektor3(pv[1]));
+              {$Endif}
 
               p[0] := VSOP87_all(Version, Body, GV_POS_X, tdb1, tdb2-d);
               p[1] := VSOP87_all(Version, Body, GV_POS_Y, tdb1, tdb2-d);
@@ -3180,7 +3770,11 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
               if (Version = 3) then
                 iauRxp(rp, p, p);
 
+              {$IfDef FPC}
               iauPmp(pv[1], p, pv[1]);
+              {$Else}
+              iauPmp(TRealvektor3(pv[1]), p, TRealvektor3(pv[1]));
+              {$Endif}
             end
         end
     else
@@ -3204,10 +3798,17 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
           pv[0][1] := r * sin(l) * cos(b);
           pv[0][2] := r * sin(b);
 
+          {$IfDef FPC}
           RotVX(-obl, pv[0]);
 
           if (Version = 4) then
             iauRxp(rp, pv[0], pv[0]);
+          {$Else}
+          RotVX(-obl, TRealvektor3(pv[0]));
+
+          if (Version = 4) then
+            iauRxp(rp, TRealvektor3(pv[0]), TRealvektor3(pv[0]));
+          {$Endif}
 
           if (Value > 3) and (Value < 7) then
             begin
@@ -3219,10 +3820,17 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
               pv[1][1] := r * sin(l) * cos(b);
               pv[1][2] := r * sin(b);
 
+              {$IfDef FPC}
               RotVX(-obl, pv[1]);
 
               if (Version = 4) then
                 iauRxp(rp, pv[1], pv[1]);
+              {$Else}
+              RotVX(-obl, TRealvektor3(pv[1]));
+
+              if (Version = 4) then
+                iauRxp(rp, TRealvektor3(pv[1]), TRealvektor3(pv[1]));
+              {$Endif}
 
               l := VSOP87_all(Version, Body, GV_LONGITUDE, tdb1, tdb2-d);
               b := VSOP87_all(Version, Body, GV_LATITUDE , tdb1, tdb2-d);
@@ -3237,7 +3845,11 @@ function  RawEphem(const Version, Body, Value: integer; const tdb1, tdb2: Real; 
               if (Version = 4) then
                 iauRxp(rp, p, p);
 
+              {$IfDef FPC}
               iauPmp(pv[1], p, pv[1]);
+              {$Else}
+              iauPmp(TRealvektor3(pv[1]), p, TRealvektor3(pv[1]));
+              {$Endif}
             end;
         end
     else
@@ -3250,18 +3862,18 @@ function  EarthEphem(const Version: integer; const tdb1, tdb2: Real; var pvh, pv
   var
     i,j: integer;
     r, obl: Real;
-    rp: Array[0..2] of Array [0..2] of Real;
+    rp: TRealMatrix3_3;
     Helper : TRealVektor6;
   begin
     if (Version > 7) then
       begin
-        for i := 0 to 1 do      //fill the Array with pvb
-            for j := 0 to 2 do
-              Helper[i*3 + j] := pvb[i][j];
-
         r := plEph(Version, tdb1, tdb2, 3, 11, Helper);
         if (r <= PLERR_NOFILE) then
           exit(trunc(r));
+
+        for i := 0 to 1 do
+          for j := 0 to 2 do
+            pvh[i][j] := Helper[i*3 + j];
 
         r := plEph(Version, tdb1, tdb2, 3, 12, Helper);
         if (r <= PLERR_NOFILE) then
@@ -3292,8 +3904,13 @@ function  EarthEphem(const Version: integer; const tdb1, tdb2: Real; var pvh, pv
             pvh[0][1] := VSOP87_all(3, 3, GV_POS_Y, tdb1, tdb2);
             pvh[0][2] := VSOP87_all(3, 3, GV_POS_Z, tdb1, tdb2);
 
+            {$IfDef FPC}
             RotVX(-obl, pvh[0]);
             iauRxp(rp, pvh[0], pvh[0]);
+            {$Else}
+            RotVX(-obl, TRealvektor3(pvh[0]));
+            iauRxp(rp, TRealvektor3(pvh[0]), TRealvektor3(pvh[0]));
+            {$EndIf}
           end
         else
           begin
@@ -3303,28 +3920,44 @@ function  EarthEphem(const Version: integer; const tdb1, tdb2: Real; var pvh, pv
             pvh[0][1] := VSOP87_all(1, 3, GV_POS_Y, tdb1, tdb2);
             pvh[0][2] := VSOP87_all(1, 3, GV_POS_Z, tdb1, tdb2);
 
+            {$IfDef FPC}
             RotVX(-obl, pvh[0]);
+            {$Else}
+            RotVX(-obl, TRealvektor3(pvh[0]));
+            {$EndIf}
           end;
 
         pvb[0][0] := VSOP87_all(5, 3, GV_POS_X, tdb1, tdb2);
         pvb[0][1] := VSOP87_all(5, 3, GV_POS_Y, tdb1, tdb2);
         pvb[0][2] := VSOP87_all(5, 3, GV_POS_Z, tdb1, tdb2);
 
+        {$IfDef FPC}
         RotVX(-obl, pvb[0]);
+        {$Else}
+        RotVX(-obl, TRealvektor3(pvb[0]));
+        {$EndIf}
 
         pvb[1][0] := VSOP87_all(5, 3, GV_POS_X, tdb1, tdb2+0.5);
         pvb[1][1] := VSOP87_all(5, 3, GV_POS_Y, tdb1, tdb2+0.5);
         pvb[1][2] := VSOP87_all(5, 3, GV_POS_Z, tdb1, tdb2+0.5);
 
+        {$IfDef FPC}
         RotVX(-obl, pvb[1]);
+        {$Else}
+        RotVX(-obl, TRealvektor3(pvb[1]));
+        {$EndIf}
 
         rp[1][0] := VSOP87_all(5, 3, GV_POS_X, tdb1, tdb2-0.5);
         rp[1][1] := VSOP87_all(5, 3, GV_POS_Y, tdb1, tdb2-0.5);
         rp[1][2] := VSOP87_all(5, 3, GV_POS_Z, tdb1, tdb2-0.5);
 
+        {$IfDef FPC}
         RotVX(-obl, rp[1]);
-
         iauPmp(pvb[1], rp[1], pvb[1]);
+        {$Else}
+        RotVX(-obl, TRealvektor3(rp[1]));
+        iauPmp(TRealvektor3(pvb[1]), TRealvektor3(rp[1]), TRealvektor3(pvb[1]));
+        {$EndIf}
     end;
 
     Result := 1;
@@ -3332,11 +3965,18 @@ function  EarthEphem(const Version: integer; const tdb1, tdb2: Real; var pvh, pv
 
 function  FrameTransform(const Version, Frame, Body, Adjust: integer; const tt1, tt2: Real; var {eph, evb,} p: TRealVektor3): boolean;
   var
+    {$IfDef FPC}
     r: boolean = false;
+    {$Else}
+    r: boolean;
+    {$EndIf}
     rb, rp, rn, rbp, rc2i: TRealMatrix3_3;
     dpsi, deps, epsa{, er}: Real;
-
   begin
+    {$IfNDef FPC}
+    r := false;
+    {$EndIf}
+
     if (Body = 0) and (Frame = FR_J2000) then
       exit(true)
     else
@@ -3401,8 +4041,14 @@ function  FrameTransform(const Version, Frame, Body, Adjust: integer; const tt1,
             else
               begin
                 iauNut80(tt1, tt2, dpsi, deps);
+
+                {$IfDef FPC}
                 dpsi += ddPsi;
                 deps += ddEps;
+                {$Else}
+                dpsi := dpsi + ddPsi;
+                deps := deps + ddEps;
+                {$EndIf}
 
                 epsa := iauObl80(tt1, tt2);
                 iauNumat(epsa, dpsi, deps, rn);
@@ -3451,9 +4097,14 @@ function  FrameTransform(const Version, Frame, Body, Adjust: integer; const tt1,
                   iauNum00a(tt1, tt2, rn)
               else
                 begin
-                  iauNut80(tt1, tt2, &dpsi, &deps);
+                  iauNut80(tt1, tt2, dpsi, deps);
+                  {$IfDef FPC}
                   dpsi += ddPsi;
                   deps += ddEps;
+                  {$Else}
+                  dpsi := dpsi + ddPsi;
+                  deps := deps + ddEps;
+                  {$EndIf}
 
                   epsa := iauObl80(tt1, tt2);
                   iauNumat(epsa, dpsi, deps, rn);
@@ -3471,11 +4122,18 @@ function  FrameTransform(const Version, Frame, Body, Adjust: integer; const tt1,
 
 function  FrameTransformMatrix(const Version, Frame, Body, Adjust: integer; const tt1, tt2: Real; {var eph, evb: TRealVektor3;} var tm: TRealMatrix3_3): boolean;
   var
-  r: boolean = false;
-  rb, rp, rn, rbp, rc2i: TRealMatrix3_3;
-  dpsi, deps, epsa: Real;
-
+    {$IfDef FPC}
+    r: boolean = false;
+    {$Else}
+    r: boolean;
+    {$EndIf}
+    rb, rp, rn, rbp, rc2i: TRealMatrix3_3;
+    dpsi, deps, epsa: Real;
   begin
+    {$IfNDef FPC}
+    r := false;
+    {$EndIf}
+
     iauIr(tm);
 
     if (Body = 0 ) and (Frame = FR_J2000) then
@@ -3531,8 +4189,14 @@ function  FrameTransformMatrix(const Version, Frame, Body, Adjust: integer; cons
             else
               begin
                 iauNut80(tt1, tt2, dpsi, deps);
+
+                {$IfDef FPC}
                 dpsi += ddPsi;
                 deps += ddEps;
+                {$Else}
+                dpsi := dpsi + ddPsi;
+                deps := deps + ddEps;
+                {$EndIf}
 
                 epsa := iauObl80(tt1, tt2);
                 iauNumat(epsa, dpsi, deps, rn);
@@ -3582,8 +4246,14 @@ function  FrameTransformMatrix(const Version, Frame, Body, Adjust: integer; cons
                else
                  begin
                    iauNut80(tt1, tt2, dpsi, deps);
+
+                   {$IfDef FPC}
                    dpsi += ddPsi;
                    deps += ddEps;
+                   {$Else}
+                   dpsi := dpsi + ddPsi;
+                   deps := deps + ddEps;
+                   {$EndIf}
 
                    epsa := iauObl80(tt1, tt2);
                    iauNumat(epsa, dpsi, deps, rn);
@@ -3617,7 +4287,12 @@ function  BodyLightTime(const Version, Body: integer; const topo: boolean; const
     else
       iauCpv(epvh, e);
 
+    {$IfDef FPC}
     rp := iauPm(e[0]);
+    {$Else}
+    rp := iauPm(TRealVektor3(e[0]));
+    {$EndIf}
+
     re := rp;
     rb := 0.0;
     t := 0.0;
@@ -3642,7 +4317,11 @@ function  BodyLightTime(const Version, Body: integer; const topo: boolean; const
                 if (topo) then
                   iauPvmpv(e, obpv, e);
 
+                {$IfDef FPC}
                 rp := iauPm(e[0]);
+                {$Else}
+                rb := iauPm(TRealVektor3(e[0]));
+                {$EndIf}
               end;
           end
         else
@@ -3653,11 +4332,16 @@ function  BodyLightTime(const Version, Body: integer; const topo: boolean; const
               exit(r);
 
             iauPvmpv(q, e, p);
+
+            {$IfDef FPC}
             rp := iauPm(p[0]);
             rq := iauPm(q[0]);
+            {$Else}
+            rp := iauPm(TRealVektor3(p[0]));
+            rq := iauPm(TRealVektor3(q[0]));
+            {$EndIf}
 
             t := (rp + 2.0*muc2 * ln((rp + re + rq) / (rp - re + rq))) / DC;
-
           end;
 
         if (Version < 8) then
@@ -3681,9 +4365,15 @@ function AstrometricLightTime(const Version, Body: integer; const topo: boolean;
       begin
         iauPvtob(Lon, Lat, hm, xp, yp, sp, era, obpv);
 
+        {$IfDef FPC}
         obpv[0][0] /= DAU;
         obpv[0][1] /= DAU;
         obpv[0][2] /= DAU;
+        {$Else}
+        obpv[0][0] := obpv[0][0] / DAU;
+        obpv[0][1] := obpv[0][1] / DAU;
+        obpv[0][2] := obpv[0][2] / DAU;
+        {$EndIf}
 
         if (Version >= 423) then
           BPNMatrix(2006, tdb1, tdb2, tm);
@@ -3694,7 +4384,12 @@ function AstrometricLightTime(const Version, Body: integer; const topo: boolean;
           BPNMatrix(1900, tdb1, tdb2, tm);
 
         iauTr(tm ,tm);
+
+        {$IfDef FPC}
         iauRxp(tm, obpv[0], obpv[0]);
+        {$Else}
+        iauRxp(tm, TRealVektor3(obpv[0]), TRealVektor3(obpv[0]));
+        {$EndIf}
       end;
 
     Result := BodyLightTime(Version, Body, topo, tdb1, tdb2, obpv, epvh, epvb);
@@ -3707,9 +4402,9 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
     r, lt, sp, era, obl: Real;
     tm, dtm: TRealMatrix3_3;
     //DOUBLE l,b,r,lt,sp,era,obl;
-    epvh, epvb: Array [0..1, 0..2] of Real;
+    epvh, epvb: TRealMatrix2_3;
     tai1,tai2,tdb1,tdb2,tt1,tt2: Real;
-    pv, tmp, obpv: Array [0..1, 0..2] of Real;
+    pv, tmp, obpv: TRealMatrix2_3;
   begin
 
     if (Version = 6) then
@@ -3752,13 +4447,24 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
     //if (Value >= PASSAGE) then
     //  exit(Passage(Version, Frame, Body, Value, utc1, utc2, Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb));
 
-    utc2 -= (TZ / 24.0);
     lt := 0.0;
+
+    {$IfDef FPC}
+    utc2 -= (TZ / 24.0);
     dut1 /= 86400;
     xp *= DAS2R;
     yp *= DAS2R;
     Lon *= DD2R;
     Lat *= DD2R;
+    {$Else}
+    utc2 := utc2 - (TZ / 24.0);
+    dut1 := dut1 / 86400;
+    xp := xp * DAS2R;
+    yp := yp * DAS2R;
+    Lon := Lon * DD2R;
+    Lat := Lat * DD2R;
+    {$EndIf}
+
     iauZpv(pv);
     iauZpv(obpv);
     iauZpv(epvh);
@@ -3809,9 +4515,15 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
 
     iauPvtob(Lon, Lat, hm, xp, yp, sp, era, obpv);
 
+    {$IfDef FPC}
     obpv[0][0] /= DAU;
     obpv[0][1] /= DAU;
     obpv[0][2] /= DAU;
+    {$Else}
+    obpv[0][0] := obpv[0][0] / DAU;
+    obpv[0][1] := obpv[0][1] / DAU;
+    obpv[0][2] := obpv[0][2] / DAU;
+    {$EndIf}
 
     // Adjust for Light Time
     r := EarthEphem(Version, tdb1, tdb2, epvh, epvb);
@@ -3827,7 +4539,12 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
               BPNMatrix(1900, tdb1, tdb2, tm);
 
             iauTr(tm ,tm);
+
+            {$IfDef FPC}
             iauRxp(tm, obpv[0], tmp[0]);
+            {$Else}
+            iauRxp(tm, TRealVektor3(obpv[0]), TRealVektor3(tmp[0]));
+            {$EndIf}
           end;
 
         lt := BodyLightTime(Version, Body, topo, tdb1, tdb2, tmp, epvh, epvb);
@@ -3869,17 +4586,37 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
 
             for i := 0 to 2 do
               for j := 0 to 2 do
+                {$IfDef FPC}
                 dtm[i][j] -= tm[i][j];
+                {$Else}
+                dtm[i][j] := dtm[i][j] - tm[i][j];
+                {$EndIf}
 
             FrameTransformMatrix(Version, Frame, Body, Adjust, tt1, tt2, {epvh[0], epvb[1],} tm);
             iauRx(obl, tm);
-            iauRxp(tm, pv[1], pv[1]); iauRxp(dtm, pv[0], pv[0]); iauPpp(pv[0], pv[1], pv[1]);
+
+            {$IfDef FPC}
+            iauRxp(tm, pv[1], pv[1]);
+            iauRxp(dtm, pv[0], pv[0]);
+            iauPpp(pv[0], pv[1], pv[1]);
+            {$Else}
+            iauRxp(tm, TRealVektor3(pv[1]), TRealVektor3(pv[1]));
+            iauRxp(TRealMatrix3_3(dtm), TRealVektor3(pv[0]), TRealVektor3(pv[0]));
+            iauPpp(TRealVektor3(pv[0]), TRealVektor3(pv[1]), TRealVektor3(pv[1]));
+            {$EndIf}
 
             exit(pv[1][Value-GV_VEL_X]);
           end;
 
+        obl := ephObliquity(Version, Frame, tt1, tt2);
+
+        {$IfDef FPC}
         FrameTransform(Version, Frame, Body, Adjust or 256, tt1, tt2, {epvh[0], epvb[1],} pv[0]);
-        obl := ephObliquity(Version, Frame, tt1, tt2); RotVX(obl, pv[0]);
+        RotVX(obl, pv[0]);
+        {$Else}
+        FrameTransform(Version, Frame, Body, Adjust or 256, tt1, tt2, {epvh[0], epvb[1],} TRealVektor3(pv[0]));
+        RotVX(obl, TRealVektor3(pv[0]));
+        {$EndIf}
 
         if (Value <  GV_LONGITUDE) then
           exit (pv[(Value - 1) div 3][(Value - 1) mod 3])
@@ -3895,6 +4632,7 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
       end
     else
       begin
+        {$IfDef FPC}
         iauPmp(pv[0], epvh[0], pv[0]);
         if (Value = GV_ELONGATION) then
           begin
@@ -3904,6 +4642,17 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
           end;
 
         FrameTransform(Version, Frame, Body, Adjust, tt1, tt2, {epvh[0], epvb[1],} pv[0]);
+        {$Else}
+        iauPmp(TRealVektor3(pv[0]), TRealVektor3(epvh[0]), TRealVektor3(pv[0]));
+        if (Value = GV_ELONGATION) then
+          begin
+            Adjust := Adjust or 256;
+            iauSxp(-1.0, TRealVektor3(epvh[0]), TRealVektor3(epvh[0]));
+            FrameTransform(Version, Frame, Body, Adjust, tt1, tt2, {epvh[0], epvb[1],} TRealVektor3(epvh[0]));
+          end;
+
+        FrameTransform(Version, Frame, Body, Adjust, tt1, tt2, {epvh[0], epvb[1],} TRealVektor3(pv[0]));
+        {$EndIf}
 
        //if (Value = ELONGATION) then
          //if (Frame < J2000) then
@@ -3915,6 +4664,7 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
           begin
             //h := r - (era + lon + sp);
 
+            {$IfDef FPC}
             RotVZ((era + Lon + sp), pv[0]);
             RotVZ((era + Lon + sp), obpv[0]);
             rPolarMotion(xp, yp, sp, Lon, pv[0]);
@@ -3925,11 +4675,24 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
                 rPolarMotion(xp, yp, sp, Lon, epvh[0]);
               end;
 
+            {$Else}
+            RotVZ((era + Lon + sp), TRealVektor3(pv[0]));
+            RotVZ((era + Lon + sp), TRealVektor3(obpv[0]));
+            rPolarMotion(xp, yp, sp, Lon, TRealVektor3(pv[0]));
+
+            if (Value = GV_ELONGATION) then
+              begin
+                RotVZ((era + Lon + sp), TRealVektor3(epvh[0]));
+                rPolarMotion(xp, yp, sp, Lon, TRealVektor3(epvh[0]));
+              end;
+            {$EndIf}
+
             //iauPom00(xp, yp, sp, tm);
             //iauRxp(tm, pv, pv);
 
             if (Frame >= FR_TOP) or ((Frame < FR_J2000) and (Frame >= FR_TOPO))  then
               begin
+                {$IfDef FPC}
                 if (topo) then
                   rDiurnalParallax(obpv, pv[0]);
 
@@ -3962,9 +4725,44 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
                 else
                   if (Value < GV_ELEVATION) then
                     RotVZ(-(era + Lon + sp), pv[0]);
+                {$Else}
+                if (topo) then
+                  rDiurnalParallax(obpv, TRealVektor3(pv[0]));
+
+                if topo and (Value = GV_ELONGATION) then
+                  rDiurnalParallax(obpv, TRealVektor3(epvh[0]));
+
+                // rDiurnalAberration(obpv, pv[0]);
+
+                if (Frame >= FR_OBS) or ((Frame < FR_J2000) and (Frame >= FR_OBSD)) then
+                  begin
+                    rEquatorialToHorizontal(TRealVektor3(pv[0]), Lat, TRealVektor3(pv[0]));
+                    rRefraction(ra, rb, TRealVektor3(pv[0]));
+
+                    if (Value < GV_ELEVATION) then
+                      rHorizontalToEquatorial(TRealVektor3(pv[0]), Lat, TRealVektor3(pv[0]))
+                    else
+                      if (Value = GV_ELONGATION) then
+                        begin
+                          rEquatorialToHorizontal(TRealVektor3(epvh[0]), Lat, TRealVektor3(epvh[0]));
+                          rRefraction(ra, rb, TRealVektor3(epvh[0]));
+                          rHorizontalToEquatorial(TRealVektor3(epvh[0]), Lat, TRealVektor3(epvh[0]));
+                        end;
+                  end
+                else
+                  if (Value >= GV_ELEVATION) then
+                    rEquatorialToHorizontal(TRealVektor3(pv[0]), Lat, TRealVektor3(pv[0]));
+
+                if (Value = GV_ELONGATION) then
+                  RotVZ(-(era + Lon + sp), TRealVektor3(epvh[0]))
+                else
+                  if (Value < GV_ELEVATION) then
+                    RotVZ(-(era + Lon + sp), TRealVektor3(pv[0]));
+                {$EndIf}
               end
             else
               begin
+                {$IfDef FPC}
                 if (topo) then
                   rDiurnalParallax(obpv, pv[0]);
 
@@ -3973,17 +4771,35 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
 
                 if (Value >= GV_ELEVATION) then
                   rEquatorialToHorizontal(pv[0], Lat, pv[0])
-              else
-                begin
-                  if (Value = GV_ELONGATION) then
-                    RotVZ(-(era + Lon + sp), epvh[0]);
+                else
+                  begin
+                    if (Value = GV_ELONGATION) then
+                      RotVZ(-(era + Lon + sp), epvh[0]);
 
-                  RotVZ(-(era + Lon + sp), pv[0]);
-                end;
+                    RotVZ(-(era + Lon + sp), pv[0]);
+                  end;
+                {$Else}
+                if (topo) then
+                  rDiurnalParallax(obpv, TRealVektor3(pv[0]));
+
+                if topo and (Value = GV_ELONGATION) then
+                  rDiurnalParallax(obpv, TRealVektor3(epvh[0]));
+
+                if (Value >= GV_ELEVATION) then
+                  rEquatorialToHorizontal(TRealVektor3(pv[0]), Lat, TRealVektor3(pv[0]))
+                else
+                  begin
+                    if (Value = GV_ELONGATION) then
+                      RotVZ(-(era + Lon + sp), TRealVektor3(epvh[0]));
+
+                    RotVZ(-(era + Lon + sp), TRealVektor3(pv[0]));
+                  end;
+                {$EndIf}
             end;
           end
         else
           begin
+            {$IfDef FPC}
             if topo then
               rDiurnalParallax(obpv, pv[0]);
 
@@ -3995,12 +4811,29 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
                 RotVZ((era + Lon + sp), pv[0]);
                 rEquatorialToHorizontal(pv[0], Lat, pv[0]);
               end;
+            {$Else}
+            if topo then
+              rDiurnalParallax(obpv, TRealVektor3(pv[0]));
+
+            if topo and (Value = GV_ELONGATION) then
+              rDiurnalParallax(obpv, TRealVektor3(epvh[0]));
+
+            if (Value >= GV_ELEVATION) then
+              begin
+                RotVZ((era + Lon + sp), TRealVektor3(pv[0]));
+                rEquatorialToHorizontal(TRealVektor3(pv[0]), Lat, TRealVektor3(pv[0]));
+              end;
+            {$EndIf}
           end;
 
         if (Value < GV_RIGHTASCENSION) then
           begin
             obl := ephObliquity(Version, Frame, tt1, tt2);
+           {$IfDef FPC}
             RotVX(obl, pv[0]);
+            {$Else}
+            RotVX(obl, TRealVektor3(pv[0]));
+            {$EndIf}
           end;
 
         if (Value = GV_EARTHLONGITUDE) then
@@ -4033,10 +4866,16 @@ function  Ephem(const Version, Frame, Body, Value: integer; Adjust: integer; con
           if (Value = GV_ELONGATION) then
             begin
               //iauSxp(-1.0, epvh[0], epvh[0]);
+              {$IfDef FPC}
               exit(RangeTo(DR2D*iauSepp(pv[0], epvh[0]), 360.0));
-              {l = ATANG2(pv[0][1], pv[0][0]); r = ATANG2(epvh[0][1], epvh[0][0]) + DPI;
-              b = ATANG2(pv[0][2],sqrt(pv[0][0]*pv[0][0]+pv[0][1]*pv[0][1]));
-              exit(RangeTo(DR2D*(ACOS(cos(b) * cos(l - r))),360.0));}
+              {$Else}
+              exit(RangeTo(DR2D*iauSepp(TRealVektor3(pv[0]), TRealVektor3(epvh[0])), 360.0));
+              {$EndIf}
+
+              {l := ATANG2(pv[0][1], pv[0][0]);
+              r := ATANG2(epvh[0][1], epvh[0][0]) + DPI;
+              b := ATANG2(pv[0][2], sqrt(pv[0][0]*pv[0][0] + pv[0][1]*pv[0][1]));
+              exit(RangeTo(DR2D*(ACOS(cos(b) * cos(l - r))), 360.0));}
             end
       end;
 

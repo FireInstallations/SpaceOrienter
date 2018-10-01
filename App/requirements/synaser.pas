@@ -2355,8 +2355,6 @@ var
     if FindFirst( ThisRootStr, $FFFFFFFF, sr) = 0 then
     begin
       repeat
-         ShowMessage(sr.Name);
-
         if (sr.Attr and $FFFFFFFF) = Sr.Attr then
         begin
           data := sr.Name;

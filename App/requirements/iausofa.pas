@@ -130,7 +130,7 @@ function  iauJdcalf(const ndp: integer; const dj1, dj2: Real; var iymdf: TIntVek
 
 { Astronomy/Astrometry }
 procedure iauAb(const pnat, v: TRealVektor3; const s, bm1: Real; var ppr: TRealVektor3);
-procedure iauApcg(const date1, date2: Real; const ebpv: TRealMatrix2_3; ehp: TRealVektor3; var astrom: iauASTROM);
+procedure iauApcg(const date1, date2: Real; const ebpv: TRealMatrix2_3; const ehp: TRealVektor3; var astrom: iauASTROM);
 procedure iauApcg13(const date1, date2: Real; astrom: iauASTROM);
 procedure iauApci(const date1, date2: Real; const ebpv: TRealMatrix2_3; const ehp: TRealVektor3; const x, y, s: Real; var astrom: iauASTROM);
 procedure iauApci13(const date1, date2: Real; var astrom: iauASTROM; var eo: Real);
@@ -209,7 +209,7 @@ procedure iauLtp(const epj: Real; var rp: TRealMatrix3_3);
 procedure iauLtpb(const epj: Real; var rpb: TRealMatrix3_3);
 procedure iauLtpecl(const epj: Real; var vec: TRealVektor3);
 procedure iauLtpequ(const epj: Real; var veq: TRealVektor3);
-procedure iauNum00a(const date1, date2: Real; rmatn: TRealMatrix3_3);
+procedure iauNum00a(const date1, date2: Real; var rmatn: TRealMatrix3_3);
 procedure iauNum00b(const date1, date2: Real; var rmatn: TRealMatrix3_3);
 procedure iauNum06a(const date1, date2: Real; rmatn: TRealMatrix3_3);
 procedure iauNumat(const epsa, dpsi, deps: Real; var rmatn: TRealMatrix3_3);
@@ -419,7 +419,6 @@ implementation
 function  fmod (a, b: Real): Real; inline;
   begin
     fmod := a - b * Int(a / b);
-
   end;
 
 
@@ -3463,7 +3462,8 @@ const
       for i := 0 to 13 do
       begin
          m := mfapl[ifreq][i];
-         if (m <> 0) then arg += m * fa[i];
+         if (m <> 0) then
+           arg += m * fa[i];
       end;
 
       sc[0] := sin(arg);
@@ -3505,7 +3505,8 @@ const
       for i := 0 to 4 do
       begin
          m := mfals[ifreq][i];
-         if (m <> 0) then arg += m * fa[i];
+         if (m <> 0) then
+           arg += m * fa[i];
       end;
       sc[0] := sin(arg);
       sc[1] := cos(arg);
@@ -15291,7 +15292,7 @@ procedure iauNum00b(const date1, date2: Real; var rmatn: TRealMatrix3_3);
 
   end;
 
-procedure iauNum00a(const date1, date2: Real; rmatn: TRealMatrix3_3);
+procedure iauNum00a(const date1, date2: Real; var rmatn: TRealMatrix3_3);
 {
 **  - - - - - - - - - -
 **   i a u N u m 0 0 a
@@ -31088,7 +31089,7 @@ procedure iauApcg13(const date1, date2: Real; astrom: iauASTROM);
 {  Finished.  }
   end;
 
-procedure iauApcg(const date1, date2: Real; const ebpv: TRealMatrix2_3; ehp: TRealVektor3; var astrom: iauASTROM);
+procedure iauApcg(const date1, date2: Real; const ebpv: TRealMatrix2_3; const ehp: TRealVektor3; var astrom: iauASTROM);
 {
 **  - - - - - - - -
 **   i a u A p c g

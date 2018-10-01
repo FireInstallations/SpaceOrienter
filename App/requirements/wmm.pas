@@ -1,7 +1,11 @@
 unit wmm;
 
-{$mode objfpc}{$H+}
-{$WARN 5057 off : Local variable "$1" does not seem to be initialized}
+{$IfDef FPC}
+  {$mode objfpc}
+  {$WARN 5057 off : Local variable "$1" does not seem to be initialized}
+{$EndIf}
+
+{$H+}
 interface
 
   uses
@@ -51,7 +55,7 @@ type
 
   TRealVektorBUF = array[0..1023] of Real;
   TRealVektor8 = array[0..7] of Real;
-  TSArray15 = Array[PARAMS] of String;
+  TSArrayParam = Array[PARAMS] of String;
 
     MAGtype_Date = record
       Year: integer;
@@ -183,27 +187,27 @@ var
   DoubleParams: array[0..2] of Real = (0.0, 0.0, 0.0);
   DateParams: array[0..2] of integer = (0, 0, 0);
 
-function  CALCULATE_NUMTERMS (const N: Real): Real; inline;
+function  CALCULATE_NUMTERMS (const N: Real): Real; {$IfDef FPC} inline {$EndIf};
   begin
     Result := (N * ( N + 1 ) / 2 + N)
   end;
 
-function  ATanH (const x: Real): Real; inline;
+function  ATanH (const x: Real): Real; {$IfDef FPC} inline {$EndIf};
   begin
     Result := (0.5 * ln((1 + x) / (1 - x)));
   end;
 
-function  RAD2DEG (const Rad: Real): Real; inline;
+function  RAD2DEG (const Rad: Real): Real; {$IfDef FPC} inline {$EndIf};
   begin
     Result := (rad)*(180.0/Pi);
    end;
 
-function  DEG2RAD (const deg: Real): Real; inline;
+function  DEG2RAD (const deg: Real): Real; {$IfDef FPC} inline {$EndIf};
   begin
     Result := deg*(Pi/180.0)
   end;
 
-function  nDaysMonth (const Year, Month: integer): integer; inline;
+function  nDaysMonth (const Year, Month: integer): integer; {$IfDef FPC} inline {$EndIf};
   var
     Day: integer;
   begin
@@ -228,7 +232,7 @@ function  nDaysMonth (const Year, Month: integer): integer; inline;
 
 //----------------------------------------------------------------------------\\
 
-function DateToYear (const Year: integer; Month, Day: integer): Real; inline;
+function DateToYear (const Year: integer; Month, Day: integer): Real; {$IfDef FPC} inline {$EndIf};
   var
     f: Real;
     i, n: integer;
@@ -243,17 +247,25 @@ function DateToYear (const Year: integer; Month, Day: integer): Real; inline;
 
     f := 365.0 + Day;
 
+    {$IfDef FPC}
     for i := 0 to Month - 1 do
       if (i = 1) then
         n += 28 + Day
       else
         n += nDaysMonth (Year, i + 1);
+    {$Else}
+    for i := 0 to Month - 1 do
+      if (i = 1) then
+        n := n + 28 + Day
+      else
+        n := n + nDaysMonth (Year, i + 1);
+    {$EndIf}
 
     Result := Year + ((n - 1) / f);
 
   end;
 
-procedure MAG_SetDefaults (var Ellip: MAGtype_Ellipsoid; var Geoid: MAGtype_Geoid); inline;
+procedure MAG_SetDefaults (var Ellip: MAGtype_Ellipsoid; var Geoid: MAGtype_Geoid); {$IfDef FPC} inline {$EndIf};
   begin
     // Sets WGS-84 parameters
     with Ellip do
@@ -279,16 +291,24 @@ procedure MAG_SetDefaults (var Ellip: MAGtype_Ellipsoid; var Geoid: MAGtype_Geoi
       end;
   end;  //MAG_SetDefaults
 
-function MAG_GetGeoidHeight (const Latitude, Longitude: Real; var DeltaHeight: Real; var Geoid: MAGtype_Geoid): boolean; inline;
+function MAG_GetGeoidHeight (const Latitude, Longitude: Real; var DeltaHeight: Real; var Geoid: MAGtype_Geoid): boolean; {$IfDef FPC} inline {$EndIf};
   var
     Index: longint;
+    {$IfDef FPC}
     Error_Code: integer = 0;
+    {$Else}
+    Error_Code: integer;
+    {$EndIf}
     PostX, PostY: Real;
     UpperY, LowerY: Real;
     DeltaX, DeltaY: Real;
     OffsetX, OffsetY: Real;
     ElevationSE, ElevationSW, ElevationNE, ElevationNW: Real;
   begin
+    {$IfNDef FPC}
+    Error_Code := 0;
+    {$EndIf}
+
     if not (Geoid.Geoid_Initialized) then
       exit (false);
 
@@ -311,12 +331,19 @@ function MAG_GetGeoidHeight (const Latitude, Longitude: Real; var DeltaHeight: R
         //  Find Four Nearest Geoid Height Cells for specified Latitude, Longitude;
         //  Assumes that (0,0) of Geoid Height Array is at Northwest corner:
         PostX := floor (OffsetX);
+        PostY := floor (OffsetY);
+
+        {$IfDef FPC}
         if (PostX + 1) = Geoid.NumbGeoidCols then
           PostX -= 1;
-
-        PostY := floor (OffsetY);
         if (PostY + 1) = Geoid.NumbGeoidRows then
           PostY -= 1;
+        {$Else}
+        if (PostX + 1) = Geoid.NumbGeoidCols then
+          PostX := PostX - 1;
+        if (PostY + 1) = Geoid.NumbGeoidRows then
+          PostY := PostY - 1;
+        {$EndIf}
 
         Index := trunc (PostY * Geoid.NumbGeoidCols + PostX);
         ElevationNW := Geoid.GeoidHeightBuffer[Index];
@@ -341,16 +368,15 @@ function MAG_GetGeoidHeight (const Latitude, Longitude: Real; var DeltaHeight: R
       Result := false;
   end; //MAG_GetGeoidHeight
 
-procedure MAG_EquivalentLatLon (const lat, lon: Real; var repairedLat, repairedLon: Real); inline;
+procedure MAG_EquivalentLatLon (const lat, lon: Real; var repairedLat, repairedLon: Real); {$IfDef FPC} inline {$EndIf};
   var
     colat: Real;
   begin
     colat := 90 - lat;
     repairedLon := lon;
 
-    if (colat < 0) then
-      colat := -colat;
-
+    colat := abs(colat);
+    {$IfDef FPC}
     while (colat > 360) do
       colat -= 360;
 
@@ -367,9 +393,28 @@ procedure MAG_EquivalentLatLon (const lat, lon: Real; var repairedLat, repairedL
 
     if (repairedLon < -180) then
       repairedLon += 360;
+    {$Else}
+    while (colat > 360) do
+      colat := colat - 360;
+
+    if (colat > 180) then
+      begin
+        colat := colat - 180;
+        repairedLon := repairedLon + 180;
+      end;
+
+    repairedLat := 90 - colat;
+
+    if (repairedLon > 360) then
+      repairedLon := repairedLon - 360;
+
+    if (repairedLon < -180) then
+      repairedLon := repairedLon + 360;
+    {$EndIf}
+
   end; //MAG_EquivalentLatLon
 
-function MAG_ConvertGeoidToEllipsoidHeight (var CoordGeodetic: MAGtype_CoordGeodetic; var Geoid: MAGtype_Geoid): boolean; inline;
+function MAG_ConvertGeoidToEllipsoidHeight (var CoordGeodetic: MAGtype_CoordGeodetic; var Geoid: MAGtype_Geoid): boolean; {$IfDef FPC} inline {$EndIf};
     var
       GotError: boolean;
       lat, lon: Real;
@@ -393,7 +438,7 @@ function MAG_ConvertGeoidToEllipsoidHeight (var CoordGeodetic: MAGtype_CoordGeod
       Result := GotError;
     end; //MAG_ConvertGeoidToEllipsoidHeight
 
-procedure MAG_GeodeticToSpherical (const Ellip: MAGtype_Ellipsoid; const CoordGeodetic: MAGtype_CoordGeodetic; var CoordSpherical: MAGtype_CoordSpherical); inline;
+procedure MAG_GeodeticToSpherical (const Ellip: MAGtype_Ellipsoid; const CoordGeodetic: MAGtype_CoordGeodetic; var CoordSpherical: MAGtype_CoordSpherical); {$IfDef FPC} inline {$EndIf};
   var
     CosLat, SinLat, rc, xp, zp: double; //all local variables
   begin
@@ -417,7 +462,7 @@ procedure MAG_GeodeticToSpherical (const Ellip: MAGtype_Ellipsoid; const CoordGe
 
   end; //MAG_GeodeticToSpherical
 
-procedure MAG_TMfwd4 (const Eps, Epssq, K0R4, K0R4oa: Real; const Acoeff: TRealVektor8; const Lam0, K0, falseE, falseN: Real; const XYonly: integer; const Lambda, Phi: Real; var X, Y, pscale, CoM: Real); inline;
+procedure MAG_TMfwd4 (const Eps, Epssq, K0R4, K0R4oa: Real; const Acoeff: TRealVektor8; const Lam0, K0, falseE, falseN: Real; const XYonly: integer; const Lambda, Phi: Real; var X, Y, pscale, CoM: Real); {$IfDef FPC} inline {$EndIf};
   var
     U, V: Real;
     Xstar, Ystar: Real;
@@ -488,15 +533,27 @@ procedure MAG_TMfwd4 (const Eps, Epssq, K0R4, K0R4oa: Real; const Acoeff: TRealV
        ----- ----- -- ------ -----
       Accumulate terms for X and Y }
     Xstar := Acoeff[3] * s8u * c8v;
+    Ystar := Acoeff[3] * c8u * s8v;
+
+    {$IfDef FPC}
     Xstar += Acoeff[2] * s6u * c6v;
     Xstar += Acoeff[1] * s4u * c4v;
     Xstar += Acoeff[0] * s2u * c2v;
     Xstar += U;
-    Ystar := Acoeff[3] * c8u * s8v;
     Ystar += Acoeff[2] * c6u * s6v;
     Ystar += Acoeff[1] * c4u * s4v;
     Ystar += Acoeff[0] * c2u * s2v;
     Ystar += V;
+    {$Else}
+    Xstar := Xstar + Acoeff[2] * s6u * c6v;
+    Xstar := Xstar + Acoeff[1] * s4u * c4v;
+    Xstar := Xstar + Acoeff[0] * s2u * c2v;
+    Xstar := Xstar + U;
+    Ystar := Ystar + Acoeff[2] * c6u * s6v;
+    Ystar := Ystar + Acoeff[1] * c4u * s4v;
+    Ystar := Ystar + Acoeff[0] * c2u * s2v;
+    Ystar := Ystar + V;
+    {$EndIf}
 
     //   Apply isoperimetric radius, scale adjustment, and offsets
     X := K0R4 * Xstar + falseE;
@@ -511,24 +568,35 @@ procedure MAG_TMfwd4 (const Eps, Epssq, K0R4, K0R4oa: Real; const Acoeff: TRealV
       end
     else
       begin
-      sig1 := 8 * Acoeff[3] * c8u * c8v;
-      sig1 += 6 * Acoeff[2] * c6u * c6v;
-      sig1 += 4 * Acoeff[1] * c4u * c4v;
-      sig1 += 2 * Acoeff[0] * c2u * c2v;
-      sig1 += 1;
-      sig2 := 8 * Acoeff[3] * s8u * s8v;
-      sig2 += 6 * Acoeff[2] * s6u * s6v;
-      sig2 += 4 * Acoeff[1] * s4u * s4v;
-      sig2 += 2 * Acoeff[0] * s2u * s2v;
+        sig1 := 8 * Acoeff[3] * c8u * c8v;
+        sig2 := 8 * Acoeff[3] * s8u * s8v;
 
-      //    Combined square roots
-      comroo := sqrt ((1 - Epssq * SPhi * SPhi) * denom2 * (sig1 * sig1 + sig2 * sig2));
-      pscale := K0R4oa * 2 * denom * comroo;
-      CoM := arctan2 (SChi * SLam, CLam) + arctan2 (sig2, sig1);
+        {$IfDef FPC}
+        sig1 += 6 * Acoeff[2] * c6u * c6v;
+        sig1 += 4 * Acoeff[1] * c4u * c4v;
+        sig1 += 2 * Acoeff[0] * c2u * c2v;
+        sig1 += 1;
+        sig2 += 6 * Acoeff[2] * s6u * s6v;
+        sig2 += 4 * Acoeff[1] * s4u * s4v;
+        sig2 += 2 * Acoeff[0] * s2u * s2v;
+        {$Else}
+        sig1 := sig1 + 6 * Acoeff[2] * c6u * c6v;
+        sig1 := sig1 + 4 * Acoeff[1] * c4u * c4v;
+        sig1 := sig1 + 2 * Acoeff[0] * c2u * c2v;
+        sig1 := sig1 + 1;
+        sig2 := sig2 + 6 * Acoeff[2] * s6u * s6v;
+        sig2 := sig2 + 4 * Acoeff[1] * s4u * s4v;
+        sig2 := sig2 + 2 * Acoeff[0] * s2u * s2v;
+        {$EndIf}
+
+        //    Combined square roots
+        comroo := sqrt ((1 - Epssq * SPhi * SPhi) * denom2 * (sig1 * sig1 + sig2 * sig2));
+        pscale := K0R4oa * 2 * denom * comroo;
+        CoM := arctan2 (SChi * SLam, CLam) + arctan2 (sig2, sig1);
       end;
   end; // MAG_TMfwd4
 
-function MAG_GetUTMParameters (Latitude, Longitude: Real; var Zone: integer; var IsNorthHemisphere: boolean; var CentralMeridian: Real): boolean; inline;
+function MAG_GetUTMParameters (Latitude, Longitude: Real; var Zone: integer; var IsNorthHemisphere: boolean; var CentralMeridian: Real): boolean; {$IfDef FPC} inline {$EndIf};
     var
       Long_Degrees, Lat_Degrees: longint;
       temp_zone: longint;
@@ -547,7 +615,11 @@ function MAG_GetUTMParameters (Latitude, Longitude: Real; var Zone: integer; var
 
       //no errors
       if (Longitude < 0) then
+        {$IfDef FPC}
         Longitude += (2 * Pi) + 1.0e-10;
+        {$Else}
+        Longitude := Longitude + (2 * Pi) + 1.0e-10;
+        {$EndIf}
 
       Lat_Degrees := trunc (Latitude * 180.0 / Pi);
       Long_Degrees := trunc (Longitude * 180.0 / Pi);
@@ -588,7 +660,7 @@ function MAG_GetUTMParameters (Latitude, Longitude: Real; var Zone: integer; var
 
     end; //MAG_GetUTMParameters
 
-procedure MAG_GetTransverseMercator (const CoordGeodetic: MAGtype_CoordGeodetic; var UTMParameters: MAGtype_UTMParameters); inline;
+procedure MAG_GetTransverseMercator (const CoordGeodetic: MAGtype_CoordGeodetic; var UTMParameters: MAGtype_UTMParameters); {$IfDef FPC} inline {$EndIf};
   var
     Zone, XYonly: integer;
     IsNorthHemisphere: boolean;
@@ -646,7 +718,7 @@ procedure MAG_GetTransverseMercator (const CoordGeodetic: MAGtype_CoordGeodetic;
   end; // MAG_GetTransverseMercator
 
 //MAGtype_MagneticModel *MAG_AllocateModelMemory(int NumTerms)
-procedure MAG_AllocateModelMemory (var model: MAGtype_MagneticModel); inline; // Wirklich noch benötigt?
+procedure MAG_AllocateModelMemory (var model: MAGtype_MagneticModel); {$IfDef FPC} inline {$EndIf}; // Wirklich noch benötigt?
   var
     i: integer;
   begin
@@ -670,7 +742,7 @@ procedure MAG_AllocateModelMemory (var model: MAGtype_MagneticModel); inline; //
       end;
   end;  //MAG_AllocateModelMemory
 
-procedure MAG_AssignHeaderValues (var model: MAGtype_MagneticModel; const values: TSArray15); inline;
+procedure MAG_AssignHeaderValues (var model: MAGtype_MagneticModel; const values: TSArrayParam); {$IfDef FPC} inline {$EndIf};
   begin  //    MAGtype_Date rleasedate;
 
     with  model do
@@ -696,9 +768,32 @@ procedure MAG_AssignHeaderValues (var model: MAGtype_MagneticModel; const values
       end;
   end;
 
-function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels: MAGtype_MagneticModel; array_size: integer): integer; inline;
+{$IfNDef FPC}
+function LineSplit(line: string; const sep: char): TStringArray;
   var
-    paramkeys: Array[PARAMS] of String = (
+    p: Integer;
+    r: TStringList;
+  begin
+    r := TStringList.Create;
+
+    line := Trim(line);
+    p := Pos(sep, line);
+
+    while (p > 0) do
+      begin
+        r.Add(Copy(line, 1, p-1));
+
+        line := Copy(line, p+1, Length(line)-p-1);
+        p := Pos(sep, line);
+      end;
+
+   Result := r;
+  end;
+{$EndIf}
+
+function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels: MAGtype_MagneticModel; array_size: integer): integer; {$IfDef FPC} inline {$EndIf};
+  var
+    paramkeys: TSArrayParam = (
       'SHDF ',
       'ModelName: ',
       'Publisher: ',
@@ -719,11 +814,20 @@ function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels:
     Lines: TStrings;
     //coefftype: char; //Internal or External (I/E)
     i: PARAMS;
+    {$IfDef FPC}
     paramvaluelength: integer = 0;
     newrecord: boolean = True;
     header_index: integer = -1;
     allocationflag: boolean = False;
     paramkeylength: integer = 0;
+    {$Else}
+    paramvaluelength: integer; // = 0;
+    newrecord: boolean; // = True;
+    header_index: integer; // = -1;
+    allocationflag: boolean; // = False;
+    paramkeylength: integer; // = 0;
+    {$EndIf}
+
     paramvalue: string;
     gnm, hnm, dgnm, dhnm{, cutoff}: Real;
     paramvalues: array [PARAMS] of string;
@@ -737,7 +841,11 @@ function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels:
         else
           Result := true;
 
+        {$IfDef FPC}
         Vals := Line.Split(' ', TStringSplitOptions.ExcludeEmpty);
+        {$Else}
+        Vals := LineSplit(Line, ' ');
+        {$EndIf}
         //coefftype := Vals[0][1];
         n := StrToInt(Vals[1]);
         m := StrToInt(Vals[2]);
@@ -747,7 +855,12 @@ function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels:
       var
         Vals: TStringArray; //sscanf (Lines[j], '%c,%d,%d,%lf,,%lf,', [@, @n, @m, @gnm, @dgnm])
       begin
+        {$IfDef FPC}
         Vals := Line.Split(' ', TStringSplitOptions.ExcludeEmpty);
+        {$Else}
+        Vals := LineSplit(Line, ' ');
+        {$EndIf}
+
         //coefftype := Vals[0][1];
         n := StrToInt(Vals[1]);
         m := StrToInt(Vals[2]);
@@ -759,7 +872,12 @@ function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels:
       var
         Vals: TStringArray; //sscanf (Lines[j], '%c,%d,%d,%lf,%lf,%lf,%lf', [@, @n, @m, @gnm, @hnm, @dgnm, @dhnm]);
       begin
+        {$IfDef FPC}
         Vals := Line.Split(' ', TStringSplitOptions.ExcludeEmpty);
+        {$Else}
+        Vals := LineSplit(Line, ' ');
+        {$EndIf}
+
         //coefftype := Vals[0][1];
         n := StrToInt(Vals[1]);
         m := StrToInt(Vals[2]);
@@ -770,6 +888,14 @@ function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels:
       end;
 
   begin
+    {$IfNDef FPC}
+    newrecord := True;
+    header_index := -1;
+    paramkeylength := 0;
+    paramvaluelength := 0;
+    allocationflag := False;
+    {$EndIf}
+
     Result := -1;
     Lines := TStringList.Create;
 
@@ -790,7 +916,7 @@ function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels:
             continue
           else if (Lines[j][1] = '%') then
             begin
-              Lines[j] := copy (Lines[j], 2, Lines[j].length - 1);
+              Lines[j] := copy (Lines[j], 2, Length(Lines[j]) - 1);
 
               if (newrecord) then
                 begin
@@ -811,11 +937,11 @@ function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels:
 
               for i := SHDF to SPATBASFUNC do
                 begin
-                  paramkeylength := paramkeys[i].length;
+                  paramkeylength := Length(paramkeys[i]);
 
                   if strlicomp (PChar (Lines[j]), PChar (paramkeys[i]), paramkeylength) = 0 then
                     begin
-                      paramvaluelength := Lines[j].length - paramkeylength;
+                      paramvaluelength := Length(Lines[j]) - paramkeylength;
                       paramvalue := copy (Lines[j], paramkeylength, paramvaluelength);
                       paramvalues[i] := paramvalue;
 
@@ -887,21 +1013,30 @@ function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels:
       end;
   end; //MAG_readMagneticModel_SHDF
 
-function MAG_readMagneticModel (const filename: string; var MagneticModel: MAGtype_MagneticModel): boolean; inline;
+function MAG_readMagneticModel (const filename: string; var MagneticModel: MAGtype_MagneticModel): boolean; {$IfDef FPC} inline {$EndIf};
   var
     Lines: TStrings;
     New_Str: String;
     gnm, hnm, dgnm, dhnm: Real;
     epoch: String;
     m, n, index: integer;
-    EOF_Flag: BoolEan = true;
+    {$IfDef FPC}
+    EOF_Flag: Boolean = true;
     j: integer = 0;
+    {$Else}
+    EOF_Flag: Boolean;
+    j: integer;
+    {$EndIf}
 
   procedure GetValues (Line : String);   // ReadError fix
     var
       Vals: TStringArray;
     begin
+      {$IfDef FPC}
       Vals := Line.Split(' ', TStringSplitOptions.ExcludeEmpty);
+      {$Else}
+      Vals := LineSplit(Line, ' ');
+      {$EndIf}
       n := StrToInt(Vals[0]);
       m := StrToInt(Vals[1]);
       gnm := StrToFloat(Vals[2]);
@@ -912,6 +1047,11 @@ function MAG_readMagneticModel (const filename: string; var MagneticModel: MAGty
 
   begin
     Lines := TStringList.Create;
+
+    {$IfNDef FPC}
+    j := 0;
+    EOF_Flag := true;
+    {$EndIf}
     Result := False;
 
     try
@@ -931,7 +1071,26 @@ function MAG_readMagneticModel (const filename: string; var MagneticModel: MAGty
           Secular_Var_Coeff_G[0] := 0.0;
         end;
 
-      sscanf (Lines[0], '%s%s', [@epoch, @New_Str]); //Well, I had to fix some Errors
+      Lines[0] := Trim(Lines[0]);
+      n := Pos(' ', Lines[0]);
+
+      if (n > 0) then
+        begin
+          epoch    := Copy(Lines[0], 1, n - 1);
+
+          Lines[0] := Trim(Copy(Lines[0], n + 1, Length(Lines[0]) - n - 1));
+          n := Pos(' ', Lines[0]);
+
+          if (n > 0) then
+            New_str := Copy(Lines[0], 1, n - 1)
+          else
+            New_str := Lines[0];
+        end
+      else
+        begin
+          epoch := Lines[0];
+          New_Str := 'dummy'; //So our Model is nameless? However, the name will be never used.
+        end;
 
       MagneticModel.ModelName := New_Str;
       MagneticModel.epoch     := StrToFloat(epoch);
@@ -943,7 +1102,7 @@ function MAG_readMagneticModel (const filename: string; var MagneticModel: MAGty
           Lines[j] := Trim(Lines[j]);
 
           //CHECK FOR LAST LINE IN FILE
-          if (Lines[j].length >= 5) then
+          if (Length(Lines[j]) >= 5) then
             New_Str := copy( Lines[j], 1, 5)
           else
             New_Str := '';
@@ -977,13 +1136,21 @@ function MAG_readMagneticModel (const filename: string; var MagneticModel: MAGty
       end;
   end; //MAG_readMagneticModel
 
-function MAG_robustReadMagModels (const filename: string; var magneticmodels: MAGtype_MagneticModel; const array_size: integer): boolean; inline;
+function MAG_robustReadMagModels (const filename: string; var magneticmodels: MAGtype_MagneticModel; const array_size: integer): boolean; {$IfDef FPC} inline {$EndIf};
   var
     Lines: TStrings; //char line[MAXLINELENGTH];
     n, i: integer;
+    {$IfDef FPC}
     nMax: integer = 0;
+    {$Else}
+    nMax: integer;
+    {$EndIf}
   begin
     Lines := TStringList.Create;
+
+    {$IfNDef FPC}
+    nMax := 0;
+    {$EndIf}
     Result := False;
 
     try
@@ -1002,10 +1169,17 @@ function MAG_robustReadMagModels (const filename: string; var magneticmodels: MA
             for i := 1 to Lines.Count - 1 do
               begin
 
-                if copy(Lines[i],1, 5) = '99999' then //end of file
+                if copy(Lines[i], 1, 5) = '99999' then //end of file
                   break;
 
+                {$IfDef FPC}
                 if (sscanf (Lines[i], '%d', [@n]) <> 1) then
+                {$Else}
+                Lines[i] := Trim(Lines[i]);
+                n := Pos(' ', Lines[i]);
+
+                if not TryStrToInt(Copy(Lines[i], 1, n - 1), n) then
+                {$EndIf}
                   break;
 
                 if ((n > nMax) and (n > 0)) then
@@ -1034,7 +1208,7 @@ function MAG_robustReadMagModels (const filename: string; var magneticmodels: MA
     end;
   end; ///MAG_robustReadMagModel
 
-procedure MAG_TimelyModifyMagneticModel (const UserDate: MAGtype_Date; var MagneticModel, TimedMagneticModel: MAGtype_MagneticModel); inline;
+procedure MAG_TimelyModifyMagneticModel (const UserDate: MAGtype_Date; var MagneticModel, TimedMagneticModel: MAGtype_MagneticModel); {$IfDef FPC} inline {$EndIf};
   var
     n, m, index, a, b: integer;
   begin
@@ -1076,7 +1250,7 @@ procedure MAG_TimelyModifyMagneticModel (const UserDate: MAGtype_Date; var Magne
     end;
 
 //MAGtype_LegendreFunction *MAG_AllocateLegendreFunctionMemory(int NumTerms)
-procedure MAG_AllocateLegendreFunctionMemory (var LegendreFunction: MAGtype_LegendreFunction); inline;
+procedure MAG_AllocateLegendreFunctionMemory (var LegendreFunction: MAGtype_LegendreFunction); {$IfDef FPC} inline {$EndIf};
   var
     i: integer;
   begin
@@ -1088,7 +1262,7 @@ procedure MAG_AllocateLegendreFunctionMemory (var LegendreFunction: MAGtype_Lege
   end; //MAGtype_LegendreFunction
 
 //MAGtype_SphericalHarmonicVariables* MAG_AllocateSphVarMemory(int nMax)
-procedure MAG_AllocateSphVarMemory (var SphVariables: MAGtype_SphericalHarmonicVariables); inline;
+procedure MAG_AllocateSphVarMemory (var SphVariables: MAGtype_SphericalHarmonicVariables); {$IfDef FPC} inline {$EndIf};
     var
       i: integer;
     begin
@@ -1101,7 +1275,7 @@ procedure MAG_AllocateSphVarMemory (var SphVariables: MAGtype_SphericalHarmonicV
 
     end; //MAG_AllocateSphVarMemory
 
-procedure MAG_ComputeSphericalHarmonicVariables (const Ellip: MAGtype_Ellipsoid; const CoordSpherical: MAGtype_CoordSpherical; const nMax: integer; var SphVariables: MAGtype_SphericalHarmonicVariables); inline;
+procedure MAG_ComputeSphericalHarmonicVariables (const Ellip: MAGtype_Ellipsoid; const CoordSpherical: MAGtype_CoordSpherical; const nMax: integer; var SphVariables: MAGtype_SphericalHarmonicVariables); {$IfDef FPC} inline {$EndIf};
   var
     i: integer;
     cos_lambda, sin_lambda: Real;
@@ -1135,7 +1309,7 @@ procedure MAG_ComputeSphericalHarmonicVariables (const Ellip: MAGtype_Ellipsoid;
 
   end; // MAG_ComputeSphericalHarmonicVariables
 
-function MAG_PcupHigh (var Pcup, dPcup: TRealVektorBUF; const x: Real; const nMax: integer): boolean; inline;
+function MAG_PcupHigh (var Pcup, dPcup: TRealVektorBUF; const x: Real; const nMax: integer): boolean; {$IfDef FPC} inline {$EndIf};
   var
     k, kstart, m, n: integer;
     pm2, pm1, pmm, plm, rescalem, z, scalef: Real;
@@ -1167,7 +1341,7 @@ function MAG_PcupHigh (var Pcup, dPcup: TRealVektorBUF; const x: Real; const nMa
 
         for m := 1 to n - 2 do
           begin
-            k += 1;
+            Inc(k);
             GeomagF1[k] := (2 * n - 1) / GeomagPreSqr[n + m] / GeomagPreSqr[n - m];
             GeomagF2[k] := GeomagPreSqr[n - m - 1] * GeomagPreSqr[n + m - 1] /
               GeomagPreSqr[n + m] / GeomagPreSqr[n - m];
@@ -1253,7 +1427,7 @@ function MAG_PcupHigh (var Pcup, dPcup: TRealVektorBUF; const x: Real; const nMa
 
   end; // MAG_PcupHigh
 
-procedure MAG_PcupLow (var Pcup, dPcup: TRealVektorBUF; const x: Real; const nMax: integer); inline;
+procedure MAG_PcupLow (var Pcup, dPcup: TRealVektorBUF; const x: Real; const nMax: integer); {$IfDef FPC} inline {$EndIf};
   var
     k, z: Real;
     n, m, index, index1, index2: integer;
@@ -1342,11 +1516,20 @@ procedure MAG_PcupLow (var Pcup, dPcup: TRealVektorBUF; const x: Real; const nMa
       end;
   end;  // MAG_PcupLow
 
-function MAG_AssociatedLegendreFunction (const CoordSpherical: MAGtype_CoordSpherical; const nMax: integer; var LegendreFunction: MAGtype_LegendreFunction): boolean; inline;
+function MAG_AssociatedLegendreFunction (const CoordSpherical: MAGtype_CoordSpherical; const nMax: integer; var LegendreFunction: MAGtype_LegendreFunction): boolean; {$IfDef FPC} inline {$EndIf};
   var
+    {$IfDef FPC}
     FLAG: boolean = True;
+    {$Else}
+    FLAG: boolean
+    {$EndIf}
+
     sin_phi: Real;
   begin
+    {$IfNDef FPC}
+    FLAG := True;
+    {$EndIf}
+
     //(deg)*(M_PI/180.0L)
     sin_phi := sin ((CoordSpherical.phig) * (Pi / 180.0)); // sin  (geocentric latitude)
 
@@ -1358,7 +1541,7 @@ function MAG_AssociatedLegendreFunction (const CoordSpherical: MAGtype_CoordSphe
     Result := FLAG;
   end; //MAG_AssociatedLegendreFunction
 
-procedure MAG_SummationSpecial (const MagneticModel: MAGtype_MagneticModel; const SphVariables: MAGtype_SphericalHarmonicVariables; const CoordSpherical: MAGtype_CoordSpherical; var MagneticResults: MAGtype_MagneticResults); inline;
+procedure MAG_SummationSpecial (const MagneticModel: MAGtype_MagneticModel; const SphVariables: MAGtype_SphericalHarmonicVariables; const CoordSpherical: MAGtype_CoordSpherical; var MagneticResults: MAGtype_MagneticResults); {$IfDef FPC} inline {$EndIf};
   var
     n, index: integer;
     k, sin_phi, schmidtQuasiNorm1, schmidtQuasiNorm2, schmidtQuasiNorm3: Real;
@@ -1394,7 +1577,11 @@ procedure MAG_SummationSpecial (const MagneticModel: MAGtype_MagneticModel; cons
                 By =    SUM (a/r) (m)  SUM  [g cos(m p) + h sin(m p)] dP (sin(phi))
                            n=1             m=0   n            n           n  }
         // Equation 11 in the WMM Technical report. Derivative with respect to longitude, divided by radius.
+        {$IfDef FPC}
         MagneticResults.By += SphVariables.RelativeRadiusPower[n] *
+        {$Else}
+        MagneticResults.By := MagneticResults.By + SphVariables.RelativeRadiusPower[n] *
+        {$EndIf}
           (MagneticModel.Main_Field_Coeff_G[index] * SphVariables.sin_mlambda[1] -
           MagneticModel.Main_Field_Coeff_H[index] * SphVariables.cos_mlambda[1]) *
           GeomagPcupS[n] * schmidtQuasiNorm3;
@@ -1402,7 +1589,7 @@ procedure MAG_SummationSpecial (const MagneticModel: MAGtype_MagneticModel; cons
 
     end; // MAG_SummationSpecial
 
-procedure MAG_Summation (const LegendreFunction: MAGtype_LegendreFunction; const MagneticModel: MAGtype_MagneticModel; const SphVariables: MAGtype_SphericalHarmonicVariables; const CoordSpherical: MAGtype_CoordSpherical; var MagneticResults: MAGtype_MagneticResults); inline;
+procedure MAG_Summation (const LegendreFunction: MAGtype_LegendreFunction; const MagneticModel: MAGtype_MagneticModel; const SphVariables: MAGtype_SphericalHarmonicVariables; const CoordSpherical: MAGtype_CoordSpherical; var MagneticResults: MAGtype_MagneticResults); {$IfDef FPC} inline {$EndIf};
   var
     cos_phi: Real;
     m, n, index: integer;
@@ -1420,7 +1607,11 @@ procedure MAG_Summation (const LegendreFunction: MAGtype_LegendreFunction; const
                    Bz =   -SUM (a/r)   (n+1) SUM  [g cos(m p) + h sin(m p)] P (sin(phi))
                                    n=1              m=0   n            n           n  }
           // Equation 12 in the WMM Technical report.  Derivative with respect to radius.
+          {$IfDef FPC}
           MagneticResults.Bz -= SphVariables.RelativeRadiusPower[n] *
+          {$Else}
+          MagneticResults.Bz := MagneticResults.Bz - SphVariables.RelativeRadiusPower[n] *
+          {$EndIf}
             (MagneticModel.Main_Field_Coeff_G[index] * SphVariables.cos_mlambda[m] +
             MagneticModel.Main_Field_Coeff_H[index] * SphVariables.sin_mlambda[m]) *
             (n + 1) * LegendreFunction.Pcup[index];
@@ -1429,7 +1620,11 @@ procedure MAG_Summation (const LegendreFunction: MAGtype_LegendreFunction; const
                    By =    SUM (a/r) (m)  SUM  [g cos(m p) + h sin(m p)] dP (sin(phi))
                               n=1             m=0   n            n           n  }
           // Equation 11 in the WMM Technical report. Derivative with respect to longitude, divided by radius.
+          {$IfDef FPC}
           MagneticResults.By += SphVariables.RelativeRadiusPower[n] *
+          {$Else}
+          MagneticResults.By := MagneticResults.By + SphVariables.RelativeRadiusPower[n] *
+          {$EndIf}
             (MagneticModel.Main_Field_Coeff_G[index] * SphVariables.sin_mlambda[m] -
             MagneticModel.Main_Field_Coeff_H[index] * SphVariables.cos_mlambda[m]) *
             m * LegendreFunction.Pcup[index];
@@ -1438,7 +1633,11 @@ procedure MAG_Summation (const LegendreFunction: MAGtype_LegendreFunction; const
                    Bx = - SUM (a/r)   SUM  [g cos(m p) + h sin(m p)] dP (sin(phi))
                               n=1         m=0   n            n           n  }
           // Equation 10  in the WMM Technical report. Derivative with respect to latitude, divided by radius.
+          {$IfDef FPC}
           MagneticResults.Bx -= SphVariables.RelativeRadiusPower[n] *
+          {$Else}
+          MagneticResults.Bx := MagneticResults.Bx - SphVariables.RelativeRadiusPower[n] *
+          {$EndIf}
             (MagneticModel.Main_Field_Coeff_G[index] * SphVariables.cos_mlambda[m] +
             MagneticModel.Main_Field_Coeff_H[index] * SphVariables.sin_mlambda[m]) *
             LegendreFunction.dPcup[index];
@@ -1453,7 +1652,7 @@ procedure MAG_Summation (const LegendreFunction: MAGtype_LegendreFunction; const
 
   end; //MAG_Summation
 
-procedure MAG_SecVarSummationSpecial (const MagneticModel: MAGtype_MagneticModel; const SphVariables: MAGtype_SphericalHarmonicVariables; const CoordSpherical: MAGtype_CoordSpherical; var MagneticResults: MAGtype_MagneticResults); inline;
+procedure MAG_SecVarSummationSpecial (const MagneticModel: MAGtype_MagneticModel; const SphVariables: MAGtype_SphericalHarmonicVariables; const CoordSpherical: MAGtype_CoordSpherical; var MagneticResults: MAGtype_MagneticResults); {$IfDef FPC} inline {$EndIf};
   var
     n, index: integer;
     k, sin_phi, schmidtQuasiNorm1, schmidtQuasiNorm2, schmidtQuasiNorm3: Real;
@@ -1486,14 +1685,18 @@ procedure MAG_SecVarSummationSpecial (const MagneticModel: MAGtype_MagneticModel
                 By =    SUM (a/r) (m)  SUM  [g cos(m p) + h sin(m p)] dP (sin(phi))
                            n=1             m=0   n            n           n  }
         // Derivative with respect to longitude, divided by radius.
+        {$IfDef FPC}
         MagneticResults.By += SphVariables.RelativeRadiusPower[n] *
+        {$Else}
+        MagneticResults.By := MagneticResults.By + SphVariables.RelativeRadiusPower[n] *
+        {$EndIf}
           (MagneticModel.Secular_Var_Coeff_G[index] * SphVariables.sin_mlambda[1] -
           MagneticModel.Secular_Var_Coeff_H[index] * SphVariables.cos_mlambda[1]) *
           GeomagPcupS[n] * schmidtQuasiNorm3;
       end;
   end; // SecVarSummationSpecial
 
-procedure MAG_SecVarSummation (const LegendreFunction: MAGtype_LegendreFunction; var MagneticModel: MAGtype_MagneticModel; const SphVariables: MAGtype_SphericalHarmonicVariables; const CoordSpherical: MAGtype_CoordSpherical; var MagneticResults: MAGtype_MagneticResults); inline;
+procedure MAG_SecVarSummation (const LegendreFunction: MAGtype_LegendreFunction; var MagneticModel: MAGtype_MagneticModel; const SphVariables: MAGtype_SphericalHarmonicVariables; const CoordSpherical: MAGtype_CoordSpherical; var MagneticResults: MAGtype_MagneticResults); {$IfDef FPC} inline {$EndIf};
   var
     cos_phi: Real;
     m, n, index: integer;
@@ -1513,7 +1716,11 @@ procedure MAG_SecVarSummation (const LegendreFunction: MAGtype_LegendreFunction;
                   Bz =   -SUM (a/r)   (n+1) SUM  [g cos(m p) + h sin(m p)] P (sin(phi))
                                   n=1              m=0   n            n           n  }
           //  Derivative with respect to radius.
+          {$IfDef FPC}
           MagneticResults.Bz -= SphVariables.RelativeRadiusPower[n] *
+          {$Else}
+          MagneticResults.Bz := MagneticResults.Bz - SphVariables.RelativeRadiusPower[n] *
+          {$EndIf}
             (MagneticModel.Secular_Var_Coeff_G[index] * SphVariables.cos_mlambda[m] +
             MagneticModel.Secular_Var_Coeff_H[index] * SphVariables.sin_mlambda[m]) *
             (n + 1) * LegendreFunction.Pcup[index];
@@ -1522,7 +1729,11 @@ procedure MAG_SecVarSummation (const LegendreFunction: MAGtype_LegendreFunction;
                   By =    SUM (a/r) (m)  SUM  [g cos(m p) + h sin(m p)] dP (sin(phi))
                              n=1             m=0   n            n           n  }
           // Derivative with respect to longitude, divided by radius.
+          {$IfDef FPC}
           MagneticResults.By += SphVariables.RelativeRadiusPower[n] *
+          {$Else}
+          MagneticResults.By := MagneticResults.By + SphVariables.RelativeRadiusPower[n] *
+          {$EndIf}
             (MagneticModel.Secular_Var_Coeff_G[index] * SphVariables.sin_mlambda[m] -
             MagneticModel.Secular_Var_Coeff_H[index] * SphVariables.cos_mlambda[m]) *
             m * LegendreFunction.Pcup[index];
@@ -1531,7 +1742,11 @@ procedure MAG_SecVarSummation (const LegendreFunction: MAGtype_LegendreFunction;
                   Bx = - SUM (a/r)   SUM  [g cos(m p) + h sin(m p)] dP (sin(phi))
                              n=1         m=0   n            n           n  }
           // Derivative with respect to latitude, divided by radius.
+          {$IfDef FPC}
           MagneticResults.Bx -= SphVariables.RelativeRadiusPower[n] *
+          {$Else}
+          MagneticResults.Bx := MagneticResults.Bx - SphVariables.RelativeRadiusPower[n] *
+          {$EndIf}
             (MagneticModel.Secular_Var_Coeff_G[index] * SphVariables.cos_mlambda[m] +
             MagneticModel.Secular_Var_Coeff_H[index] * SphVariables.sin_mlambda[m]) *
             LegendreFunction.dPcup[index];
@@ -1546,7 +1761,7 @@ procedure MAG_SecVarSummation (const LegendreFunction: MAGtype_LegendreFunction;
 
   end; // MAG_SecVarSummation
 
-procedure MAG_RotateMagneticVector (const CoordSpherical: MAGtype_CoordSpherical; const CoordGeodetic: MAGtype_CoordGeodetic; const MagneticResultsSph: MAGtype_MagneticResults; var MagneticResultsGeo: MAGtype_MagneticResults); inline;
+procedure MAG_RotateMagneticVector (const CoordSpherical: MAGtype_CoordSpherical; const CoordGeodetic: MAGtype_CoordGeodetic; const MagneticResultsSph: MAGtype_MagneticResults; var MagneticResultsGeo: MAGtype_MagneticResults); {$IfDef FPC} inline {$EndIf};
   var
     Psi: Real;
   begin
@@ -1559,7 +1774,7 @@ procedure MAG_RotateMagneticVector (const CoordSpherical: MAGtype_CoordSpherical
     MagneticResultsGeo.By := MagneticResultsSph.By;
   end; // MAG_RotateMagneticVector
 
-procedure MAG_CalculateGeoMagneticElements (const MagneticResultsGeo: MAGtype_MagneticResults; var GeoMagneticElements: MAGtype_GeoMagneticElements); inline;
+procedure MAG_CalculateGeoMagneticElements (const MagneticResultsGeo: MAGtype_MagneticResults; var GeoMagneticElements: MAGtype_GeoMagneticElements); {$IfDef FPC} inline {$EndIf};
   begin
     GeoMagneticElements.X := MagneticResultsGeo.Bx;
     GeoMagneticElements.Y := MagneticResultsGeo.By;
@@ -1572,7 +1787,7 @@ procedure MAG_CalculateGeoMagneticElements (const MagneticResultsGeo: MAGtype_Ma
     GeoMagneticElements.Incl := arctan2 (GeoMagneticElements.Z, GeoMagneticElements.H) * (180.0 / Pi);
   end; //MAG_CalculateGeoMagneticElements
 
-procedure MAG_CalculateSecularVariationElements (const MagneticVariation: MAGtype_MagneticResults; var MagneticElements: MAGtype_GeoMagneticElements); inline;
+procedure MAG_CalculateSecularVariationElements (const MagneticVariation: MAGtype_MagneticResults; var MagneticElements: MAGtype_GeoMagneticElements); {$IfDef FPC} inline {$EndIf};
   begin
     MagneticElements.Xdot := MagneticVariation.Bx;
     MagneticElements.Ydot := MagneticVariation.By;
@@ -1588,7 +1803,7 @@ procedure MAG_CalculateSecularVariationElements (const MagneticVariation: MAGtyp
     MagneticElements.GVdot := MagneticElements.Decldot;
   end;
 
-procedure MAG_Geomag (const CoordSpherical: MAGtype_CoordSpherical; const CoordGeodetic: MAGtype_CoordGeodetic; var TimedMagneticModel: MAGtype_MagneticModel); inline;
+procedure MAG_Geomag (const CoordSpherical: MAGtype_CoordSpherical; const CoordGeodetic: MAGtype_CoordGeodetic; var TimedMagneticModel: MAGtype_MagneticModel); {$IfDef FPC} inline {$EndIf};
   var
     MagneticResultsSph, MagneticResultsGeo, MagneticResultsSphVar,
     MagneticResultsGeoVar: MAGtype_MagneticResults;
@@ -1619,7 +1834,7 @@ procedure MAG_Geomag (const CoordSpherical: MAGtype_CoordSpherical; const CoordG
     //MAG_FreeSphVarMemory(SphVariables);
   end;
 
-function MAG_CalculateGridVariation (location: MAGtype_CoordGeodetic; var elements: MAGtype_GeoMagneticElements): boolean; inline;
+function MAG_CalculateGridVariation (location: MAGtype_CoordGeodetic; var elements: MAGtype_GeoMagneticElements): boolean; {$IfDef FPC} inline {$EndIf};
   var
     UTMParameters: MAGtype_UTMParameters;
   begin
@@ -1642,7 +1857,7 @@ function MAG_CalculateGridVariation (location: MAGtype_CoordGeodetic; var elemen
         end;
     end; // MAG_CalculateGridVariation
 
-procedure MAG_WMMErrorCalc (const H: Real; var Uncertainty: MAGtype_GeoMagneticElements); inline;
+procedure MAG_WMMErrorCalc (const H: Real; var Uncertainty: MAGtype_GeoMagneticElements); {$IfDef FPC} inline {$EndIf};
   var
     decl_variable, decl_constant: Real;
   begin
@@ -1664,26 +1879,34 @@ procedure MAG_WMMErrorCalc (const H: Real; var Uncertainty: MAGtype_GeoMagneticE
 
 function wmm_Geomag (Value, Year, Month, Day: integer; Lon, Lat, Height: Real): Real;
   var
+    {$IfDef FPC}
+    epochs: integer = 1;
+    {$Else}
+    epochs: integer;
+    {$EndIf}
     TempDecimalSeparator: Char;
     r: double;
-    epochs: integer = 1;
     fname: string;
     UserDate: MAGtype_Date;
     CoordGeodetic: MAGtype_CoordGeodetic;
     CoordSpherical: MAGtype_CoordSpherical;
   begin
+    {$IfNDef FPC}
+      epochs := 1;
+    {$EndIf}
+
     if not haveCoeffs then
       begin
 
       fname := (GetCurrentDir + PathDelim +'WMM.COF');
 
       //to ensure to get the right DecimalSeparator.
-      TempDecimalSeparator := DefaultFormatSettings.DecimalSeparator;
-      DefaultFormatSettings.DecimalSeparator := '.';
+      TempDecimalSeparator := {$IfDef FPC}DefaultFormatSettings.{$EndIf}DecimalSeparator;
+      {$IfDef FPC}DefaultFormatSettings.{$EndIf}DecimalSeparator := '.';
 
       MAG_robustReadMagModels (fname, GeomagMagneticModel, epochs);
 
-      DefaultFormatSettings.DecimalSeparator := TempDecimalSeparator;
+      {$IfDef FPC}DefaultFormatSettings.{$EndIf}DecimalSeparator := TempDecimalSeparator;
 
       if not (GeomagMagneticModel.ModelName = '') then
         begin
@@ -1692,7 +1915,7 @@ function wmm_Geomag (Value, Year, Month, Day: integer; Lon, Lat, Height: Real): 
         // Set default values and constants, Check for Geographic Poles
         MAG_SetDefaults (GeomagEllipsoid, GeomagGeoid);
 
-        GeomagGeoid.GeoidHeightBuffer := GeoidHeightBuffer;
+        GeomagGeoid.GeoidHeightBuffer := {$IfNDef FPC}@{$EndIf}GeoidHeightBuffer;
         GeomagGeoid.Geoid_Initialized := True;
         GeomagGeoid.UseGeoid := True;
         haveCoeffs := True;

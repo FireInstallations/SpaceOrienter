@@ -4,7 +4,7 @@ unit spaceorienter_main;
 
 interface
 
-  {Copyright (C) <2018> <FireInstallations> <kettnerl@hu-berlin.de>
+  {Copyright (C) <2018> <FireInstallations> <kettnerl [at] hu-berlin.de>
 
    This programm is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published by
@@ -275,7 +275,7 @@ interface
     Make default WMM.COF, so the User doesn't have to install it
     Finish PlanEph translation --> move it to won project & remove everything unessesary in used lib
     Put DefaultList/Options/WMM in own Unit
-    If Resett StarList / WMM / Options don't Save and load frome file, just save and load frome default
+    If Resett StarList / WMM / Options don't Save and load from file, just save and load from default
     Make Starlist and WMM loading as robost as config loading
     Add Hight to places list
     Add more contrys to places list
@@ -323,7 +323,6 @@ interface
     Make OlsOptions / Lists optional
     In ProgressList: test if the Item is vailed (mainpage)
     In ProgressNumber: Errorhandeling if the Item doesnt exits
-    In CalculateEphemerisLoc: BugFix
     Are there cases where GetCurrentDir is not the own dir at beginning?
     In FormShow: move Connect to LoadOptions and use Connact to all just if no vailid port was found;
     Errorhandeling when Connect doesn't work (see MI_ConnectClick)
@@ -508,10 +507,10 @@ var
         Lb_Day: TLabel;
         Lb_Day_: TLabel;
         Lb_T_: TLabel;
-        Lb_UTC1: TLabel;
-        Lb_UTC1_: TLabel;
-        Lb_UTC2: TLabel;
-        Lb_UTC2_: TLabel;
+        Lb_UTC1_Val: TLabel;
+        Lb_UTC1_Nam: TLabel;
+        Lb_UTC2_val: TLabel;
+        Lb_UTC2_Nam: TLabel;
         Lb_Zeit: TLabel;
         Lb_ZW: TLabel;
         Lb_ZW_: TLabel;
@@ -1546,6 +1545,8 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         Temp_Koord                  := Frm_Config.Koordinaten (Options[j]); //If it is an invailed place an Error is reaised here (may change in future)
 
                         Frm_Config.FlSpEd_Lon.Value := Temp_Koord.Lon;
+                        Lb_Lon_G.Caption            := FloatToStr(Temp_Koord.Lon);
+                        Lb_Lon_G1.Caption           := FloatToStr(Temp_Koord.Lon);
 
                         Frm_Config.FlSpEd_Lat.Value := Temp_Koord.Lat;
                         Lb_Lat_G.Caption            := FloatToStr(Temp_Koord.Lat);
@@ -2235,8 +2236,8 @@ procedure TFrm_Spori.ProgressFirstPointOfAries (); //Done
 
 procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
   var
-    Lat_G: Real;
-    Lon_R: Real;
+    Lon_G: Real;
+    Lat_R: Real;
     Rtzn_Grd, Rtzn_Rd: Real;
     Dekli_Grd, Dekli_Rd: Real;
     AkFrPnk: Real;
@@ -2246,8 +2247,8 @@ procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
     Ele, Azimut: Real;
     Az_Z, Az_N: Real;
   begin     ;
-    Lat_G     := StrToFloat(Lb_Lat_G.Caption);
-    Lon_R     := StrToFloat(Lb_Lon_R.caption);
+    Lon_G     := StrToFloat(Lb_Lon_G.Caption);
+    Lat_R     := StrToFloat(Lb_Lat_R.caption);
 
     Rtzn_Grd  := StrToFloat(Lb_Rtzn_Grd.Caption);
     Rtzn_Rd   := StrToFloat(Lb_Rtzn_Rd.caption);
@@ -2267,16 +2268,16 @@ procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
     if (Grt > 360) then
       Grt -= 360;
 
-    T := Grt + Lat_G;
+    T := Grt + Lon_G;
     if (T > 360) then
       T -= 360;
      T *= (Pi/180);
 
-    Ele := ArcSin(Sin(Lon_R)*Sin(Delta) + Cos(Lon_R)*Cos(Delta)*Cos(T));
+    Ele := ArcSin(Sin(Lat_R)*Sin(Delta) + Cos(Lat_R)*Cos(Delta)*Cos(T));
     Ele *= 180/Pi;
 
     Az_Z := Sin(-T);
-    Az_N := tan(Delta) * cos(Lon_R) - sin(Lon_R) * cos(T);
+    Az_N := tan(Delta) * cos(Lat_R) - sin(Lat_R) * cos(T);
 
     Azimut := ArcTan2(Az_Z, Az_N) * 180/PI();
     if (Azimut <= 0) then
@@ -2308,6 +2309,10 @@ procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
          ra, rb: Double;
          Body: Integer;
          Uebertrag: String;
+
+         UTC1, UTC2: Real;
+         Hour, Minute, Second, Milli: Word;
+         year, month, day: Word;
       begin
         TZ := GetLocalTimeOffset() div -60;
 
@@ -2317,31 +2322,32 @@ procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
         // better 50?
         hm := 100; // hight (meters) Used with topocentric frames to apply diurnal aberration.
 
-        Tz  := GetLocalTimeOffset() div -60; //(Zeitverschiebung)
+        Tz  := GetLocalTimeOffset() div -60; //Difference beteween system time and UTC
 
-        xp     := 0.182698;    // The x offset of the terrestrial pole. Used to apply polar motion. From www.iers.org bulletin service
-        yp     := 0.401681;    // The y offset From www.iers.org bulletin service
-        dut1   := -0.307649;   // Difference between UTC and UT1. It can only be obtained by a bulletin service From www.iers.org bulletin service
+        xp     := 0.20937;    // The x offset of the terrestrial pole. Used to apply polar motion. From www.iers.org bulletin service
+        yp     := 0.34715;    // The y offset From www.iers.org bulletin service
+        dut1   := 0.055836;   // Difference between UTC and UT1. It can only be obtained by a bulletin service From www.iers.org bulletin service
 
-        tc  := 24.0;        // Temperature (celcius)
-        pm  := 1021.0;      // Pressure (milibars)
+        tc  := 20.0;        // Temperature (celcius)
+        pm  := 1000.0;      // Pressure (milibars)
         rh  := 0.5;         // Relative Humidity (percent [fractional])
         wl  := 0.55;        // Wavelength (micrometers)
-        RefractionAB(pm, tc, rh, wl, ra{%H-}, rb{%H-}); // spuckt die beiden konstanten aus, die angeben, wie die Athmosphäre die beobachtung beinflusst
+        RefractionAB(pm, tc, rh, wl, ra, rb); //How athmosphare doese change the observation
 
 procedure TFrm_Spori.MI_ConnectClick(Sender: TObject);  //ToDo
   begin
 
+        UTC1 := StrToFloat(Lb_UTC1_Val.Caption);
+        UTC2 := StrToFloat(Lb_UTC2_Val.Caption);
+
         Uebertrag := FloatToStrF(Ephem(0, FR_ICRS, Body, GV_ELEVATION, AD_LIGHTTIME,
-                   StrToFloat(Lb_UTC1.Caption),  StrToFloat(Lb_UTC2.Caption),
-                   Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb),ffFixed, 4, 13); //TZ richtig?
+                   UTC1,  UTC2, Lon, Lat, TZ, xp, yp, dut1, 0, ra, rb), ffFixed, 4, 13);
 
 procedure TFrm_Spori.MI_Hilf_FehClick(Sender: TObject);  //toDo
   begin
 
         Uebertrag := FloatToStrF(Ephem(0, FR_ICRS, Body, GV_AZIMUTH, AD_LIGHTTIME,
-                   StrToFloat(Lb_UTC1.Caption),  StrToFloat(Lb_UTC2.Caption),
-                   Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb),ffFixed, 4, 13); //TZ richtig?
+                   UTC1,  UTC2, Lon, Lat, TZ, xp, yp, dut1, 0, ra, rb), ffFixed, 4, 13);
 
 procedure TFrm_Spori.MI_SuchClick(Sender: TObject); //Wenn nicht Last error
   begin
@@ -2765,12 +2771,8 @@ procedure TFrm_Spori.MI_Sicht_ExpClick (Sender: TObject); //ToDo: Comments
             Lb_Zeit.Caption := DateTimeToStr(Now);
             Lb_MEZ.Caption  := DateTimeToStr(Now);
 
-    EintragMode(StMode);
-
-    Ed_Nr.Text:=HK;
-    OptionsChange(15, HK);
-   end;
-
+            DecodeTime(now, Stunden, Minuten, Sekunden, Millisek);
+            DecodeDate(now, Jahr, Monat, Tage);
            end
          else
           begin
@@ -2780,9 +2782,7 @@ procedure TFrm_Spori.MI_Sicht_ExpClick (Sender: TObject); //ToDo: Comments
 procedure TFrm_Spori.Bt_BebListClick(Sender: TObject);  //ToDO
   begin
 
-   end;
-
-            if( not NoEntry) then
+            if not NoEntry then
               begin
                 Frm_Config.TE_Time.Time := (Time + DiffT);
                 Frm_Config.DE_Day.Date  := (Date + DiffD);
@@ -2791,29 +2791,28 @@ procedure TFrm_Spori.Bt_BebListClick(Sender: TObject);  //ToDO
                end;
            end;
 
-        TZ := GetLocalTimeOffset() div -60;
-        Lb_Gmt.Caption      := DateTimeToStr(StrToDateTime(Lb_MEZ.Caption)- TZ /24);
+        Lb_Sek.Caption  := IntToStr(Sekunden);
+        Lb_Min.Caption  := IntToStr(Minuten);
+        Lb_Hour.Caption := IntToStr(Stunden);
+        Lb_Day.Caption  := IntToStr(Tage);
+        Lb_Mon.Caption  := IntToStr(Monat);
+        Lb_Jhr.Caption  := IntToStr(Jahr);
 
-        LB_OtZ.Caption := DateTimeToStr(StrToDateTime(Lb_Gmt.Caption) + StrToFloat(Lb_Lat_G.Caption)/360);
+        TZ              := GetLocalTimeOffset() div -60;
+        Lb_Gmt.Caption  := DateTimeToStr(StrToDateTime(Lb_MEZ.Caption)- TZ /24);
+
+        LB_OtZ.Caption  := DateTimeToStr(StrToDateTime(Lb_Gmt.Caption) + StrToFloat(Lb_Lat_G.Caption)/360);
 
         ProgressFirstPointOfAries();
 
-        Lb_UTC1.Caption := FloatToStr(Julian(StrToInt(Lb_Jhr.Caption),
-                           StrToInt(Lb_Mon.Caption), StrToInt(Lb_Day.Caption),
-                           StrToInt(Lb_Hour.Caption), StrToInt(Lb_Min.Caption),
-                           StrToInt(Lb_Sek.Caption)));
+        Lb_UTC1_Val.Caption := FloatToStr(Julian(Jahr, Monat, Tage, 0, 0, 0));
 
-        //UTC1 := Julian(2018, 9, 18, 0, 0, 0);  // or UTC1 : Julian( Jahr, Monat, Tag, Stunde, Minute, Sekunde)
-
-        Lb_UTC2.Caption := FloatToStrF(((StrToInt(Lb_Hour.Caption) +
-                           StrToInt(Lb_Min.Caption)/60 +
-                           StrToInt(Lb_Sek.Caption)/3600)/24),ffFixed,4,13);
-
-        // UTC2 := (i + 00/60 + 0/3600)/24; //UTC2 : (Stunde + Minute/60 + Sekunde/3600)/24
+        Lb_UTC2_val.Caption := FloatToStrF(
+                               (Stunden + Minuten/60 + Sekunden/3600)/24,
+                               ffFixed,4,13);
 
         TempMagnVariation := FloatToStrF(
-                           wmmGeomag(1, StrToInt(Lb_Jhr.caption),
-                             StrToInt(Lb_Mon.caption), StrToInt(Lb_Day.caption),
+                           wmmGeomag(1, StrToInt(Lb_Jhr.caption), Monat, Tage,
                              Frm_Config.FlSpEd_Lon.Value, Frm_Config.FlSpEd_Lat.Value, 0),
                            ffFixed, 4, 14);
 
@@ -2821,10 +2820,10 @@ procedure TFrm_Spori.Bt_BebListClick(Sender: TObject);  //ToDO
         Ed_Mswg.Text    := TempMagnVariation;
 
 
-        if not (Ansilowercase(Ed_Egstn.Text) = 'ephemeride') then
-          CalculateStarLoc ()
-        else
-         CalculateEphemerisLoc ();
+        if (Ansilowercase(Ed_Egstn.Text) = 'ephemeride') then  
+          CalculateEphemerisLoc ()
+        else 
+          CalculateStarLoc () ;
        end;
 
 procedure TFrm_Spori.Tmr_GetDataTimer (Sender: TObject); //ToDo: Comments

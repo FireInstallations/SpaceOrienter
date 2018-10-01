@@ -1,7 +1,7 @@
 object Frm_Spori: TFrm_Spori
-  Left = 58
+  Left = 49
   Height = 420
-  Top = 116
+  Top = 272
   Width = 724
   AlphaBlendValue = 250
   Caption = 'SpaceOrienter'
@@ -2145,7 +2145,7 @@ object Frm_Spori: TFrm_Spori
     Height = 381
     Top = 0
     Width = 712
-    ActivePage = TbS_StLst
+    ActivePage = TbS_Ephi
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.CharSet = ANSI_CHARSET
     Font.Height = -13
@@ -2154,7 +2154,7 @@ object Frm_Spori: TFrm_Spori
     Font.Quality = fqDraft
     MultiLine = True
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 4
     TabOrder = 0
     Options = [nboMultiLine, nboKeyboardTabSwitch]
     object TbS_Inter: TTabSheet
@@ -2738,7 +2738,7 @@ object Frm_Spori: TFrm_Spori
         Top = 16
         Width = 256
         Caption = 'Zeit'
-        ClientHeight = 102
+        ClientHeight = 108
         ClientWidth = 203
         Font.CharSet = ANSI_CHARSET
         Font.Height = -10
@@ -2803,7 +2803,7 @@ object Frm_Spori: TFrm_Spori
         Top = 184
         Width = 256
         Caption = 'FrühlingsPunkt'
-        ClientHeight = 159
+        ClientHeight = 165
         ClientWidth = 203
         Font.CharSet = ANSI_CHARSET
         Font.Height = -10
@@ -2913,7 +2913,7 @@ object Frm_Spori: TFrm_Spori
         Top = 16
         Width = 256
         Caption = 'SternenLage'
-        ClientHeight = 172
+        ClientHeight = 178
         ClientWidth = 203
         Font.CharSet = ANSI_CHARSET
         Font.Height = -10
@@ -3089,7 +3089,7 @@ object Frm_Spori: TFrm_Spori
         Top = 264
         Width = 256
         Caption = 'Winkel'
-        ClientHeight = 95
+        ClientHeight = 101
         ClientWidth = 203
         Font.CharSet = ANSI_CHARSET
         Font.Height = -10
@@ -3163,7 +3163,7 @@ object Frm_Spori: TFrm_Spori
         Top = 48
         Width = 240
         Caption = 'Azimut'
-        ClientHeight = 70
+        ClientHeight = 76
         ClientWidth = 190
         Font.CharSet = ANSI_CHARSET
         Font.Height = -10
@@ -3211,7 +3211,7 @@ object Frm_Spori: TFrm_Spori
         Top = 184
         Width = 240
         Caption = 'Berechnet'
-        ClientHeight = 95
+        ClientHeight = 101
         ClientWidth = 190
         Font.CharSet = ANSI_CHARSET
         Font.Height = -10
@@ -3337,8 +3337,14 @@ object Frm_Spori: TFrm_Spori
         Top = 24
         Width = 256
         Caption = 'Zeit'
-        ClientHeight = 355
-        ClientWidth = 252
+        ClientHeight = 287
+        ClientWidth = 203
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 0
         object Lb_Day_: TLabel
           Left = 16
@@ -3380,35 +3386,35 @@ object Frm_Spori: TFrm_Spori
           Caption = 'Jahr'
           ParentColor = False
         end
-        object Lb_UTC1: TLabel
-          Left = 104
-          Height = 16
-          Top = 296
-          Width = 60
+        object Lb_UTC1_Val: TLabel
+          Left = 83
+          Height = 13
+          Top = 237
+          Width = 51
           Caption = '2457848,5'
           ParentColor = False
         end
-        object Lb_UTC1_: TLabel
-          Left = 16
-          Height = 16
-          Top = 296
-          Width = 32
+        object Lb_UTC1_Nam: TLabel
+          Left = 13
+          Height = 13
+          Top = 237
+          Width = 25
           Caption = 'UTC1'
           ParentColor = False
         end
-        object Lb_UTC2_: TLabel
-          Left = 16
-          Height = 16
-          Top = 336
-          Width = 32
+        object Lb_UTC2_Nam: TLabel
+          Left = 13
+          Height = 13
+          Top = 269
+          Width = 25
           Caption = 'UTC2'
           ParentColor = False
         end
-        object Lb_UTC2: TLabel
-          Left = 104
-          Height = 16
-          Top = 336
-          Width = 74
+        object Lb_UTC2_val: TLabel
+          Left = 83
+          Height = 13
+          Top = 269
+          Width = 63
           Caption = '0,449722222'
           ParentColor = False
         end
@@ -3498,8 +3504,14 @@ object Frm_Spori: TFrm_Spori
         Top = 232
         Width = 256
         Caption = 'Winkel'
-        ClientHeight = 123
-        ClientWidth = 252
+        ClientHeight = 101
+        ClientWidth = 203
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 1
         object Lb_Lat1: TLabel
           Left = 13
@@ -3566,8 +3578,14 @@ object Frm_Spori: TFrm_Spori
         Top = 24
         Width = 233
         Caption = 'Missweisung'
-        ClientHeight = 171
-        ClientWidth = 229
+        ClientHeight = 140
+        ClientWidth = 184
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 2
         object Lb_MngMswg_: TLabel
           Left = 16
@@ -3624,8 +3642,14 @@ object Frm_Spori: TFrm_Spori
         Top = 232
         Width = 233
         Caption = 'Berechnet'
-        ClientHeight = 123
-        ClientWidth = 229
+        ClientHeight = 101
+        ClientWidth = 184
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 3
         object Lb_Az_1: TLabel
           Left = 16

@@ -1,7 +1,14 @@
 unit utils;
 
-{$mode objfpc}{$H+}
-{$WARN 5057 off : Local variable "$1" does not seem to be initialized}
+{$UnDef FPC}
+
+{$IFDef FPC}
+  {$mode objfpc}{$H+}
+  {$WARN 5057 off : Local variable "$1" does not seem to be initialized}
+{$EndIf}
+
+{$H+}
+
 interface
 
 uses
@@ -53,14 +60,24 @@ procedure JulianDateToDateAndTime(jd1, jd2: Real; var date, time: Real);
 
     while (time > 1.0) do
       begin
+        {$IfDef FPC}
         time -= 1.0;
         date += 1.0;
+        {$Else}
+        time := time - 1.0;
+        date := date + 1.0;
+        {$EndIf}
       end;
 
     while (time < 0.0) do
       begin
+        {$IfDef FPC}
         time += 1.0;
         date -= 1.0;
+        {$Else}
+        time := time + 1.0;
+        date := date - 1.0;
+        {$EndIf}
       end;
   end;
 

@@ -1,6 +1,6 @@
 unit GetHotkey;
 
-{Copyright (C) <2018> <FireInstallations> <kettnerl@hu-berlin.de>
+{Copyright (C) <2018> <FireInstallations> <kettnerl [at] hu-berlin.de>
 
    This programm is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published by
