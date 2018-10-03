@@ -1,41 +1,41 @@
 unit iausofa;
 
-{$mode objfpc}{$H+}
+{$mode objfpc}{$H+}  //Automatic generated Compiler swiches, NOT PART OF THE ORGINAL SOFA!
 
-{$WARN 5057 off : Local variable "$1" does not seem to be initialized}
+{Copyright note:
+  The Orginal files, found at http://www.iausofa.org was translated by FireInstallations
+  (kettnerl [at] hu-berlin.de) to a pascal version of the International Astronomical Union's
+  Software Collection. The orginal Software is owned by the IAU SOFA Board ("SOFA") and
+  under license (see note at end of file).
+  However, this pascal version IS NOT PART OF THE ORGINAL Software Collection and was NOT
+  provided by the IAU SOFA Board, it is based on these files.
+}
 
-{
- Can do:
- - Set Result at the rhight place, so we don't need exit this often
- - set Array length containing constances better
- - Put all function in its own file, like in the orginal
- - Rething about accessing the arrays
- - Translate the Testfile
- - Del unsused "Return" (lokal) Values
- ToDo:
-  - Compaire the translated functions with the orgnial ones
-  --> Write everything that chanced down
-  - Wirte an Email to Sofa
- Done: Ported to pascal v v v
+{Changes: Ported to pascal v v v
  - just 1 unit for all functions / procedures
  - removed void retuns
- - defined new Typs
+ - defined new Typs to ge access to arrays without using pointers
  - used pascal friendly "var" instad of pointers
- - used Real instad of double
- - chaned to pascal opparators
+ - used Real instad of double (Since FPC use the rhigt length by its own)
+ - changed to pascal opparators
  - Just 1 Copyrigth notice at the end
- - changed brackets
- - removed (in pascal) unnessesary conversions of datatyps
+ - changed brackets to pascal equivalitations
+ - removed (in FPC) unnessesary conversions of datatyps
  - hardcoded Arraylength when constand
- - div instad of "/" by integer division
+ - div instad of "/" for integer division
  - removed (in pascal) unnessesary brakets
- - removed makros
+ - Changed makros to functions
  - renamed doubled variables (case don't matter in pascal)
- - changed integer to boolean if this wase there only use
- - chaned non returned variavles on function headers to constantses
+ - changed integer to boolean if this was there only use
+ - changed non returned variavles on function headers to constantses
  - put type deffinitions of Records at its own place, it's not mixed up with the const deffinitions anymore
  - Rename local variables if they have the same name as a pascal const or function or reserved word (like pi)
-}
+ - changed Enums, containing just one item to regulare constanses
+ - Since Codeblocks use "begin" and "end" instad of breackets I decided to give them thaire own line
+ - If record definitions was mixed with Array declarations I sepperated both
+ - Removed "&", since there is no need to work wiith pointers
+ - Added "iausofa." to use the right DJM0 since pascal is not case sensitive.
+ }
 
 interface
 
@@ -531,6 +531,8 @@ procedure iauZpv(var pv: TRealMatrix2_3);
   begin
    iauZp(pv[0]);
    iauZp(pv[1]);
+
+   //Removed void return
   end;
 
 procedure iauZr(var r: TRealMatrix3_3);
@@ -565,6 +567,8 @@ procedure iauZr(var r: TRealMatrix3_3);
    r[2][0] := 0.0;
    r[2][1] := 0.0;
    r[2][2] := 0.0;
+
+   //Removed void return
   end;
 
 procedure iauXys06a(const date1, date2: Real; var x,  y, s: Real);
@@ -649,6 +653,7 @@ procedure iauXys06a(const date1, date2: Real; var x,  y, s: Real);
 { Obtain s. }
    s := iauS06(date1, date2, x, y);
 
+   //removed void return
   end;
 
 procedure iauXys00b(const date1, date2: Real; var x, y, s: Real);
@@ -732,6 +737,8 @@ procedure iauXys00b(const date1, date2: Real; var x, y, s: Real);
 
 { Obtain s. }
    s := iauS00(date1, date2, x, y);
+
+   //Removed void return
 end;
 
 procedure iauXys00a(const date1, date2: Real; var x, y, s: Real);
@@ -815,6 +822,8 @@ procedure iauXys00a(const date1, date2: Real; var x, y, s: Real);
 
 { Obtain s. }
    s := iauS00(date1, date2, x, y);
+
+   //Removed void return
   end;
 
 procedure iauXy06(const date1, date2: Real; var x, y: Real);
@@ -915,7 +924,6 @@ procedure iauXy06(const date1, date2: Real; var x, y: Real);
  }
 
 const
-
 {  Maximum power of T in the polynomials for X and Y  } //TODO!
    MAXPT = 5; // instad of enum ( MAXPT = 5 );
 
@@ -3460,11 +3468,10 @@ const
    {  Obtain the argument functions.  }
       arg := 0.0;
       for i := 0 to 13 do
-      begin
+        begin
          m := mfapl[ifreq][i];
-         if (m <> 0) then
-           arg += m * fa[i];
-      end;
+         if (m <> 0) then arg += m * fa[i];
+        end;
 
       sc[0] := sin(arg);
       sc[1] := cos(arg);
@@ -3636,8 +3643,7 @@ function  iauUtcut1(const utc1, utc2, dut1: Real; var ut11, ut12: Real): integer
    else if ( jw > 0 ) then
       js := jw;
 
-   if ( iauTaiut1(tai1, tai2, dta, ut11, ut12) <> 0) then
-     exit (-1);
+   if ( iauTaiut1(tai1, tai2, dta, ut11, ut12) <> 0) then exit (-1);
 
 {  Status.  }
    Result := js;
@@ -5115,7 +5121,7 @@ function  iauTpors(const xi, eta, a, b: Real; var a01, b01, a02, b02: Real): int
       c := rsb*eta + w;
       a02 := iauAnp(a - arctan2(xi,w));
       b02 := arctan2(s,c);
-      if (abs(rsb) < 1.0) then // Makro removed
+      if (abs(rsb) < 1.0) then // Makro removed NOT PART OF THE ORGINAL SOFA
         Result := 1
       else
         Result := 2
@@ -5174,7 +5180,7 @@ function  iauTf2d(const s: char; const ihour, imin: integer; const sec: Real; va
   begin
 
 { Compute the interval. }
-   if (s = '-') then // macro removed
+   if (s = '-') then // macro removed NOT PART OF THE ORGINAL SOFA!
      signum := -1
    else
      signum := 1;
@@ -5240,7 +5246,7 @@ function  iauTf2a(const s: char; const ihour, imin: integer; const sec: Real; va
   begin
 
 { Compute the interval. }
-   if (s = '-') then // macro removed
+   if (s = '-') then // macro removed NOT PART OF THE ORGINAL SOFA
      signum := -1
    else
      signum := 1;
@@ -5400,7 +5406,7 @@ function  iauTdbtcb(const tdb1, tdb2: Real; var tcb1, tcb2: Real): integer;
    t77tf: Real = TTMTAI/DAYSEC;
 
 { TDB (days) at TAI 1977 Jan 1.0 }
-   ftdb0: Real = TDB0/DAYSEC;  //Renamed becourse Case dont matter in pascal
+   ftdb0: Real = TDB0/DAYSEC;  //Renamed becourse Case don't matter in pascal
 
 { TDB to TCB rate }
    elbb: Real = ELB/(1.0-ELB);
@@ -5559,7 +5565,7 @@ function  iauTcbtdb(const tcb1, tcb2: Real; var tdb1, tdb2: Real): integer;
    t77tf: Real = TTMTAI/DAYSEC;
 
 { TDB (days) at TAI 1977 Jan 1.0 }
-     ftdb0: Real = TDB0/DAYSEC;  //Renamed becourse Case dont matter in pasca
+     ftdb0: Real = TDB0/DAYSEC;  //Renamed becourse case don't matter in pasca
 
  var
    d: Real;
@@ -6118,7 +6124,7 @@ const
    if (i >= IMAX) then iwarn += 4;
 
 { Replace observed radial velocity with inertial value. }
-  if (betsr <> 0.0) then  //Makro removed
+  if (betsr <> 0.0) then  //Makro removed NOT PART OF THE ORGINAL SOFA
     w := d + del / betsr
   else
     w := 1.0;
@@ -8251,7 +8257,7 @@ procedure iauRefco(const phpa, tc, rh, wl: Real; var refa, refb: Real);
    tk := t + 273.15;
    if optic then
    begin
-      wlsq := w * w;  //sqr
+      wlsq := w * w;
       gamma := ( ( 77.53484e-6 +
                  ( 4.39108e-7 + 3.666e-9/wlsq ) / wlsq ) * p
                     - 11.2684e-6*pw ) / tk;
@@ -8260,7 +8266,7 @@ procedure iauRefco(const phpa, tc, rh, wl: Real; var refa, refb: Real);
 
 {  Formula for beta from Stone, with empirical adjustments.  }
    beta := 4.4474e-6 * tk;
-   if ( not optic ) then beta -= 0.0074 * pw * beta;  //new line
+   if ( not optic ) then beta -= 0.0074 * pw * beta;
 
 {  Refraction constants from Green.  }
    refa := gamma * ( 1.0 - beta );
@@ -8699,7 +8705,7 @@ function  iauPvstar(var pv: TRealMatrix2_3; var ra, dec, pmr, pmd, px, rv: Real)
    del := - w / (sqrt(1.0-w) + 1.0);
 
 {  Apply relativistic correction factor to radial velocity component.  }
-   if (betr <> 0) then  //Macro Removed, THIS IS NOT PART OF THE ORGINAL SOFA! There it was defined as Macro
+   if (betr <> 0) then  //Macro Removed, THIS IS NOT PART OF THE ORGINAL SOFA!
      w := (betr - del) / (betr * d)
    else
      w := 1.0;
@@ -9383,8 +9389,8 @@ begin
 
 { Construct the matrix. }
    iauIr(rpom);
-   iauRz(sp, rpom); //ungeprüft
-   iauRy(-xp, rpom); //ungeprüft
+   iauRz(sp, rpom);
+   iauRy(-xp, rpom);
    iauRx(-yp, rpom);
 
   end;
@@ -10578,7 +10584,7 @@ procedure iauPmpx(const rc, dc, pr, pd, px, rv, pmt: Real; const pob: TRealVEkto
    cr := cos(rc);
    sd := sin(dc);
    cd := cos(dc);
-   x := cr*cd; // Had to put x,y,z in thair own lines
+   x := cr*cd; // Had to put x,y,z into thair own lines
    y := sr*cd;
    z := sd;
 
@@ -10909,7 +10915,7 @@ function  iauPm(const p: TRealVektor3): Real;
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
 }
   begin
-   Result := sqrt( p[0]*p[0] + p[1]*p[1] + p[2]*p[2] );    //sqr
+   Result := sqrt( p[0]*p[0] + p[1]*p[1] + p[2]*p[2] );
   end;
 
 function  iauPlan94(const date1, date2: Real; np: integer; var pv: TRealMatrix2_3): integer;
@@ -11328,7 +11334,7 @@ function  iauPlan94(const date1, date2: Real; np: integer; var pv: TRealMatrix2_
          dl += t * (cl[np][k] * cos(argl) +
                     sl[np][k] * sin(argl)) * 1e-7;
       end;
-      dl := fmod(dl, D2Pi); // is that right?
+      dl := fmod(dl, D2Pi);
 
    {  Iterative soln. of Kepler's equation to get eccentric anomaly.  }
       am := dl - dp;
@@ -11687,7 +11693,7 @@ function  iauPas(const al, ap, bl, bp: Real): Real;
    y := sin(dl) * cos(bp);
    x := sin(bp) * cos(ap) - cos(bp) * sin(ap) * cos(dl);
 
-   if ((x <> 0.0) or (y <> 0.0)) then // Macro remoed; THIS IF CONDITION WAS NOT PART OF THE ORGINAL SOFA
+   if ((x <> 0.0) or (y <> 0.0)) then // Macro remoed; NOT PART OF THE ORGINAL SOFA
      pa := arctan2(y, x)
    else
      pa := 0.0;
@@ -14937,7 +14943,7 @@ const
   begin
 
 {  Interval between fundamental date J2000.0 and given date (JC).  }
-   t := ((date1 - DJ00) + date2) / DJC;          //should have a look!
+   t := ((date1 - DJ00) + date2) / DJC;
 
 {  -------------------  }
 {  LUNI-SOLAR NUTATION  }
@@ -16239,7 +16245,7 @@ procedure iauLdn(const n: integer; const b: Array of iauLDBODY; const ob, sc: TR
    iauCp(sc, sn);
 
 {  Body by body.  }
-   for i := 0 to  n-1 do  // Is that right?
+   for i := 0 to  n-1 do
    begin
 
    {  Body to observer vector at epoch of observation (au).  }
@@ -16937,7 +16943,7 @@ function  iauHd2pa (const ha, dec, phi: Real): Real;
    sqsz := cp*sin(ha);
    cqsz := sin(phi)*cos(dec) - cp*sin(dec)*cos(ha);
 
-   if ( sqsz <> 0.0) or (cqsz <> 0.0 ) then   // Macro Removed;  THIS IS NOT PART OF THE ORGINAL SOFA!
+   if ( sqsz <> 0.0) or (cqsz <> 0.0 ) then   // Macro Removed; THIS IS NOT PART OF THE ORGINAL SOFA!
      Result := arctan2(sqsz,cqsz)
    else
      Result := 0.0;
@@ -17123,8 +17129,7 @@ procedure iauH2fk5(const rh, dh, drh, ddh, pxh, rvh: Real; var r5, d5, dr5, dd5,
    iauFk5hip(r5h, s5h);
 
 {  Make spin units per day instead of per year.  }
-   for i := 0 to 2 do
-     s5h[i] /= 365.25;  //put this in a new line
+   for i := 0 to 2 do s5h[i] /= 365.25;
 
 {  Orient the spin into the Hipparcos system.  }
    iauRxp(r5h, s5h, sh);
@@ -17968,7 +17973,7 @@ function  iauGd2gce (const a, f, elong, phi, height: Real; var xyz: TRealVektor3
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
   var
-   sp, cp, w, d, ac, as_, r: Real;  // Had to rename as, becourse it is a reserved word in pascal
+   sp, cp, w, d, ac, as_, r: Real;  // Had to rename "as", becourse it is a reserved word in pascal
 
   begin
 
@@ -17976,8 +17981,8 @@ function  iauGd2gce (const a, f, elong, phi, height: Real; var xyz: TRealVektor3
    sp := sin(phi);
    cp := cos(phi);
    w := 1.0 - f;
-   w := w * w;  //sqr
-   d := cp*cp + w*sp*sp;  //sqr
+   w := w * w;
+   d := cp*cp + w*sp*sp;
    if ( d <= 0.0 ) then exit(-1);
    ac := a / sqrt(d);
    as_ := w * ac;
@@ -18677,8 +18682,7 @@ var
    iauFk5hip(r5h, s5h);
 
 {  Make spin units per day instead of per year.  }
-   for i := 0 to 2 do
-     s5h[i] /= 365.25; // Put this in it's own line
+   for i := 0 to 2 do s5h[i] /= 365.25;
 
 {  Orient the FK5 position into the Hipparcos system.  }
    iauRxp(r5h, pv5[0], pvh[0]);
@@ -18934,7 +18938,7 @@ function  iauFave03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin // Removed Real a becourse it was not used
+  begin // Removed Real a becourse it was unused
 
 {  Mean longitude of Venus (IERS Conventions 2003).  }
    Result := fmod(3.176146697 + 1021.3285546211 * t,  D2Pi);
@@ -18983,7 +18987,7 @@ function  iauFaur03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin //Removed Real a, becourse it was not used
+  begin //Removed Real a, becourse it was unused
 
 {  Mean longitude of Uranus (IERS Conventions 2003).  }
    Result := fmod(5.481293872 + 7.4781598567 * t,  D2Pi);
@@ -19035,7 +19039,7 @@ function  iauFasa03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin //Removed Real a, becourse it was not used
+  begin //Removed Real a, becourse it was unused
 
 {  Mean longitude of Saturn (IERS Conventions 2003).  }
    Result := fmod(0.874016757 + 21.3299104960 * t,  D2Pi);
@@ -19088,7 +19092,7 @@ function  iauFapa03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin  //Removed Real a, becourse it was not used
+  begin  //Removed Real a, becourse it was unused
 
 {  General accumulated precession in longitude.  }
    Result := (0.024381750 + 0.00000538691 * t) * t;
@@ -19137,7 +19141,7 @@ function  iauFaom03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin  //Removed Real a, becourse it was not used
+  begin  //Removed Real a, becourse it was unused
 
 {  Mean longitude of the Moon's ascending node  }
 {  (IERS Conventions 2003).                     }
@@ -19191,7 +19195,7 @@ function  iauFane03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin //Removed Real a, becourse it was not used
+  begin //Removed Real a, becourse it was unused
 
 {  Mean longitude of Neptune (IERS Conventions 2003).  }
    Result := fmod(5.311886287 + 3.8133035638 * t,  D2Pi);
@@ -19243,7 +19247,7 @@ function  iauFame03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin //Removed Real a, becourse it was not used
+  begin //Removed Real a, becourse it was unused
 
 {  Mean longitude of Mercury (IERS Conventions 2003).  }
    Result := fmod(4.402608842 + 2608.7903141574 * t, 2* Pi);
@@ -19344,7 +19348,7 @@ function  iauFalp03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin //Removed Real a, becourse it was not used
+  begin //Removed Real a, becourse it was unused
 
 {  Mean anomaly of the Sun (IERS Conventions 2003).  }
    Result := fmod(         1287104.793048 +
@@ -19398,7 +19402,7 @@ function  iauFal03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin //Removed Real a, becourse it was not used
+  begin //Removed Real a, becourse it was unused
 
 {  Mean anomaly of the Moon (IERS Conventions 2003).  }
    Result := fmod(           485868.249036  +
@@ -19453,7 +19457,7 @@ function  iauFaju03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin //Removed Real a, becourse it was not used
+  begin //Removed Real a, becourse it was unused
 
 {  Mean longitude of Jupiter (IERS Conventions 2003).  }
    Result := fmod(0.599546497 + 52.9690962641 * t,   D2Pi);
@@ -19503,7 +19507,7 @@ function  iauFaf03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin //Removed Real a, becourse it was not used
+  begin //Removed Real a, becourse it was unused
 
 {  Mean longitude of the Moon minus that of the ascending node  }
 {  (IERS Conventions 2003).                                     }
@@ -19560,7 +19564,7 @@ function  iauFae03(const t: Real): Real;
 **
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
  }
-  begin  //Removed Real a, becourse it was not used
+  begin  //Removed Real a, becourse it was unused
 
 {  Mean longitude of Earth (IERS Conventions 2003).  }
    Result := fmod(1.753470314 + 628.3075849991 * t,   D2Pi);
@@ -22248,7 +22252,7 @@ function  iauEpv00(const date1, date2: Real;var pvh, pvb: TRealMatrix2_3): integ
 
 
 {  Numbers of terms for each component of the model, in x,y,z sets  }
-   ne0: Array [0..2] of integer = ( (sizeof (e0x) div sizeof (double) div 3), // can be simplified
+   ne0: Array [0..2] of integer = ( (sizeof (e0x) div sizeof (double) div 3),
                               (sizeof (e0y) div sizeof (double) div 3),
                               (sizeof (e0z) div sizeof (double) div 3) );
    ne1: Array [0..2] of integer = ( (sizeof (e1x) div sizeof (double) div 3),
@@ -22287,7 +22291,7 @@ function  iauEpv00(const date1, date2: Real;var pvh, pvb: TRealMatrix2_3): integ
 { -------------------------------------------------------------------- }
   begin
    ce0[0] := e0x; // initalize the arrays
-   ce0[1] := e0y;
+   ce0[1] := e0y; //NOT PART OF THE ORGINAL SOFA!
    ce0[2] := e0z;
    ce1[0] := e1x;
    ce1[1] := e1y;
@@ -23921,7 +23925,7 @@ procedure iauD2tf(const ndp: integer; const days: Real; var sign: Char; var ihms
    if (ndp < 0) then
    begin
       nrs := 1;
-      for n := 1 to ndp do // is this right?
+      for n := 1 to ndp do
         if ((n = 2) or (n = 4)) then // Macro removed;  THIS IS NOT PART OF THE ORGINAL SOFA
           nrs *=  6
         else
@@ -25361,7 +25365,7 @@ function  iauDtdb(const date1, date2, ut, elong, u, v: Real): Real;
 
 {  T**4  }
    w4 := 0;
-   for j := 786 downto 784 do  // Should have a look over this
+   for j := 786 downto 784 do
       w4 += fairhd[j][0] * sin(fairhd[j][1] * t + fairhd[j][2]);
 
 {  Multiply by powers of T and combine.  }
@@ -25758,7 +25762,7 @@ function  iauCal2jd(const iy, im, id: integer; var djm0, djm: Real): integer;
 
 {  If February in a leap year, 1, otherwise 0.  }
    if ((im = 2) and not ((iy mod 4) <> 0 ) and (((iy mod 100) <> 0) or not ((iy mod 400) <> 0))) then // Had to change this, in pascal boolean and integer are not the same. THIS IS NOT PART OF THE ORGINAL SOFA!
-     ly := 1 // After all I should have a look at this if function
+     ly := 1
    else
     ly := 0;
 
@@ -31330,7 +31334,7 @@ function  iauAf2a(const s: char; const ideg, iamin: integer; const asec: Real; v
 **  Copyright (C) 2018 IAU SOFA Board.  See notes at end.
 }
   var
-    signum : integer; // new Integer so we dont have to wirte down the  Macro dobble THIS IS NOT PART OF THE ORGINAL SOFA!
+    signum : integer; // new Integer so we dont have to wirte down the  Macro double THIS IS NOT PART OF THE ORGINAL SOFA!
   begin
 
 {  Compute the interval.  }

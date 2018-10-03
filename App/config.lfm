@@ -1,7 +1,7 @@
 object Frm_Config: TFrm_Config
-  Left = 0
+  Left = 16
   Height = 580
-  Top = 364
+  Top = 395
   Width = 960
   AlphaBlendValue = 250
   Caption = 'Einstellungen'
@@ -2498,36 +2498,36 @@ object Frm_Config: TFrm_Config
   OnCreate = FormCreate
   Position = poMainFormCenter
   SessionProperties = 'Height;Left;Top;Width;WindowState;ImgMn.ItemIndex'
-  ShowInTaskBar = stNever
   LCLVersion = '1.8.5.0'
   object PgCont_Pnl: TPageControl
-    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Control = ImgMn
+    AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Pnl_ueber
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 150
+    Left = 200
     Height = 508
     Top = 72
-    Width = 810
+    Width = 760
     TabStop = False
     ActivePage = TbSht_Loc
     Anchors = [akTop, akLeft, akRight, akBottom]
-    BorderSpacing.Left = 150
     Font.Color = clWhite
     Font.Height = -18
     ParentBiDiMode = False
     ParentFont = False
+    ShowTabs = False
     TabIndex = 1
     TabOrder = 1
     TabPosition = tpLeft
-    Options = [nboShowCloseButtons, nboHidePageListPopup, nboShowAddTabButton]
+    Options = [nboHidePageListPopup, nboKeyboardTabSwitch]
     object TbSht_Alg: TTabSheet
       Caption = 'A'
       ClientHeight = 506
-      ClientWidth = 768
+      ClientWidth = 758
       object Sw_PortableMode: TECSwitch
         AnchorSideLeft.Control = Lbl_PortableMode
         AnchorSideTop.Control = Lbl_PortableMode
@@ -3370,14 +3370,14 @@ object Frm_Config: TFrm_Config
     object TbSht_Loc: TTabSheet
       Caption = 'D'
       ClientHeight = 506
-      ClientWidth = 768
+      ClientWidth = 758
       object FlSpEd_Lat: TFloatSpinEdit
         AnchorSideLeft.Control = Lbl_Lat
         AnchorSideTop.Control = Lbl_Lat
         AnchorSideTop.Side = asrBottom
         Left = 73
         Height = 32
-        Top = 178
+        Top = 179
         Width = 160
         BorderSpacing.Left = 13
         BorderSpacing.Top = 15
@@ -3398,7 +3398,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrBottom
         Left = 60
         Height = 26
-        Top = 137
+        Top = 138
         Width = 77
         BorderSpacing.Top = 20
         Caption = 'Lattitude'
@@ -3410,7 +3410,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrBottom
         Left = 60
         Height = 26
-        Top = 230
+        Top = 231
         Width = 86
         BorderSpacing.Top = 20
         Caption = 'Londitude'
@@ -3422,7 +3422,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrBottom
         Left = 73
         Height = 32
-        Top = 271
+        Top = 272
         Width = 160
         BorderSpacing.Left = 13
         BorderSpacing.Top = 15
@@ -3446,7 +3446,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 146
         Height = 16
-        Top = 137
+        Top = 138
         Width = 16
         AutoSize = True
         BorderSpacing.Left = 9
@@ -3565,7 +3565,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 155
         Height = 16
-        Top = 230
+        Top = 231
         Width = 16
         AutoSize = True
         BorderSpacing.Left = 9
@@ -3692,18 +3692,21 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Control = Lbl_Ort
         AnchorSideTop.Side = asrBottom
         Left = 73
-        Height = 31
+        Height = 32
         Top = 86
         Width = 160
         AutoComplete = True
         AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+        AutoDropDown = True
         AutoSize = False
         BorderSpacing.Left = 13
         BorderSpacing.Top = 15
-        Constraints.MinHeight = 31
+        Constraints.MinHeight = 32
         Font.Color = clBlack
         Font.Height = -18
-        ItemHeight = 25
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ItemHeight = 0
         ItemIndex = 101
         Items.Strings = (
           'Aachen'
@@ -3811,10 +3814,7 @@ object Frm_Config: TFrm_Config
           'Zwickau'
         )
         OnEditingDone = CbBx_OrtEditingDone
-        ParentColor = True
         ParentFont = False
-        ReadOnly = True
-        Style = csOwnerDrawFixed
         TabOrder = 2
         Text = 'Zeuthen'
       end
@@ -3943,11 +3943,10 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrBottom
         Left = 73
         Height = 32
-        Top = 363
+        Top = 364
         Width = 160
         BorderSpacing.Left = 13
         BorderSpacing.Top = 14
-        DecimalPlaces = 3
         Font.Color = clBlack
         Font.Height = -18
         Increment = 1
@@ -3967,7 +3966,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 114
         Height = 16
-        Top = 323
+        Top = 324
         Width = 16
         AutoSize = True
         BorderSpacing.Left = 9
@@ -4083,7 +4082,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrBottom
         Left = 60
         Height = 26
-        Top = 323
+        Top = 324
         Width = 45
         BorderSpacing.Top = 20
         Caption = 'Höhe'
@@ -4093,13 +4092,13 @@ object Frm_Config: TFrm_Config
     object TbSht_Up: TTabSheet
       Caption = 'U'
       ClientHeight = 506
-      ClientWidth = 768
+      ClientWidth = 758
       object CBx_Rate: TComboBox
         AnchorSideLeft.Control = Img_Auto
         AnchorSideTop.Control = Lbl_Plan
         AnchorSideTop.Side = asrBottom
         Left = 73
-        Height = 42
+        Height = 35
         Top = 288
         Width = 191
         BorderSpacing.Top = 14
@@ -4128,7 +4127,7 @@ object Frm_Config: TFrm_Config
         Left = 60
         Height = 26
         Top = 45
-        Width = 658
+        Width = 648
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 60
         BorderSpacing.Top = 45
@@ -4144,7 +4143,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 277
         Height = 26
-        Top = 296
+        Top = 292
         Width = 27
         BorderSpacing.Left = 13
         Caption = 'am'
@@ -4191,7 +4190,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrCenter
         Left = 473
         Height = 26
-        Top = 296
+        Top = 292
         Width = 28
         BorderSpacing.Left = 13
         Caption = 'um'
@@ -4206,7 +4205,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 60
         Height = 33
-        Top = 438
+        Top = 431
         Width = 230
         BorderSpacing.Top = 20
         BorderSpacing.Bottom = 18
@@ -4312,7 +4311,7 @@ object Frm_Config: TFrm_Config
         Left = 117
         Height = 26
         Top = 85
-        Width = 601
+        Width = 591
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 19
         BorderSpacing.Right = 50
@@ -4426,7 +4425,7 @@ object Frm_Config: TFrm_Config
         Left = 117
         Height = 26
         Top = 163
-        Width = 601
+        Width = 591
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 19
         BorderSpacing.Right = 50
@@ -4444,7 +4443,7 @@ object Frm_Config: TFrm_Config
         Left = 117
         Height = 23
         Top = 204
-        Width = 601
+        Width = 591
         Anchors = [akTop, akLeft, akRight]
         AutoSize = False
         BorderSpacing.Left = 19
@@ -4476,7 +4475,7 @@ object Frm_Config: TFrm_Config
         AnchorSideRight.Side = asrBottom
         Left = 60
         Height = 26
-        Top = 350
+        Top = 343
         Width = 243
         BorderSpacing.Top = 20
         Caption = 'Falls Versäumt wiederholen?'
@@ -4492,7 +4491,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 312
         Height = 16
-        Top = 350
+        Top = 343
         Width = 16
         AutoSize = True
         BorderSpacing.Left = 9
@@ -4608,7 +4607,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrBottom
         Left = 73
         Height = 28
-        Top = 390
+        Top = 383
         Width = 66
         BevelOuter = bvSpace
         BevelWidth = 0
@@ -4645,7 +4644,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrCenter
         Left = 148
         Height = 26
-        Top = 391
+        Top = 384
         Width = 26
         BorderSpacing.Left = 9
         Caption = 'Ein'
@@ -4693,7 +4692,7 @@ object Frm_Config: TFrm_Config
     object TbSht_Con: TTabSheet
       Caption = 'C'
       ClientHeight = 506
-      ClientWidth = 768
+      ClientWidth = 758
       Font.Color = clWhite
       Font.Height = -18
       ParentFont = False
@@ -4808,57 +4807,6 @@ object Frm_Config: TFrm_Config
         Flat = True
         Wrap = True
       end
-      object Img_ComCon: TImage
-        AnchorSideLeft.Control = TbSht_Con
-        AnchorSideTop.Control = TbSht_Con
-        Left = 60
-        Height = 23
-        Top = 45
-        Width = 23
-        AutoSize = True
-        BorderSpacing.Left = 60
-        BorderSpacing.Top = 45
-        Picture.Data = {
-          1754506F727461626C654E6574776F726B477261706869637004000089504E47
-          0D0A1A0A0000000D4948445200000017000000170806000000E02AD4A0000000
-          06624B474400FF00FF00FFA0BDA793000000097048597300000B1300000B1301
-          009A9C180000000774494D4507E20319021B3106856D22000003FD4944415448
-          C78D954F4C5C5514C67FF7CD3080AD41EAA2FE8B31366D133BF3180630A42674
-          2145C5853110A805669E861435AC3571EFA68B2626C518B53A33504485362ED0
-          A4A19898084919A69D792F292D65A52EDA4468D28136CCCC3B2EBC0F1F13A83D
-          ABFBF73BE79EFB9DEF287C164E86712CC71BEF010E005D403B7018D80BDC036E
-          00B3C08FC08A63391B95F701143B5838193E017C00B4F1FFF61BF0B96339DF57
-          6E287FD44000F812E80742DB0FAA65A5D4AA88D40B72A8026713F80E18044A5E
-          F441DF5302C0B7C080BE5052A88C52EA743E91BF5819959932DF16918F0469D6
-          8124F4D620500A27C3DB223F07BCA7A7050363286FE5C7BDFDE6B16632FD199A
-          479BC90C64B69C44929193827C053CA697CE399633B895169DE3948EA0A0508D
-          B665DFD297B12DFBA1490F27C30714CA11A4062801966339E79566C5CFFAF34A
-          0646226FE5C71F05D46F9164A45B90099DDE39E07543D3AD0D402995F152F130
-          E0C6742300D1743466A6CC4F006AAB6B2F2AD4BC3E72143864681E7B8C38EDA5
-          62376B483770357E95583AF64CC92DCDBAE27E1A494646AEBC73A58CE2ACEF68
-          A701BCEACD3C561886F11F58AAC1CF1072F11C66CA8C14DDE22DA00E4090A3B1
-          746CCF70CBF00F3EF03643571E0AB5AC9F4A2E9EA371B4F17034157D3297C801
-          104BC7C827F2982933E68A7B49905A0D72A12658D3968D67D7875E1A1285FA53
-          AF1F3480C775BE5701AEC5AF114D475B8BE5E25259CA9F455351A321D540369E
-          A529DDF4A22BEEEFC0531A603614082532FD997BD174143F0E506F68AD40907A
-          8096D196274A6EE917BDD65796F2485D555DD04C992F6FBA9B4B408D7EE9AFD5
-          55D56F6407B20580B2940110917D1A7CCDD02284C8BF25BD30B07037A0029DC0
-          7DEDE0FDB5CDB51957DC0B825469E0F3A160E8CDC5BEC54D33650260276C7A2E
-          F70404794E832F1BC0657F4903E412B9F9800A1C03D6B58363C0B3FAD8A55030
-          34582C17EF6B126CFDE0D21F4BDD7E413380496F26221F7BE35C22B7A0944A00
-          1B3EAA4E9F693AF3DA62FFE2033F28C0F1C9E3868B3BEC5B9A3680152D9B08D2
-          144945FABC5D3B614F19CA784B7FD43746D0E8EA88746CA3A75713B7D76F7703
-          AD7A790EB8E9694B2F9006420AB50198B665AF7800B1D1D8F34529AEDA71BBB0
-          4BE9BF00DC1024A4B525E158CEB85F15939E6C2AD40314F1FDB5FBA7667A665C
-          7F75BAAEBB250DED53EDC69DC29D2E1119D3C00049C772DE05509E9E8793E120
-          F0B54F97CB0A358FE2EC91A78F4C4E744C943D27BD3FF506AEDFBDDE2D22C382
-          B402410F1838E5584EB152CFD187BED00E82159DE82FA5D4DF22B2CF4737CF4A
-          C018700A287A9D68B71E7A12F81078E511D4760E18712C677CD71EBA43F7DFAB
-          75A7534BF241A01E58039635C3A6819B8EE51476EAFEFF0084E5ACC38A6BAC25
-          0000000049454E44AE426082
-        }
-        Visible = False
-      end
       object PgsB_ComCon: TProgressBar
         AnchorSideLeft.Control = TbSht_Con
         AnchorSideTop.Control = Lbl_ComMsg
@@ -4875,7 +4823,7 @@ object Frm_Config: TFrm_Config
         TabOrder = 3
         Visible = False
       end
-      object Img_ComInfo: TImage
+      object Img_Conf_ComState: TImage
         AnchorSideLeft.Control = TbSht_Con
         AnchorSideTop.Control = TbSht_Con
         Left = 60
@@ -4883,42 +4831,6 @@ object Frm_Config: TFrm_Config
         Top = 45
         Width = 23
         AutoSize = True
-        BorderSpacing.Left = 60
-        BorderSpacing.Top = 45
-        Picture.Data = {
-          1754506F727461626C654E6574776F726B47726170686963C402000089504E47
-          0D0A1A0A0000000D4948445200000017000000170806000000E02AD4A0000000
-          06624B474400FF00FF00FFA0BDA793000000097048597300000B1300000B1301
-          009A9C180000000774494D4507E20319031539971FA2A9000002514944415448
-          C7BDD5C16B55471406F0DF5CF22AD6174885ECBA0808CDAA60B4E86D95422288
-          DB0ABA295D445759F917D445FE82AE7421A60B759342DC28E842C185782D14B2
-          4DA8287569AB697D20E4A1D3CDB9E9E492680AEA079799B973BEC33933E77C93
-          14C80DA9DE98F7F1054EE31826318A9758C11D2C6235D5065D3E245B20377EC0
-          1CBEF66E3CC0C554BBD2DD4865D4E8E1E788B657D80D701F6B18C311F48BFD61
-          64318B611BFD48914A0FD7702A08AF700BF3A9B6BC457653F81127B01BDFE393
-          188711EC86F1D5DCC8F13DCE8D998EB3A3B9F1536E7CDBF93F13F62DF7EAA663
-          8933BE1CD13FC1A1547B561CD75EDCC657F80DC7F1BCB8FC71FC8A090C2567D3
-          6157AAA88AB970FC0A6753ED599B563858C79F7813E37AE158047226F83DCCE5
-          87FA29370E4434703DD54E6E539A9F630ACBA9F6749B2A5BC277B13C584565B4
-          982F8E42AAC98D5E6EECC10BDCC55FB95175FBA3E4074E57D1203048B5E56E23
-          E01CFE89726CBF2F37D573BD91E572ECC3B12A3A4FD4F156B8846FF028D62FF0
-          FA2D4DD5FA99ACA2A5458374A3966A7FE38F68946D51F0D6621CAD422B44E7D9
-          54FCFF03056F2CC69755889068E9F781D6CF4A15EA06FDDCD8DF5ECE4EB228ED
-          82B7BFD09C3B55084E8BF3E5F9056157DC4B5574753F373E2DED4A7E60B1C26A
-          C8269CC88DE94ED467700FFB62FD199670A113FD7488582BC3AB23A936C88D8B
-          A11BBBB1909BFFB44532903DC5EF455423785E64378E85E00F43DF076F53C5E9
-          1D56C9B6AA5815E9CFE297984FE0666E2C856E6FE5742AB4E446D80BFEECC625
-          7FC897E8E3BCA11FE2F5FF170CA918C9711E56420000000049454E44AE426082
-        }
-        Visible = False
-      end
-      object Img_ComWarn: TImage
-        AnchorSideLeft.Control = TbSht_Con
-        AnchorSideTop.Control = TbSht_Con
-        Left = 60
-        Height = 23
-        Top = 45
-        Width = 23
         BorderSpacing.Left = 60
         BorderSpacing.Top = 45
         Picture.Data = {
@@ -5552,7 +5464,7 @@ object Frm_Config: TFrm_Config
     object TbSht_Time: TTabSheet
       Caption = 'T'
       ClientHeight = 506
-      ClientWidth = 768
+      ClientWidth = 758
       object Sw_AutoTime: TECSwitch
         AnchorSideLeft.Control = Lbl_AutoTime
         AnchorSideTop.Control = Lbl_AutoTime
@@ -6075,7 +5987,7 @@ object Frm_Config: TFrm_Config
     object TbSht_StarList: TTabSheet
       Caption = 'S'
       ClientHeight = 506
-      ClientWidth = 768
+      ClientWidth = 758
       object LbL_LoadStarList: TLabel
         AnchorSideLeft.Control = TbSht_StarList
         AnchorSideTop.Control = TbSht_StarList
@@ -6178,12 +6090,13 @@ object Frm_Config: TFrm_Config
     Top = 0
     Width = 960
     Anchors = [akTop, akLeft, akRight]
+    BevelOuter = bvNone
     Caption = '                  SpaceOrienter - Einstellungen'
     ClientHeight = 72
     ClientWidth = 960
     Color = clNavy
     Font.Color = clWhite
-    Font.Height = -28
+    Font.Height = -30
     Font.Name = '@Adobe Gothic Std B'
     Font.Quality = fqCleartypeNatural
     FullRepaint = False
@@ -6194,11 +6107,14 @@ object Frm_Config: TFrm_Config
       AnchorSideLeft.Control = Pnl_ueber
       AnchorSideTop.Control = Pnl_ueber
       AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Lbl_ZHS
+      AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrCenter
-      Left = 26
+      Left = 25
       Height = 40
       Top = 16
-      Width = 158
+      Width = 186
+      Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 25
       OnClick = Img_ZHS_WClick
       OnMouseDown = Img_ZHS_WMouseDown
@@ -6297,15 +6213,13 @@ object Frm_Config: TFrm_Config
       }
     end
     object Lbl_ZHS: TLabel
-      AnchorSideLeft.Control = Pnl_ueber
       AnchorSideTop.Control = Pnl_ueber
       AnchorSideTop.Side = asrCenter
-      Left = 76
+      Left = 75
       Height = 30
       Top = 21
       Width = 136
       AutoSize = False
-      BorderSpacing.Left = 75
       Caption = 'Hauptseite'
       Font.Color = 14671839
       Font.Height = 25
@@ -6325,10 +6239,10 @@ object Frm_Config: TFrm_Config
       AnchorSideRight.Side = asrCenter
       AnchorSideBottom.Control = Pnl_ueber
       AnchorSideBottom.Side = asrBottom
-      Left = 298
+      Left = 301
       Height = 79
-      Top = -8
-      Width = 364
+      Top = -7
+      Width = 358
       Anchors = [akLeft, akRight, akBottom]
       Picture.Data = {
         1754506F727461626C654E6574776F726B47726170686963AF15000089504E47
@@ -6658,11 +6572,14 @@ object Frm_Config: TFrm_Config
       AnchorSideLeft.Control = Pnl_ueber
       AnchorSideTop.Control = Pnl_ueber
       AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Lbl_ZHS
+      AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 26
+      Left = 25
       Height = 40
       Top = 16
-      Width = 188
+      Width = 186
+      Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 25
       OnClick = Img_ZHS_WClick
       OnMouseDown = Img_ZHS_WMouseDown
@@ -6764,6 +6681,7 @@ object Frm_Config: TFrm_Config
         9031994C2366B3F9B8288A5D82407A57AEBCB3ABBFFF0C6D6CAC438AA25C5186
         7E98FE3F39BBB040CAF6AB390000000049454E44AE426082
       }
+      Transparent = True
       Visible = False
     end
   end
@@ -6776,7 +6694,7 @@ object Frm_Config: TFrm_Config
     Left = 0
     Height = 508
     Top = 72
-    Width = 192
+    Width = 200
     Anchors = [akTop, akLeft, akBottom]
     CaptionAlign = -1
     CaptionFontOptions.FontColor = clActiveCaption
@@ -6819,7 +6737,7 @@ object Frm_Config: TFrm_Config
     OnSelectionChange = ImgMnSelectionChange
     ParentBidiMode = False
     ParentFont = False
-    ScrollWidth = 190
+    ScrollWidth = 198
     TabOrder = 0
   end
   object ImgLst_Mn: TImageList

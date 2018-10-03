@@ -70,9 +70,7 @@ type
     TE_Time: TDateTimePicker;
     FlSpEd_Lat: TFloatSpinEdit;
     FlSpEd_Lon: TFloatSpinEdit;
-    Img_ComCon: TImage;
-    Img_ComWarn: TImage;
-    Img_ComInfo: TImage;
+    Img_Conf_ComState: TImage;
     Img_Info_Redo: TImage;
     Img_CkB_DSOff: TImage;
     ImgMn: TECImageMenu;
@@ -205,7 +203,7 @@ var
 implementation
 
 uses
-  spaceorienter_main;
+  spaceorienter_main, SpOri_Main;
 
 {$R *.lfm}
 
@@ -1067,15 +1065,22 @@ procedure TFrm_Config.Bt_ConClick(Sender: TObject);
 
 procedure TFrm_Config.CbBx_OrtEditingDone(Sender: TObject);
   var
+    PlaceName: String;
     TempKoord: TKoord;
   begin
-    TempKoord        := Koordinaten (CbBx_Ort.Caption);
+    PlaceName        := CbBx_Ort.Caption;
+    TempKoord        := Koordinaten (PlaceName);
+
     FlSpEd_Lat.Value := TempKoord.Lat;
     FlSpEd_Lon.Value := TempKoord.Lon;
 
-    Frm_Spori.Options[ON_Place] := CbBx_Ort.Caption;
-    Frm_Spori.Options[ON_Lon]   := FloatToStr(TempKoord.Lon);
-    Frm_Spori.Options[ON_Lat]   := FloatToStr(TempKoord.Lat);
+    Frm_Spori.Options[ON_Place] := PlaceName;
+    Frm_Spori.Options[ON_Lon]   := FloatToStrF(TempKoord.Lon, ffFixed, 3, 4);
+    Frm_Spori.Options[ON_Lat]   := FloatToStrF(TempKoord.Lat, ffFixed, 3, 4);
+
+
+    PlaceName := AnsiUpperCase(String(PlaceName[1])) + copy(PlaceName, 2, pred(Length(PlaceName)));
+    Frm_Main.Lbl_Place_Name.Caption     := PlaceName;
    end;
 
 procedure TFrm_Config.CBx_RateEditingDone(Sender: TObject);
@@ -1190,9 +1195,12 @@ procedure TFrm_Config.Img_ZHS_WClick(Sender: TObject);
 procedure TFrm_Config.Img_ZHS_WMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
   begin
-    Img_ZHS_W.Visible  := false;
-    Img_ZHS_G.Visible  := true;
-    Lbl_ZHS.Font.Color := $a5a5a5;
+    if (Button = mbLeft) then
+      begin
+        Img_ZHS_W.Visible  := false;
+        Img_ZHS_G.Visible  := true;
+        Lbl_ZHS.Font.Color := $a5a5a5;
+      end;
   end;
 
 procedure TFrm_Config.Img_ZHS_WMouseUp(Sender: TObject; Button: TMouseButton;

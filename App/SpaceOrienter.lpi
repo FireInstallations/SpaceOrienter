@@ -92,7 +92,7 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="63">
+    <Units Count="64">
       <Unit0>
         <Filename Value="SpaceOrienter.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -354,9 +354,18 @@
         <Filename Value="gethotkey.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Frm_GetHotKey"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="GetHotkey"/>
       </Unit62>
+      <Unit63>
+        <Filename Value="spori_main.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Frm_Main"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="SpOri_Main"/>
+      </Unit63>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -341,25 +341,21 @@ interface
     TODO 02 -oFireInstall -cFunc : Sternbildsuche - Liste}
 
   uses
-    Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs,
-    Menus, StrUtils, StdCtrls, ComCtrls, ActnList, ExtCtrls, PopupNotifier,
-    EditBtn, Buttons, math, Types,  DateUtils,
-    Config, PlanEph, Utils, synaser, typinfo, LCLType
+    Classes, SysUtils, FileUtil, Forms, Controls, Graphics, LCLType,
+    Dialogs, Menus, StrUtils, StdCtrls, ComCtrls, ActnList, ExtCtrls,
+    PopupNotifier, EditBtn, Buttons, math, Types, DateUtils, typinfo,
+    PlanEph, Utils, synaser, Config, SpOri_Main
    {$IfDEF Windows}
      //, windows, ShellApi;
     ;
-   {$ELSE IFDEF UNIX}
+   {$ELSE}
     , clocale, process
      //,unix,baseunix
      //,lclintf
     ;
   {$ENDIF}
 
-var
-  Frm_Spori: TFrm_Spori;
-  DiffD:TDate;
-  DiffT:TTime;
-  Sternbild:Array of TListItem;
+  type
 
     {Warning: EVERY new option must be listed here! }
     TOptionNames = (
@@ -395,6 +391,7 @@ var
         Bt_LoList: TButton;
         Bt_Pilot_StrLst: TButton;
         BT_Opt_Temp: TButton;
+        BT_Main_Temp: TButton;
         CB_HK: TComboBox;
         CB_StrMode: TComboBox;
         CB_StB: TComboBox;
@@ -552,6 +549,7 @@ var
         TbS_Ephi: TTabSheet;
         {if this Button was clicked, data wil be sended to the arduino (SendData will be called),
         like Bt_PilotClick (below) but located on the Starlist tab.}
+        procedure BT_Main_TempClick(Sender: TObject);
         procedure Bt_Pilot_StrLstClick(Sender: TObject);
         {if this Button was clicked, data wil be sended to the arduino (SendData will be called)}
         procedure Bt_PilotClick(Sender: TObject);
@@ -608,15 +606,15 @@ var
         procedure MI_Sicht_ExpClick(Sender: TObject);
         {calculation Timer, Heart of SpaceOrienter,
          where Star, ehem location calculating is called}
-        procedure Tmr_BerechTimer(Sender: TObject);
+        procedure Tmr_Calc_All(Sender: TObject);
         {Read incomming data from the ArduIno}
         procedure Tmr_GetDataTimer(Sender: TObject);
         {Follow moving bodys}
-        procedure Tmr_NachTimer(Sender: TObject);
+        procedure Tmr_Follow(Sender: TObject);
       private
         {Compaires two strings and compute the sameness in percent
         The boolean  does that what it's name say: it determine if StrCompaire is casesensitive}
-        function  StrCompaire(str1, str2: string; const CaseSensitive: Boolean = true): Real;
+        function  StrCompaire(str1, str2: Unicodestring; const CaseSensitive: Boolean = true): Real;
         {Find the Optionsname in a Sting, if there is none then nothig is returned}
         function  FindOptionName (const Line:String):String; 
         {Find the optionsvalue, if there is none then nothig is returned}
@@ -725,10 +723,10 @@ implementation
 
   { Frm_Spori }
 
-function  TFrm_Spori.StrCompaire (str1, str2: string; const CaseSensitive: Boolean = true): Real;  //Done?
+function  TFrm_Spori.StrCompaire (str1, str2: Unicodestring; const CaseSensitive: Boolean = true): Real;  //Done?
   type
     TCharList = Record
-      Chara: Char;
+      Chara: UniCodeChar;
       Count: Integer;
      end;
 
@@ -749,8 +747,8 @@ function TFrm_Spori.Gleiche (str1, str2: string): Real;  inline; //Fertig?
 
     if not CaseSensitive  then
       begin
-       Str1 := AnsiLowercase(Str1);
-       Str2 := AnsiLowerCase(Str2);
+       Str1 := UnicodeLowerCase(Str1);
+       Str2 := UnicodeLowerCase(Str2);
       end;
 
 
@@ -946,20 +944,29 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
     Port: String;
     Baud: integer;
   begin
-
     //to make sure everything was loaded
-    if not OptionsLoaded then
+    if OptionsLoaded then
       begin
         //Tell the User, we are trying to connect
-        with Frm_Config do
-            begin
-              Lbl_ComMsg.Caption  := 'Verbinde...';
-              PgsB_ComCon.Visible := true;
-              Img_ComCon.Visible  := false;
-              Img_ComInfo.Visible := true;
-              Img_ComWarn.Visible := false;
-              Lbl_Ardo.Visible    := false;
-            end;
+        with Frm_Config, Frm_Main do
+          begin
+            ImgLst_UsedPics.GetBitmap(1, Img_Conf_ComState.Picture.Bitmap);
+            Lbl_ComMsg.Caption  := 'Verbinde...';
+
+            PgsB_ComCon.Visible := true;
+            Lbl_Ardo.Visible    := false;
+          end;
+
+        with Frm_Main do
+          begin
+            ImgLst_UsedPics.GetBitmap(1, Img_ComState.Picture.Bitmap);
+            Lbl_ComState.Caption := 'Verbinde...';
+
+            PrgrssBr_ComPCon.Visible := true;
+            Lbl_ArdoType.Visible     := false;
+          end;
+
+        //give the forms time to update
         Application.ProcessMessages;
 
         //Close Connection if there is one
@@ -995,7 +1002,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
                     break;
                   end
                 else
-                  //It didn't worked, next try
+                  //It didn't worked, try next
                   ser.CloseSocket;
               end;
           end
@@ -1008,42 +1015,59 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
             Delay(500);
           end;
 
+        //Set Result to the connections state
         Result := ser.InstanceActive;
 
-        with Frm_Config do
-          if Result then
-            begin
-              //Tell the user we are connected
-              Lbl_ComMsg.Caption  := 'Verbnden mit: ';
-              PgsB_ComCon.Visible := false;
-              Img_ComCon.Visible  := true;
-              Img_ComInfo.Visible := false;
-              Img_ComWarn.Visible := false;
-              Lbl_Ardo.Visible    := true;
-              Lbl_Ardo.Caption     := 'Arduino Leonardo'; //Defaultvalue
+        with Frm_Config, Frm_Main do
+          begin
+            if Result then
+              begin
+                //Tell the user we are connected
+                ImgLst_UsedPics.GetBitmap(0, Img_Conf_ComState.Picture.Bitmap);
+                Lbl_ComMsg.Caption  := 'Verbnden mit: ';
+                Lbl_Ardo.Caption    := 'Arduino Leonardo'; //Defaultvalue
+              end
+            else  //Tell the user we are not connected
+              begin
+                ImgLst_UsedPics.GetBitmap(2, Img_Conf_ComState.Picture.Bitmap);
+                Lbl_ComMsg.Caption    := 'Nicht Verbunden';
+              end;
 
-              Tmr_GetData.Enabled := true; //Read Data
-            end
-          else
-            begin
-              //Tell the user we are not connected
-              Lbl_ComMsg.Caption  := 'Nicht Verbunden';
-              PgsB_ComCon.Visible := false;
-              Img_ComCon.Visible  := false;
-              Img_ComInfo.Visible := false;
-              Img_ComWarn.Visible := true;
-              Lbl_Ardo.Visible    := false;
-              ser.CloseSocket;
+            Lbl_Ardo.Visible    := Result;
+            PgsB_ComCon.Visible := false;
+          end;
 
-              Tmr_GetData.Enabled := false; //Don't read Data
-            end;
-        Application.ProcessMessages;
+         with Frm_Main do
+          begin
+            if Result then
+              begin
+                ImgLst_UsedPics.GetBitmap(0, Img_ComState.Picture.Bitmap);
+                Lbl_ComState.Caption   := 'Verbnden mit: ';
+                Lbl_ArdoType.Caption := 'Arduino Leonardo'; //Defaultvalue
+              end
+            else
+              begin
+                ImgLst_UsedPics.GetBitmap(2, Img_ComState.Picture.Bitmap);
+                Lbl_ComState.Caption   := 'Nicht Verbunden';
+              end;
+
+            Lbl_ArdoType.Visible     := Result;
+            PrgrssBr_ComPCon.Visible := false;
+          end;
+
+         //give the forms time to update
+         Application.ProcessMessages;
+
+        //Read upcoming data from ArduIno, if connected
+        Tmr_GetData.Enabled := Result;
+
+          if not Result then
+            ser.CloseSocket;
       end;
   end;
 
 procedure TFrm_Spori.SendData (); //Done?
   begin
-
     //If a Connection is active and stable elevation and azimuth to the ArduIno.
     if ser.InstanceActive and ser.CanWrite(200) then
         ser.SendString(StringReplace((Ed_Ele_Soll.Text + ';' + Ed_Azi_Soll.Text), ',', '.', [rfReplaceAll]));
@@ -1064,7 +1088,7 @@ function  TFrm_Spori.IsConstellation (): Boolean; //Can be optimized
     // if the choosen Constellation is a valid Constellation and can be found in the starlist
     if (CB_StB.Items.IndexOf(Constellation) >= 0) then
       for i := 0 to LV_List.Items.Count-1 do
-        if (Constellation = AnsilowerCase(LV_List.Items[i].SubItems[2])) then
+        if (Constellation = AnsiLowerCase(LV_List.Items[i].SubItems[2])) then
             exit(true);
 
    end;
@@ -1538,7 +1562,8 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         else
                           ErrorMessage := 'Fehler in Longitude Ladevorgang: Falscher DatenTyp';
 
-                        Frm_Config.CbBx_Ort.Caption := 'Keine';
+                        Frm_Config.CbBx_Ort.Caption := 'Unbekannt';
+                        Frm_Main.Lbl_Place_Name.Caption := '-';
                       end
                     else
                       begin
@@ -1553,6 +1578,11 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         Lb_Lat_G1.Caption           := FloatToStr(Temp_Koord.Lat);
 
                         Frm_Config.CbBx_Ort.Caption := Options[j];
+
+                        //Make the first letter UpperCase
+                        TempStr := AnsiUpperCase(String(Options[j][1])) +
+                          Copy(Options[j], 2, pred(Length(Options[j])));
+                        Frm_Main.Lbl_Place_Name.Caption := TempStr;
                         //Inc(j);
                         //Inc(j);
                       end;
@@ -1692,6 +1722,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                     if TryStrToInt (Options[j], i) then
                       begin
                         Ed_Nr.Text := Options[j];
+                        Frm_Main.Lbl_Bdy_Nr.Caption := Options[j];
                        end
                      else
                       ErrorMessage := 'Fehler in HimmelsKörper-Ladevorgang: Falscher DatenTyp';
@@ -1930,17 +1961,17 @@ procedure TFrm_Spori.DefaultList ();  //ToDo: put this into it's own File
       List.Add('84;Sadalsuud;Sadalsuud;Wassermann;Tierkreis;322;53,5;-5;-34,3;');
       List.Add('85;Eta Piscium;Eta Piscium;Fische;Tierkreis;22;52,3;15;20,8;');
       List.Add('86;Achird;Achird;Kassiopeia;Dollystern;347;45,0;57;49,0;*');
-      List.Add('87;Merkur;-;-;Ephemeride;-;-;-;-;');
-      List.Add('88;Venus;-;-;Ephemeride;-;-;-;-;');
-      List.Add('89;Erde;-;-;Ephemeride;-;-;-;-;');
-      List.Add('90;Mars;-;-;Ephemeride;-;-;-;-;');
-      List.Add('91;Jupiter;-;-;Ephemeride;-;-;-;-;');
-      List.Add('92;Saturn;-;-;Ephemeride;-;-;-;-;');
-      List.Add('93;Uranus;-;-;Ephemeride;-;-;-;-;');
-      List.Add('94;Neptun;-;-;Ephemeride;-;-;-;-;');
-      List.Add('95;Pluto;-;-;Ephemeride;-;-;-;-;');
-      List.Add('96;Mond;-;-;Ephemeride;-;-;-;-;');
-      List.Add('97;Sonne;-;-;Ephemeride;-;-;-;-;');
+      List.Add('87;Merkur;Mercurius;-;Ephemeride;-;-;-;-;');
+      List.Add('88;Venus;Venus;-;Ephemeride;-;-;-;-;');
+      List.Add('89;Erde;Terra;-;Ephemeride;-;-;-;-;');
+      List.Add('90;Mars;Mars;-;Ephemeride;-;-;-;-;'); //macht mobiel
+      List.Add('91;Jupiter;Jupiter;-;Ephemeride;-;-;-;-;');
+      List.Add('92;Saturn;Saturnus;-;Ephemeride;-;-;-;-;');
+      List.Add('93;Uranus;Uranus;-;Ephemeride;-;-;-;-;');
+      List.Add('94;Neptun;Neptunus;-;Ephemeride;-;-;-;-;');
+      List.Add('95;Pluto;Pluto;-;Ephemeride;-;-;-;-;');
+      List.Add('96;Mond;Luna;-;Ephemeride;-;-;-;-;');
+      List.Add('97;Sonne;Sol;-;Ephemeride;-;-;-;-;');
 
 
       if FileExists(DefaultListPath) then  //remove old ones
@@ -2119,9 +2150,18 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
     CB_HK.caption  := Item.SubItems[0];
     CB_StB.caption := Item.SubItems[2];
     Ed_Egstn.Text  := Item.SubItems[3];
+    with Frm_Main do
+      begin
+        Lbl_Bdy_Nr.caption        := Item.Caption;
+        Lbl_Bdy_Name.caption      := Item.SubItems[0];
+        Lbl_Bdy_NameLat.caption   := Item.SubItems[1];
+        Lbl_BdyPrpty_Val1.caption := Item.SubItems[2];
+        Lbl_BdyPrpty_Val2.caption := Item.SubItems[3];
+      end;
 
-    if not (Ansilowercase(Item.SubItems[0]) = 'ruheposition') and  //Try to tell Star calculate page where to find the star
-       not (Ansilowercase(Item.SubItems[3]) = 'ephemeride' ) then
+
+    if not (AnsiLowerCase(Item.SubItems[0]) = 'ruheposition') and  //Try to tell Star calculate page where to find the star
+       not (AnsiLowerCase(Item.SubItems[3]) = 'ephemeride' ) then
       begin
         if TryStrToFloat (Item.SubItems[4], TestFloat) then
           Lb_Rtzn_Grd.Caption := Item.SubItems[4]
@@ -2148,7 +2188,7 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
             exit;
       end
      else
-      if (Ansilowercase(Item.SubItems[0]) = 'ruheposition') then //if it's not a star but the restposition set lon and lat to 89.
+      if (AnsiLowerCase(Item.SubItems[0]) = 'ruheposition') then //if it's not a star but the restposition set lon and lat to 89.
         begin
           Ed_Ele_Soll.Text := '89';
           Ed_Azi_Soll.Text := '89';
@@ -2293,69 +2333,76 @@ procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
     Lb_Az_N.Caption := FloatToStrF(Az_N, ffFixed, 4, 13);
 
     Lb_El.caption := FloatToStrF(Ele, ffFixed, 4, 11);
-    if not (Frm_Config.Sw_ManW.Checked) and not (Ansilowercase(CB_HK.caption) = 'ruheposition') then
+    if not (Frm_Config.Sw_ManW.Checked) and not (AnsiLowerCase(CB_HK.caption) = 'ruheposition') then
       Ed_Ele_Soll.text := FloatToStrF(Ele, ffFixed, 4, 13);
 
     Lb_Az.caption:=FloatToStrF(Azimut, ffFixed, 4, 11);
-    if not (Frm_Config.Sw_ManW.Checked) and not (Ansilowercase(CB_HK.caption) = 'ruheposition') then
+    if not (Frm_Config.Sw_ManW.Checked) and not (AnsiLowerCase(CB_HK.caption) = 'ruheposition') then
       Ed_Azi_Soll.text:=FloatToStrF(Azimut, ffFixed, 4, 13);
 
-    Ed_Mswg.Text:='-';
   end;
 
-    procedure TFrm_Spori.CalculateEphemerisLoc ();  //Bugfix
-      var
-         Lon, Lat, TZ, xp, yp, dut1, hm, tc, pm, rh, wl: Real;
-         ra, rb: Double;
-         Body: Integer;
-         Uebertrag: String;
+procedure TFrm_Spori.CalculateEphemerisLoc (); //ToDo: Comments; clean up
+  var
+     Lon, Lat, TZ, xp, yp, dut1, hm, tc, pm, rh, wl: Real;
+     ra, rb: Double;
+     Body: Integer;
+     Uebertrag: String;
 
-         UTC1, UTC2: Real;
-         Hour, Minute, Second, Milli: Word;
-         year, month, day: Word;
-      begin
-        TZ := GetLocalTimeOffset() div -60;
-
-        Lon := Frm_Config.FlSpEd_Lon.Value; // Positive eastward
-        Lat := Frm_Config.FlSpEd_Lat.Value; // Positive northward
-
-        // better 50?
-        hm := 100; // hight (meters) Used with topocentric frames to apply diurnal aberration.
-
-        Tz  := GetLocalTimeOffset() div -60; //Difference beteween system time and UTC
-
-        xp     := 0.20937;    // The x offset of the terrestrial pole. Used to apply polar motion. From www.iers.org bulletin service
-        yp     := 0.34715;    // The y offset From www.iers.org bulletin service
-        dut1   := 0.055836;   // Difference between UTC and UT1. It can only be obtained by a bulletin service From www.iers.org bulletin service
-
-        tc  := 20.0;        // Temperature (celcius)
-        pm  := 1000.0;      // Pressure (milibars)
-        rh  := 0.5;         // Relative Humidity (percent [fractional])
-        wl  := 0.55;        // Wavelength (micrometers)
-        RefractionAB(pm, tc, rh, wl, ra, rb); //How athmosphare doese change the observation
-
-procedure TFrm_Spori.MI_ConnectClick(Sender: TObject);  //ToDo
+     UTC1, UTC2: Real;
   begin
+    TZ := GetLocalTimeOffset() div -60;
 
-        UTC1 := StrToFloat(Lb_UTC1_Val.Caption);
-        UTC2 := StrToFloat(Lb_UTC2_Val.Caption);
+    Lon := Frm_Config.FlSpEd_Lon.Value; // Positive eastward
+    Lat := Frm_Config.FlSpEd_Lat.Value; // Positive northward
 
-        Uebertrag := FloatToStrF(Ephem(0, FR_ICRS, Body, GV_ELEVATION, AD_LIGHTTIME,
-                   UTC1,  UTC2, Lon, Lat, TZ, xp, yp, dut1, 0, ra, rb), ffFixed, 4, 13);
+    // better 50?
+    hm := 100; // hight (meters) Used with topocentric frames to apply diurnal aberration.
 
-procedure TFrm_Spori.MI_Hilf_FehClick(Sender: TObject);  //toDo
-  begin
+    Tz  := GetLocalTimeOffset() div -60; //Difference beteween system time and UTC
 
-        Uebertrag := FloatToStrF(Ephem(0, FR_ICRS, Body, GV_AZIMUTH, AD_LIGHTTIME,
-                   UTC1,  UTC2, Lon, Lat, TZ, xp, yp, dut1, 0, ra, rb), ffFixed, 4, 13);
+    xp     := 0.20937;    // The x offset of the terrestrial pole. Used to apply polar motion. From www.iers.org bulletin service
+    yp     := 0.34715;    // The y offset From www.iers.org bulletin service
+    dut1   := 0.055836;   // Difference between UTC and UT1. It can only be obtained by a bulletin service From www.iers.org bulletin service
 
-procedure TFrm_Spori.MI_SuchClick(Sender: TObject); //Wenn nicht Last error
-  begin
-    FndD.FindText:=CB_HK.Text;
-    FndD.Execute;
+    tc  := 20.0;        // Temperature (celcius)
+    pm  := 1000.0;      // Pressure (milibars)
+    rh  := 0.5;         // Relative Humidity (percent [fractional])
+    wl  := 0.55;        // Wavelength (micrometers)
+    RefractionAB(pm, tc, rh, wl, ra, rb); //How athmosphare doese change the observation
+
+    Case Trim(AnsiLowerCase(CB_HK.Caption)) of
+      'merkur':  Body := BN_MERCURY;
+      'venus':   Body := BN_VENUS;
+      'erde':    Body := BN_EARTH ;
+      'mars':    Body := BN_MARS;
+      'jupiter': Body := BN_JUPITER;
+      'saturn':  Body := BN_SATURN;
+      'uranus':  Body := BN_URANUS;
+      'neptun':  Body := BN_NEPTUNE;
+      'pluto':   Body := BN_PLUTO;
+      'mond':    Body := BN_MOON;
+      'sonne':   Body := BN_SUN;
+     else
+                 Body := BN_EARTH;  //Error
+     end;
+
+    UTC1 := StrToFloat(Lb_UTC1_Val.Caption);
+    UTC2 := StrToFloat(Lb_UTC2_Val.Caption);
+
+    Uebertrag := FloatToStrF(Ephem(0, FR_ICRS, Body, GV_ELEVATION, AD_LIGHTTIME,
+               UTC1,  UTC2, Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb), ffFixed, 4, 13);
+
+    Lb_El1.Caption  := Uebertrag;
+    Ed_Ele_Soll.Text:= Uebertrag;
+
+    Uebertrag := FloatToStrF(Ephem(0, FR_ICRS, Body, GV_AZIMUTH, AD_LIGHTTIME,
+               UTC1,  UTC2, Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb), ffFixed, 4, 13);
+
+    Lb_Az1.Caption  := Uebertrag;
+    Ed_Azi_Soll.Text:= Uebertrag;
+
    end;
-
-       end;
 
 procedure TFrm_Spori.searchStarList (SerchFor: String); //Done
   var
@@ -2384,7 +2431,7 @@ procedure TFrm_Spori.searchStarList (SerchFor: String); //Done
     else
       for i := 0 to LV_List.Items.Count-1 do
         for j := 0 to Lv_List.Items[i].SubItems.Count-1 do
-          if (StrCompaire (SerchFor, AnsilowerCase(LV_List.Items[i].SubItems[j])) >= 60) then
+          if (StrCompaire (SerchFor, AnsiLowerCase(LV_List.Items[i].SubItems[j])) >= 60) then
             begin
               LV_List.Selected := LV_List.Items[i];
               PgC_Haupt.TabIndex := 1;
@@ -2403,6 +2450,7 @@ procedure TFrm_Spori.Ed_NrEditingDone (Sender: TObject); //Done
 
     if TryStrToInt(Ed_Nr.Text, Void) then
     {$ENDIF Window}
+
       ProgressNumber (); //We got a new body, tell it erverbody else
   end;
 
@@ -2463,7 +2511,9 @@ procedure TFrm_Spori.FormCreate (Sender: TObject); //Done?
     PressedKeys := [];
     HotKey      := [];
 
+    //Make sure these two Forms are already created when LoadOptions was called
     Application.CreateForm(TFrm_Config, Frm_Config);
+    Application.CreateForm(TFrm_Main, Frm_Main);
 
     //Tell LoadOptions to try to load from portable  file if it exits
     if FileExists(GetCurrentDir + PathDelim + 'Options.Space') then
@@ -2760,71 +2810,68 @@ procedure TFrm_Spori.MI_Sicht_ExpClick (Sender: TObject); //ToDo: Comments
     ProgressExpertMode ();
    end;
 
-    procedure TFrm_Spori.Tmr_BerechTimer (Sender: TObject);   //ToDo: comments; Lb_Gmt = UTC!
-      var
-         TZ: integer;
-         TempMagnVariation: String;
-         Jahr, Monat, Tage, Stunden, Minuten, Sekunden, Millisek:Word;
-      begin
-        if Frm_Config.Sw_AutoTime.Checked then
-          begin
-            Lb_Zeit.Caption := DateTimeToStr(Now);
-            Lb_MEZ.Caption  := DateTimeToStr(Now);
+procedure TFrm_Spori.Tmr_Calc_All (Sender: TObject);   //ToDo: comments; Lb_Gmt = UTC!
+  var
+     TimeToUse: TDateTime;
+     TZ: integer;
 
-            DecodeTime(now, Stunden, Minuten, Sekunden, Millisek);
-            DecodeDate(now, Jahr, Monat, Tage);
-           end
-         else
-          begin
-            Lb_Zeit.Caption := DateTimeToStr(Now + DiffD+DiffT);
-            Lb_MEZ.Caption  := DateTimeToStr(Now + DiffD+DiffT);
-
-procedure TFrm_Spori.Bt_BebListClick(Sender: TObject);  //ToDO
+     TempMagDvtn: Real;
+     Year, Month, Day, Hour, Minute, Second, MilliSecond: Word; //Millisec is unused
   begin
+    if Frm_Config.Sw_AutoTime.Checked then
+      TimeToUse := now
+    else
+      TimeToUse := now + DiffD + DiffT;
 
-            if not NoEntry then
-              begin
-                Frm_Config.TE_Time.Time := (Time + DiffT);
-                Frm_Config.DE_Day.Date  := (Date + DiffD);
-                Options[ON_Date] := DateToStr(Frm_Config.DE_Day.Date);
-                Options[ON_Time] := TimeToStr(Frm_Config.TE_Time.Time);
-               end;
-           end;
+    Frm_Main.Lbl_Date.Caption := DateToStr(TimeToUse);
+    Frm_Main.Lbl_Time.Caption := TimeToStr(TimeToUse);
+    Lb_Zeit.Caption := DateTimeToStr(TimeToUse);
+    Lb_MEZ.Caption  := DateTimeToStr(TimeToUse);
 
-        Lb_Sek.Caption  := IntToStr(Sekunden);
-        Lb_Min.Caption  := IntToStr(Minuten);
-        Lb_Hour.Caption := IntToStr(Stunden);
-        Lb_Day.Caption  := IntToStr(Tage);
-        Lb_Mon.Caption  := IntToStr(Monat);
-        Lb_Jhr.Caption  := IntToStr(Jahr);
+    DecodeTime(TimeToUse, Hour, Minute, Second, MilliSecond);
+    DecodeDate(TimeToUse, Year, Month, Day);
 
-        TZ              := GetLocalTimeOffset() div -60;
-        Lb_Gmt.Caption  := DateTimeToStr(StrToDateTime(Lb_MEZ.Caption)- TZ /24);
-
-        LB_OtZ.Caption  := DateTimeToStr(StrToDateTime(Lb_Gmt.Caption) + StrToFloat(Lb_Lat_G.Caption)/360);
-
-        ProgressFirstPointOfAries();
-
-        Lb_UTC1_Val.Caption := FloatToStr(Julian(Jahr, Monat, Tage, 0, 0, 0));
-
-        Lb_UTC2_val.Caption := FloatToStrF(
-                               (Stunden + Minuten/60 + Sekunden/3600)/24,
-                               ffFixed,4,13);
-
-        TempMagnVariation := FloatToStrF(
-                           wmmGeomag(1, StrToInt(Lb_Jhr.caption), Monat, Tage,
-                             Frm_Config.FlSpEd_Lon.Value, Frm_Config.FlSpEd_Lat.Value, 0),
-                           ffFixed, 4, 14);
-
-        Lb_Mswg1.Caption:= TempMagnVariation;
-        Ed_Mswg.Text    := TempMagnVariation;
-
-
-        if (Ansilowercase(Ed_Egstn.Text) = 'ephemeride') then  
-          CalculateEphemerisLoc ()
-        else 
-          CalculateStarLoc () ;
+    if not NoEntry then
+      begin
+        Frm_Config.TE_Time.Time := (Time + DiffT);
+        Frm_Config.DE_Day.Date  := (Date + DiffD);
+        Options[ON_Date] := DateToStr(Frm_Config.DE_Day.Date);
+        Options[ON_Time] := TimeToStr(Frm_Config.TE_Time.Time);
        end;
+
+    Lb_Sek.Caption  := IntToStr(Second);
+    Lb_Min.Caption  := IntToStr(Minute);
+    Lb_Hour.Caption := IntToStr(Hour);
+    Lb_Day.Caption  := IntToStr(Day);
+    Lb_Mon.Caption  := IntToStr(Month);
+    Lb_Jhr.Caption  := IntToStr(Year);
+
+    TZ              := GetLocalTimeOffset() div -60;
+    Lb_Gmt.Caption  := DateTimeToStr(StrToDateTime(Lb_MEZ.Caption)- TZ /24);
+
+    LB_OtZ.Caption  := DateTimeToStr(StrToDateTime(Lb_Gmt.Caption) + StrToFloat(Lb_Lat_G.Caption)/360);
+
+    ProgressFirstPointOfAries();
+
+    Lb_UTC1_Val.Caption := FloatToStr(Julian(Year, Month, Day, 0, 0, 0));
+
+    Lb_UTC2_val.Caption := FloatToStrF(
+                           (Hour + Minute/60 + Second/3600)/24,
+                           ffFixed, 4, 13);
+
+    TempMagDvtn :=  wmmGeomag(1, StrToInt(Lb_Jhr.caption), Month, Day,
+                    Frm_Config.FlSpEd_Lon.Value, Frm_Config.FlSpEd_Lat.Value, 0);
+
+    Lb_Mswg1.Caption:= FloatToStrF(TempMagDvtn, ffFixed, 3, 14);
+    Ed_Mswg.Text    := FloatToStrF(TempMagDvtn, ffFixed, 3, 14);
+    Frm_Main.Lbl_MagDvtn_Val.Caption := FloatToStrF(TempMagDvtn, ffFixed, 3, 4);
+
+
+    if (AnsiLowerCase(Ed_Egstn.Text) = 'ephemeride') then
+      CalculateEphemerisLoc ()
+    else
+      CalculateStarLoc () ;
+   end;
 
 procedure TFrm_Spori.Tmr_GetDataTimer (Sender: TObject); //ToDo: Comments
   var
@@ -2863,7 +2910,7 @@ procedure TFrm_Spori.Tmr_GetDataTimer (Sender: TObject); //ToDo: Comments
 
   end;
 
-procedure TFrm_Spori.Tmr_NachTimer (Sender: TObject); //ToDo: the collection doesn't work (course there is never a case where 2 Starmodes are active) --> add a new mode
+procedure TFrm_Spori.Tmr_Follow (Sender: TObject); //ToDo: the collection doesn't work (course there is never a case where 2 Starmodes are active) --> add a new mode
   var
      EleNow, EleCalk: Real;
      AziNow, AziCalk: Real;
@@ -2881,7 +2928,7 @@ procedure TFrm_Spori.Tmr_NachTimer (Sender: TObject); //ToDo: the collection doe
 
         //Find all stars in the given collection
         for Index := 0 to LV_List.Items.Count-1 do
-          if AnsilowerCase(Trim(CB_StB.Text)) = AnsilowerCase(LV_List.Items[Index].SubItems[2]) then
+          if AnsiLowerCase(Trim(CB_StB.Text)) = AnsiLowerCase(LV_List.Items[Index].SubItems[2]) then
             begin
               setlength(Collection, length(Collection)+1);
               Collection[high(Collection)] := LV_List.Items[Index];
@@ -2919,7 +2966,7 @@ procedure TFrm_Spori.Tmr_NachTimer (Sender: TObject); //ToDo: the collection doe
         SendData ();
    end;
 
-    procedure TFrm_Spori.CB_HKEditingDone (Sender: TObject); //In function auslagern?
+    procedure TFrm_Spori.CB_HKEditingDone (Sender: TObject); //In own function?
       var
          Gefunden:Boolean;
          Index,Index2:Integer;
@@ -2938,7 +2985,7 @@ procedure TFrm_Spori.Tmr_NachTimer (Sender: TObject); //ToDo: the collection doe
             begin
               for Index2 := 0 to LV_List.Items.Count-1 do
                 begin
-                  if Uebertrag = AnsilowerCase(LV_List.Items[Index2].SubItems[0]) then
+                  if Uebertrag = AnsiLowerCase(LV_List.Items[Index2].SubItems[0]) then
                     begin
                       ProgressList (LV_List.Items[Index2]);
                       Gefunden := true;
@@ -2968,6 +3015,11 @@ procedure TFrm_Spori.Bt_Pilot_StrLstClick (Sender: TObject); //Comments
 
     SendData ();
    end;
+
+procedure TFrm_Spori.BT_Main_TempClick(Sender: TObject); //Temp
+  begin
+    Frm_Main.Show;
+  end;
 
 procedure TFrm_Spori.CB_StrModeChange (Sender: TObject); //Done
   begin
