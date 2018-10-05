@@ -72,7 +72,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     {cosmetic: set color of label and image back to white (leftklick)}
     procedure Img_Settings_WMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+      Shift: TShiftState; {%H-}X, {%H-}Y: Integer);
   private
 
   public

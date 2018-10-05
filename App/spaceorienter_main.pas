@@ -2552,13 +2552,6 @@ procedure TFrm_Spori.FormDestroy (Sender: TObject);   //Version Dynamic; Comment
      Index: Integer;
      SaveStrings, LoadStrings: TStringList;
   begin
-    if Assigned(ser) then
-     begin
-       ser.Purge;
-       ser.CloseSocket;
-       FreeAndNil(ser);
-     end;
-
     SaveStrings := TStringlist.create;
 
     if not FileExists (DefaultOptionsPath) then  //make a new clean file
@@ -2900,7 +2893,7 @@ procedure TFrm_Spori.Tmr_GetDataTimer (Sender: TObject); //ToDo: Comments
         Ed_Ele_Ist.Text := StrOut;
 
       BeginPos := succ(Endpos);
-      Endpos := PosEx(';', StrIn, succ(Endpos));
+      Endpos := PosEx(';', StrIn, BeginPos);
       StrOut := Copy(StrIn, BeginPos, Endpos-BeginPos);
 
       if TryStrToFloat(StrOut, TestFloat) then
@@ -2909,7 +2902,7 @@ procedure TFrm_Spori.Tmr_GetDataTimer (Sender: TObject); //ToDo: Comments
       end;
 
   end;
-
+    //longitude!
 procedure TFrm_Spori.Tmr_Follow (Sender: TObject); //ToDo: the collection doesn't work (course there is never a case where 2 Starmodes are active) --> add a new mode
   var
      EleNow, EleCalk: Real;
@@ -3038,5 +3031,22 @@ procedure TFrm_Spori.CB_StrModeChange (Sender: TObject); //Done
          else
           ProgressNumber ();
        end;
+
+//Does exist just for compa
+initialization
+
+finalization
+
+  begin  //No Matter what, we have to clean Up!
+    if Assigned(ser) then
+     begin
+       ser.Purge;
+       ser.CloseSocket;
+       FreeAndNil(ser);
+     end;
+
+    EndPlanetEphem();
+  end;
+
 
     end.

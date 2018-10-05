@@ -2990,7 +2990,7 @@ function  jplEph(const deSOL: integer; const ET1, ET2: Real; const NTARG, NCENT,
     Result := plResult[NVAL-1];
   end;
 
-function ephObliquity(const Version, Frame: integer; tt1, tt2: Real): Real;
+function  ephObliquity(const Version, Frame: integer; tt1, tt2: Real): Real;
   var
     obl,dpsi,deps: Real;
   begin
@@ -4351,7 +4351,7 @@ function  BodyLightTime(const Version, Body: integer; const topo: boolean; const
     Result := t;
   end;
 
-function AstrometricLightTime(const Version, Body: integer; const topo: boolean; const tdb1, tdb2, Lon, Lat, hm, xp, yp, sp, era: Real): Real;
+function  AstrometricLightTime(const Version, Body: integer; const topo: boolean; const tdb1, tdb2, Lon, Lat, hm, xp, yp, sp, era: Real): Real;
   var
     tm: TRealMatrix3_3;
     obpv, epvh, epvb: TRealMatrix2_3;

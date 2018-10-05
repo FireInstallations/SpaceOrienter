@@ -1331,7 +1331,7 @@ procedure TFrm_Config.Sw_ManWChange(Sender: TObject);
   begin
     IsActive := Sw_ManW.Checked;
 
-    Sw_ManW.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+    Lbl_Sw_ManW.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
 
     Frm_Spori.Options[ON_AutoValueMode] := BoolToStr(not IsActive, 'True', 'False');
    end;
