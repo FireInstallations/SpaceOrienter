@@ -15,6 +15,10 @@ object Frm_GetHotKey: TFrm_GetHotKey
   ClientHeight = 156
   ClientWidth = 292
   Color = 2818816
+  Constraints.MaxHeight = 160
+  Constraints.MaxWidth = 295
+  Constraints.MinHeight = 150
+  Constraints.MinWidth = 290
   DefaultMonitor = dmMainForm
   Icon.Data = {
     BD3501000000010001000000000001002000A73501001600000089504E470D0A
@@ -2501,6 +2505,7 @@ object Frm_GetHotKey: TFrm_GetHotKey
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   Position = poMainFormCenter
+  ShowInTaskBar = stNever
   LCLVersion = '1.8.5.0'
   object Lbl_GetHotkey: TLabel
     AnchorSideLeft.Control = Owner
@@ -2651,35 +2656,40 @@ object Frm_GetHotKey: TFrm_GetHotKey
       99DF5A3BFF0583F5BFE6564DA3BF0000000049454E44AE426082
     }
   end
-  object Bt_Ok: TButton
+  object BtBtn_Ok: TBitBtn
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 180
-    Height = 34
-    Top = 102
-    Width = 87
+    Left = 182
+    Height = 35
+    Top = 101
+    Width = 85
     Anchors = [akRight, akBottom]
     BorderSpacing.Right = 25
     BorderSpacing.Bottom = 20
-    Caption = 'Ok'
-    OnClick = Bt_OkClick
+    Color = clGreen
+    Default = True
+    DefaultCaption = True
+    Kind = bkOK
+    ModalResult = 1
+    OnClick = BtBtn_OkClick
     TabOrder = 1
   end
-  object Bt_cancel: TButton
+  object BtBtn_Cancel: TBitBtn
     AnchorSideLeft.Control = Owner
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 25
-    Height = 34
-    Top = 102
-    Width = 87
+    Height = 35
+    Top = 101
+    Width = 100
     Anchors = [akLeft, akBottom]
     BorderSpacing.Left = 25
     BorderSpacing.Bottom = 20
     Caption = 'Abbrechen'
-    OnClick = Bt_cancelClick
+    Kind = bkCancel
+    ModalResult = 2
     TabOrder = 2
   end
 end

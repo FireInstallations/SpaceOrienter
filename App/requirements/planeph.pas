@@ -221,6 +221,12 @@ const
 { Function Declarations }
 {=======================}
 
+{ Clean Up }
+{==========}
+procedure EndPlanetEphem();
+
+{ Time }
+{======}
 function nDaysMonth (const Year, Month: integer): integer; inline;
 
 { Ephemerides }
@@ -234,7 +240,7 @@ function  Passage(const Version: integer; Frame: integer; const Body, Value: int
 
 { Astrometry }
 {============}
-//procedure RefractionAB(pm, tc, rh, wl: Double; var RefA, RefB: Double); stdcall;
+//procedure RefractionAB(pm, tc, rh, wl: Double; var RefA, RefB: Double);
 
 { Calendars }
 {===========}

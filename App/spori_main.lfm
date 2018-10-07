@@ -1,12 +1,14 @@
 object Frm_Main: TFrm_Main
-  Left = 0
-  Height = 577
-  Top = 182
+  Left = 641
+  Height = 606
+  Top = 180
   Width = 966
   Caption = 'Frm_Main'
-  ClientHeight = 577
+  ClientHeight = 606
   ClientWidth = 966
   Color = 2818816
+  Constraints.MinHeight = 575
+  Constraints.MinWidth = 965
   DefaultMonitor = dmMainForm
   Icon.Data = {
     3E08010000000100010080800000010020002808010016000000280000008000
@@ -2126,6 +2128,8 @@ object Frm_Main: TFrm_Main
     0000
   }
   KeyPreview = True
+  OnKeyDown = FormKeyDown
+  OnKeyUp = FormKeyUp
   Position = poMainFormCenter
   LCLVersion = '1.8.5.0'
   object PgCtrl_Menue: TPageControl
@@ -2138,21 +2142,22 @@ object Frm_Main: TFrm_Main
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 194
-    Height = 499
+    Height = 528
     Top = 78
     Width = 772
+    TabStop = False
     ActivePage = TbSht_DashBord
     Anchors = [akTop, akLeft, akRight, akBottom]
     ShowTabs = False
     TabIndex = 0
-    TabOrder = 2
+    TabOrder = 1
     Options = [nboHidePageListPopup, nboKeyboardTabSwitch]
     object TbSht_DashBord: TTabSheet
-      AnchorSideLeft.Side = asrBottom
       Caption = 'TbSht_DashBord'
-      ClientHeight = 497
+      ClientHeight = 526
       ClientWidth = 770
       Font.Color = clWhite
+      Font.Height = 21
       ParentFont = False
       object Pnl_Status: TPanel
         AnchorSideTop.Control = TbSht_DashBord
@@ -2161,24 +2166,26 @@ object Frm_Main: TFrm_Main
         AnchorSideBottom.Control = TbSht_DashBord
         AnchorSideBottom.Side = asrBottom
         Left = 580
-        Height = 497
+        Height = 526
         Top = 0
         Width = 190
         Anchors = [akTop, akRight, akBottom]
         BevelColor = clNone
         BevelOuter = bvNone
-        ClientHeight = 497
+        ClientHeight = 526
         ClientWidth = 190
         Color = 3866624
         Font.Color = clWhite
         ParentColor = False
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 2
         object Lbl_Date: TLabel
-          Left = 16
+          AnchorSideLeft.Control = Pnl_Status
+          Left = 39
           Height = 21
           Top = 24
           Width = 108
+          BorderSpacing.Left = 39
           Caption = '01.10.2018'
           Font.Color = clWhite
           Font.Height = -17
@@ -2194,9 +2201,9 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Side = asrCenter
           AnchorSideBottom.Control = Img_ComState
           AnchorSideBottom.Side = asrCenter
-          Left = 46
+          Left = 48
           Height = 18
-          Top = 102
+          Top = 203
           Width = 104
           Anchors = [akTop, akLeft, akBottom]
           BorderSpacing.Left = 10
@@ -2207,9 +2214,9 @@ object Frm_Main: TFrm_Main
           AnchorSideLeft.Control = Img_ComState
           AnchorSideTop.Control = Img_ComState
           AnchorSideTop.Side = asrBottom
-          Left = 13
+          Left = 15
           Height = 8
-          Top = 135
+          Top = 236
           Width = 156
           BorderSpacing.Top = 12
           Smooth = True
@@ -2218,36 +2225,54 @@ object Frm_Main: TFrm_Main
           Visible = False
         end
         object Lbl_Update_Title: TLabel
-          AnchorSideTop.Control = PrgrssBr_ComPCon
-          AnchorSideTop.Side = asrBottom
-          Left = 16
+          AnchorSideLeft.Control = Img_UpStatus
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Img_UpStatus
+          AnchorSideTop.Side = asrCenter
+          Left = 53
           Height = 19
-          Top = 163
+          Top = 257
           Width = 51
-          BorderSpacing.Top = 20
+          BorderSpacing.Left = 15
           Caption = 'Update!'
           ParentColor = False
         end
         object Lbl_Place_Title: TLabel
-          Left = 16
+          AnchorSideLeft.Control = Pnl_Status
+          AnchorSideTop.Control = Img_UpStatus
+          AnchorSideTop.Side = asrBottom
+          Left = 19
           Height = 19
-          Top = 208
-          Width = 21
-          Caption = 'Ort'
+          Top = 309
+          Width = 31
+          BorderSpacing.Left = 19
+          BorderSpacing.Top = 31
+          Caption = 'Ort:'
+          Font.Color = clWhite
+          Font.Height = -16
+          Font.Name = 'Sans'
           ParentColor = False
+          ParentFont = False
         end
         object Lbl_MagDvtn_Title: TLabel
-          Left = 16
+          AnchorSideLeft.Control = Lbl_Place_Title
+          AnchorSideBottom.Control = Pnl_Status
+          AnchorSideBottom.Side = asrBottom
+          Left = 19
           Height = 19
-          Top = 408
+          Top = 464
           Width = 79
+          Anchors = [akLeft, akBottom]
+          BorderSpacing.Bottom = 43
           Caption = 'Missweisung'
           ParentColor = False
         end
         object Lbl_Time: TLabel
-          Left = 16
+          AnchorSideLeft.Control = Lbl_Date
+          AnchorSideLeft.Side = asrCenter
+          Left = 50
           Height = 21
-          Top = 52
+          Top = 48
           Width = 86
           Caption = '15:10:00'
           Font.Color = clWhite
@@ -2261,9 +2286,9 @@ object Frm_Main: TFrm_Main
           AnchorSideLeft.Control = Img_ComState
           AnchorSideTop.Control = Img_ComState
           AnchorSideTop.Side = asrBottom
-          Left = 27
+          Left = 29
           Height = 19
-          Top = 130
+          Top = 231
           Width = 116
           BorderSpacing.Left = 14
           BorderSpacing.Top = 7
@@ -2274,11 +2299,16 @@ object Frm_Main: TFrm_Main
           Visible = False
         end
         object Img_ComState: TImage
-          Left = 13
+          AnchorSideLeft.Control = Pnl_Status
+          AnchorSideTop.Control = Pnl_Line_Status
+          AnchorSideTop.Side = asrBottom
+          Left = 15
           Height = 23
-          Top = 100
+          Top = 201
           Width = 23
           AutoSize = True
+          BorderSpacing.Left = 15
+          BorderSpacing.Top = 25
           Picture.Data = {
             1754506F727461626C654E6574776F726B477261706869631D03000089504E47
             0D0A1A0A0000000D4948445200000017000000170806000000E02AD4A0000000
@@ -2311,13 +2341,12 @@ object Frm_Main: TFrm_Main
         object Lbl_MagDvtn_Val: TLabel
           AnchorSideLeft.Control = Lbl_MagDvtn_Title
           AnchorSideTop.Control = Lbl_MagDvtn_Title
-          AnchorSideTop.Side = asrBottom
-          Left = 29
+          Left = 32
           Height = 19
-          Top = 441
+          Top = 488
           Width = 28
           BorderSpacing.Left = 13
-          BorderSpacing.Top = 14
+          BorderSpacing.Top = 24
           Caption = '3.80'
           ParentColor = False
         end
@@ -2325,28 +2354,163 @@ object Frm_Main: TFrm_Main
           AnchorSideLeft.Control = Lbl_Place_Title
           AnchorSideTop.Control = Lbl_Place_Title
           AnchorSideTop.Side = asrBottom
-          Left = 29
+          Left = 32
           Height = 19
-          Top = 234
+          Top = 335
           Width = 37
           BorderSpacing.Left = 13
           BorderSpacing.Top = 7
           Caption = 'Berlin'
           ParentColor = False
         end
+        object Img_UpStatus: TImage
+          AnchorSideLeft.Control = Img_ComState
+          AnchorSideTop.Control = Img_ComState
+          AnchorSideTop.Side = asrBottom
+          Left = 15
+          Height = 23
+          Top = 255
+          Width = 23
+          AutoSize = True
+          BorderSpacing.Top = 31
+          Picture.Data = {
+            1754506F727461626C654E6574776F726B477261706869631D03000089504E47
+            0D0A1A0A0000000D4948445200000017000000170806000000E02AD4A0000000
+            06624B474400D400000000853662E6000000097048597300000B1300000B1301
+            009A9C180000000774494D4507E20319022904BD46FD70000002AA4944415448
+            C7BD95314F544110C77FBBF724DEC1A10D897636043DB7381B0AA890C4F00588
+            D1020D747C080A3E818D7412A5C0288658120D504941E315EB194243A7090D70
+            E14EB9F7762DDEECF1EE727A40E13FD9CCCBCECEECECBC99FF2832B08039FFEE
+            07868169601218018A400DD803B680F7C0BE81D34E7B00451758780ACC03E3F4
+            C61760C9C06AA74265A30622E015F004B896395743A91DA5F59177EE263086F7
+            C58CBE09BC05E68038441F659E12012BE218A081521B44D1A269362B780F4972
+            FEBA282A93240B783F05E48119096806886D47E46F44017080D6B3C6B96D00AB
+            759FE4FE16F0135833CE9D896E02E796813B62BB62E0592B2D92E3D772F3015A
+            8F1AE70E016C2E074952043E01A3C02EF08828AA9938462E18C2B95DB9A0093C
+            37B0AAA52AE6C57143223EACE6F30098F354E8CC2238AE160A18E70ED17A1668
+            889F790BFD5ACA2DAD0AA536422A4A8D061741A95E4F83706E1BA536647B1C18
+            D692CB14B9DC622B1597808DA2367BC1B4960601A89938AE7C6D4FC58560E298
+            4A2A2BD26400935A3A0F94DA01B87EE3065741DFE020593FC088969646697D04
+            70EFF8F84ACE4B272764FD00451D9E219DC7F710C1255115BBE007A8692121F0
+            7E0CE09744D005B90ED986B360E77DE0A33D0D6C8667D8282A3FE85E2D31B003
+            7C1619B7554B2E473950020CC8F6A606D65AA79264812ED5A2946A2AA53E28A5
+            5E8A6CB6554B382FF682350DEC0B6D82F75356EB0980D0A1E9B6CF7BEF5F78EF
+            3F8A6C29AB85022D8E49492CD0F0BE16A25F124EC8E3DCB2D57A287468AB41E0
+            37E044B65257AAD703B72C0B3B3685DF4FFFC58A73C6B92D806F51D487528F81
+            DBC00FBC7F773F8E7BB2621812D894DB572D785975ABD4BAFCA46E2D5FB64AAD
+            5BA8676C566D3A17B0579E4469B90DF49A44FF6786F698FE0F81BB1DD37F53CA
+            F8AFD3FF0F367E2E096F176CA30000000049454E44AE426082
+          }
+        end
+        object Lbl_AzNow_Title: TLabel
+          Left = 16
+          Height = 22
+          Top = 128
+          Width = 68
+          Caption = 'Azim. ist:'
+          Font.Color = clWhite
+          Font.Height = -15
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lbl_AzNow: TLabel
+          AnchorSideLeft.Control = Lbl_Ele_Now
+          Left = 120
+          Height = 22
+          Top = 128
+          Width = 40
+          Caption = '00.00'
+          Font.Color = clWhite
+          Font.Height = -15
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lbl_EleNow_Title: TLabel
+          Left = 15
+          Height = 22
+          Top = 96
+          Width = 71
+          Caption = 'Eleva. ist:'
+          Font.Color = clWhite
+          Font.Height = -15
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lbl_Ele_Now: TLabel
+          Left = 120
+          Height = 22
+          Top = 96
+          Width = 40
+          Caption = '00.00'
+          Font.Color = clWhite
+          Font.Height = -15
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+        end
+        object Pnl_Line_Status: TPanel
+          AnchorSideLeft.Control = Pnl_Status
+          AnchorSideTop.Control = Lbl_AzNow
+          AnchorSideTop.Side = asrBottom
+          AnchorSideRight.Control = Pnl_Status
+          AnchorSideRight.Side = asrBottom
+          Left = 15
+          Height = 1
+          Top = 175
+          Width = 160
+          Anchors = [akTop, akLeft, akRight]
+          BorderSpacing.Left = 15
+          BorderSpacing.Top = 25
+          BorderSpacing.Right = 15
+          BevelColor = clWhite
+          Caption = 'Pnl_Line_Status'
+          Color = clWhite
+          ParentColor = False
+          TabOrder = 1
+        end
+        object Lbl_AzNow_Grd: TLabel
+          AnchorSideLeft.Control = Lbl_AzNow
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Lbl_AzNow
+          AnchorSideBottom.Control = Lbl_AzNow
+          AnchorSideBottom.Side = asrBottom
+          Left = 162
+          Height = 19
+          Top = 128
+          Width = 6
+          BorderSpacing.Left = 2
+          Caption = '°'
+          ParentColor = False
+        end
+        object Lbl_EleNow_Grd: TLabel
+          AnchorSideLeft.Control = Lbl_Ele_Now
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Lbl_Ele_Now
+          Left = 162
+          Height = 19
+          Top = 96
+          Width = 6
+          BorderSpacing.Left = 2
+          Caption = '°'
+          ParentColor = False
+        end
       end
       object Lbl_Bdy_Title: TLabel
         AnchorSideLeft.Control = TbSht_DashBord
         AnchorSideTop.Control = TbSht_DashBord
-        Left = 60
-        Height = 23
-        Top = 40
-        Width = 136
-        BorderSpacing.Left = 60
-        BorderSpacing.Top = 40
+        Left = 35
+        Height = 21
+        Top = 24
+        Width = 121
+        Anchors = [akLeft]
+        BorderSpacing.Left = 35
+        BorderSpacing.Top = 25
         Caption = 'Himmelkörper'
         Font.Color = clWhite
-        Font.Height = -19
+        Font.Height = -17
         Font.Name = 'Sans'
         ParentColor = False
         ParentFont = False
@@ -2355,15 +2519,15 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Title
         AnchorSideTop.Control = Lbl_Bdy_Title
         AnchorSideTop.Side = asrBottom
-        Left = 73
-        Height = 25
-        Top = 73
-        Width = 39
+        Left = 48
+        Height = 23
+        Top = 55
+        Width = 36
         BorderSpacing.Left = 13
         BorderSpacing.Top = 10
         Caption = '206'
         Font.Color = clWhite
-        Font.Height = -21
+        Font.Height = -19
         Font.Name = 'Sans'
         ParentColor = False
         ParentFont = False
@@ -2372,14 +2536,14 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Nr
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Nr
-        Left = 127
-        Height = 25
-        Top = 73
-        Width = 65
+        Left = 99
+        Height = 23
+        Top = 55
+        Width = 60
         BorderSpacing.Left = 15
         Caption = 'Sonne'
         Font.Color = clWhite
-        Font.Height = -21
+        Font.Height = -19
         Font.Name = 'Sans'
         ParentColor = False
         ParentFont = False
@@ -2388,14 +2552,14 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Title
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Title
-        Left = 346
-        Height = 23
-        Top = 40
-        Width = 135
-        BorderSpacing.Left = 150
+        Left = 296
+        Height = 21
+        Top = 24
+        Width = 121
+        BorderSpacing.Left = 140
         Caption = 'Eigenschaften'
         Font.Color = clWhite
-        Font.Height = -19
+        Font.Height = -17
         Font.Name = 'Sans'
         ParentColor = False
         ParentFont = False
@@ -2404,15 +2568,15 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_BdyPrpty_Title
         AnchorSideTop.Control = Lbl_BdyPrpty_Title
         AnchorSideTop.Side = asrBottom
-        Left = 359
-        Height = 25
-        Top = 73
-        Width = 8
+        Left = 309
+        Height = 23
+        Top = 55
+        Width = 7
         BorderSpacing.Left = 13
         BorderSpacing.Top = 10
         Caption = '-'
         Font.Color = clWhite
-        Font.Height = -21
+        Font.Height = -19
         Font.Name = 'Sans'
         ParentColor = False
         ParentFont = False
@@ -2421,14 +2585,14 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_BdyPrpty_Val1
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_BdyPrpty_Val1
-        Left = 382
-        Height = 25
-        Top = 73
-        Width = 113
+        Left = 331
+        Height = 23
+        Top = 55
+        Width = 104
         BorderSpacing.Left = 15
         Caption = 'Ehemeride'
         Font.Color = clWhite
-        Font.Height = -21
+        Font.Height = -19
         Font.Name = 'Sans'
         ParentColor = False
         ParentFont = False
@@ -2437,14 +2601,14 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Split
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Nr
-        Left = 219
-        Height = 25
-        Top = 73
-        Width = 32
+        Left = 185
+        Height = 23
+        Top = 55
+        Width = 29
         BorderSpacing.Left = 10
         Caption = 'Sol'
         Font.Color = clWhite
-        Font.Height = -21
+        Font.Height = -19
         Font.Name = 'Sans'
         ParentColor = False
         ParentFont = False
@@ -2453,86 +2617,249 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Name
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Nr
-        Left = 202
-        Height = 25
-        Top = 73
-        Width = 7
+        Left = 169
+        Height = 23
+        Top = 55
+        Width = 6
         BorderSpacing.Left = 10
         Caption = '/'
         Font.Color = clWhite
-        Font.Height = -21
+        Font.Height = -19
         Font.Name = 'Sans'
         ParentColor = False
         ParentFont = False
       end
-      object BitBtn_Navigate: TBitBtn
-        Left = 432
-        Height = 35
-        Top = 432
-        Width = 99
-        BorderSpacing.Left = 8
-        BorderSpacing.Top = 16
+      object BitBtn_Navigate_Main: TBitBtn
+        AnchorSideRight.Control = Pnl_Status
+        AnchorSideBottom.Control = CmbBx_Mode
+        Left = 404
+        Height = 40
+        Top = 412
+        Width = 132
+        Anchors = [akRight, akBottom]
+        BorderSpacing.Right = 40
+        BorderSpacing.Bottom = 13
         BorderSpacing.Around = 4
         Caption = '& Anfahren'
+        Default = True
+        Font.CharSet = ANSI_CHARSET
         Font.Color = clGreen
-        Glyph.Data = {
-          76060000424D7606000000000000360000002800000014000000140000000100
-          2000000000004006000064000000640000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          000000000000000000000000000000000000555555004D4D4D00000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000004646
-          46004D4D4DFF4E4E4EFF4F4F4F00000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          000000000000000000004D4D4D004D4D4DFF4D4D4D004D4D4D004D4D4DFF4D4D
-          4D00000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000000000000000000000000000555555004D4D4DFF4C4C
-          4CFF00000000000000004B4B4B004D4D4DFF4F4F4F0000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000494949004D4D4DFF4D4D4DFF000000000000000000000000000000004E4E
-          4E004D4D4DFF4B4B4B0000000000000000000000000000000000000000000000
-          000000000000000000000000000000000000464646004C4C4C00000000000000
-          0000000000000000000000000000000000004E4E4E004D4D4DFF4E4E4E000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000004B4B4B004D4D4DFF505050000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000000000000000000000000000000000004E4E4E004D4D
-          4DFF4B4B4B000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          00000000000000000000000000004D4D4D004D4D4DFF4D4D4D00000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          00004C4C4C004D4D4DFF50505000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          000000000000000000000000000000000000000000004C4C4C004D4D4DFF5151
-          5100000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          000000000000000000004B4B4B00000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000000000000000
-          0000000000000000000000000000000000000000000000000000
-        }
+        Font.Height = -18
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
         GlyphShowMode = gsmAlways
-        OnClick = BitBtn_NavigateClick
+        Kind = bkOK
+        OnClick = BitBtn_Navigate_MainClick
+        ParentFont = False
+        TabOrder = 0
+      end
+      object Ed_Search4Bdy_Main: TEdit
+        AnchorSideTop.Control = TbSht_DashBord
+        AnchorSideRight.Control = Pnl_Status
+        AnchorSideBottom.Control = CmbBx_Mode
+        AnchorSideBottom.Side = asrBottom
+        Left = 463
+        Height = 31
+        Top = 15
+        Width = 104
+        Anchors = [akTop, akRight]
+        AutoSize = False
+        BorderSpacing.Top = 15
+        BorderSpacing.Right = 13
+        Font.Height = -16
+        Font.Name = 'Sans'
+        OnEnter = Ed_Search4Bdy_MainEnter
+        OnExit = Ed_Search4Bdy_MainExit
+        OnKeyDown = Ed_Search4Bdy_MainKeyDown
         ParentFont = False
         TabOrder = 1
+        Text = 'Suchen...'
+      end
+      object Pnl_Line: TPanel
+        AnchorSideLeft.Control = TbSht_DashBord
+        AnchorSideTop.Control = Lbl_Bdy_Nr
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = Pnl_Status
+        Left = 40
+        Height = 1
+        Top = 102
+        Width = 500
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Left = 40
+        BorderSpacing.Top = 24
+        BorderSpacing.Right = 40
+        BevelColor = clWhite
+        Caption = 'Pnl_Line'
+        TabOrder = 3
+      end
+      object CmbBx_Mode: TComboBox
+        AnchorSideLeft.Control = BitBtn_Navigate_Main
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideRight.Control = Pnl_Status
+        AnchorSideBottom.Control = TbSht_DashBord
+        AnchorSideBottom.Side = asrBottom
+        Left = 402
+        Height = 32
+        Top = 469
+        Width = 136
+        Anchors = [akLeft, akBottom]
+        AutoSize = False
+        BorderSpacing.Bottom = 25
+        Font.Height = 18
+        ItemHeight = 0
+        ItemIndex = 0
+        Items.Strings = (
+          'Normal'
+          'Nachführen'
+          'Erkennen'
+          'Suche'
+          'Ort'
+          'Sternbild'
+        )
+        OnSelect = CmbBx_ModeSelect
+        ParentFont = False
+        Style = csDropDownList
+        TabOrder = 4
+        Text = 'Normal'
+      end
+      object Pnl_Values: TPanel
+        AnchorSideLeft.Side = asrBottom
+        Left = 48
+        Height = 97
+        Top = 411
+        Width = 306
+        Anchors = []
+        BevelColor = clWhite
+        BevelInner = bvLowered
+        BevelOuter = bvNone
+        ChildSizing.LeftRightSpacing = 10
+        ChildSizing.TopBottomSpacing = 10
+        ChildSizing.HorizontalSpacing = 10
+        ClientHeight = 97
+        ClientWidth = 306
+        TabOrder = 5
+        object Lbl_EleCalc_Main: TLabel
+          AnchorSideLeft.Control = FltSpnEd_EleManu
+          AnchorSideLeft.Side = asrCenter
+          AnchorSideTop.Control = FltSpnEd_EleManu
+          AnchorSideTop.Side = asrCenter
+          Left = 45
+          Height = 30
+          Top = 51
+          Width = 66
+          Caption = '89.000'
+          ParentColor = False
+        end
+        object Lbl_AzCalc_Main: TLabel
+          AnchorSideLeft.Control = FltSpnEd_AzManu
+          AnchorSideLeft.Side = asrCenter
+          AnchorSideTop.Control = FltSpnEd_AzManu
+          AnchorSideTop.Side = asrCenter
+          Left = 195
+          Height = 30
+          Top = 51
+          Width = 66
+          Caption = '89.000'
+          ParentColor = False
+        end
+        object FltSpnEd_AzManu: TFloatSpinEdit
+          AnchorSideRight.Control = Pnl_Values
+          AnchorSideRight.Side = asrBottom
+          AnchorSideBottom.Control = Pnl_Values
+          AnchorSideBottom.Side = asrBottom
+          Left = 163
+          Height = 36
+          Top = 48
+          Width = 130
+          Anchors = [akRight, akBottom]
+          BorderSpacing.Right = 12
+          BorderSpacing.Bottom = 12
+          DecimalPlaces = 5
+          Font.Height = 21
+          Increment = 1
+          MaxValue = 360
+          MinValue = 0
+          ParentFont = False
+          TabOrder = 0
+          Value = 89.99999
+          Visible = False
+        end
+        object FltSpnEd_EleManu: TFloatSpinEdit
+          AnchorSideLeft.Control = Pnl_Values
+          AnchorSideRight.Side = asrBottom
+          AnchorSideBottom.Control = Pnl_Values
+          AnchorSideBottom.Side = asrBottom
+          Left = 13
+          Height = 36
+          Top = 48
+          Width = 130
+          Anchors = [akLeft, akBottom]
+          BorderSpacing.Left = 12
+          BorderSpacing.Bottom = 12
+          DecimalPlaces = 5
+          Font.Height = 21
+          Increment = 1
+          MaxValue = 360
+          MinValue = 0
+          ParentFont = False
+          TabOrder = 1
+          Value = 89.99999
+          Visible = False
+        end
+        object Lbl_EleName_Main: TLabel
+          AnchorSideLeft.Control = FltSpnEd_EleManu
+          AnchorSideLeft.Side = asrCenter
+          AnchorSideTop.Control = Pnl_Values
+          AnchorSideRight.Side = asrCenter
+          Left = 14
+          Height = 30
+          Top = 13
+          Width = 129
+          BorderSpacing.Top = 12
+          Caption = 'Elevation soll'
+          ParentColor = False
+        end
+        object Lbl_AzName_Main: TLabel
+          AnchorSideLeft.Side = asrCenter
+          AnchorSideTop.Control = Pnl_Values
+          AnchorSideRight.Control = FltSpnEd_AzManu
+          AnchorSideRight.Side = asrCenter
+          AnchorSideBottom.Control = FltSpnEd_AzManu
+          Left = 174
+          Height = 30
+          Top = 13
+          Width = 107
+          Anchors = [akTop, akRight]
+          BorderSpacing.Top = 12
+          Caption = 'Azimut soll'
+          Font.Color = clWhite
+          Font.Height = 21
+          ParentColor = False
+          ParentFont = False
+        end
+        object Lbl_EleCalc_Grd_Main: TLabel
+          AnchorSideLeft.Control = Lbl_EleCalc_Main
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Lbl_EleCalc_Main
+          Left = 121
+          Height = 30
+          Top = 51
+          Width = 9
+          Caption = '°'
+          ParentColor = False
+        end
+        object Lbl_AziCalc_Grd_Main: TLabel
+          AnchorSideLeft.Control = Lbl_AzCalc_Main
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Lbl_AzCalc_Main
+          Left = 271
+          Height = 30
+          Top = 51
+          Width = 9
+          Caption = '°'
+          ParentColor = False
+        end
       end
     end
     object TbSht_StarList: TTabSheet
@@ -2561,7 +2888,7 @@ object Frm_Main: TFrm_Main
     FullRepaint = False
     ParentColor = False
     ParentFont = False
-    TabOrder = 0
+    TabOrder = 2
     object Img_ShootingStar: TImage
       AnchorSideLeft.Control = Pnl_Header
       AnchorSideLeft.Side = asrCenter
@@ -3167,7 +3494,7 @@ object Frm_Main: TFrm_Main
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 499
+    Height = 528
     Top = 78
     Width = 194
     Anchors = [akTop, akLeft, akBottom]
@@ -3191,7 +3518,7 @@ object Frm_Main: TFrm_Main
     ItemIndex = 0
     ParentFont = False
     ScrollWidth = 192
-    TabOrder = 1
+    TabOrder = 0
   end
   object ImgLst_Menue: TImageList
     DrawingStyle = dsTransparent

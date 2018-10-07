@@ -267,7 +267,11 @@ interface
    }
 
   {ToDo List:
+    on E: EInOutError do
+      writeln('File handling error occurred. Reason: ', E.Message);
+
     Clean ArduIno code
+    Lon /Lat to Timezone offset
     Build up own Planetarium, to show where  is what located, to find and choose bodys on a graphicle way
     Better handeling of globale variables (property)
     Warning msg if config resett
@@ -341,19 +345,18 @@ interface
     TODO 02 -oFireInstall -cFunc : Sternbildsuche - Liste}
 
   uses
+    {$IfDef Windows}
+    JwaWindows, {windows, ShellApi,}
+    {$Else}
+    clocale, process,
+    //unix,baseunix,
+    //lclintf,
+    {$EndIf}
+
     Classes, SysUtils, FileUtil, Forms, Controls, Graphics, LCLType,
     Dialogs, Menus, StrUtils, StdCtrls, ComCtrls, ActnList, ExtCtrls,
     PopupNotifier, EditBtn, Buttons, math, Types, DateUtils, typinfo,
-    PlanEph, Utils, synaser, Config, SpOri_Main
-   {$IfDEF Windows}
-     //, windows, ShellApi;
-    ;
-   {$ELSE}
-    , clocale, process
-     //,unix,baseunix
-     //,lclintf
-    ;
-  {$ENDIF}
+    PlanEph, Utils, synaser, Config, SpOri_Main;
 
   type
 
@@ -575,13 +578,13 @@ interface
         procedure FormDestroy(Sender: TObject);
         {Collect every ne pressed key and add them to the set KeysPressed.
          Also increases KeyCount, wich has a value above 0 as long as some keys are still pressed}
-        procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState
+        procedure FormKeyDown(Sender: TObject; var Key: Word; {%H-}Shift: TShiftState
           );
         {If the last key goes up (KeyCount = 0) then the Set KeysPressed, which
          containing all last pressed keys with the Hotkey set. If they are equal
          and UseHotkey is active SendData will be called.
          Therefore it decreases KeyCount ervytime FormKeyUp was called}
-        procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+        procedure FormKeyUp(Sender: TObject; var {%H-}Key: Word; {%H-}Shift: TShiftState);
         {Load Options once}
         procedure FormShow(Sender: TObject);
         {Just a temporary way to get to the Config form.}
@@ -614,7 +617,7 @@ interface
       private
         {Compaires two strings and compute the sameness in percent
         The boolean  does that what it's name say: it determine if StrCompaire is casesensitive}
-        function  StrCompaire(str1, str2: Unicodestring; const CaseSensitive: Boolean = true): Real;
+        function  StrCompaire(str1, str2: String; const CaseSensitive: Boolean = true): Real;
         {Find the Optionsname in a Sting, if there is none then nothig is returned}
         function  FindOptionName (const Line:String):String; 
         {Find the optionsvalue, if there is none then nothig is returned}
@@ -629,24 +632,19 @@ interface
         function  LoadOptions (const LoadFromFile: Boolean = true): Boolean;
         {Looks for a choosen constellation up, if it is valid}
         function  IsConstellation ():Boolean;
-        {Try to tell the Rest of the mainform what star was selecet by a given Item}
-        procedure ProgressList (const Item:TListItem);
         {Transfer lon, lat to Rad}
         procedure Angle ();
         {calculate the First Point of Aries}
         procedure ProgressFirstPointOfAries ();
-        {Tell the mainform what starmode was selected}
-        procedure ProgressStarMode (const Mode: byte; Save: Boolean = true);
         {calculate the position of the selected star}
         procedure CalculateStarLoc();
         {calculate the position of the selected Ephemedides (PlanEpeh)}
         procedure CalculateEphemerisLoc ();
         {serches for an Item in the StarList}
         procedure searchStarList (SerchFor: String);
+
         {Try to find all possible ComPorts}
         procedure GetComPorts ();
-
-
         var
           {Importend pathes}
           DefaultPath,
@@ -712,6 +710,13 @@ interface
 
         {Sends Data to the Arduino}
         procedure SendData ();
+
+        //Temporary public for new main form
+        function Search4Body (SerchFor: String): TListItem;
+        {Try to tell the Rest of the mainform what star was selecet by a given Item}
+        procedure ProgressList (const Item:TListItem);
+        {Tell the mainform what starmode was selected}
+        procedure ProgressStarMode (const Mode: byte; Save: Boolean = true);
       end;
 
   var
@@ -723,7 +728,7 @@ implementation
 
   { Frm_Spori }
 
-function  TFrm_Spori.StrCompaire (str1, str2: Unicodestring; const CaseSensitive: Boolean = true): Real;  //Done?
+function  TFrm_Spori.StrCompaire (str1, str2: String; const CaseSensitive: Boolean = true): Real;  //Done?
   type
     TCharList = Record
       Chara: UniCodeChar;
@@ -747,8 +752,8 @@ function TFrm_Spori.Gleiche (str1, str2: string): Real;  inline; //Fertig?
 
     if not CaseSensitive  then
       begin
-       Str1 := UnicodeLowerCase(Str1);
-       Str2 := UnicodeLowerCase(Str2);
+       Str1 := AnsiLowerCase(Str1);
+       Str2 := AnsiLowerCase(Str2);
       end;
 
 
@@ -955,6 +960,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
 
             PgsB_ComCon.Visible := true;
             Lbl_Ardo.Visible    := false;
+            Img_UpStatus.AnchorSideTop.Control := PrgrssBr_ComPCon;
           end;
 
         with Frm_Main do
@@ -1044,11 +1050,15 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
                 ImgLst_UsedPics.GetBitmap(0, Img_ComState.Picture.Bitmap);
                 Lbl_ComState.Caption   := 'Verbnden mit: ';
                 Lbl_ArdoType.Caption := 'Arduino Leonardo'; //Defaultvalue
+
+                Img_UpStatus.AnchorSideTop.Control := Lbl_ArdoType;
               end
             else
               begin
                 ImgLst_UsedPics.GetBitmap(2, Img_ComState.Picture.Bitmap);
                 Lbl_ComState.Caption   := 'Nicht Verbunden';
+
+                Img_UpStatus.AnchorSideTop.Control := Img_ComState;
               end;
 
             Lbl_ArdoType.Visible     := Result;
@@ -1067,10 +1077,21 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
   end;
 
 procedure TFrm_Spori.SendData (); //Done?
+  var
+    PointAsSep: TFormatSettings;
+    EleStr, AzStr: String;
   begin
+    //Make sure a point was used as decimal separator
+    PointAsSep := DefaultFormatSettings;
+    PointAsSep.DecimalSeparator := '.';
+
+    //Get values to navigate to
+    EleStr := FloatToStrF(Frm_Main.FltSpnEd_EleManu.Value, ffFixed, 3, 5,PointAsSep);
+    AzStr  := FloatToStrF(Frm_Main.FltSpnEd_AzManu.Value, ffFixed, 3, 5, PointAsSep);
+
     //If a Connection is active and stable elevation and azimuth to the ArduIno.
     if ser.InstanceActive and ser.CanWrite(200) then
-        ser.SendString(StringReplace((Ed_Ele_Soll.Text + ';' + Ed_Azi_Soll.Text), ',', '.', [rfReplaceAll]));
+        ser.SendString(EleStr + ';' + AzStr);
 
   end;
 
@@ -1642,7 +1663,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
 
                   ON_AutoValueMode:
                     if TryStrToBool(Options[j], Tempbool) then
-                      Frm_Config.Sw_ManW.Checked := not Tempbool
+                      Frm_Config.Sw_ManuVal.Checked := not Tempbool
                     else
                      ErrorMessage := 'Fehler in WerteMode-Ladevorgang: Falscher DatenTyp';
 
@@ -1781,17 +1802,42 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
    end;
 
 procedure TFrm_Spori.SetPortableMode (IsActive: Boolean); //ToDo: CleanUp after Mode has changed
+  {$IfDef Windows}
+  var
+    FileName: String;
+    H: THandle;
+  {$EndIf}
   begin
     if IsActive then //PortableMode uses just the dir where the binary is located
       DefaultPath := OwnDir
     else     //while non PortableMode uses a different path, to hide files
       {$IfDef Windows}
-        DefaultPath := 'C:\ProgramData\FireInstallations\SpaceOrienter';
+        begin
+          //Works like the windows global path
+          DefaultPath := 'C:\ProgramData\FireInstallations\SpaceOrienter';
+
+          //Test if we have access, else we use the system local path
+          if not ForceDirectories(DefaultPath) then
+             DefaultPath := GetAppConfigDir(false)
+          else
+            begin
+              FileName := IncludeTrailingPathDelimiter(DefaultPath) + 'chk.tmp';
+              H := CreateFileW(PWideChar(FileName), GENERIC_READ or GENERIC_WRITE, 0, nil,
+                CREATE_NEW, FILE_ATTRIBUTE_TEMPORARY or FILE_FLAG_DELETE_ON_CLOSE, 0);
+
+              if H <> INVALID_HANDLE_VALUE then
+                 DefaultPath := GetAppConfigDir(false);
+              CloseHandle(H);
+            end;
+
+
+        end;
       {$Else}
          DefaultPath := GetAppConfigDir(false);
       {$EndIf Windows}
 
     {Sets all the pathes where DefaultPath is used}
+    //ConfigExtension
     DefaultOptionsPath    := DefaultPath + PathDelim + 'Options.Space';
     DefaultOldOptionsPath := DefaultPath + PathDelim + 'OldOptions';
     DefaultListPath       := DefaultPath + PathDelim + 'StarList.Space';
@@ -1802,7 +1848,7 @@ procedure TFrm_Spori.SetPortableMode (IsActive: Boolean); //ToDo: CleanUp after 
 
 procedure TFrm_Spori.Delay (Milliseconds: DWORD); //Done
   var
-    Yet: DWORD;
+    Yet: QWord;
   begin
     //Get time
     Yet := GetTickCount64;
@@ -2192,6 +2238,15 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
         begin
           Ed_Ele_Soll.Text := '89';
           Ed_Azi_Soll.Text := '89';
+
+          with Frm_Main, DefaultFormatSettings do
+            begin
+              FltSpnEd_EleManu.Value := 89.999;
+              FltSpnEd_AzManu.Value  := 89.999;
+
+              Lbl_EleCalc_Main.Caption := '89' + DecimalSeparator + '999';
+              Lbl_AzCalc_Main.Caption  := '89' + DecimalSeparator + '999';
+            end;
          end;
    end;
 
@@ -2333,13 +2388,24 @@ procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
     Lb_Az_N.Caption := FloatToStrF(Az_N, ffFixed, 4, 13);
 
     Lb_El.caption := FloatToStrF(Ele, ffFixed, 4, 11);
-    if not (Frm_Config.Sw_ManW.Checked) and not (AnsiLowerCase(CB_HK.caption) = 'ruheposition') then
-      Ed_Ele_Soll.text := FloatToStrF(Ele, ffFixed, 4, 13);
-
     Lb_Az.caption:=FloatToStrF(Azimut, ffFixed, 4, 11);
-    if not (Frm_Config.Sw_ManW.Checked) and not (AnsiLowerCase(CB_HK.caption) = 'ruheposition') then
-      Ed_Azi_Soll.text:=FloatToStrF(Azimut, ffFixed, 4, 13);
 
+
+    if not (Frm_Config.Sw_ManuVal.Checked) and not (AnsiLowerCase(CB_HK.caption) = 'ruheposition') then
+      begin
+        Ed_Ele_Soll.text := FloatToStrF(Ele, ffFixed, 3, 3);
+        Ed_Azi_Soll.text := FloatToStrF(Azimut, ffFixed, 3, 3);
+
+        with Frm_Main do
+          begin
+            FltSpnEd_EleManu.Value := Ele;
+            FltSpnEd_AzManu.Value  := Azimut;
+
+            Lbl_EleCalc_Main.Caption := FloatToStrF(Ele, ffFixed, 3, 3);
+            Lbl_AzCalc_Main.Caption  := FloatToStrF(Azimut, ffFixed, 3, 3);
+
+          end;
+      end;
   end;
 
 procedure TFrm_Spori.CalculateEphemerisLoc (); //ToDo: Comments; clean up
@@ -2347,9 +2413,9 @@ procedure TFrm_Spori.CalculateEphemerisLoc (); //ToDo: Comments; clean up
      Lon, Lat, TZ, xp, yp, dut1, hm, tc, pm, rh, wl: Real;
      ra, rb: Double;
      Body: Integer;
-     Uebertrag: String;
-
      UTC1, UTC2: Real;
+
+     Ele, Azi: Real;
   begin
     TZ := GetLocalTimeOffset() div -60;
 
@@ -2369,7 +2435,7 @@ procedure TFrm_Spori.CalculateEphemerisLoc (); //ToDo: Comments; clean up
     pm  := 1000.0;      // Pressure (milibars)
     rh  := 0.5;         // Relative Humidity (percent [fractional])
     wl  := 0.55;        // Wavelength (micrometers)
-    RefractionAB(pm, tc, rh, wl, ra, rb); //How athmosphare doese change the observation
+    RefractionAB(pm, tc, rh, wl, ra{%H-}, rb{%H-}); //How athmosphare doese change the observation
 
     Case Trim(AnsiLowerCase(CB_HK.Caption)) of
       'merkur':  Body := BN_MERCURY;
@@ -2390,55 +2456,78 @@ procedure TFrm_Spori.CalculateEphemerisLoc (); //ToDo: Comments; clean up
     UTC1 := StrToFloat(Lb_UTC1_Val.Caption);
     UTC2 := StrToFloat(Lb_UTC2_Val.Caption);
 
-    Uebertrag := FloatToStrF(Ephem(0, FR_ICRS, Body, GV_ELEVATION, AD_LIGHTTIME,
-               UTC1,  UTC2, Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb), ffFixed, 4, 13);
+    Ele := Ephem(0, FR_ICRS, Body, GV_ELEVATION, AD_LIGHTTIME, UTC1,  UTC2,
+           Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb);
+    Azi := Ephem(0, FR_ICRS, Body, GV_AZIMUTH, AD_LIGHTTIME, UTC1,  UTC2,
+           Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb);
 
-    Lb_El1.Caption  := Uebertrag;
-    Ed_Ele_Soll.Text:= Uebertrag;
+    Lb_El1.Caption   := FloatToStrF(Ele, ffFixed, 3, 5);
+    Ed_Ele_Soll.Text := FloatToStrF(Ele, ffFixed, 3, 3);
 
-    Uebertrag := FloatToStrF(Ephem(0, FR_ICRS, Body, GV_AZIMUTH, AD_LIGHTTIME,
-               UTC1,  UTC2, Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb), ffFixed, 4, 13);
+    Lb_Az1.Caption   := FloatToStrF(Azi, ffFixed, 3, 5);
+    Ed_Azi_Soll.Text := FloatToStrF(Azi, ffFixed, 3, 3);
 
-    Lb_Az1.Caption  := Uebertrag;
-    Ed_Azi_Soll.Text:= Uebertrag;
+    with Frm_Main do
+      begin
+        FltSpnEd_EleManu.Value := Ele;
+        FltSpnEd_AzManu.Value  := Azi;
+
+        Lbl_EleCalc_Main.Caption := FloatToStrF(Ele, ffFixed, 3, 3);
+        Lbl_AzCalc_Main.Caption  := FloatToStrF(Azi, ffFixed, 3, 3);
+      end;
 
    end;
 
-procedure TFrm_Spori.searchStarList (SerchFor: String); //Done
+function TFrm_Spori.Search4Body (SerchFor: String): TListItem;  //ToDo: Comments
   var
-     i, j: Integer;
-     Item: TListItem;
+    i, j: Integer;
+    sameness: Real = -1;
+    TempSameness: Real;
   begin
-    Item := LV_List.Items.FindCaption(0, SerchFor, false, false, true);
+    Result := LV_List.Items.FindCaption(0, SerchFor, false, false, true);
 
-    if Assigned (Item) then
-      begin
-        LV_List.Selected := Item;
-        PgC_Haupt.TabIndex := 1;
-        LV_List.SetFocus;
-        LV_List.ItemFocused := LV_List.Items[0];
-        LV_List.Items[Item.Index].MakeVisible(false);
-       end
+    if Assigned (Result) then
+        LV_List.Selected := Result
     else
       if SerchFor = '0' then
         begin
           LV_List.Selected := LV_List.Items[0];
-          PgC_Haupt.TabIndex := 1;
-          LV_List.SetFocus;
-          LV_List.ItemFocused := LV_List.Items[0];
-          LV_List.Items[0].MakeVisible(false);
+
+         Result := LV_List.Items[0];
         end
     else
       for i := 0 to LV_List.Items.Count-1 do
         for j := 0 to Lv_List.Items[i].SubItems.Count-1 do
-          if (StrCompaire (SerchFor, AnsiLowerCase(LV_List.Items[i].SubItems[j])) >= 60) then
-            begin
-              LV_List.Selected := LV_List.Items[i];
-              PgC_Haupt.TabIndex := 1;
-              LV_List.SetFocus;
-              LV_List.ItemFocused := LV_List.Items[i];
-              LV_List.Items[i].MakeVisible(false);
-            end;
+          begin
+            TempSameness :=  StrCompaire (SerchFor, LV_List.Items[i].SubItems[j], false);
+
+            if (TempSameness >= 60) and (TempSameness > Sameness) then
+              begin
+                LV_List.Selected := LV_List.Items[i];
+                Sameness := TempSameness;
+
+                Result := LV_List.Items[i];
+              end;
+          end;
+
+  end;
+
+procedure TFrm_Spori.searchStarList (SerchFor: String); //ToDo: Comments; ErrorHandeling(Item not Found)
+  var
+    FoundBody: TListItem;
+  begin
+    FoundBody := Search4Body(SerchFor);
+
+    if Assigned (FoundBody) then
+      begin
+        LV_List.Selected := FoundBody;
+        PgC_Haupt.TabIndex := 1;
+        LV_List.SetFocus;
+        LV_List.ItemFocused := FoundBody;
+        LV_List.Items[FoundBody.Index].MakeVisible(false);
+       end
+    else
+     ;
   end;
 
 procedure TFrm_Spori.Ed_NrEditingDone (Sender: TObject); //Done
@@ -2450,7 +2539,6 @@ procedure TFrm_Spori.Ed_NrEditingDone (Sender: TObject); //Done
 
     if TryStrToInt(Ed_Nr.Text, Void) then
     {$ENDIF Window}
-
       ProgressNumber (); //We got a new body, tell it erverbody else
   end;
 
@@ -2711,7 +2799,7 @@ procedure TFrm_Spori.MI_ConnectionClick(Sender: TObject); //ToDo: Remove if new 
 
     procedure TFrm_Spori.MI_DatSchutzClick (Sender: TObject); //ToDo
       begin
-        Showmessage('Wir von  FireInstallations & Co möchten der gesammten ' +
+        Showmessage('Wir von  FireInstallations möchten der gesammten ' +
                     'Datensammelwut etwas entgegensetzen. ' + //sLineBreak +
                     'Daher sind all unsere Produkte Open Source und nutzen nur ' +
                     'Daten, welche zwingend zur Bereitstellung ' + //sLineBreak +
@@ -3032,21 +3120,25 @@ procedure TFrm_Spori.CB_StrModeChange (Sender: TObject); //Done
           ProgressNumber ();
        end;
 
-//Does exist just for compa
+//Does exist just for compatibility
 initialization
 
 finalization
-
   begin  //No Matter what, we have to clean Up!
-    if Assigned(ser) then
-     begin
-       ser.Purge;
-       ser.CloseSocket;
-       FreeAndNil(ser);
-     end;
+    with Frm_Spori do
+      if Assigned(ser) then
+       begin
+         //If the buffer is not emty
+         if (ser.SendingData > 0) or (ser.WaitingDataEx > 0) then
+           ser.Purge;
+
+         //close conncetion and free memory (importend, without you can't connect again, until next restart)
+         ser.CloseSocket;
+         FreeAndNil(ser);
+       end;
 
     EndPlanetEphem();
   end;
 
 
-    end.
+end.

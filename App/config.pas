@@ -133,7 +133,7 @@ type
     PgCont_Pnl: TPageControl;
     Pnl_ueber: TPanel;
     PgsB_ComCon: TProgressBar;
-    Sw_ManW: TECSwitch;
+    Sw_ManuVal: TECSwitch;
     Sw_PortableMode: TECSwitch;
     Sw_Exprt: TECSwitch;
     Sw_Redo: TECSwitch;
@@ -145,8 +145,8 @@ type
     TbSht_Info: TTabSheet;
     TbSht_Time: TTabSheet;
     TbSht_Up: TTabSheet;
-    UpDn_test: TUpDown;
-    UpDn_test1: TUpDown;
+    UpDn_ComPort: TUpDown;
+    UpDn_Baud: TUpDown;
     procedure BitBtn_NwCnfgClick(Sender: TObject);
     procedure Bt_ConfStarListClick(Sender: TObject);
     procedure Bt_LoadStarListClick(Sender: TObject);
@@ -182,7 +182,7 @@ type
     procedure Sw_AutoTimeChange(Sender: TObject);
     procedure Sw_ExprtChange(Sender: TObject);
     procedure Sw_HtKyChange(Sender: TObject);
-    procedure Sw_ManWChange(Sender: TObject);
+    procedure Sw_ManuValChange(Sender: TObject);
     procedure Sw_PortableModeChange(Sender: TObject);
     procedure Sw_AutoConChange(Sender: TObject);
     procedure Sw_RedoChange(Sender: TObject);
@@ -1325,16 +1325,42 @@ procedure TFrm_Config.Sw_HtKyChange(Sender: TObject);
     Frm_Spori.Options[ON_UseHotkey] := BoolToStr(IsActive, 'True', 'False');
   end;
 
-procedure TFrm_Config.Sw_ManWChange(Sender: TObject);
+procedure TFrm_Config.Sw_ManuValChange(Sender: TObject);   //Done
   var
     IsActive: Boolean;
   begin
-    IsActive := Sw_ManW.Checked;
+    IsActive := Sw_ManuVal.Checked;
 
+    //Set Caption
     Lbl_Sw_ManW.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
 
+    //Toggle visebility of FloatEditfields and make the decimal places userfrendly
+    with Frm_Main do
+      begin
+        FltSpnEd_EleManu.Enabled := IsActive;
+        FltSpnEd_EleManu.Visible := IsActive;
+        FltSpnEd_AzManu.Visible  := IsActive;
+        FltSpnEd_AzManu.Enabled  := IsActive;
+
+        //If the mode was not active show the fancyer labels instat
+        Lbl_EleCalc_Main.Visible := not IsActive;
+        Lbl_AzCalc_Main.Visible  := not IsActive;
+
+        if (IsActive) then
+          begin
+            FltSpnEd_EleManu.DecimalPlaces := 3;
+            FltSpnEd_AzManu.DecimalPlaces  := 3;
+          end
+        else
+          begin //We will work intern with more places
+            FltSpnEd_EleManu.DecimalPlaces := 5;
+            FltSpnEd_AzManu.DecimalPlaces  := 5;
+          end;
+      end;
+
+    //save value
     Frm_Spori.Options[ON_AutoValueMode] := BoolToStr(not IsActive, 'True', 'False');
-   end;
+  end;
 
 procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject);
   begin
@@ -1344,24 +1370,24 @@ procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject);
     Frm_Spori.SetPortableMode(Sw_PortableMode.Checked);
    end;
 
-procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //ToDo: Don't connect if config wasn't loeaded
+procedure TFrm_Config.Sw_AutoConChange(Sender: TObject);
+  var
+    isActive: Boolean;
   begin
-    if (Sw_AutoCon).Checked then
-      begin
-        Lbl_Sw_AutoCon.Caption := 'Ein';
-        //ED_Port.Enabled        := false;
+    isActive :=  Sw_AutoCon.Checked;
 
-        Frm_Spori.Options[ON_AutoComMode] := 'True';
-       end
-     else
-      begin
-        Lbl_Sw_AutoCon.Caption := 'Ein';
-        //ED_Port.Enabled        := true;
+    //Set Caption for the Button
+    Lbl_Sw_AutoCon.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+    //Save it
+    Frm_Spori.Options[ON_AutoComMode] := BoolToStr(IsActive, 'True', 'False');
 
-        Frm_Spori.Options[ON_AutoComMode] := 'False';
+    //Disable Comport Editfield since we will test all avible ports
+    CmbBx_ComPort.Enabled := not isActive;
+    UpDn_ComPort.Enabled := not isActive;
 
+    //Try to connect to all avible ports
+    if isActive then
         Frm_Spori.Connect (true);
-       end;
    end;
 
 procedure TFrm_Config.Sw_RedoChange(Sender: TObject);

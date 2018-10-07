@@ -1,5 +1,5 @@
 object Frm_Config: TFrm_Config
-  Left = 16
+  Left = 159
   Height = 580
   Top = 407
   Width = 960
@@ -2513,14 +2513,14 @@ object Frm_Config: TFrm_Config
     Top = 72
     Width = 760
     TabStop = False
-    ActivePage = TbSht_Con
+    ActivePage = TbSht_Alg
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Color = clWhite
     Font.Height = -18
     ParentBiDiMode = False
     ParentFont = False
     ShowTabs = False
-    TabIndex = 3
+    TabIndex = 0
     TabOrder = 1
     TabPosition = tpLeft
     Options = [nboHidePageListPopup, nboKeyboardTabSwitch]
@@ -2886,7 +2886,7 @@ object Frm_Config: TFrm_Config
           99DF5A3BFF0583F5BFE6564DA3BF0000000049454E44AE426082
         }
       end
-      object Sw_ManW: TECSwitch
+      object Sw_ManuVal: TECSwitch
         AnchorSideLeft.Control = Sw_PortableMode
         AnchorSideTop.Control = Lbl_ManW
         AnchorSideTop.Side = asrBottom
@@ -2917,7 +2917,7 @@ object Frm_Config: TFrm_Config
         Style = eosFinePanel
         SwitchWidth = 66
         TabOrder = 2
-        OnChange = Sw_ManWChange
+        OnChange = Sw_ManuValChange
       end
       object Lbl_ManW: TLabel
         AnchorSideLeft.Control = Lbl_PortableMode
@@ -3051,9 +3051,9 @@ object Frm_Config: TFrm_Config
         }
       end
       object Lbl_Sw_ManW: TLabel
-        AnchorSideLeft.Control = Sw_ManW
+        AnchorSideLeft.Control = Sw_ManuVal
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = Sw_ManW
+        AnchorSideTop.Control = Sw_ManuVal
         AnchorSideTop.Side = asrCenter
         Left = 148
         Height = 26
@@ -3382,7 +3382,6 @@ object Frm_Config: TFrm_Config
         BorderSpacing.Left = 13
         BorderSpacing.Top = 15
         DecimalPlaces = 3
-        Font.Color = clBlack
         Font.Height = -18
         Increment = 1
         MaxValue = 1000
@@ -3427,7 +3426,6 @@ object Frm_Config: TFrm_Config
         BorderSpacing.Left = 13
         BorderSpacing.Top = 15
         DecimalPlaces = 3
-        Font.Color = clBlack
         Font.Height = -18
         Increment = 1
         MaxValue = 1000
@@ -3702,7 +3700,6 @@ object Frm_Config: TFrm_Config
         BorderSpacing.Left = 13
         BorderSpacing.Top = 15
         Constraints.MinHeight = 32
-        Font.Color = clBlack
         Font.Height = -18
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
@@ -3947,7 +3944,6 @@ object Frm_Config: TFrm_Config
         Width = 160
         BorderSpacing.Left = 13
         BorderSpacing.Top = 14
-        Font.Color = clBlack
         Font.Height = -18
         Increment = 1
         MaxValue = 1000
@@ -4696,7 +4692,7 @@ object Frm_Config: TFrm_Config
       Font.Color = clWhite
       Font.Height = -18
       ParentFont = False
-      object UpDn_test: TUpDown
+      object UpDn_ComPort: TUpDown
         AnchorSideLeft.Control = CmbBx_ComPort
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = CmbBx_ComPort
@@ -4788,7 +4784,7 @@ object Frm_Config: TFrm_Config
         TabOrder = 1
         OnChange = Sw_AutoConChange
       end
-      object UpDn_test1: TUpDown
+      object UpDn_Baud: TUpDown
         AnchorSideLeft.Control = CmbBx_Baud
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = CmbBx_Baud
@@ -4879,14 +4875,14 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Control = Lbl_Con
         AnchorSideTop.Side = asrBottom
         Left = 73
-        Height = 33
+        Height = 34
         Top = 419
         Width = 145
         BorderSpacing.Left = 13
         BorderSpacing.Top = 14
         Caption = 'Jetzt Verbinden'
         Font.Color = clBlack
-        Font.Height = -18
+        Font.Height = 18
         OnClick = Bt_ConClick
         ParentFont = False
         TabOrder = 4

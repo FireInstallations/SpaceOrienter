@@ -22,25 +22,23 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls;
+  ExtCtrls, Buttons;
 
 type
 
   { TFrm_GetHotKey }
 
   TFrm_GetHotKey = class(TForm)
-    Bt_Ok: TButton;
-    Bt_cancel: TButton;
+    BtBtn_Ok: TBitBtn;
+    BtBtn_Cancel: TBitBtn;
     Ed_shwHotkey: TEdit;
     Img_Info_GetHotkey: TImage;
     Lbl_GetHotkey: TLabel;
-    {Abort}
-    procedure Bt_cancelClick(Sender: TObject);
     {Saves changes}
-    procedure Bt_OkClick(Sender: TObject);
+    procedure BtBtn_OkClick(Sender: TObject);
     {Read a Key, if it's a new one add it to PressedHotKeys and
      Ed_shwHotkey}
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; {%H-}Shift: TShiftState);
     {Resetts parameters}
     procedure FormShow(Sender: TObject);
   private
@@ -100,7 +98,7 @@ procedure TFrm_GetHotKey.FormShow(Sender: TObject);  //Done
     PressedHotKeys := [];
   end;
 
-procedure TFrm_GetHotKey.Bt_OkClick(Sender: TObject); //Done
+procedure TFrm_GetHotKey.BtBtn_OkClick(Sender: TObject); //Done
   begin
     //Set Text
     if (PressedHotKeys = []) then
@@ -113,15 +111,6 @@ procedure TFrm_GetHotKey.Bt_OkClick(Sender: TObject); //Done
       HotKey := PressedHotKeys;
       Options[ON_Hotkey] := OptionsHotkey;
     end;
-
-    //Return
-    Close;
-  end;
-
-procedure TFrm_GetHotKey.Bt_cancelClick(Sender: TObject); //Done
-  begin
-    //abort
-    Close;
   end;
 
 end.
