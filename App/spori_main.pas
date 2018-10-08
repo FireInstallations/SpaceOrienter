@@ -36,6 +36,12 @@ type
     Ed_Search4Bdy_Main: TEdit;
     FltSpnEd_AzManu: TFloatSpinEdit;
     FltSpnEd_EleManu: TFloatSpinEdit;
+    Img_Info_DateTime: TImage;
+    Img_Info_EleAzNow: TImage;
+    Img_Info_ConStatus: TImage;
+    Img_Info_UpStatus: TImage;
+    Img_Info_Place: TImage;
+    Img_Info_MagDvtn: TImage;
     Img_UpStatus: TImage;
     Img_ComState: TImage;
     ImgLst_UsedPics: TImageList;
@@ -88,7 +94,7 @@ type
     {calls SearchInputEdit}
     procedure Btn_Search4Bdy_MainClick(Sender: TObject);
     {A BodyMode was selecet, tell it}
-    procedure CmbBx_ModeSelect(Sender: TObject);
+    procedure CmbBx_ModeChange(Sender: TObject);
     {If just the default text is given clear it else Select all text (buggy)}
     procedure Ed_Search4Bdy_MainEnter(Sender: TObject);
     {If the Editfild is emty reset it's text to 'Search for...'}
@@ -100,10 +106,10 @@ type
      containing all last pressed keys with the Hotkey set. If they are equal
      and UseHotkey is active SendData will be called.
      Therefore it decreases KeyCount ervytime FormKeyUp was called}
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; {%H-}Shift: TShiftState);
     {Collect every ne pressed key and add them to the set KeysPressed.
      Also increases KeyCount, wich has a value above 0 as long as some keys are still pressed}
-    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormKeyUp(Sender: TObject; var {%H-}Key: Word; {%H-}Shift: TShiftState);
     {Get the user to the confing form}
     procedure Img_Settings_WClick(Sender: TObject);
     {cosmetic: set color of label and image to gray (leftklick)}
@@ -149,7 +155,7 @@ procedure TFrm_Main.BitBtn_Navigate_MainClick(Sender: TObject);  //Done
     Frm_Spori.SendData ();
   end;
 
-procedure TFrm_Main.SearchInputEdit ();  //ToDo: Error handeling (Item not found); search for collection
+procedure TFrm_Main.SearchInputEdit ();  //ToDo: Error handeling (Item not found)
   var
     TempItem: TListItem;
   begin
@@ -163,6 +169,9 @@ procedure TFrm_Main.SearchInputEdit ();  //ToDo: Error handeling (Item not found
              begin
                ProgressList(TempItem);
 
+               //If the user searched for a constellation, change Bodymode
+               if (StrCompaire(Ed_Search4Bdy_Main.Text, TempItem.SubItems[2] , false) > 75) then
+                 ProgressBodyMode(5);
              end
            else
            ; //Item not found
@@ -175,9 +184,9 @@ procedure TFrm_Main.Btn_Search4Bdy_MainClick(Sender: TObject);  //done
     SearchInputEdit();
   end;
 
-procedure TFrm_Main.CmbBx_ModeSelect(Sender: TObject);
+procedure TFrm_Main.CmbBx_ModeChange(Sender: TObject);
   begin
-    Frm_Spori.ProgressStarMode(CmbBx_Mode.ItemIndex);
+    Frm_Spori.ProgressBodyMode(CmbBx_Mode.ItemIndex);
   end;
 
 procedure TFrm_Main.Ed_Search4Bdy_MainEnter(Sender: TObject);  //Buggy

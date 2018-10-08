@@ -1,5 +1,9 @@
 unit spaceorienter_main;
 
+//Fixed Starmode
+//Renamed Starmode -> BodyMode
+//Search on new mainform works now for constellations too
+
 {$mode objfpc}{$H+}
 
 interface
@@ -267,51 +271,57 @@ interface
    }
 
   {ToDo List:
+    for unnown Errors do
     on E: EInOutError do
-      writeln('File handling error occurred. Reason: ', E.Message);
+      writeln('Message', E.Message);
 
     Clean ArduIno code
+    Use Out in PlanEph and Sofa
+    rename (kleiner) wagen -> (kleiner) Bär
+    Warn if more then one inctance is runnig
     Lon /Lat to Timezone offset
     Build up own Planetarium, to show where  is what located, to find and choose bodys on a graphicle way
     Better handeling of globale variables (property)
-    Warning msg if config resett
-    Config window doesn' show in Taskbar
+    Throw a warning msg if config resett
     Make default WMM.COF, so the User doesn't have to install it
-    Finish PlanEph translation --> move it to won project & remove everything unessesary in used lib
+    Finish PlanEph translation & remove everything unessesary in used lib
     Put DefaultList/Options/WMM in own Unit
     If Resett StarList / WMM / Options don't Save and load from file, just save and load from default
     Make Starlist and WMM loading as robost as config loading
     Add Hight to places list
+    Use Heigt of Config form
     Add more contrys to places list
     Make places list customizable
     Use http://maia.usno.navy.mil/ for automatic values (x, y offset dut1)
-    PlanEph: Test on WMM.COF exitense
-    Make Order of procedures and functions more relatable
+    PlanEph: Test on WMM.COF exitense; finalization automaticly calls EndPlanEph
+    Make order of procedures and functions more relatable
     Starlist configurator
     Make Hotkey Editfield working
     Add Resett Button on GetHotkey form
     FnD --> use defaultpath as default path
     Replace summertime whit time offzeit
-    Does comport saving work? (Save it, when connection established)
-    ExpertMode have to hide: <-- release unused space)
+    ExpertMode have to hide: <-- (release unused space)
      - Lat, Lon
      - Comport (just automatic connecting)
      - Baudrate (see above)
      - hole time configurations
      - both calculating tabs (works)
     Identify place name if lon / lat is near
-    Scrollbars in Starlist doesn't work
-    Use threads
-    Load images from ImageList (like ardu con. ones)
-    Reconnect to ArduIno when lost
+    Use threads for timers
+    Load images from ImageList (like update ones)
+    Try to reconnect to ArduIno when lost
     Make temperatur, atmospheric pressure, humidity customizable and get them automatic online
+      --> let the user decide if we get anything automatic online
     Add wave lengths in starlist
     Updates via Github
     There might be a bug with time setting
     Add ISS and other space stations
-    Add Hints
-    Redesine main form
-    Make anchor work
+    Add Hints (for Questionmark images)
+    Finish rdesine main form
+      - Shortcuts like Str f
+      - Starlist
+      - Calculate Tabs
+    Make anchors work
     Make popup menues work
     Make an own Installer
     Add mulilangue support
@@ -323,17 +333,15 @@ interface
     Detect Arduinotype (and if it is the Spori); Synapser dosn't find right ports
     Function IsCollection could be optimized
     There seems to be an error in LoadStarList, but I coudn't determine what goes wrong yet
-    If portable mode was switched, clead at the old place up and move all files to the new location
+    If portable mode was switched, clear at the old place up and move all files to the new location
     Make OlsOptions / Lists optional
     In ProgressList: test if the Item is vailed (mainpage)
     In ProgressNumber: Errorhandeling if the Item doesnt exits
     Are there cases where GetCurrentDir is not the own dir at beginning?
-    In FormShow: move Connect to LoadOptions and use Connact to all just if no vailid port was found;
+    In FormShow: move Connect to LoadOptions and use Connact to all just if no vailid port was found or
+      autoconncet is turned on
     Errorhandeling when Connect doesn't work (see MI_ConnectClick)
-    In MI_Dar_QuitClick: Does FormDestroy work correcly?
-    In FollowTmr: the collection doesn't work (course there is never a case where 2 Starmodes are active) --> add a new mode
     In MI_SuchClick: Error handeling
-    Make the main menue work
     Remove unessesary units from uses list
 
     convert "legal" file to md
@@ -382,7 +390,7 @@ interface
       ON_AutoValueMode,
       ON_UseHotkey,
       ON_HotKey,
-      ON_StarMode,
+      ON_BodyMode,
       ON_Body,
       ON_Langue
       );
@@ -558,7 +566,7 @@ interface
         procedure Bt_PilotClick(Sender: TObject);
         {A new Body was selected, tell it (... will be called)}
         procedure CB_HKEditingDone(Sender: TObject);
-        {If a new StarMode was chosen, tell it everybody}
+        {If a new BodyMode was chosen, tell it everybody}
         procedure CB_StrModeChange(Sender: TObject);
         procedure CB_StBEditingDone(Sender: TObject);
         {If a vailed number was given, ProgressNumber will be called}
@@ -572,7 +580,7 @@ interface
         {Opens an FindDialog and searches for the given String in our StarList}
         procedure FndDFind(Sender: TObject);
         {Detect PortableMode and initialize importend global vairiables like the paths.
-         The reaon why we can't load the options here is that Frm_Config has to be created first}
+         And call LoadOptions}
         procedure FormCreate(Sender: TObject);
         {Save the configurations file and  clean up}
         procedure FormDestroy(Sender: TObject);
@@ -585,8 +593,6 @@ interface
          and UseHotkey is active SendData will be called.
          Therefore it decreases KeyCount ervytime FormKeyUp was called}
         procedure FormKeyUp(Sender: TObject; var {%H-}Key: Word; {%H-}Shift: TShiftState);
-        {Load Options once}
-        procedure FormShow(Sender: TObject);
         {Just a temporary way to get to the Config form.}
         procedure Lb_ZeitClick(Sender: TObject);
         {If a vailed Item was seleceted tell it (call ProgressList)}
@@ -615,9 +621,6 @@ interface
         {Follow moving bodys}
         procedure Tmr_Follow(Sender: TObject);
       private
-        {Compaires two strings and compute the sameness in percent
-        The boolean  does that what it's name say: it determine if StrCompaire is casesensitive}
-        function  StrCompaire(str1, str2: String; const CaseSensitive: Boolean = true): Real;
         {Find the Optionsname in a Sting, if there is none then nothig is returned}
         function  FindOptionName (const Line:String):String; 
         {Find the optionsvalue, if there is none then nothig is returned}
@@ -630,7 +633,7 @@ interface
         {Load Saved Options, if there is no file, create default otions will be created.
          Warning: ervery New Option must loaded here!}
         function  LoadOptions (const LoadFromFile: Boolean = true): Boolean;
-        {Looks for a choosen constellation up, if it is valid}
+        {Looks for a choosen Constellation up, if it is valid}
         function  IsConstellation ():Boolean;
         {Transfer lon, lat to Rad}
         procedure Angle ();
@@ -712,11 +715,15 @@ interface
         procedure SendData ();
 
         //Temporary public for new main form
+        {Seaches for a given Body in Bodylist}
         function Search4Body (SerchFor: String): TListItem;
         {Try to tell the Rest of the mainform what star was selecet by a given Item}
         procedure ProgressList (const Item:TListItem);
-        {Tell the mainform what starmode was selected}
-        procedure ProgressStarMode (const Mode: byte; Save: Boolean = true);
+        {Tell the mainform what BodyMode was selected}
+        procedure ProgressBodyMode (const Mode: byte; Save: Boolean = true);
+        {Compaires two strings and compute the sameness in percent
+        The boolean  does that what it's name say: it determine if StrCompaire is casesensitive}
+        function  StrCompaire(str1, str2: String; const CaseSensitive: Boolean = true): Real;
       end;
 
   var
@@ -1334,7 +1341,7 @@ function  TFrm_Spori.GetDefaultOption (const OptnName: TOptionNames): String; //
       ON_UpdateRate:    Result := '1';
       ON_UpdateDay:     Result := '6';
       ON_UpdateTime:    Result := '00:00:00';
-      ON_UpRetry:          Result := 'True';
+      ON_UpRetry:       Result := 'True';
       ON_Place:         Result := 'Zeuthen';
       ON_Lon:           Result := '52,345';
       ON_Lat:           Result := '13,604';
@@ -1347,7 +1354,7 @@ function  TFrm_Spori.GetDefaultOption (const OptnName: TOptionNames): String; //
       ON_AutoValueMode: Result := 'True';
       ON_UseHotkey:     Result := 'False';
       ON_HotKey:        Result :=  IntToStr(VK_Q);
-      ON_StarMode:      Result := '0';
+      ON_BodyMode:      Result := '0';
       ON_Body:          Result := '0';
       ON_Langue:        Result := 'German';
     end;
@@ -1730,14 +1737,18 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                     end;
 
 
-                  ON_StarMode:
+                  ON_BodyMode:
                     if TryStrToInt(Options[j], i) then
-                      begin
-                        CB_StrMode.ItemIndex := i;
-                        ProgressStarMode(i, false);
-                      end
+                      if (i in [0..pred(Frm_Main.CmbBx_Mode.Items.Count)]) then
+                        begin
+                          Frm_Main.CmbBx_Mode.ItemIndex := i;
+
+                          ProgressBodyMode(i, false);
+                        end
+                      else
+                        ErrorMessage := 'Fehler in BodyMode-Ladevorgang: Out of Range'
                     else
-                      ErrorMessage := 'Fehler in StarMode-Ladevorgang: Falscher DatenTyp';
+                       ErrorMessage := 'Fehler in BodyMode-Ladevorgang: Falscher DatenTyp';
 
                   ON_Body:
                     if TryStrToInt (Options[j], i) then
@@ -2035,70 +2046,67 @@ procedure TFrm_Spori.DefaultList ();  //ToDo: put this into it's own File
      end;
    end;
 
-procedure TFrm_Spori.ProgressStarMode (const Mode: byte; Save: Boolean = true); //TODO: implement search
-begin
-  if Save then  //if a new Mode is seleced save it
-    Options[ON_StarMode] := IntToStr(Mode);
+procedure TFrm_Spori.ProgressBodyMode (const Mode: byte; Save: Boolean = true); //ToDo: implement search; make Md constances global enum
+  const
+    Md_Normal     = 0;
+    Md_Follow     = 1;
+    Md_Scan       = 2;
+    Md_Place      = 3;
+    Md_Time       = 4;
+    Md_Collection = 5;
+    Md_Search     = 6;
+  begin
+    if Save then  //if a new Mode was seleced save it
+      Options[ON_BodyMode] := IntToStr(Mode);
 
-  case Mode of
-    0: //normal
+    CB_StrMode.ItemIndex := Mode;
+    Frm_Main.CmbBx_Mode.ItemIndex := Mode;
+
+    case Mode of
+      Md_Normal:
+        begin
+          Mmo_Bsbg.Text    := 'Peilt den ausgewählten Himmelskörper / die ausgewählte Position an.';
+          Tmr_Nach.Enabled := false;
+         end;
+      Md_Follow:
+        begin
+          Mmo_Bsbg.Text    := 'Peilt den ausgewählten Himmelskörper an und verfolgt diesen auf dem Himmel';
+          Tmr_Nach.Enabled := true;
+         end;
+      Md_Scan:
+        begin
+          Mmo_Bsbg.Text    := 'Sobald ein Himmelsköper (manuell) angestuert wurde, wird er identifiziert.';
+          Tmr_Nach.Enabled := false;
+         end;
+      Md_Place:
+        begin
+          Mmo_Bsbg.Text    := 'Gibt den eigenen Ort aus. '+#10+'Hierzu muss ein Himmelskörper angesteuert und richtig benannt werden.';
+          Tmr_Nach.Enabled := false;
+         end;
+      Md_Time:
+        begin
+          Mmo_Bsbg.Text    := 'Gibt die aktuelle Zeit aus. '+#10+'Hierzu muss ein Himmelskörper angesteuert und richtig benannt werden.';
+          Tmr_Nach.Enabled := false;
+         end;
+      Md_Collection:
+        begin
+          if IsConstellation () then
+            begin
+              Mmo_Bsbg.Text    := 'Fährt ein Sternbild nach und verfolgt dieses.';
+              Tmr_Nach.Enabled := true;
+             end
+           else
+             ProgressBodyMode(Md_Normal);
+        end;
+      Md_Search:
+        ProgressBodyMode(Md_Normal);
+     else
       begin
-        CB_StrMode.Text  := 'Normal';
-        Mmo_Bsbg.Text    := 'Peilt den ausgewählten Himmelskörper / die ausgewählte Position an.';
-        Tmr_Nach.Enabled := false;
+        raise Exception.Create('Fehler in Change-Mode-Vorgang: Unbekannter Mode:' + IntToStr(Mode));
+        Mmo_Bsbg.Text := 'Error';
        end;
-    1: // follow
-      begin
-        CB_StrMode.Text  := 'Nachführen';
-        Mmo_Bsbg.Text    := 'Peilt den ausgewählten Himmelskörper an und verfolgt diesen auf dem Himmel';
-        Tmr_Nach.Enabled := true;
-       end;
-    2: //scan
-      begin
-        CB_StrMode.Text  := 'Erkennen';
-        Mmo_Bsbg.Text    := 'Sobald ein Himmelsköper (manuell) angestuert wurde, wird er identifiziert.';
-        Tmr_Nach.Enabled := false;
-       end;
-    4: //place
-      begin
-        CB_StrMode.Text  := 'Ort';
-        Mmo_Bsbg.Text    := 'Gibt den eigenen Ort aus. '+#10+'Hierzu muss ein Himmelskörper angesteuert und richtig benannt werden.';
-        Tmr_Nach.Enabled := false;
-       end;
-    5: //time
-      begin
-        CB_StrMode.Text  := 'Zeit';
-        Mmo_Bsbg.Text    := 'Gibt die aktuelle Zeit aus. '+#10+'Hierzu muss ein Himmelskörper angesteuert und richtig benannt werden.';
-        Tmr_Nach.Enabled := false;
-       end;
-    6:  //collection
-      begin
-        if IsConstellation () then
-          begin
-            CB_StrMode.Text  := 'Sternbild';
-            Mmo_Bsbg.Text    :='Fährt ein Sternbild nach und verfolgt dieses.';
-            Tmr_Nach.Enabled :=true;
-           end
-         else
-          begin
-            CB_StrMode.Text  := 'Normal';
-            Mmo_Bsbg.Text    := 'Peilt den ausgewählten Himmelskörper / die ausgewählte Position an.';
-            Tmr_Nach.Enabled := false;
-          end;
-      end;
-    7: //'suche'
-      begin
-        CB_StrMode.Text  :='Normal';
-        Mmo_Bsbg.Text    :='Peilt den ausgewählten Himmelskörper / die ausgewählte Position an.';
-        Tmr_Nach.Enabled :=false;
-      end;
-   else
-    begin
-      raise Exception.Create('Fehler in Change-Mode-Vorgang: Unbekannter Mode');
-      Mmo_Bsbg.Text := 'Error';
      end;
    end;
- end;
 
 procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate expert options in config; comments
   begin
@@ -2201,8 +2209,27 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
         Lbl_Bdy_Nr.caption        := Item.Caption;
         Lbl_Bdy_Name.caption      := Item.SubItems[0];
         Lbl_Bdy_NameLat.caption   := Item.SubItems[1];
-        Lbl_BdyPrpty_Val1.caption := Item.SubItems[2];
-        Lbl_BdyPrpty_Val2.caption := Item.SubItems[3];
+
+        //Toggle visibility if useful information was given or not
+        with Lbl_BdyPrpty_Val1 do
+          begin
+            if (Item.SubItems[2] = '-') then
+              Visible := false
+            else
+              Visible := true;
+            caption := Item.SubItems[2];
+          end;
+       //Toggle visibility if useful information was given or not
+       //But show it anyway if body property 1 wasn't useful
+        with Lbl_BdyPrpty_Val2 do
+          begin
+            if Lbl_BdyPrpty_Val1.Visible and (Item.SubItems[3]= 'Keine') then
+              Visible := false
+            else
+              Visible := true;
+
+            caption := Item.SubItems[3];
+          end;
       end;
 
 
@@ -2264,12 +2291,8 @@ procedure TFrm_Spori.ProgressNumber (Normal:Boolean = true); //ToDo: Errorhandel
       begin
         ProgressList (Item);
 
-        if (CB_StrMode.Caption = 'Sternbild') and Normal then //reset StarMode
-          begin
-            Tmr_Nach.Enabled := false;
-            CB_StrMode.Text  := 'Normal';
-            Mmo_Bsbg.Text    := 'Peilt den ausgewählten Himmelskörper / die ausgewählte Position an.';
-           end;
+        if (CB_StrMode.ItemIndex = 5) and Normal then //reset BodyMode
+          ProgressBodyMode (0);
       end
      else; //Errorhandeling
    end;
@@ -2339,7 +2362,7 @@ procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
     StWk: Real;
     Beta, Delta: Real;
     Grt, T: Real;
-    Ele, Azimut: Real;
+    Ele, Azimuth: Real;
     Az_Z, Az_N: Real;
   begin     ;
     Lon_G     := StrToFloat(Lb_Lon_G.Caption);
@@ -2374,9 +2397,9 @@ procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
     Az_Z := Sin(-T);
     Az_N := tan(Delta) * cos(Lat_R) - sin(Lat_R) * cos(T);
 
-    Azimut := ArcTan2(Az_Z, Az_N) * 180/PI();
-    if (Azimut <= 0) then
-      Azimut += 360;
+    Azimuth := ArcTan2(Az_Z, Az_N) * 180/PI();
+    if (Azimuth <= 0) then
+      Azimuth += 360;
 
     Lb_Beta.Caption := FloatToStrF(Beta, ffFixed, 4, 13);
     Lb_Delt.caption := FloatToStrF(Delta, ffFixed, 4, 13);
@@ -2388,21 +2411,21 @@ procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
     Lb_Az_N.Caption := FloatToStrF(Az_N, ffFixed, 4, 13);
 
     Lb_El.caption := FloatToStrF(Ele, ffFixed, 4, 11);
-    Lb_Az.caption:=FloatToStrF(Azimut, ffFixed, 4, 11);
+    Lb_Az.caption:=FloatToStrF(Azimuth, ffFixed, 4, 11);
 
 
     if not (Frm_Config.Sw_ManuVal.Checked) and not (AnsiLowerCase(CB_HK.caption) = 'ruheposition') then
       begin
         Ed_Ele_Soll.text := FloatToStrF(Ele, ffFixed, 3, 3);
-        Ed_Azi_Soll.text := FloatToStrF(Azimut, ffFixed, 3, 3);
+        Ed_Azi_Soll.text := FloatToStrF(Azimuth, ffFixed, 3, 3);
 
         with Frm_Main do
           begin
             FltSpnEd_EleManu.Value := Ele;
-            FltSpnEd_AzManu.Value  := Azimut;
+            FltSpnEd_AzManu.Value  := Azimuth;
 
             Lbl_EleCalc_Main.Caption := FloatToStrF(Ele, ffFixed, 3, 3);
-            Lbl_AzCalc_Main.Caption  := FloatToStrF(Azimut, ffFixed, 3, 3);
+            Lbl_AzCalc_Main.Caption  := FloatToStrF(Azimuth, ffFixed, 3, 3);
 
           end;
       end;
@@ -2478,7 +2501,7 @@ procedure TFrm_Spori.CalculateEphemerisLoc (); //ToDo: Comments; clean up
 
    end;
 
-function TFrm_Spori.Search4Body (SerchFor: String): TListItem;  //ToDo: Comments
+function TFrm_Spori.Search4Body (SerchFor: String): TListItem;  //ToDo: Comments; better error handleling
   var
     i, j: Integer;
     sameness: Real = -1;
@@ -2570,7 +2593,7 @@ procedure TFrm_Spori.Ed_SuchExit (Sender: TObject);  //Done
       Ed_Such.Text  := 'Suchen...';
   end;
 
-procedure TFrm_Spori.FndDFind (Sender: TObject); //Done
+procedure TFrm_Spori.FndDFind (Sender: TObject); //ToDo: move Connect to LoadOptions and use Connact to all just if no vailid port was found; Update
   var
      SearchForStr: String;
   begin
@@ -2761,11 +2784,6 @@ procedure TFrm_Spori.FormKeyUp(Sender: TObject; var Key: Word; //Done
       end;
   end;
 
-procedure TFrm_Spori.FormShow (Sender: TObject); //ToDo: move Connect to LoadOptions and use Connact to all just if no vailid port was found; Update
-  begin
-
-  end;
-
 procedure TFrm_Spori.Lb_ZeitClick (Sender: TObject); //This is just Temporary!
   begin
     Frm_Spori.Hide;
@@ -2774,18 +2792,20 @@ procedure TFrm_Spori.Lb_ZeitClick (Sender: TObject); //This is just Temporary!
 
 procedure TFrm_Spori.LV_ListDblClick (Sender: TObject); //Done?
   begin
-    if LV_List.SelCount <> 0 then //if an Item was selected, tell it
+    //if an Item was selected, tell it
+    if LV_List.SelCount <> 0 then
       ProgressList (LV_List.Selected);
   end;
 
 procedure TFrm_Spori.LV_ListItemChecked (Sender: TObject; Item: TListItem); //Done?
   begin
-    ProgressList(Item); // Tell what Item was selected
+    // Tell what Item was selected
+    ProgressList(Item);
   end;
 
-procedure TFrm_Spori.LV_ListKeyPress (Sender: TObject; var Key: char); //Done
+procedure TFrm_Spori.LV_ListKeyPress (Sender: TObject; var Key: char); //ToDo: Replace with Keydown
   begin
-    if ((LV_List.SelCount <> 0) and (Key = #13)) then
+    if ((LV_List.SelCount <> 0) and (Ord(Key) = VK_RETURN)) then
       ProgressList (LV_List.Selected);
   end;
 
@@ -2829,24 +2849,16 @@ procedure TFrm_Spori.MI_Dar_QuitClick  (Sender: TObject);  //Done
     Halt;
    end;
 
-    procedure TFrm_Spori.MI_Hilf_FehClick (Sender: TObject);  //toDo
-      begin
+procedure TFrm_Spori.MI_Hilf_FehClick (Sender: TObject);  //toDo
+  begin
 
-    for Index:=0 to CB_HK.Items.Count-1 do
-      if Uebertrag = CB_HK.Items[Index] then
-        begin
-          for Index2:=0 to LV_List.Items.Count-1 do
-            begin
-              if Uebertrag = AnsilowerCase(LV_List.Items[Index2].SubItems[0]) then
-                begin
-                  EintragList (LV_List.Items[Index2]);
-                  Gefunden:=true;
+   end;
 
-    procedure TFrm_Spori.MI_SuchClick (Sender: TObject); //If there was no Error
-      begin
-        FndD.FindText := CB_HK.Text;
-        FndD.Execute;
-       end;
+procedure TFrm_Spori.MI_SuchClick (Sender: TObject); //ToDo: Test if there was no Error
+  begin
+    FndD.FindText := CB_HK.Text;
+    FndD.Execute;
+   end;
 
     procedure TFrm_Spori.MI_UeberClick (Sender: TObject); //ToDo
       begin
@@ -2868,23 +2880,15 @@ procedure TFrm_Spori.MI_Dar_QuitClick  (Sender: TObject);  //Done
                     'Hilfsmittel oder Netzteile als den USB Port eines Laptops.');
        end;
 
-    procedure TFrm_Spori.MP_Hilf_OffClick (Sender: TObject);  //toDo
-      begin
-
-procedure TFrm_Spori.BBt_AnfahrenClick(Sender: TObject); //Fertig?
+procedure TFrm_Spori.MP_Hilf_OffClick (Sender: TObject);  //toDo
   begin
-    SendData ();
+
    end;
 
-    procedure TFrm_Spori.MI_Hilf_OnClick (Sender: TObject);   //toDo
-      begin
-
-procedure TFrm_Spori.Bt_EinstZuRSClick(Sender: TObject); //Fertig
-  var
-     StMode,HK:String;
+procedure TFrm_Spori.MI_Hilf_OnClick (Sender: TObject);   //toDo
   begin
-    StMode:=CB_StrMode.Text;
-    HK:=Ed_Nr.Text;
+
+   end;
 
 procedure TFrm_Spori.MI_Sicht_ExpClick (Sender: TObject); //ToDo: Comments
   begin
@@ -2986,38 +2990,36 @@ procedure TFrm_Spori.Tmr_GetDataTimer (Sender: TObject); //ToDo: Comments
 
       if TryStrToFloat(StrOut, TestFloat) then
         Ed_Azi_Ist.Text := StrOut;
-
       end;
-
   end;
-    //longitude!
-procedure TFrm_Spori.Tmr_Follow (Sender: TObject); //ToDo: the collection doesn't work (course there is never a case where 2 Starmodes are active) --> add a new mode
+
+procedure TFrm_Spori.Tmr_Follow (Sender: TObject); //Done?
   var
      EleNow, EleCalk: Real;
      AziNow, AziCalk: Real;
 
      Index: Integer;
-     InCollection: Boolean;
-     Collection: Array of TListItem;
+     InConstellation: Boolean;
+     Constellation: Array of TListItem;
   begin
-    //If Mode was set to collection
+    //If Mode was set to Constellation
     if CB_StrMode.Text = 'Sternbild' then
       begin
         // initialize
-        Setlength(Collection, 0);
-        InCollection  := false;
+        Setlength(Constellation, 0);
+        InConstellation  := false;
 
-        //Find all stars in the given collection
+        //Find all stars in the given Constellation
         for Index := 0 to LV_List.Items.Count-1 do
           if AnsiLowerCase(Trim(CB_StB.Text)) = AnsiLowerCase(LV_List.Items[Index].SubItems[2]) then
             begin
-              setlength(Collection, length(Collection)+1);
-              Collection[high(Collection)] := LV_List.Items[Index];
+              setlength(Constellation, length(Constellation)+1);
+              Constellation[high(Constellation)] := LV_List.Items[Index];
              end;
 
         //Find the Index of the selected star
-        for Index := 0 to high(Collection) do
-          if Ed_Nr.Text = Collection[Index].Caption then
+        for Index := 0 to high(Constellation) do
+          if Ed_Nr.Text = Constellation[Index].Caption then
             begin
               //Get informations about own and starposition
               EleNow  := StrToFloat(Ed_Ele_Ist.Text);
@@ -3028,24 +3030,25 @@ procedure TFrm_Spori.Tmr_Follow (Sender: TObject); //ToDo: the collection doesn'
               //if the own position is near of the postion of the star get next one
               if ((EleNow - EleCalk  < 5) and (EleNow - EleCalk  > -5) and
                   (AziNow - AziCalk  < 5) and (AziNow - AziCalk  > -5)) then
-                ProgressList (Collection[succ(Index) mod high(Collection)])
+                ProgressList (Constellation[succ(Index) mod high(Constellation)])
               else
-               ProgressList (Collection[0]);
+               ProgressList (Constellation[0]);
 
               //We found it!
-              InCollection := true;
+              InConstellation := true;
               break;
             end;
 
         //if no Item was found (strange case) use the first Item on the list
-        if not InCollection then
-         ProgressList (Collection[0]);
+        if not InConstellation then
+         ProgressList (Constellation[0]);
        end;
 
-      //If the user doesn't want to to send the data on his/her/it/whatever own
+    //If the user doesn't want to to send the data on his/her/it/whatever own
+    //Test if we can send data will be done by the function itself
       if not Frm_Config.Sw_HtKy.Checked then
         SendData ();
-   end;
+  end;
 
     procedure TFrm_Spori.CB_HKEditingDone (Sender: TObject); //In own function?
       var
@@ -3105,20 +3108,16 @@ procedure TFrm_Spori.BT_Main_TempClick(Sender: TObject); //Temp
 procedure TFrm_Spori.CB_StrModeChange (Sender: TObject); //Done
   begin
     //We got a now mode, tell it everything else
-    ProgressStarMode(CB_StrMode.ItemIndex);
+    ProgressBodyMode(CB_StrMode.ItemIndex);
    end;
 
-    procedure TFrm_Spori.CB_StBEditingDone (Sender: TObject); //In Procedure Auslagern?
-      begin
-        if IsConstellation () then
-          begin
-            Tmr_Nach.Enabled := true;
-            CB_StrMode.Text  := 'Sternbild';
-            Mmo_Bsbg.Text    := 'Fährt ein Sternbild nach und verfolgt dieses.';
-           end
-         else
-          ProgressNumber ();
-       end;
+procedure TFrm_Spori.CB_StBEditingDone (Sender: TObject); //ToDo: Comments
+  begin
+    if IsConstellation () then
+      ProgressBodyMode(5)
+     else
+      ProgressNumber ();
+   end;
 
 //Does exist just for compatibility
 initialization

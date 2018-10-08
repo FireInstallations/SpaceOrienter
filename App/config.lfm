@@ -3398,9 +3398,9 @@ object Frm_Config: TFrm_Config
         Left = 60
         Height = 26
         Top = 138
-        Width = 77
+        Width = 70
         BorderSpacing.Top = 20
-        Caption = 'Lattitude'
+        Caption = 'Latitude'
         ParentColor = False
       end
       object Lbl_Lon: TLabel
@@ -3412,7 +3412,7 @@ object Frm_Config: TFrm_Config
         Top = 231
         Width = 86
         BorderSpacing.Top = 20
-        Caption = 'Londitude'
+        Caption = 'Longitude'
         ParentColor = False
       end
       object FlSpEd_Lon: TFloatSpinEdit
@@ -3442,7 +3442,7 @@ object Frm_Config: TFrm_Config
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = Lbl_Redo
         AnchorSideBottom.Side = asrBottom
-        Left = 146
+        Left = 139
         Height = 16
         Top = 138
         Width = 16
@@ -4094,7 +4094,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Control = Lbl_Plan
         AnchorSideTop.Side = asrBottom
         Left = 73
-        Height = 42
+        Height = 35
         Top = 288
         Width = 191
         BorderSpacing.Top = 14
@@ -4139,7 +4139,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 277
         Height = 26
-        Top = 296
+        Top = 292
         Width = 27
         BorderSpacing.Left = 13
         Caption = 'am'
@@ -4186,7 +4186,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrCenter
         Left = 473
         Height = 26
-        Top = 296
+        Top = 292
         Width = 28
         BorderSpacing.Left = 13
         Caption = 'um'
@@ -4201,7 +4201,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 60
         Height = 33
-        Top = 438
+        Top = 431
         Width = 230
         BorderSpacing.Top = 20
         BorderSpacing.Bottom = 18
@@ -4471,7 +4471,7 @@ object Frm_Config: TFrm_Config
         AnchorSideRight.Side = asrBottom
         Left = 60
         Height = 26
-        Top = 350
+        Top = 343
         Width = 243
         BorderSpacing.Top = 20
         Caption = 'Falls Versäumt wiederholen?'
@@ -4487,7 +4487,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 312
         Height = 16
-        Top = 350
+        Top = 343
         Width = 16
         AutoSize = True
         BorderSpacing.Left = 9
@@ -4603,7 +4603,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrBottom
         Left = 73
         Height = 28
-        Top = 390
+        Top = 383
         Width = 66
         BevelOuter = bvSpace
         BevelWidth = 0
@@ -4640,7 +4640,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrCenter
         Left = 148
         Height = 26
-        Top = 391
+        Top = 384
         Width = 26
         BorderSpacing.Left = 9
         Caption = 'Ein'
