@@ -16,6 +16,10 @@ unit Config;
    along with this library; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.}
 
+//Make all labels act like thair switches
+//Usefull: ComboboxEx,  TECTabCtrl
+// Benachrichtigungen
+
 {$mode objfpc}{$H+}
 
 interface
@@ -29,7 +33,7 @@ uses
 
 type
 
-  TKoord = Record
+  TCoord = Record
       Lon: Real;
       Lat:  Real;
      end;
@@ -192,8 +196,10 @@ type
   private
       {private declarations}
   public
-    function KeyToStr (Key: Word): String; inline;
-    function Koordinaten (Stadt:String):TKoord;
+    {Converts a number to the name of the Key like #13 is 'Enter'}
+    function KeyToStr (Key: Word): String;
+    {}
+    function Koordinaten (Place: String):TCoord;
     procedure AllUpOff ();
   end;
 
@@ -209,10 +215,7 @@ uses
 
 { TFrm_Config }
 
-//Usefull: ComboboxEx,  TECTabCtrl
-// Benachrichtigungen
-
-function TFrm_Config.KeyToStr (Key: Word): String; inline; //Label for virtuel; own file
+function TFrm_Config.KeyToStr (Key: Word): String; //Label for virtuel; Array 4 bothh dicetions into own file
   begin
     case Key of
       VK_HIGHESTVALUE,
@@ -282,15 +285,15 @@ function TFrm_Config.KeyToStr (Key: Word): String; inline; //Label for virtuel; 
       VK_F24:        Result := 'F24';
 
       VK_TAB:        Result := 'Tab';
-      VK_SHIFT:      Result := 'Shift'; // See also VK_LSHIFT, VK_RSHIFT
-      VK_RETURN:     Result := 'Enter'; // The "Enter" key, also used for a keypad center press
-      VK_BACK:       Result := 'Back';  // The "Backspace" key, dont confuse with the
-                                        // Android BACK key which is mapped to VK_ESCAPE
-      VK_CONTROL:    Result := 'Ctr';   // See also VK_LCONTROL, VK_RCONTROL
+      VK_SHIFT:      Result := 'Shift';  // See also VK_LSHIFT, VK_RSHIFT
+      VK_RETURN:     Result := 'Enter';  // The "Enter" key, also used for a keypad center press
+      VK_BACK:       Result := 'Back';   // The "Backspace" key, dont confuse with the
+                                         // Android BACK key which is mapped to VK_ESCAPE
+      VK_CONTROL:    Result := 'Ctr';    // See also VK_LCONTROL, VK_RCONTROL
       VK_DELETE:     Result := 'Del';
-      VK_MENU:       Result := 'Alt'; // The ALT key. Also called "Option" in Mac OS X. See also VK_LMENU, VK_RMENU
-      VK_PAUSE:      Result := 'Pause'; // Pause/Break key
-      VK_CAPITAL:    Result := 'Caps'; // CapsLock key
+      VK_MENU:       Result := 'Alt';    // The ALT key. Also called "Option" in Mac OS X. See also VK_LMENU, VK_RMENU
+      VK_PAUSE:      Result := 'Pause';  // Pause/Break key
+      VK_CAPITAL:    Result := 'Caps';   // CapsLock key
       VK_SPACE:      Result := 'Space';
       VK_END:        Result := 'End';
       VK_HOME:       Result := 'Home';
@@ -299,17 +302,17 @@ function TFrm_Config.KeyToStr (Key: Word): String; inline; //Label for virtuel; 
       VK_RIGHT:      Result := 'Right';
       VK_DOWN:       Result := 'Down';
       VK_SELECT:     Result := 'Selct';
-      VK_PRINT:      Result := 'Print'; // PrintScreen key
+      VK_PRINT:      Result := 'Print';  // PrintScreen key
       VK_EXECUTE:    Result := 'Execte';
       VK_SNAPSHOT:   Result := 'Snapsht';
       VK_INSERT:     Result := 'Insrt';
       VK_CLEAR:      Result := 'Clear';
 
-      VK_LWIN:       Result := 'LSYS'; // In Mac OS X this is the Apple, or Command key. Windows Key in PC keyboards
-      VK_RWIN:       Result := 'RSYS'; // In Mac OS X this is the Apple, or Command key. Windows Key in PC keyboards
-      VK_ESCAPE:     Result := 'Esc';  // Also used for the hardware Back key in Android
+      VK_LWIN:       Result := 'LSYS';   // In Mac OS X this is the Apple, or Command key. Windows Key in PC keyboards
+      VK_RWIN:       Result := 'RSYS';   // In Mac OS X this is the Apple, or Command key. Windows Key in PC keyboards
+      VK_ESCAPE:     Result := 'Esc';    // Also used for the hardware Back key in Android
       VK_PRIOR:      Result := 'PageUp'; // Page Up
-      VK_NEXT:       Result := 'PageDwn'; // Page Down
+      VK_NEXT:       Result := 'PageDwn';// Page Down
       VK_SCROLL:     Result := 'Scrll';
 
       VK_NUMLOCK:    Result := 'Num';
@@ -323,7 +326,7 @@ function TFrm_Config.KeyToStr (Key: Word): String; inline; //Label for virtuel; 
       VK_NUMPAD7:    Result := 'Num7';
       VK_NUMPAD8:    Result := 'Num8';
       VK_NUMPAD9:    Result := 'Num9';
-      VK_MULTIPLY:   Result := 'Num*'; // VK_MULTIPLY up to VK_DIVIDE are usually in the numeric keypad in PC keyboards
+      VK_MULTIPLY:   Result := 'Num*';   // VK_MULTIPLY up to VK_DIVIDE are usually in the numeric keypad in PC keyboards
       VK_ADD:        Result := 'Num+';
       VK_SEPARATOR:  Result := 'NumEntr';
       VK_SUBTRACT:   Result := 'Num-';
@@ -337,24 +340,24 @@ function TFrm_Config.KeyToStr (Key: Word): String; inline; //Label for virtuel; 
       VK_XBUTTON1:   Result := 'XBtn1';
       VK_XBUTTON2:   Result := 'XBtn2';
 
-      VK_OEM_PLUS:   Result := '+'; // For any country/region, the '+' key
-      VK_OEM_COMMA:  Result := ','; // For any country/region, the ',' key
-      VK_OEM_MINUS:  Result := '-'; // For any country/region, the '-' key
-      VK_OEM_PERIOD: Result := '.'; // For any country/region, the '.' key
+      VK_OEM_PLUS:   Result := '+';      // For any country/region, the '+' key
+      VK_OEM_COMMA:  Result := ',';      // For any country/region, the ',' key
+      VK_OEM_MINUS:  Result := '-';      // For any country/region, the '-' key
+      VK_OEM_PERIOD: Result := '.';      // For any country/region, the '.' key
 
       //Application.ExtendedKeysSupport
       VK_LSHIFT:     Result := 'LShift';
       VK_RSHIFT:     Result := 'RShift';
       VK_LCONTROL:   Result := 'LCtr';
       VK_RCONTROL:   Result := 'RCtr';
-      VK_LMENU:      Result := 'LAlt'; // Left ALT key (also named Option in Mac OS X)
-      VK_RMENU:      Result := 'RAlt'; // Right ALT key (also named Option in Mac OS X)
+      VK_LMENU:      Result := 'LAlt';  // Left ALT key (also named Option in Mac OS X)
+      VK_RMENU:      Result := 'RAlt';  // Right ALT key (also named Option in Mac OS X)
 
       VK_HELP:       Result := 'Help';
-      VK_APPS:       Result := 'Apps';   // The PopUp key in PC keyboards
+      VK_APPS:       Result := 'Apps';  // The PopUp key in PC keyboards
       VK_SLEEP:      Result := 'Sleep';
 
-      VK_PROCESSKEY: Result := 'Prgrss'; // IME Process key
+      VK_PROCESSKEY: Result := 'Prgrss';// IME Process key
 
       VK_KANA:       Result := 'Kana';
       //VK_HANGUL:     Result := 'Hangul';
@@ -379,8 +382,8 @@ function TFrm_Config.KeyToStr (Key: Word): String; inline; //Label for virtuel; 
       VK_LCL_POWER:  Result := 'Power';
       VK_LCL_CALL:   Result := 'Call';
       VK_LCL_ENDCALL:Result := 'EndCall';
-      VK_LCL_AT:     Result := '@'; // Not equivalent to anything < $FF, will only be sent by a primary "@" key
-                                    // but not for a @ key as secondary action of a "2" key for example
+      VK_LCL_AT:     Result := '@';     // Not equivalent to anything < $FF, will only be sent by a primary "@" key
+                                        // but not for a @ key as secondary action of a "2" key for example
     else
      Result := '???';
 
@@ -433,10 +436,9 @@ function TFrm_Config.KeyToStr (Key: Word): String; inline; //Label for virtuel; 
     end;
   end;
 
-function TFrm_Config.Koordinaten (Stadt:String):TKoord; //Dynamisch, laden + Speichern ermöglichen; own file
+function TFrm_Config.Koordinaten (Place: String):TCoord; //Dynamicly; make loading / saving happen; default into own file
   begin
-//    ShowMessage(Stadt);
-    case (Trim(AnsiLowerCase(Stadt))) of
+    case (Trim(AnsiLowerCase(Place))) of
       'none':
         begin
           Result.Lat := 0;
@@ -959,7 +961,7 @@ function TFrm_Config.Koordinaten (Stadt:String):TKoord; //Dynamisch, laden + Spe
 
    end;
 
-procedure TFrm_Config.AllUpOff ();
+procedure TFrm_Config.AllUpOff (); //ToDo: Comments; clean up
   begin
     Img_Auto.Picture    := Img_Off.Picture;
     Img_Msg.Picture     := Img_Off.Picture;
@@ -977,18 +979,18 @@ procedure TFrm_Config.AllUpOff ();
     TE_Plan.Enabled     := false;
    end;
 
-procedure TFrm_Config.FormCreate(Sender: TObject);
-begin
-  ImgMn.ItemIndex       := 0;
-  PgCont_Pnl.ActivePage := TbSht_Alg;
-end;
+procedure TFrm_Config.FormCreate(Sender: TObject); //ToDo: Comments
+  begin
+    ImgMn.ItemIndex       := 0;
+    PgCont_Pnl.ActivePage := TbSht_Alg;
+  end;
 
-procedure TFrm_Config.Bt_UpClick(Sender: TObject);
+procedure TFrm_Config.Bt_UpClick(Sender: TObject);  //ToDo: Comments
   begin
     Frm_Spori.Update_ ();
    end;
 
-procedure TFrm_Config.Bt_Con1Click(Sender: TObject);
+procedure TFrm_Config.Bt_Con1Click(Sender: TObject); //Todo
 begin
 
 end;
@@ -998,7 +1000,7 @@ procedure TFrm_Config.Ed_HtKyEditingDone(Sender: TObject); //ToDo
 
   end;
 
-procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject);
+procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject); //ToDo: Comments
   var
     HK: String;
     PortableMode: boolean;
@@ -1021,7 +1023,8 @@ procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject);
           RenameFile (OptionsPath, OldOptionsPath + PathDelim + 'Options'+formatdatetime('d.m.y-h;n;s;z', Now)+'.old');
         end;
 
-        Sw_PortableMode.Checked := PortableMode;  //Since it would be changed if portableMode was active there is no need to call SetPortableMode(PortableMode);
+        //Since the sitch would call it, there is no need to call SetPortableMode(PortableMode);
+        Sw_PortableMode.Checked := PortableMode;
 
         Ed_Nr.Text := HK;
         ProgressNumber ();
@@ -1033,7 +1036,7 @@ procedure TFrm_Config.Bt_ConfStarListClick(Sender: TObject); //ToDo
 
   end;
 
-procedure TFrm_Config.Bt_LoadStarListClick(Sender: TObject);
+procedure TFrm_Config.Bt_LoadStarListClick(Sender: TObject); //ToDo: Comments
   begin
     if (OpnD_StarList.Execute) then
       begin
@@ -1043,7 +1046,7 @@ procedure TFrm_Config.Bt_LoadStarListClick(Sender: TObject);
       end;
   end;
 
-procedure TFrm_Config.Bt_ResetStarListClick(Sender: TObject);
+procedure TFrm_Config.Bt_ResetStarListClick(Sender: TObject); //ToDo: Comments
   begin
     with Frm_Spori do
       begin
@@ -1053,20 +1056,20 @@ procedure TFrm_Config.Bt_ResetStarListClick(Sender: TObject);
       end;
   end;
 
-procedure TFrm_Config.Bt_HtKyClick(Sender: TObject);
+procedure TFrm_Config.Bt_HtKyClick(Sender: TObject); //ToDo: Comments
   begin
     Frm_GetHotKey.ShowModal;
   end;
 
-procedure TFrm_Config.Bt_ConClick(Sender: TObject);
+procedure TFrm_Config.Bt_ConClick(Sender: TObject); //ToDo: Comments
   begin
     Frm_Spori.Connect();
    end;
 
-procedure TFrm_Config.CbBx_OrtEditingDone(Sender: TObject);
+procedure TFrm_Config.CbBx_OrtEditingDone(Sender: TObject); //ToDo: Comments
   var
     PlaceName: String;
-    TempKoord: TKoord;
+    TempKoord: TCoord;
   begin
     PlaceName        := CbBx_Ort.Caption;
     TempKoord        := Koordinaten (PlaceName);
@@ -1078,34 +1081,33 @@ procedure TFrm_Config.CbBx_OrtEditingDone(Sender: TObject);
     Frm_Spori.Options[ON_Lon]   := FloatToStrF(TempKoord.Lon, ffFixed, 3, 4);
     Frm_Spori.Options[ON_Lat]   := FloatToStrF(TempKoord.Lat, ffFixed, 3, 4);
 
-
     PlaceName := AnsiUpperCase(String(PlaceName[1])) + copy(PlaceName, 2, pred(Length(PlaceName)));
     Frm_Main.Lbl_Place_Name.Caption     := PlaceName;
    end;
 
-procedure TFrm_Config.CBx_RateEditingDone(Sender: TObject);
+procedure TFrm_Config.CBx_RateEditingDone(Sender: TObject); //ToDo: Comments
   begin
     Frm_Spori.Options[ON_UpdateRate] := IntToStr(CBx_Rate.ItemIndex);
    end;
 
-procedure TFrm_Config.CBx_TagEditingDone(Sender: TObject);
+procedure TFrm_Config.CBx_TagEditingDone(Sender: TObject); //ToDo: Comments
   begin
     Frm_Spori.Options[ON_UpdateDay] := IntToStr(CBx_Tag.ItemIndex);
    end;
 
-procedure TFrm_Config.DE_DayChange(Sender: TObject);
+procedure TFrm_Config.DE_DayChange(Sender: TObject); //ToDo: Comments
   begin
     Frm_Spori.DiffD   := De_Day.Date - Date;
     Frm_Spori.NoEntry := true;
    end;
 
-procedure TFrm_Config.De_DayEditingDone(Sender: TObject);
+procedure TFrm_Config.De_DayEditingDone(Sender: TObject); //ToDo: Comments
   begin
     Frm_Spori.Options[ON_Date] := DateToStr(De_Day.Date);
     Frm_Spori.NoEntry := false;
    end;
 
-procedure TFrm_Config.FlSpEd_LatEditingDone(Sender: TObject);
+procedure TFrm_Config.FlSpEd_LatEditingDone(Sender: TObject); //ToDo: Comments
 begin
   Frm_Spori.Lb_Lat_G.Caption  := FloatToStr(FlSpEd_Lat.Value);
   Frm_Spori.Lb_Lat_G1.Caption := FloatToStr(FlSpEd_Lat.Value);
@@ -1115,7 +1117,7 @@ begin
   Frm_Spori.Options[ON_Lat] := FloatToStr(FlSpEd_Lat.Value);
 end;
 
-procedure TFrm_Config.FlSpEd_LonEditingDone(Sender: TObject);
+procedure TFrm_Config.FlSpEd_LonEditingDone(Sender: TObject); //ToDo: Comments
 begin
   Frm_Spori.Lb_Lon_G.Caption  := FloatToStr(FlSpEd_Lon.Value);
   Frm_Spori.Lb_Lon_G1.Caption := FloatToStr(FlSpEd_Lon.Value);
@@ -1125,12 +1127,12 @@ begin
   Frm_Spori.Options[ON_Lon] := FloatToStr(FlSpEd_Lon.Value);
 end;
 
-procedure TFrm_Config.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+procedure TFrm_Config.FormClose(Sender: TObject; var CloseAction: TCloseAction); //ToDo: Comments
 begin
   Frm_Spori.Show;
 end;
 
-procedure TFrm_Config.Img_AutoClick(Sender: TObject);
+procedure TFrm_Config.Img_AutoClick(Sender: TObject); //ToDo: Comments, Clean up
   begin
     AllUpOff ();
     Img_Auto.Picture :=  Img_On.Picture;
@@ -1138,7 +1140,7 @@ procedure TFrm_Config.Img_AutoClick(Sender: TObject);
     Frm_Spori.Options[ON_UpdateMode] := '0';
    end;
 
-procedure TFrm_Config.Img_MsgClick(Sender: TObject);
+procedure TFrm_Config.Img_MsgClick(Sender: TObject); //ToDo: Comments, Clean up
   begin
     AllUpOff ();
     Img_Msg.Picture  := Img_On.Picture;
@@ -1146,7 +1148,7 @@ procedure TFrm_Config.Img_MsgClick(Sender: TObject);
     Frm_Spori.Options[ON_UpdateMode] := '1';
    end;
 
-procedure TFrm_Config.Img_tmClick(Sender: TObject);
+procedure TFrm_Config.Img_tmClick(Sender: TObject); //ToDo: Comments, Clean up
   begin
     AllUpOff ();
     Img_tm.Picture      := Img_On.Picture;
@@ -1166,7 +1168,7 @@ procedure TFrm_Config.Img_tmClick(Sender: TObject);
     Frm_Spori.Options[ON_UpdateMode] := '2';
    end;
 
-procedure TFrm_Config.Img_NonClick(Sender: TObject);
+procedure TFrm_Config.Img_NonClick(Sender: TObject); //ToDo: Comments, Clean up
   begin
     AllUpOff ();
     Img_Non.Picture  := Img_On.Picture;
@@ -1174,8 +1176,9 @@ procedure TFrm_Config.Img_NonClick(Sender: TObject);
     Frm_Spori.Options[ON_UpdateMode] := '3';
    end;
 
-procedure TFrm_Config.ImgMnSelectionChange(Sender: TObject; User: boolean);
+procedure TFrm_Config.ImgMnSelectionChange(Sender: TObject; User: boolean); //Done
   begin
+    //a different menu point was chosen, set the right  page active
     case ImgMn.itemIndex of
       0: PgCont_Pnl.ActivePage := TbSht_Alg;
       1: PgCont_Pnl.ActivePage := TbSht_Up;
@@ -1187,14 +1190,16 @@ procedure TFrm_Config.ImgMnSelectionChange(Sender: TObject; User: boolean);
      end;
   end;
 
-procedure TFrm_Config.Img_ZHS_WClick(Sender: TObject);
+procedure TFrm_Config.Img_ZHS_WClick(Sender: TObject); //Done
   begin
+    //Back to main form
     Close;
    end;
 
-procedure TFrm_Config.Img_ZHS_WMouseDown(Sender: TObject; Button: TMouseButton;
+procedure TFrm_Config.Img_ZHS_WMouseDown(Sender: TObject; Button: TMouseButton; //Done
   Shift: TShiftState; X, Y: Integer);
   begin
+    //if it was a leftklick color the label and the image (temporary) grey)
     if (Button = mbLeft) then
       begin
         Img_ZHS_W.Visible  := false;
@@ -1203,129 +1208,103 @@ procedure TFrm_Config.Img_ZHS_WMouseDown(Sender: TObject; Button: TMouseButton;
       end;
   end;
 
-procedure TFrm_Config.Img_ZHS_WMouseUp(Sender: TObject; Button: TMouseButton;
+procedure TFrm_Config.Img_ZHS_WMouseUp(Sender: TObject; Button: TMouseButton; //Done
   Shift: TShiftState; X, Y: Integer);
   begin
-    Img_ZHS_W.Visible  := true;
-    Img_ZHS_G.Visible  := false;
-    Lbl_ZHS.Font.Color := $00DFDFDF;
+    //Color labal and Image back to white. if it was a left klick
+    if (Button = mbLeft) then
+      begin
+        Img_ZHS_W.Visible  := true;
+        Img_ZHS_G.Visible  := false;
+        Lbl_ZHS.Font.Color := $00DFDFDF;
+      end;
   end;
 
-procedure TFrm_Config.Lbl_Sw_AutoTimeClick(Sender: TObject);
+procedure TFrm_Config.Lbl_Sw_AutoTimeClick(Sender: TObject); //Done
   begin
-    if (Sw_AutoTime.Checked) then
-      begin
-        Sw_AutoTime.Checked     := false;
-        Lbl_Sw_AutoTime.Caption := 'Aus';
-      end
-     else
-       begin
-        Sw_AutoTime.Checked     := true;
-        Lbl_Sw_AutoTime.Caption := 'Ein';
-       end;
+    //Toggle the switch
+    Sw_AutoTime.Checked     := not Sw_AutoTime.Checked;
    end;
 
-procedure TFrm_Config.Lbl_Sw_ExprtClick(Sender: TObject);
+procedure TFrm_Config.Lbl_Sw_ExprtClick(Sender: TObject); //Done
   begin
-    if (Sw_Exprt.Checked) then
-      begin
-        Sw_Exprt.Checked     := false;
-        Lbl_Sw_Exprt.Caption := 'Aus';
-      end
-     else
-       begin
-        Sw_Exprt.Checked     := true;
-        Lbl_Sw_Exprt.Caption := 'Ein';
-       end;
+    //Toggle the switch
+    Sw_Exprt.Checked     := not Sw_Exprt.Checked;
    end;
 
-procedure TFrm_Config.Lbl_Sw_PortableModeClick(Sender: TObject);
+procedure TFrm_Config.Lbl_Sw_PortableModeClick(Sender: TObject); //Done
   begin
-    if (Sw_PortableMode.Checked) then
-      begin
-        Sw_PortableMode.Checked     := false;
-        Lbl_Sw_PortableMode.Caption := 'Aus';
-      end
-     else
-       begin
-        Sw_PortableMode.Checked     := true;
-        Lbl_Sw_PortableMode.Caption := 'Ein';
-       end;
+    Sw_PortableMode.Checked := not Sw_PortableMode.Checked;
    end;
 
-procedure TFrm_Config.Lbl_Sw_RedoClick(Sender: TObject);
+procedure TFrm_Config.Lbl_Sw_RedoClick(Sender: TObject);  //Done
   begin
-    if (Sw_Redo.Checked) then
-      begin
-        Sw_Redo.Checked     := false;
-        Lbl_Sw_Redo.Caption := 'Aus';
-      end
-     else
-       begin
-        Sw_Redo.Checked     := true;
-        Lbl_Sw_Redo.Caption := 'Ein';
-       end;
+    //Just act like the label was part of the switch, so just toggle it
+    Sw_Redo.Checked     := not Sw_Redo.Checked;
    end;
 
-procedure TFrm_Config.Sw_AutoTimeChange(Sender: TObject);
+procedure TFrm_Config.Sw_AutoTimeChange(Sender: TObject);  //Done
+  var
+    IsActive: Boolean;
   begin
-    if (Sw_AutoTime.Checked) then
-      begin
-        Lb_Time.Enabled         := false;
-        TE_Time.Enabled         := false;
-        Lb_Day.Enabled          := false;
-        DE_Day.Enabled          := false;
-        Lbl_Sw_AutoTime.Caption := 'Ein';
+    IsActive := Sw_AutoTime.Checked;
 
-        Frm_Spori.Options[ON_AutoTimeMode] := 'True';
-       end
-     else
-       begin
-         Lb_Time.Enabled         := true;
-         TE_Time.Enabled         := true;
-         Lb_Day.Enabled          := true;
-         DE_Day.Enabled          := true;
-         Lbl_Sw_AutoTime.Caption := 'Aus';
+    //Toggle lable caption
+    Lbl_Sw_AutoTime.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
 
-         Frm_Spori.DiffD         := DE_Day.Date - Date;
-         Frm_Spori.DiffT         := StrToTime(TimeToStr(TE_Time.Time)) - Time;
-         Frm_Spori.Options[ON_AutoTimeMode] := 'False';
+    //Don't let the User chage time wihle the app is supposed to use the system time
+    Lb_Time.Enabled         := not IsActive;
+    TE_Time.Enabled         := not IsActive;
+    Lb_Day.Enabled          := not IsActive;
+    DE_Day.Enabled          := not IsActive;
+
+    //Set time and date difference, should already be the same but who knows
+    //Used for setting a point in time
+    if IsActive then
+      with Frm_Spori do
+        begin
+          DiffD := DE_Day.Date - Date;
+         DiffT  := StrToTime(TimeToStr(TE_Time.Time)) - Time;
         end;
+
+    //Save new value
+    Frm_Spori.Options[ON_AutoTimeMode] := BoolToStr(IsActive, 'True', 'False');;
    end;
 
-procedure TFrm_Config.Sw_ExprtChange(Sender: TObject);
+procedure TFrm_Config.Sw_ExprtChange(Sender: TObject);  //Done
+  var
+    IsActive: Boolean;
   begin
-    if (Sw_Exprt.Checked) then
-      begin
-        Lbl_Sw_Exprt.Caption           := 'Ein';
+    IsActive := Sw_Exprt.Checked;
 
-        Frm_Spori.MI_Sicht_Exp.Checked := true;
-        Frm_Spori.ProgressExpertMode ();
-       end
-     else
-      begin
-        Lbl_Sw_Exprt.Caption           := 'Aus';
+    //Toggle lable caption
+    Lbl_Sw_Exprt.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
 
-        Frm_Spori.MI_Sicht_Exp.Checked := false;
-        Frm_Spori.ProgressExpertMode ();
-       end;
+    //Old
+    Frm_Spori.MI_Sicht_Exp.Checked := IsActive;
+
+    //Hide or show high level programmparts; saves mode automaticly
+    Frm_Spori.ProgressExpertMode ();
    end;
 
-procedure TFrm_Config.Sw_HtKyChange(Sender: TObject);
+procedure TFrm_Config.Sw_HtKyChange(Sender: TObject); //Done
     var
     IsActive: Boolean;
   begin
     IsActive := Sw_HtKy.Checked;
 
+    //Toggle Caption
     Lbl_Sw_HtKy.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
 
+    //Don't let the User change the Hotkey while not using it
     Ed_HtKy.Enabled := IsActive;
     Bt_HtKy.Enabled := IsActive;
 
+    //Save new value
     Frm_Spori.Options[ON_UseHotkey] := BoolToStr(IsActive, 'True', 'False');
   end;
 
-procedure TFrm_Config.Sw_ManuValChange(Sender: TObject);   //Done
+procedure TFrm_Config.Sw_ManuValChange(Sender: TObject); //Done
   var
     IsActive: Boolean;
   begin
@@ -1337,24 +1316,23 @@ procedure TFrm_Config.Sw_ManuValChange(Sender: TObject);   //Done
     //Toggle visebility of FloatEditfields and make the decimal places userfrendly
     with Frm_Main do
       begin
-        FltSpnEd_EleManu.Enabled := IsActive;
-        FltSpnEd_EleManu.Visible := IsActive;
-        FltSpnEd_AzManu.Visible  := IsActive;
-        FltSpnEd_AzManu.Enabled  := IsActive;
-
-        //If the mode was not active show the fancyer labels instat
-        Lbl_EleCalc_Main.Visible := not IsActive;
-        Lbl_AzCalc_Main.Visible  := not IsActive;
+        FltSpnEd_EleCalcManu.Enabled := IsActive;
+        FltSpnEd_EleCalcManu.Visible := IsActive;
+        FltSpnEd_AziCalcManu.Visible  := IsActive;
+        FltSpnEd_AziCalcManu.Enabled  := IsActive;
 
         if (IsActive) then
           begin
-            FltSpnEd_EleManu.DecimalPlaces := 3;
-            FltSpnEd_AzManu.DecimalPlaces  := 3;
+            FltSpnEd_EleCalcManu.DecimalPlaces := 2;
+            FltSpnEd_AziCalcManu.DecimalPlaces  := 2;
+
+            //Call for number agin, to support static modes like DefaultPos ("Ruhelage")
+            Frm_Spori.ProgressNumber();
           end
         else
           begin //We will work intern with more places
-            FltSpnEd_EleManu.DecimalPlaces := 5;
-            FltSpnEd_AzManu.DecimalPlaces  := 5;
+            FltSpnEd_EleCalcManu.DecimalPlaces := 5;
+            FltSpnEd_AziCalcManu.DecimalPlaces  := 5;
           end;
       end;
 
@@ -1362,15 +1340,23 @@ procedure TFrm_Config.Sw_ManuValChange(Sender: TObject);   //Done
     Frm_Spori.Options[ON_AutoValueMode] := BoolToStr(not IsActive, 'True', 'False');
   end;
 
-procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject);
+procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject); //Done
+  var
+    IsActive: Boolean;
   begin
-    Frm_Spori.Options[ON_PortableMode] := BoolToStr(Sw_PortableMode.Checked, 'True', 'False');
-    Lbl_Sw_PortableMode.Caption := BoolToStr(Sw_PortableMode.Checked, 'Ein', 'Aus');
+    IsActive := Sw_PortableMode.Checked;
 
-    Frm_Spori.SetPortableMode(Sw_PortableMode.Checked);
+    //Toggle lable caption
+    Lbl_Sw_PortableMode.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+
+    //Save new Value
+    Frm_Spori.Options[ON_PortableMode] := BoolToStr(IsActive, 'True', 'False');
+
+    //Change used paths
+    Frm_Spori.SetPortableMode(IsActive);
    end;
 
-procedure TFrm_Config.Sw_AutoConChange(Sender: TObject);
+procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //Done
   var
     isActive: Boolean;
   begin
@@ -1390,34 +1376,40 @@ procedure TFrm_Config.Sw_AutoConChange(Sender: TObject);
         Frm_Spori.Connect (true);
    end;
 
-procedure TFrm_Config.Sw_RedoChange(Sender: TObject);
+procedure TFrm_Config.Sw_RedoChange(Sender: TObject); //Done
+  var
+    IsActive: Boolean;
   begin
-    if (Sw_Redo.Checked) then
-      begin
-        Lbl_Sw_Redo.Caption   := 'Ein';
-        Frm_Spori.Options[ON_UpRetry] := 'True';
-       end
-     else
-      begin
-        Lbl_Sw_Redo.Caption   := 'Aus';
-        Frm_Spori.Options[ON_UpRetry] := 'False';
-       end;
+    IsActive := Sw_Redo.Checked;
+
+    //Toggle lable caption
+    Lbl_Sw_Redo.Caption   := BoolToStr(IsActive, 'Ein', 'Aus');
+
+    //Save it
+    Frm_Spori.Options[ON_UpRetry] := BoolToStr(IsActive, 'True', 'False');
    end;
 
-procedure TFrm_Config.TE_PlanEditingDone(Sender: TObject);
+procedure TFrm_Config.TE_PlanEditingDone(Sender: TObject); //Done
   begin
+    //Save new time
     Frm_Spori.Options[ON_UpdateTime] := TimeToStr(TE_Plan.Time);
    end;
 
-procedure TFrm_Config.TE_TimeChange(Sender: TObject);
+procedure TFrm_Config.TE_TimeChange(Sender: TObject);  //Done
   begin
-    Frm_Spori.DiffT   := StrToTime(TimeToStr(TE_Time.Time))- Time;
+    //Set new time differenz
+    Frm_Spori.DiffT   := StrToTime(TimeToStr(TE_Time.Time)) - Time;
+
+    //Don't save time while it is on change
     Frm_Spori.NoEntry := true;
    end;
 
-procedure TFrm_Config.TE_TimeEditingDone(Sender: TObject);
+procedure TFrm_Config.TE_TimeEditingDone(Sender: TObject); //Done
   begin
+    //Save the new time
     Frm_Spori.Options[ON_Time] := TimeToStr(TE_Time.Time);
+
+    //Editing is over we can save it savely
     Frm_Spori.NoEntry := false;
    end;
 

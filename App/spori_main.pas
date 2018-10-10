@@ -23,10 +23,12 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, ComCtrls, Buttons, Spin, ECImageMenu,
-  Config, LCLType;
+  StdCtrls, ComCtrls, Buttons, Spin, ECImageMenu, LCLType, Math,
+  Config;
 
 type
+
+  TShapeNums = (ShpN_EleNow, ShpN_EleCalc, ShpN_AziNow, ShpN_AziCalc);
 
   { TFrm_Main }
 
@@ -34,11 +36,14 @@ type
     BitBtn_Navigate_Main: TBitBtn;
     CmbBx_Mode: TComboBox;
     Ed_Search4Bdy_Main: TEdit;
-    FltSpnEd_AzManu: TFloatSpinEdit;
-    FltSpnEd_EleManu: TFloatSpinEdit;
+    FltSpnEd_AziCalcManu: TFloatSpinEdit;
+    FltSpnEd_EleCalcManu: TFloatSpinEdit;
+    Img_ChartEle: TImage;
+    Img_ChartAzi: TImage;
     Img_Info_DateTime: TImage;
-    Img_Info_EleAzNow: TImage;
     Img_Info_ConStatus: TImage;
+    Img_Info_Azi: TImage;
+    Img_Info_Ele: TImage;
     Img_Info_UpStatus: TImage;
     Img_Info_Place: TImage;
     Img_Info_MagDvtn: TImage;
@@ -50,20 +55,23 @@ type
     ImgLst_Menue: TImageList;
     Img_Settings_G: TImage;
     Img_ShootingStar: TImage;
-    Lbl_AziCalc_Grd_Main: TLabel;
-    Lbl_EleCalc_Grd_Main: TLabel;
-    Lbl_AzName_Main: TLabel;
-    Lbl_EleName_Main: TLabel;
+    Lbl_EleChart_Title: TLabel;
+    Lbl_AziChart_Title: TLabel;
+    Lbl_HeightHelper: TLabel;
+    Lbl_AziCalc_Val: TLabel;
+    Lbl_AziCalc_Grd: TLabel;
+    Lbl_AziCalc_Title: TLabel;
+    Lbl_AziNow_Val: TLabel;
+    Lbl_AziNow_Grd: TLabel;
+    Lbl_AziNow_Title: TLabel;
+    Lbl_EleCalc_Grd: TLabel;
+    Lbl_EleCalc_Val: TLabel;
+    Lbl_EleCalc_Title: TLabel;
     Lbl_EleNow_Grd: TLabel;
-    Lbl_AzNow_Grd: TLabel;
-    Lbl_AzNow_Title: TLabel;
-    Lbl_AzNow: TLabel;
     Lbl_EleNow_Title: TLabel;
-    Lbl_Ele_Now: TLabel;
-    Lbl_AzCalc_Main: TLabel;
-    Lbl_EleCalc_Main: TLabel;
+    Lbl_EleNow_Val: TLabel;
     Lbl_Place_Name: TLabel;
-    Lbl_Bdy_NameLat: TLabel;
+    Lbl_Bdy_NameLatain: TLabel;
     Lbl_Bdy_Split: TLabel;
     Lbl_MagDvtn_Val: TLabel;
     Lbl_Settings: TLabel;
@@ -85,8 +93,15 @@ type
     Pnl_Status: TPanel;
     PgCtrl_Menue: TPageControl;
     Pnl_Header: TPanel;
-    Pnl_Values: TPanel;
     PrgrssBr_ComPCon: TProgressBar;
+    Shape_AziCalc1: TShape;
+    Shape_AziNow1: TShape;
+    Shape_EleCalc: TShape;
+    Shape_AziCalc: TShape;
+    Shape_EleCalc1: TShape;
+    Shape_AziNow: TShape;
+    Shape_EleNow: TShape;
+    Shape_EleNow1: TShape;
     TbSht_DashBord: TTabSheet;
     TbSht_StarList: TTabSheet;
     {tell the device to pilote to the body}
@@ -102,6 +117,10 @@ type
     {If return (Enter) was pressed SearchInputEdit will be called}
     procedure Ed_Search4Bdy_MainKeyDown(Sender: TObject; var Key: Word;
       {%H-}Shift: TShiftState);
+    procedure FltSpnEd_AziCalcManuChange(Sender: TObject);
+    procedure FltSpnEd_EleCalcManuChange(Sender: TObject);
+    {Use the default page}
+    procedure FormCreate(Sender: TObject);
     {If the last key goes up (KeyCount = 0) then the Set KeysPressed, which
      containing all last pressed keys with the Hotkey set. If they are equal
      and UseHotkey is active SendData will be called.
@@ -110,6 +129,7 @@ type
     {Collect every ne pressed key and add them to the set KeysPressed.
      Also increases KeyCount, wich has a value above 0 as long as some keys are still pressed}
     procedure FormKeyUp(Sender: TObject; var {%H-}Key: Word; {%H-}Shift: TShiftState);
+    procedure ImgMn_MenueSelectionChange(Sender: TObject; {%H-}User: boolean);
     {Get the user to the confing form}
     procedure Img_Settings_WClick(Sender: TObject);
     {cosmetic: set color of label and image to gray (leftklick)}
@@ -125,7 +145,9 @@ type
 
     {If a Input was given search for it in LV_BodyList}
     procedure SearchInputEdit();
-  public
+  public          
+    {}
+    procedure SetShapePos (const ShapeNum: TShapeNums; Angle: Real);
 
   end;
 
@@ -141,6 +163,105 @@ uses
 {$R *.lfm}
 
 { TFrm_Main }
+
+procedure TFrm_Main.SetShapePos (const ShapeNum: TShapeNums; Angle: Real); //ToDo: Comments
+  var
+    R: Real;
+    CalcLeft, CalcTop: Integer;
+    Shape_Height: Integer;
+    TempShpeType: TShapeType;
+
+    function FImod(const ValLeft: Real; const  ValRhight: Integer): Real; inline;
+      begin
+        FImod := ValLeft - ValRhight * Int(ValLeft / ValRhight);
+      end;
+
+    function Sign_custom (const Value: Real): ShortInt; inline;
+      begin
+        if (Value = 0) then
+          Result := 1
+        else
+          Result := Sign(Value);
+      end;
+
+    procedure CalcAziPosAndShape ();
+      begin
+        Angle := FImod(Angle, 360);
+
+        CalcTop  := Img_ChartAzi.Top  + round(R) - Shape_Height;
+        CalcLeft := Img_ChartAzi.Left + round(R) - Shape_Height;
+
+        CalcTop  -= Round(R * cos(Angle * Pi/180));
+        CalcLeft += Round(R * sin(Angle * Pi/180));
+
+        case Round(Angle) of
+          316..359, 0..45: TempShpeType := stTriangle;
+          46..135:         TempShpeType := stTriangleRight;
+          136..225:        TempShpeType := stTriangleDown;
+          226..315:        TempShpeType := stTriangleLeft;
+        end;
+      end;
+
+    procedure CalcElePosAndShape ();
+      var
+        Signum: ShortInt;
+      begin
+        Angle := FImod(Angle, 181);
+
+        case Round(Angle) of
+          -45..0, 1..45:        TempShpeType := stTriangleRight;
+          46..135:              TempShpeType := stTriangle;
+          -135..-46:            TempShpeType := stTriangleDown;
+          136..180, -180..-136: TempShpeType := stTriangleLeft;
+        end;
+
+        CalcTop  := Img_ChartEle.Top  + round(R) - Shape_Height;
+        CalcLeft := Img_ChartEle.Left + round(R) - Shape_Height;
+
+        Signum   := Sign_custom(Angle);
+        Angle    := abs(Angle);
+
+        CalcTop  -= Round(R * sin(Angle * Pi/180)) * Signum;
+        CalcLeft += Round(R * cos(Angle * Pi/180));
+      end;
+
+  begin
+    //these Images are supposed to be 2 equel circles
+    R := Img_ChartEle.Height / 2;
+    Shape_Height := Shape_EleNow.Height div 2;
+
+    if (ShapeNum <= ShpN_EleCalc) then
+      CalcElePosAndShape ()
+    else
+      CalcAziPosAndShape ();
+
+    case ShapeNum of
+      ShpN_EleNow:
+        begin
+          Shape_EleNow.Left  := CalcLeft; 
+          Shape_EleNow.Top   := CalcTop;
+          Shape_EleNow.Shape := TempShpeType;
+        end;
+      ShpN_EleCalc:
+        begin
+          Shape_EleCalc.Left  := CalcLeft;
+          Shape_EleCalc.Top   := CalcTop;
+          Shape_EleCalc.Shape := TempShpeType;
+        end;
+      ShpN_AziNow:
+        begin    
+          Shape_AziNow.Left   := CalcLeft;
+          Shape_AziCalc.Top   := CalcTop;
+          Shape_AziCalc.Shape := TempShpeType;
+        end;
+      ShpN_AziCalc:
+        begin
+          Shape_AziCalc.Left  := CalcLeft;
+          Shape_AziCalc.Top   := CalcTop;
+          Shape_AziCalc.Shape := TempShpeType;
+        end;
+    end;
+  end;
 
 procedure TFrm_Main.Img_Settings_WClick(Sender: TObject); //Done
   begin
@@ -184,8 +305,9 @@ procedure TFrm_Main.Btn_Search4Bdy_MainClick(Sender: TObject);  //done
     SearchInputEdit();
   end;
 
-procedure TFrm_Main.CmbBx_ModeChange(Sender: TObject);
+procedure TFrm_Main.CmbBx_ModeChange(Sender: TObject); //Done
   begin
+    //Tell what Mode was selected
     Frm_Spori.ProgressBodyMode(CmbBx_Mode.ItemIndex);
   end;
 
@@ -223,7 +345,42 @@ procedure TFrm_Main.Ed_Search4Bdy_MainKeyDown(Sender: TObject; var Key: Word; //
       SearchInputEdit();
   end;
 
-procedure TFrm_Main.FormKeyDown(Sender: TObject; var Key: Word;
+procedure TFrm_Main.FltSpnEd_AziCalcManuChange(Sender: TObject); //ToDo: Comments
+  var
+    Val: Real;
+  begin
+    Val := FltSpnEd_AziCalcManu.Value;
+
+    SetShapePos(ShpN_AziCalc, Val);
+
+    Lbl_AziCalc_Val.Caption := FloatToStrF(Val, ffFixed, 3, 2);
+
+    //Support for old mainform
+    Frm_Spori.Ed_Azi_Soll.Text := FloatToStr(Val);
+  end;
+
+procedure TFrm_Main.FltSpnEd_EleCalcManuChange(Sender: TObject);  //ToDo: Comments
+  var
+    Val: Real;
+  begin
+    Val := FltSpnEd_EleCalcManu.Value;
+
+    SetShapePos(ShpN_EleCalc, Val);
+
+    Lbl_EleCalc_Val.Caption := FloatToStrF(Val, ffFixed, 3, 2);
+
+    //Support for old mainform
+    Frm_Spori.Ed_Ele_Soll.Text := FloatToStr(Val);
+  end;
+
+procedure TFrm_Main.FormCreate(Sender: TObject); //Done
+  begin
+    //Just take the default page
+    ImgMn_Menue.ItemIndex   := 0;
+    PgCtrl_Menue.ActivePage := TbSht_DashBord;
+  end;
+
+procedure TFrm_Main.FormKeyDown(Sender: TObject; var Key: Word; //Done
   Shift: TShiftState);
   begin
     //If we ge a new key and Use Hotkey is active add it to the set.
@@ -236,7 +393,7 @@ procedure TFrm_Main.FormKeyDown(Sender: TObject; var Key: Word;
       end;
   end;
 
-procedure TFrm_Main.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState
+procedure TFrm_Main.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState //Done
   );
   begin
         //If UseHotkey is active
@@ -255,6 +412,12 @@ procedure TFrm_Main.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState
             PressedKeys := [];
           end;
       end;
+  end;
+
+procedure TFrm_Main.ImgMn_MenueSelectionChange(Sender: TObject; User: boolean); //Done
+  begin
+    //if the User selects
+    PgCtrl_Menue.ActivePageIndex := ImgMn_Menue.itemIndex;
   end;
 
 procedure TFrm_Main.Img_Settings_WMouseDown(Sender: TObject; //Done

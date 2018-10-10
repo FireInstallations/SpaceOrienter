@@ -1,7 +1,7 @@
 object Frm_Config: TFrm_Config
-  Left = 159
+  Left = 116
   Height = 580
-  Top = 407
+  Top = 198
   Width = 960
   AlphaBlendValue = 250
   Caption = 'Einstellungen'

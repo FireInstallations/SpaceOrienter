@@ -1,9 +1,5 @@
 unit spaceorienter_main;
 
-//Fixed Starmode
-//Renamed Starmode -> BodyMode
-//Search on new mainform works now for constellations too
-
 {$mode objfpc}{$H+}
 
 interface
@@ -266,15 +262,21 @@ interface
     Well, the project started a longe time ago and had a big break.
     Many functions are basicly out of date and need a review. That are the shifted ones,
     While the none shifted ones are alredy partlay rewritten and mostly dokumented.
-    If you want to do somthing about this, take a look at the shifted ones or at the
-    ToDoList (below)
+    However since the Project get's a new mainform, where these functions arn't needed,
+    they will not get updated anymore.
+    If you want to do somthing about take a look at the ToDoList (below)
    }
 
   {ToDo List:
     for unnown Errors do
-    on E: EInOutError do
+    on E: <Errortyte> do
       writeln('Message', E.Message);
 
+    Progressbar (Main / Config) for Update
+    Move Ele/Azi charts up/down if ManuVal mode toggles
+    Integrate follow timer in Calc timer
+    Cut Ele chart in half since Values > 90° doesn't make sence
+    StrCompaire: find offset of missing parts so searching for a near char makes more sanse
     Clean ArduIno code
     Use Out in PlanEph and Sofa
     rename (kleiner) wagen -> (kleiner) Bär
@@ -357,7 +359,7 @@ interface
     JwaWindows, {windows, ShellApi,}
     {$Else}
     clocale, process,
-    //unix,baseunix,
+    //Unix, baseunix,
     //lclintf,
     {$EndIf}
 
@@ -368,7 +370,8 @@ interface
 
   type
 
-    {Warning: EVERY new option must be listed here! }
+    {Lists all possible Option (config) names
+     Warning: EVERY new option must be listed here! }
     TOptionNames = (
       ON_Version,
       ON_PortableMode,
@@ -677,7 +680,8 @@ interface
           {importend cofigurations, saved in Options.Space at the end}
           Options: Array[TOptionNames] of String;
 
-          {Diffrence between Now and the DateTime selected by the user}
+          {Diffrence between Now and the DateTime selected by the user
+           Time goes on like expected but from point in time choosen by the user}
           DiffD:       TDate;
           DiffT:       TTime;
           {Don't save time while it is on change in Frm_config }
@@ -705,7 +709,8 @@ interface
 
         {Tell the forms, if ExpertMode was activated}
         procedure ProgressExpertMode (Save: Boolean = true);
-        {Try to tell the Rest of the mainform what star was selecet by a given Number}
+        {Try to tell the Rest of the mainform what star was selecet by a given Number
+        (Number is Stored in Ed_Nr)}
         procedure ProgressNumber (Normal:Boolean = true);
 
         {Update the App; work in progress}
@@ -735,7 +740,7 @@ implementation
 
   { Frm_Spori }
 
-function  TFrm_Spori.StrCompaire (str1, str2: String; const CaseSensitive: Boolean = true): Real;  //Done?
+function  TFrm_Spori.StrCompaire (str1, str2: String; const CaseSensitive: Boolean = true): Real;  //ToDo: find offset of missing parts
   type
     TCharList = Record
       Chara: UniCodeChar;
@@ -782,17 +787,18 @@ function TFrm_Spori.Gleiche (str1, str2: string): Real;  inline; //Fertig?
            end;
 
         //look for same chararkters around of i
+        //SameChar samechar will be diveded by 4 so if the char appiers 2 places away it's just 1/4 of the same place
         for i := 0 to pred(MinLength) do
           if (str1[i] = str2[i]) then
-            Inc(SameChar)
+            Inc(SameChar, 4)
            else if ((Length(str2) - 1 >= i + 1) and (str1[i] = str2[i + 1])) then
-             Inc(SameChar)
+             Inc(SameChar, 2)
            else if ((Length(str2) - 1 >= i + 2) and (str1[i] = str2[i + 2])) then
-             Inc(SameChar)
+             Inc(SameChar,1)
            else if ((Length(str1) - 1 >= i + 1) and (str1[i + 1] = str2[i])) then
-             Inc(SameChar)
+             Inc(SameChar, 2)
            else if ((Length(str1) - 1 >= i + 2) and (str1[i + 2] = str2[i])) then
-             Inc(SameChar);
+             Inc(SameChar, 1);
 
         //count number of different chars in Str1
         for j := 0 to high(Str1) do //while (length(str1) > 0) do
@@ -845,8 +851,8 @@ function TFrm_Spori.Gleiche (str1, str2: string): Real;  inline; //Fertig?
        VariMin:= Max(length(NumberOfChar1),length(NumberOfChar2));
        end;
 
-    if variGleich2 > 0 then
-      Result := (((variGleich/VariMax)+((variGleich2/VariMin))*2)/3)*100
+    if SaneNrChr > 0 then
+      Result := (((SameChar/(Maxlength*4)) * (2/5))  + ((SaneNrChr/MinLength) * (3/5))) * 100
      else
        Result := 0.00;
 
@@ -1093,8 +1099,8 @@ procedure TFrm_Spori.SendData (); //Done?
     PointAsSep.DecimalSeparator := '.';
 
     //Get values to navigate to
-    EleStr := FloatToStrF(Frm_Main.FltSpnEd_EleManu.Value, ffFixed, 3, 5,PointAsSep);
-    AzStr  := FloatToStrF(Frm_Main.FltSpnEd_AzManu.Value, ffFixed, 3, 5, PointAsSep);
+    EleStr := FloatToStrF(Frm_Main.FltSpnEd_EleCalcManu.Value, ffFixed, 3, 5, PointAsSep);
+    AzStr  := FloatToStrF(Frm_Main.FltSpnEd_AziCalcManu.Value, ffFixed, 3, 5, PointAsSep);
 
     //If a Connection is active and stable elevation and azimuth to the ArduIno.
     if ser.InstanceActive and ser.CanWrite(200) then
@@ -1374,7 +1380,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
      TempKey: Integer;
      TempBool: Boolean;
      TempTime: TDateTime;
-     Temp_Koord: TKoord;
+     Temp_Koord: TCoord;
      TempFloat: Real;
 
      ErrorMessage:String = '';
@@ -2206,9 +2212,9 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
     Ed_Egstn.Text  := Item.SubItems[3];
     with Frm_Main do
       begin
-        Lbl_Bdy_Nr.caption        := Item.Caption;
-        Lbl_Bdy_Name.caption      := Item.SubItems[0];
-        Lbl_Bdy_NameLat.caption   := Item.SubItems[1];
+        Lbl_Bdy_Nr.caption         := Item.Caption;
+        Lbl_Bdy_Name.caption       := Item.SubItems[0];
+        Lbl_Bdy_NameLatain.caption := Item.SubItems[1];
 
         //Toggle visibility if useful information was given or not
         with Lbl_BdyPrpty_Val1 do
@@ -2268,16 +2274,19 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
 
           with Frm_Main, DefaultFormatSettings do
             begin
-              FltSpnEd_EleManu.Value := 89.999;
-              FltSpnEd_AzManu.Value  := 89.999;
+              SetShapePos (ShpN_EleCalc, 89.999);
+              SetShapePos (ShpN_AziCalc, 89.999);
 
-              Lbl_EleCalc_Main.Caption := '89' + DecimalSeparator + '999';
-              Lbl_AzCalc_Main.Caption  := '89' + DecimalSeparator + '999';
+              FltSpnEd_EleCalcManu.Value := 89.999;
+              FltSpnEd_AziCalcManu.Value  := 89.999;
+
+              Lbl_EleCalc_Val.Caption := '89' + DecimalSeparator + '99';
+              Lbl_AziCalc_Val.Caption := '89' + DecimalSeparator + '99';
             end;
          end;
    end;
 
-procedure TFrm_Spori.ProgressNumber (Normal:Boolean = true); //ToDo: Errorhandeling if the Item doesnt exits
+procedure TFrm_Spori.ProgressNumber (Normal: Boolean = true); //ToDo: Errorhandeling if the Item doesnt exits
   var
      Item:TListItem;
   begin
@@ -2302,7 +2311,7 @@ procedure TFrm_Spori.Update_ (); //ToDo
 
   end;
 
-procedure TFrm_Spori.Angle (); //Done
+procedure TFrm_Spori.Angle (); //ToDo: Comments
   var
      TempStr: String;
   begin
@@ -2421,11 +2430,14 @@ procedure TFrm_Spori.CalculateStarLoc ();  //ToDo: comments
 
         with Frm_Main do
           begin
-            FltSpnEd_EleManu.Value := Ele;
-            FltSpnEd_AzManu.Value  := Azimuth;
+            SetShapePos (ShpN_EleCalc, Ele);
+            SetShapePos (ShpN_AziCalc, Azimuth);
 
-            Lbl_EleCalc_Main.Caption := FloatToStrF(Ele, ffFixed, 3, 3);
-            Lbl_AzCalc_Main.Caption  := FloatToStrF(Azimuth, ffFixed, 3, 3);
+            FltSpnEd_EleCalcManu.Value := Ele;
+            FltSpnEd_AziCalcManu.Value  := Azimuth;
+
+            Lbl_EleCalc_Val.Caption := FloatToStrF(Ele, ffFixed, 3, 2);
+            Lbl_AziCalc_Val.Caption := FloatToStrF(Azimuth, ffFixed, 3, 2);
 
           end;
       end;
@@ -2492,11 +2504,14 @@ procedure TFrm_Spori.CalculateEphemerisLoc (); //ToDo: Comments; clean up
 
     with Frm_Main do
       begin
-        FltSpnEd_EleManu.Value := Ele;
-        FltSpnEd_AzManu.Value  := Azi;
+        SetShapePos (ShpN_EleCalc, Ele);
+        SetShapePos (ShpN_AziCalc, Azi);
 
-        Lbl_EleCalc_Main.Caption := FloatToStrF(Ele, ffFixed, 3, 3);
-        Lbl_AzCalc_Main.Caption  := FloatToStrF(Azi, ffFixed, 3, 3);
+        FltSpnEd_EleCalcManu.Value := Ele;
+        FltSpnEd_AziCalcManu.Value := Azi;
+
+        Lbl_EleCalc_Val.Caption := FloatToStrF(Ele, ffFixed, 3, 2);
+        Lbl_AziCalc_Val.Caption := FloatToStrF(Azi, ffFixed, 3, 2);
       end;
 
    end;
@@ -2626,9 +2641,8 @@ procedure TFrm_Spori.FormCreate (Sender: TObject); //Done?
     Application.CreateForm(TFrm_Config, Frm_Config);
     Application.CreateForm(TFrm_Main, Frm_Main);
 
-    //Tell LoadOptions to try to load from portable  file if it exits
-    if FileExists(GetCurrentDir + PathDelim + 'Options.Space') then
-      SetPortableMode(true);
+    //Tell LoadOptions to try to load from portable file if it exits
+    SetPortableMode(FileExists(GetCurrentDir + PathDelim + 'Options.Space'));
 
     //Load config file
     OptionsLoaded := LoadOptions();
@@ -2960,8 +2974,8 @@ procedure TFrm_Spori.Tmr_Calc_All (Sender: TObject);   //ToDo: comments; Lb_Gmt 
 
 procedure TFrm_Spori.Tmr_GetDataTimer (Sender: TObject); //ToDo: Comments
   var
-     TestFloat: Real;
-     StrIn, StrOut: String;
+     TempFloat: Real;
+     StrIn, StrVal: String;
      Beginpos, Endpos: byte;
   begin
 
@@ -2974,22 +2988,33 @@ procedure TFrm_Spori.Tmr_GetDataTimer (Sender: TObject); //ToDo: Comments
 
     if ser.InstanceActive and ser.CanRead(100) then
       begin
-       StrIn := ser.Recvstring(20); //EleIst;AziIst;
+        StrIn := ser.Recvstring(20); //EleIst;AziIst;
 
-      StrIn := StringReplace(StrIn, '.', DefaultFormatSettings.DecimalSeparator, [rfReplaceAll]);
+        StrIn := StringReplace(StrIn, '.', DefaultFormatSettings.DecimalSeparator, [rfReplaceAll]);
 
-      Endpos := Pos(';', StrIn);
-      StrOut := Copy(StrIn, 1, pred(Endpos));
+        Endpos := Pos(';', StrIn);
+        StrVal := Copy(StrIn, 1, pred(Endpos));
 
-      if TryStrToFloat(StrOut, TestFloat) then
-        Ed_Ele_Ist.Text := StrOut;
+        if TryStrToFloat(StrVal, TempFloat) then
+          begin
+            StrVal := FloatToStrF(TempFloat, ffFixed, 3, 2);
 
-      BeginPos := succ(Endpos);
-      Endpos := PosEx(';', StrIn, BeginPos);
-      StrOut := Copy(StrIn, BeginPos, Endpos-BeginPos);
+            Ed_Ele_Ist.Text := StrVal;
 
-      if TryStrToFloat(StrOut, TestFloat) then
-        Ed_Azi_Ist.Text := StrOut;
+            with Frm_Main do
+              begin
+                Lbl_EleNow_Val.Caption := StrVal;
+
+                SetShapePos(ShpN_EleNow, TempFloat);
+              end;
+          end;
+
+        BeginPos := succ(Endpos);
+        Endpos := PosEx(';', StrIn, BeginPos);
+        StrVal := Copy(StrIn, BeginPos, Endpos-BeginPos);
+
+        if TryStrToFloat(StrVal, TempFloat) then
+          Ed_Azi_Ist.Text := StrVal;
       end;
   end;
 
