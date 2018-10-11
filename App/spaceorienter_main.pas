@@ -269,10 +269,22 @@ interface
 
   {ToDo List:
     for unnown Errors do
-    on E: <Errortyte> do
-      writeln('Message', E.Message);
+      on E: Exception do
+        writeln('Message', E.Message);
 
+    If new mainform was rezised the shapes doesn't stay on thair charts
+
+    Use System langue until loaded from Options
+    Make resizing the forms more beuteful
+    Remove number labels from po files
+    Finish to change all text to Resourcestring
+    Rename Resourcestrings so it isn't that difficult anymore o figure out what they are
+    Add langue pick setting to config form
+    Change config form buttons (etc) to autosize
+    move Resourcestrings to a own file
     Progressbar (Main / Config) for Update
+    Item Nr. 79 in StarList throws an error
+    Use System DecimalSepperators for (default) StarList
     Move Ele/Azi charts up/down if ManuVal mode toggles
     Integrate follow timer in Calc timer
     Cut Ele chart in half since Values > 90° doesn't make sence
@@ -326,7 +338,6 @@ interface
     Make anchors work
     Make popup menues work
     Make an own Installer
-    Add mulilangue support
     Format code to english and component names too
     Finde next in StarList serch
     Make an Installer with importend lists and custom paths
@@ -366,6 +377,7 @@ interface
     Classes, SysUtils, FileUtil, Forms, Controls, Graphics, LCLType,
     Dialogs, Menus, StrUtils, StdCtrls, ComCtrls, ActnList, ExtCtrls,
     PopupNotifier, EditBtn, Buttons, math, Types, DateUtils, typinfo,
+    LCLTranslator,
     PlanEph, Utils, synaser, Config, SpOri_Main;
 
   type
@@ -625,7 +637,9 @@ interface
         procedure Tmr_Follow(Sender: TObject);
       private
         {Find the Optionsname in a Sting, if there is none then nothig is returned}
-        function  FindOptionName (const Line:String):String; 
+        function  FindOptionName (const Line:String):String;
+        {Transform the given OptionsName to a String and get rid of starting "ON_"}
+        function OptionsEnumToStr(EnumVal: TOptionNames): String;
         {Find the optionsvalue, if there is none then nothig is returned}
         function  FindOptionValue (const Line:String):String;
         {Find the indx of a given option, even if it isn't excaly right.
@@ -736,7 +750,28 @@ interface
 
 implementation
 
-{$R *.lfm}
+Resourcestring
+  Lbl_ComMsg_Connecting    = 'Verbinde...';
+  Lbl_ComMsg_ConnectedWith = 'Verbunden mit: ';
+  Lbl_ComMsg_NotConnected  = 'Nicht verbunden';
+  CbBx_Ort_Unnown          = 'Unbekannt';
+  Ed_HtKy_None             = 'none';  //LowerCase is importend!
+
+  Exception_ErrorMsg     = 'Error:';
+  Exception_ErrorCaption = 'ERROR';
+  Exception_ErrorWhile   = 'Fehler in ';
+  Exception_Loading      = 'Ladevorgang';
+  Exception_Because     = ' Grund: ';
+  Exception_NoIsReset    = ' (Nein = Einstellungen zurücksetzen)';
+  Exception_AskResetAll  = ' Optionen zurücksetzen?';
+  Exception_AskResetThis = ' Die fehlerhafte Option durch Defaultwert ersetzen?';
+  Exception_FoundNotAll  = ' Konnte nicht alle Optionen finden.';
+  Exception_AskDefault   = ' Die fehlerhafte(n) Option(en) durch Defaultwert(e) ersetzen?';
+  Exception_WrongType    = 'Falscher Datentyp';
+  Exception_OutOFRange   = 'Out of range';
+  Exception_UnnownFormat = 'Unbekanntes Format';
+
+  {$R *.lfm}
 
   { Frm_Spori }
 
@@ -870,6 +905,20 @@ function TFrm_Spori.SendData ():Boolean; //ToDo
     Result:=false;
    end;
 
+function TFrm_Spori.OptionsEnumToStr(EnumVal: TOptionNames): String; //Done
+  var
+    Index: Byte;
+  begin
+    //Transform the Name to it's index inside of TOptionNames
+    Index := Ord(EnumVal);
+
+    //Now get the sing transformation of Index
+    Result := GetEnumName(TypeInfo(TOptionNames), Index);
+
+    //Get rid of "ON_" of ervery name
+    Result := Copy(Result, 4, length(Result) -3);
+  end;
+
 function  TFrm_Spori.FindOptionValue (const Line:String):String; //ToDo: Versioncheck
   var
      Index,Index2:Integer;
@@ -969,7 +1018,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
         with Frm_Config, Frm_Main do
           begin
             ImgLst_UsedPics.GetBitmap(1, Img_Conf_ComState.Picture.Bitmap);
-            Lbl_ComMsg.Caption  := 'Verbinde...';
+            Lbl_ComMsg.Caption  := Lbl_ComMsg_Connecting;
 
             PgsB_ComCon.Visible := true;
             Lbl_Ardo.Visible    := false;
@@ -979,7 +1028,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
         with Frm_Main do
           begin
             ImgLst_UsedPics.GetBitmap(1, Img_ComState.Picture.Bitmap);
-            Lbl_ComState.Caption := 'Verbinde...';
+            Lbl_ComState.Caption := Lbl_ComMsg_Connecting;
 
             PrgrssBr_ComPCon.Visible := true;
             Lbl_ArdoType.Visible     := false;
@@ -1043,13 +1092,13 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
               begin
                 //Tell the user we are connected
                 ImgLst_UsedPics.GetBitmap(0, Img_Conf_ComState.Picture.Bitmap);
-                Lbl_ComMsg.Caption  := 'Verbnden mit: ';
+                Lbl_ComMsg.Caption  := Lbl_ComMsg_ConnectedWith;
                 Lbl_Ardo.Caption    := 'Arduino Leonardo'; //Defaultvalue
               end
             else  //Tell the user we are not connected
               begin
                 ImgLst_UsedPics.GetBitmap(2, Img_Conf_ComState.Picture.Bitmap);
-                Lbl_ComMsg.Caption    := 'Nicht Verbunden';
+                Lbl_ComMsg.Caption    := Lbl_ComMsg_NotConnected;
               end;
 
             Lbl_Ardo.Visible    := Result;
@@ -1061,7 +1110,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
             if Result then
               begin
                 ImgLst_UsedPics.GetBitmap(0, Img_ComState.Picture.Bitmap);
-                Lbl_ComState.Caption   := 'Verbnden mit: ';
+                Lbl_ComState.Caption := Lbl_ComMsg_ConnectedWith;
                 Lbl_ArdoType.Caption := 'Arduino Leonardo'; //Defaultvalue
 
                 Img_UpStatus.AnchorSideTop.Control := Lbl_ArdoType;
@@ -1069,7 +1118,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
             else
               begin
                 ImgLst_UsedPics.GetBitmap(2, Img_ComState.Picture.Bitmap);
-                Lbl_ComState.Caption   := 'Nicht Verbunden';
+                Lbl_ComState.Caption   := Lbl_ComMsg_NotConnected;
 
                 Img_UpStatus.AnchorSideTop.Control := Img_ComState;
               end;
@@ -1348,7 +1397,7 @@ function  TFrm_Spori.GetDefaultOption (const OptnName: TOptionNames): String; //
       ON_UpdateDay:     Result := '6';
       ON_UpdateTime:    Result := '00:00:00';
       ON_UpRetry:       Result := 'True';
-      ON_Place:         Result := 'Zeuthen';
+      ON_Place:         Result := 'Berlin';
       ON_Lon:           Result := '52,345';
       ON_Lat:           Result := '13,604';
       ON_AutoTimeMode:  Result := 'True';
@@ -1362,12 +1411,12 @@ function  TFrm_Spori.GetDefaultOption (const OptnName: TOptionNames): String; //
       ON_HotKey:        Result :=  IntToStr(VK_Q);
       ON_BodyMode:      Result := '0';
       ON_Body:          Result := '0';
-      ON_Langue:        Result := 'German';
+      ON_Langue:        Result := 'En';
     end;
 
   end;
 
-function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Version; Langue; Comments
+function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Version; Chack if Langue was loaded; Comments
   var
      LoadList: Tstringlist;
 
@@ -1377,21 +1426,22 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
      j: TOptionNames;
 
      TempStr, TempOption: String;
+     TempInt: Integer;
      TempKey: Integer;
      TempBool: Boolean;
      TempTime: TDateTime;
      Temp_Koord: TCoord;
      TempFloat: Real;
 
-     ErrorMessage:String = '';
-  begin
-    //initialize
+     ErrorMessage: String = '';
 
-    LoadList := Tstringlist.Create;
-    Result      := true;
+     { ------------------------- }
 
-    if LoadFromFile then //switch, to not load from file, if one special Option was set to default (see below)
-      begin
+     procedure LoadAndList (); inline;
+       var
+          //just Because we can't use the orginal i
+          i: integer;
+       begin
         if not FileExists (DefaultOptionsPath) then
             DefaultOptions();
 
@@ -1416,60 +1466,69 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
         finally
           FreeAndNil(LoadList);
         end;
-      end
+      end;
+
+     function RightPath (): Boolean; inline;
+       begin
+         //If a portable Optionsfile was found
+        if (OwnDir = Defaultpath) then
+          begin
+            //If portablemode is not set to active or a unknown vlue was given
+            //Set Portablemode fo false
+            //Else use the already loaded Options
+            if not TryStrToBool(Options[ON_PortableMode], Result) then
+              Result := false;
+          end
+        else
+          //No portablemode was found, just use the loaded Options
+          Result := true;
+    end;
+
+     function MakeErrorMsg (Where, Why: String):String; inline;
+       begin
+         Result :=  Where + '-' + Exception_Loading + ': ' + Why;
+       end;
+
+  begin
+    //initialize
+    LoadList := Tstringlist.Create;
+    Result      := true;
+
+    if LoadFromFile then //switch, to not load from file, if one special Option was set to default (see below)
+      LoadAndList ()
     else
       NotGottenOptions := []; // clear set, if we are not loading from file means that we already got ervything
 
-    
-    //If a portable Optionsfile was found
-    if (OwnDir = Defaultpath) then
+    if RightPath() then
       begin
-        //If portablemode is not set to active or a unknown vlue was given
-        //Set Portablemode fo false
-        //Else use the already loaded Options
-        if not TryStrToBool(Options[ON_PortableMode], Tempbool) then
-          Tempbool := false;
+        //Test if we got everything
+        if not (NotGottenOptions = []) then
+          // Let the User decide if we set the option to default, reset all options or abort
+          case MessageDlg(Exception_ErrorCaption, Exception_ErrorMsg + Slinebreak +
+                               Exception_FoundNotAll + slinebreak +
+                               Exception_AskDefault + SlineBreak +
+                               Exception_NoIsReset,
+                               mtError, mbYesNoCancel, 0, mbYes) of
+            mrYes:   //set the missing Options to default
+              begin
+                for j in NotGottenOptions do
+                  begin
+                    Options[j] := GetDefaultOption(j);
 
-        if not Tempbool then
-          begin
-            SetPortableMode(false);
-            Result := LoadOptions();
+                    Exclude(NotGottenOptions, j);
+                  end;
+
+                Result := LoadOptions(false);
+              end;
+            mrNo: //reset all Options
+              begin
+                DefaultOptions();
+
+                Result := LoadOptions(false);
+              end;
+            mrCancel: //Chanels loading Options (who had ever thougt of this?)
+              exit(false);
           end;
-      end
-    else
-      //No portablemode was found, just use the loaded Options
-      Tempbool := true;
-
-    if Tempbool then
-      begin
-        if not (NotGottenOptions = []) then //Test if we got everything
-         case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we set the option to default, reset all options or abort
-                               ' Konnte nicht alle Optionen finden.' + slinebreak +
-                               ' Die fehlerhafte(n) Option(en) durch Defaultwert(e) ersetzen?' + SlineBreak +
-                               ' (Nein = Einstellungen zurücksetzen)',
-                               mtError, [mbYes, mbNo, mbAbort], 0, mbYes) of
-           mrYes:   //set the missing Options to default
-             begin
-               for j in NotGottenOptions do
-                 begin
-                   //ShowMessage(IntToStr(Ord(j)) + ' ' + Copy(GetEnumName(TypeInfo(TOptionNames), Ord(j)), 4, length(GetEnumName(TypeInfo(TOptionNames), Ord(j))) -3));
-
-                   Options[j] := GetDefaultOption(j);
-
-                   Exclude(NotGottenOptions, j);
-                 end;
-
-               Result := LoadOptions(false);
-             end;
-           mrNo: //reset all Options
-             begin
-               DefaultOptions();
-
-               Result := LoadOptions(false);
-             end;
-           mrAbort:
-             Result := false;
-         end;
 
         try
           for j := low(TOptionNames) to high(TOptionNames) do
@@ -1484,8 +1543,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                       SetPortableMode(Tempbool);
                     end
                   else
-                    ErrorMessage := 'Fehler in PortableMode-Ladevorgang: Falscher Datentyp' + sLineBreak +
-                                    Options[j];
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                 ON_ExpertMode:
                   if TryStrToBool(Options[j], Tempbool) then
@@ -1496,12 +1554,12 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                       ProgressExpertMode(Tempbool);
                     end
                   else
-                    ErrorMessage := 'Fehler in ExpertenMode-Ladevorgang: Falscher Datentyp'   ;
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                 ON_UpdateMode:
-                  if TryStrToInt (Options[j], i) then
+                  if TryStrToInt (Options[j], TempInt) then
                     begin
-                      Case i of
+                      Case TempInt of
                         0:
                           begin
                             Frm_Config.AllUpOff ();
@@ -1536,45 +1594,45 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                             Frm_Config.Img_Non.Picture     := Frm_Config.Img_On.Picture;
                           end;
                         else
-                          ErrorMessage := 'Fehler in UpdateMode-Ladevorgang: Unbekannter Wert';
+                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_OutOFRange);
                       end;
                     end
                   else
-                    ErrorMessage := 'Fehler in UpdateMode-Ladevorgang: Falscher Datentyp';
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                 ON_UpdateRate:
-                  if TryStrToInt (Options[j], i) then
-                    if (i in [0..2]) then
-                      Frm_Config.CBx_Rate.ItemIndex := i
+                  if TryStrToInt (Options[j], TempInt) then
+                    if (TempInt in [0..2]) then
+                      Frm_Config.CBx_Rate.ItemIndex := TempInt
                     else
-                      ErrorMessage := 'Fehler in UpdateRate-Ladevorgang: Unbekannter Wert'
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_OutOFRange)
                   else
-                    ErrorMessage := 'Fehler in UpdateRate-Ladevorgang: Falscher Datentyp';
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                 ON_UpdateDay:
                   if TryStrToInt (Options[j], i) then
-                    if (i in [0..6]) then
-                      Frm_Config.CBx_Tag.ItemIndex := i
+                    if (TempInt in [0..6]) then
+                      Frm_Config.CBx_Tag.ItemIndex := TempInt
                     else
-                      ErrorMessage := 'Fehler in UpdateTag-Ladevorgang: Unbekannter Wert'
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_OutOFRange)
                   else
-                    ErrorMessage := 'Fehler in UpdateTag-Ladevorgang: Falscher Datentyp';
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                 ON_UpdateTime:
                   if TryStrToTime(Options[j], TempTime) then
                     Frm_Config.TE_Plan.Time := TempTime
                    else
-                    ErrorMessage := 'Fehler in UpdateZeit-Ladevorgang: Falscher Datentyp' ;
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                 ON_UpRetry:
                   if TryStrToBool(Options[j], TempBool)then
                    Frm_Config.Sw_Redo.Checked := TempBool
                   else
-                    ErrorMessage := 'Fehler in UpdateWiederholen-Ladevorgang: Falscher Datentyp';
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                 On_Place:
                   begin
-                    if (Options[j] = 'none') then
+                    if (Options[j] = Ed_HtKy_None) then
                       begin
                         //Inc(j);
                         if TryStrToFloat(Options[ON_Lon], TempFloat) then
@@ -1584,7 +1642,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                             Lb_Lon_G1.Caption           := Options[ON_Lon];
                           end
                         else
-                          ErrorMessage := 'Fehler in Longitude Ladevorgang: Falscher DatenTyp';
+                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(ON_Lon), Exception_WrongType);
 
                         //Inc(j);
                         if TryStrToFloat(Options[ON_Lat], TempFloat) then
@@ -1594,14 +1652,15 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                              Lb_Lat_G1.Caption           := Options[ON_Lat];
                            end
                         else
-                          ErrorMessage := 'Fehler in Longitude Ladevorgang: Falscher DatenTyp';
+                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(ON_Lat), Exception_WrongType);
 
-                        Frm_Config.CbBx_Ort.Caption := 'Unbekannt';
+                        Frm_Config.CbBx_Ort.Caption := CbBx_Ort_Unnown;
                         Frm_Main.Lbl_Place_Name.Caption := '-';
                       end
                     else
                       begin
-                        Temp_Koord                  := Frm_Config.Koordinaten (Options[j]); //If it is an invailed place an Error is reaised here (may change in future)
+                        //If it is an invailed location an Error is reaised here (may change in future)
+                        Temp_Koord                  := Frm_Config.Koordinaten (Options[j]);
 
                         Frm_Config.FlSpEd_Lon.Value := Temp_Koord.Lon;
                         Lb_Lon_G.Caption            := FloatToStr(Temp_Koord.Lon);
@@ -1632,7 +1691,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                     Frm_Config.DE_Day.enabled      := not Tempbool;
                   end
                 else
-                  ErrorMessage := 'Fehler in TimeMode-Ladevorgang: Falscher DatenTyp';
+                  ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                 ON_Date:
                   if TryStrToDate(Options[j], TempTime) then
@@ -1641,7 +1700,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                       Frm_Config.DE_Day.Date := Date + DiffD;
                     end
                   else
-                    ErrorMessage := 'Fehler in Tag-Ladevorgang: Falscher DatenTyp oder Format';
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                   ON_Time:
                     if TryStrToTime(Options[j], TempTime) then
@@ -1650,7 +1709,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         Frm_Config.TE_Time.Time := Time + DiffT
                        end
                      else
-                      ErrorMessage := 'Fehler in Zeit-Ladevorgang';
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                   ON_AutoComMode:
                     if TryStrToBool(Options[j], Tempbool) then
@@ -1663,22 +1722,22 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         //Inc(j);
                       end
                     else
-                      ErrorMessage := 'Fehler in ComMode-Ladevorgang: Falscher DatenTyp';
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                   ON_BaudRate:
-                    if TryStrToInt(Options[j], i) then
+                    if TryStrToInt(Options[j], TempInt) then
                       if (Frm_Config.CmbBx_Baud.Items.IndexOf(Options[j]) >= 0) then
                           Frm_Config.CmbBx_Baud.Caption := Options[j]
                       else
-                        ErrorMessage := 'Fehler in BaudRate-Ladevorgang: Unzulässige Baudrate'
+                        ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_OutOFRange)
                     else
-                     ErrorMessage := 'Fehler in BaudRate-Ladevorgang: Falscher DatenTyp';
+                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                   ON_AutoValueMode:
                     if TryStrToBool(Options[j], Tempbool) then
                       Frm_Config.Sw_ManuVal.Checked := not Tempbool
                     else
-                     ErrorMessage := 'Fehler in WerteMode-Ladevorgang: Falscher DatenTyp';
+                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                   ON_UseHotkey:
                     if TryStrToBool(Options[j], Tempbool) then
@@ -1688,11 +1747,11 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                           Ed_HtKy.Enabled := TempBool;
                           Bt_HtKy.Enabled := TempBool;
 
-                          Lbl_Sw_HtKy.Caption := BoolToStr(Tempbool, 'Ein', 'Aus');
+                          Lbl_Sw_HtKy.Caption := BoolToStr(Tempbool, Lbl_Turnd_On, Lbl_Turnd_Off);
                         end;
                       end
                     else
-                     ErrorMessage := 'Fehler in AnsteuerungMode-Ladevorgang: Falscher DatenTyp';
+                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                   ON_HotKey:
                     begin
@@ -1732,14 +1791,14 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                               end
                             else
                               begin
-                                ErrorMessage := 'Fehler in Hotkey-Ladevorgang: Out of Range ';
+                                ErrorMessage := MakeErrorMsg (OptionsEnumToStr(On_Hotkey), Exception_OutOFRange);
                                 break;
                               end;
 
                           until (i <= 0);
                         end
                       else
-                        Frm_Config.Ed_HtKy.Text := 'None';
+                        Frm_Config.Ed_HtKy.Text := Ed_HtKy_None;
                     end;
 
 
@@ -1752,9 +1811,9 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                           ProgressBodyMode(i, false);
                         end
                       else
-                        ErrorMessage := 'Fehler in BodyMode-Ladevorgang: Out of Range'
+                        ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_OutOFRange)
                     else
-                       ErrorMessage := 'Fehler in BodyMode-Ladevorgang: Falscher DatenTyp';
+                       ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
                   ON_Body:
                     if TryStrToInt (Options[j], i) then
@@ -1763,18 +1822,24 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         Frm_Main.Lbl_Bdy_Nr.Caption := Options[j];
                        end
                      else
-                      ErrorMessage := 'Fehler in HimmelsKörper-Ladevorgang: Falscher DatenTyp';
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
 
-                  ON_Langue:;
+                  ON_Langue:
+                    if (length(Options[j]) = 2) then
+                      begin
+                        SetDefaultLang(Options[j]);
+                      end
+                    else
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_UnnownFormat);
               end;
 
              if ErrorMessage <> '' then
                begin
-                 case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we retry, reset or abort
-                                 ' ' + ErrorMessage + ' (' + Options[j] + ')' + slinebreak +
-                                 ' Die fehlerhafte Option durch Defaultwert ersetzen?' + SlineBreak +
-                                 ' (Nein = Einstellungen zurücksetzen)',
-                                 mtError, [mbYes, mbNo, mbAbort], 0, mbYes) of
+                 case MessageDlg(Exception_ErrorCaption, Exception_ErrorMsg + Slinebreak +   // Let the User decide if we retry, reset or abort
+                                 '  ' + Exception_ErrorWhile  + ErrorMessage + ' (' + Options[j] + ')' + slinebreak +
+                                 Exception_AskResetThis + SlineBreak +
+                                 Exception_NoIsReset,
+                                 mtError, mbYesNoCancel, 0, mbYes) of
                    mrYes:
                      begin
                        Options[j] := GetDefaultOption(j);
@@ -1786,7 +1851,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
 
                        Result := Result and LoadOptions(false);
                      end;
-                   mrAbort:
+                   mrCancel:
                      Result := false;
                  end;
 
@@ -1801,21 +1866,28 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
              end;
 
         except   //Unkown Error
-          case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we, reset or abort
-                          ' Unbekannter Fehler in Optionen-Ladevorgang.' + slinebreak +
-                          ' Optionen zurücksetzen?' + SlineBreak +
-                          ' (Nein = Einstellungen zurücksetzen)',
-                          mtError, [mbYes, mbAbort], 0, mbYes) of
-            mrYes:
-              begin
-                DefaultOptions();
-                Result := LoadOptions ();
-              end;
-            mrAbort:
-              Result := false;
-          end;
+          on E: Exception do
+            case MessageDlg(Exception_ErrorCaption, Exception_ErrorMsg + Slinebreak +   // Let the User decide if we reset or abort
+                            Exception_Because + E.Message + slinebreak +
+                            Exception_AskResetAll + SlineBreak +
+                            Exception_NoIsReset,
+                            mtError, [mbYes, mbCancel], 0, mbYes) of
+              mrYes:
+                begin
+                  DefaultOptions();
+                  Result := LoadOptions ();
+                end;
+              mrCancel:
+                Result := false;
+            end;
          end;
-       end;
+       end
+    else  //RightPath returned false, turn portable mode off and retry
+      begin
+        SetPortableMode(false);
+        Result := LoadOptions();
+      end;
+
    end;
 
 procedure TFrm_Spori.SetPortableMode (IsActive: Boolean); //ToDo: CleanUp after Mode has changed
@@ -1876,7 +1948,7 @@ procedure TFrm_Spori.Delay (Milliseconds: DWORD); //Done
 
    end;
 
-procedure TFrm_Spori.DefaultOptions (); //ToDo: put this into it's own File
+procedure TFrm_Spori.DefaultOptions (); //ToDo: put this into it's own File; Multi langue header
   var
     Option: TOptionNames;
 
@@ -1921,7 +1993,7 @@ procedure TFrm_Spori.DefaultOptions (); //ToDo: put this into it's own File
     end;
   end;
 
-procedure TFrm_Spori.DefaultList ();  //ToDo: put this into it's own File
+procedure TFrm_Spori.DefaultList ();  //ToDo: put this into it's own File (english version) --> make versions for different langues
   var
      List:TStringList;
   begin
@@ -2068,6 +2140,7 @@ procedure TFrm_Spori.ProgressBodyMode (const Mode: byte; Save: Boolean = true); 
     CB_StrMode.ItemIndex := Mode;
     Frm_Main.CmbBx_Mode.ItemIndex := Mode;
 
+    //Old; Multi langue will not be supported (but somewhere this information will still be placed...)
     case Mode of
       Md_Normal:
         begin
@@ -2177,8 +2250,7 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
         case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we reset the Starlist or
                                       ' Unbekannter Fehler aufgetrenten.' + Slinebreak +
                                       ' Laden des Sterns gescheitert bei SubItem: ' + SubItem + slinebreak +
-                                      ' Sternenliste zurücksetzen und neu Laden?' + Slinebreak +
-                                      ' (Okay = reset, Abbrechen = Laden Abbrechen)',
+                                      ' Sternenliste zurücksetzen und neu Laden?',
                                       mtError, [mbOk, mbIgnore], 0, mbRetry) of
           mrOk:
             begin
@@ -2582,13 +2654,13 @@ procedure TFrm_Spori.Ed_NrEditingDone (Sender: TObject); //Done
 
 procedure TFrm_Spori.Ed_SuchEditingDone (Sender: TObject); //Done
   begin
-    if not (Ed_Such.Text = 'Suchen...') and not (Ed_Such.Text = '') then //if there was input and the input was not empty
+    if not (Ed_Such.Text = EdSearch_Default) and not (Ed_Such.Text = '') then //if there was input and the input was not empty
       searchStarList (Trim(Ed_Such.Text)) //serch for the input
   end;
 
 procedure TFrm_Spori.Ed_SuchEnter (Sender: TObject);  //Bug SelectAll does not work?
   begin
-    if Ed_Such.Text = 'Suchen...' then
+    if Ed_Such.Text = EdSearch_Default then
       Ed_Such.Clear  //nothing was typed yet, so clear up the default value
      else
       begin
@@ -2605,7 +2677,7 @@ procedure TFrm_Spori.Ed_SuchEnter (Sender: TObject);  //Bug SelectAll does not w
 procedure TFrm_Spori.Ed_SuchExit (Sender: TObject);  //Done
   begin
     if (Ed_Such.Text = '') then
-      Ed_Such.Text  := 'Suchen...';
+      Ed_Such.Text  := EdSearch_Default;
   end;
 
 procedure TFrm_Spori.FndDFind (Sender: TObject); //ToDo: move Connect to LoadOptions and use Connact to all just if no vailid port was found; Update

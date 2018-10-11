@@ -61,6 +61,8 @@ uses
 
 { TFrm_GetHotKey }
 
+Resourcestring
+  Test = '';
 
 procedure TFrm_GetHotKey.FormKeyDown(Sender: TObject; var Key: Word; //Done
           Shift: TShiftState);     

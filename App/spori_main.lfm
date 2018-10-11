@@ -1,11 +1,11 @@
 object Frm_Main: TFrm_Main
-  Left = 593
-  Height = 606
-  Top = 131
-  Width = 966
+  Left = 13
+  Height = 600
+  Top = 120
+  Width = 965
   Caption = 'Frm_Main'
-  ClientHeight = 606
-  ClientWidth = 966
+  ClientHeight = 600
+  ClientWidth = 965
   Color = 2818816
   Constraints.MinHeight = 575
   Constraints.MinWidth = 965
@@ -2143,9 +2143,9 @@ object Frm_Main: TFrm_Main
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 194
-    Height = 528
+    Height = 522
     Top = 78
-    Width = 772
+    Width = 771
     TabStop = False
     ActivePage = TbSht_DashBord
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -2156,8 +2156,8 @@ object Frm_Main: TFrm_Main
     Options = [nboHidePageListPopup, nboKeyboardTabSwitch, nboDoChangeOnSetIndex]
     object TbSht_DashBord: TTabSheet
       Caption = 'TbSht_DashBord'
-      ClientHeight = 526
-      ClientWidth = 770
+      ClientHeight = 520
+      ClientWidth = 769
       Font.Color = clWhite
       Font.Height = 21
       ParentFont = False
@@ -2167,14 +2167,14 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = TbSht_DashBord
         AnchorSideBottom.Side = asrBottom
-        Left = 580
-        Height = 526
+        Left = 579
+        Height = 520
         Top = 0
         Width = 190
         Anchors = [akTop, akRight, akBottom]
         BevelColor = clNone
         BevelOuter = bvNone
-        ClientHeight = 526
+        ClientHeight = 520
         ClientWidth = 190
         Color = 3866624
         Font.Color = clWhite
@@ -2262,7 +2262,7 @@ object Frm_Main: TFrm_Main
           AnchorSideBottom.Side = asrBottom
           Left = 19
           Height = 19
-          Top = 464
+          Top = 458
           Width = 79
           Anchors = [akLeft, akBottom]
           BorderSpacing.Bottom = 43
@@ -2345,7 +2345,7 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Control = Lbl_MagDvtn_Title
           Left = 32
           Height = 19
-          Top = 488
+          Top = 482
           Width = 28
           BorderSpacing.Left = 13
           BorderSpacing.Top = 24
@@ -2908,7 +2908,7 @@ object Frm_Main: TFrm_Main
           AnchorSideBottom.Control = Lbl_MagDvtn_Title
           Left = 162
           Height = 16
-          Top = 448
+          Top = 442
           Width = 16
           Anchors = [akRight, akBottom]
           AutoSize = True
@@ -3111,10 +3111,10 @@ object Frm_Main: TFrm_Main
         Left = 331
         Height = 23
         Top = 56
-        Width = 104
+        Width = 116
         BorderSpacing.Left = 15
         BorderSpacing.Top = 10
-        Caption = 'Ehemeride'
+        Caption = 'Ephemeride'
         Font.Color = clWhite
         Font.Height = -19
         Font.Name = 'Sans'
@@ -3157,9 +3157,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = Pnl_Status
         AnchorSideBottom.Control = TbSht_DashBord
         AnchorSideBottom.Side = asrBottom
-        Left = 408
+        Left = 407
         Height = 37
-        Top = 464
+        Top = 458
         Width = 132
         Anchors = [akRight, akBottom]
         BorderSpacing.Right = 40
@@ -3183,7 +3183,7 @@ object Frm_Main: TFrm_Main
         AnchorSideTop.Control = TbSht_DashBord
         AnchorSideRight.Control = Pnl_Status
         AnchorSideBottom.Side = asrBottom
-        Left = 448
+        Left = 447
         Height = 31
         Top = 15
         Width = 119
@@ -3209,7 +3209,7 @@ object Frm_Main: TFrm_Main
         Left = 40
         Height = 1
         Top = 103
-        Width = 500
+        Width = 499
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 40
         BorderSpacing.Top = 24
@@ -3223,9 +3223,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = BitBtn_Navigate_Main
         AnchorSideBottom.Control = TbSht_DashBord
         AnchorSideBottom.Side = asrBottom
-        Left = 247
+        Left = 246
         Height = 37
-        Top = 464
+        Top = 458
         Width = 136
         Anchors = [akRight, akBottom]
         AutoSize = False
@@ -4532,7 +4532,7 @@ object Frm_Main: TFrm_Main
         Shape = stTriangle
       end
       object Shape_AziCalc: TShape
-        Left = 414
+        Left = 413
         Height = 11
         Top = 147
         Width = 11
@@ -4644,12 +4644,12 @@ object Frm_Main: TFrm_Main
     Left = 0
     Height = 78
     Top = 0
-    Width = 966
+    Width = 965
     Anchors = [akTop, akLeft, akRight]
     BevelOuter = bvNone
     Caption = 'SpaceOrienter'
     ClientHeight = 78
-    ClientWidth = 966
+    ClientWidth = 965
     Color = clNavy
     Font.Color = clWhite
     Font.Height = -35
@@ -4666,7 +4666,7 @@ object Frm_Main: TFrm_Main
       AnchorSideRight.Side = asrCenter
       AnchorSideBottom.Control = Pnl_Header
       AnchorSideBottom.Side = asrBottom
-      Left = 314
+      Left = 313
       Height = 82
       Top = -4
       Width = 337
@@ -5264,7 +5264,7 @@ object Frm_Main: TFrm_Main
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 528
+    Height = 522
     Top = 78
     Width = 194
     Anchors = [akTop, akLeft, akBottom]

@@ -152,7 +152,7 @@
         <Item4 Mode="Win32_Release" Option="329045115240"/>
       </SessionEnabledMatrixOptions>
     </BuildModes>
-    <Units Count="98">
+    <Units Count="100">
       <Unit0>
         <Filename Value="SpaceOrienter.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -167,12 +167,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
-        <CursorPos X="25"/>
-        <FoldState Value=" TL62F T3sW0{a4 pifld0{n312 ps4+20h3 plBmJ0y222 T0.7CJ p0ihC2E,"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="72" Y="38"/>
+        <FoldState Value=" TL62F1 T7l5H~) T3tO0{a5 pjAmA0{n31114]E3;R0B2 pl0lH0z1r"/>
+        <ComponentState Value="1"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="config.pas"/>
@@ -181,12 +181,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Config"/>
-        <TopLine Value="1274"/>
-        <CursorPos X="23" Y="1330"/>
-        <FoldState Value=" TCZB3 T7i0G{' T3m20}q1 pt7yF0GB pifjc03[94ZjJ049167"/>
+        <TopLine Value="16"/>
+        <CursorPos X="18" Y="211"/>
+        <FoldState Value=" T7i0G{' T3m70}q1 pt7yF0G T1:f23*"/>
+        <ComponentState Value="1"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit2>
       <Unit3>
         <Filename Value="C:\lazarus\lcl\include\customform.inc"/>
@@ -209,7 +209,7 @@
         <Filename Value="requirements/planeph.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="PlanEph"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="7"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit5>
@@ -693,11 +693,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="GetHotkey"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="43"/>
-        <CursorPos X="64" Y="101"/>
-        <FoldState Value=" T3iL0Q2%"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="32"/>
+        <CursorPos X="26" Y="100"/>
+        <FoldState Value=" T3iN0Q011!"/>
         <UsageCount Value="200"/>
+        <Loaded Value="True"/>
       </Unit62>
       <Unit63>
         <Filename Value="spori_main.pas"/>
@@ -706,40 +707,40 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="SpOri_Main"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="314"/>
-        <CursorPos X="31" Y="373"/>
-        <FoldState Value=" T7YE{a T3kb0{G218 picl1060264"/>
-        <UsageCount Value="138"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="158"/>
+        <CursorPos Y="285"/>
+        <FoldState Value=" T3ke0{G042\"/>
+        <ComponentState Value="1"/>
+        <UsageCount Value="165"/>
         <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit63>
       <Unit64>
         <Filename Value="../Laz/fpcsrc/rtl/objpas/sysutils/datih.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="150"/>
         <CursorPos X="28" Y="198"/>
-        <UsageCount Value="31"/>
+        <UsageCount Value="28"/>
       </Unit64>
       <Unit65>
         <Filename Value="../Laz/fpcsrc/rtl/objpas/sysutils/diskh.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="18"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="17"/>
       </Unit65>
       <Unit66>
         <Filename Value="../Laz/fpcsrc/packages/rtl-extra/src/unix/clocale.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="77"/>
         <CursorPos X="6" Y="125"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="10"/>
       </Unit66>
       <Unit67>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/classes/classesh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="85"/>
         <CursorPos X="3" Y="109"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="4"/>
       </Unit67>
       <Unit68>
         <Filename Value="../../Laz/lazarus/lcl/lcltype.pp"/>
@@ -747,333 +748,351 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="380"/>
         <CursorPos X="3" Y="404"/>
-        <UsageCount Value="18"/>
+        <UsageCount Value="15"/>
       </Unit68>
       <Unit69>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/sysstrh.inc"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="50" Y="25"/>
-        <UsageCount Value="13"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="22"/>
       </Unit69>
       <Unit70>
         <Filename Value="../../Laz/lazarus/lcl/include/wincontrol.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="5687"/>
         <CursorPos X="62" Y="5694"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="9"/>
       </Unit70>
       <Unit71>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/syshelph.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="104" Y="18"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="5"/>
       </Unit71>
       <Unit72>
         <Filename Value="../../Laz/fpcsrc/rtl/inc/mathh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="77"/>
         <CursorPos X="14" Y="100"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit72>
       <Unit73>
-        <Filename Value="../../Laz/fpcsrc/rtl/objpas/objpas.pp"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="12"/>
-        <CursorPos X="8" Y="35"/>
-        <UsageCount Value="1"/>
-      </Unit73>
-      <Unit74>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/datih.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="152"/>
         <CursorPos X="21" Y="198"/>
-        <UsageCount Value="15"/>
-      </Unit74>
-      <Unit75>
+        <UsageCount Value="12"/>
+      </Unit73>
+      <Unit74>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/math.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="196"/>
         <CursorPos X="10" Y="219"/>
-        <UsageCount Value="12"/>
-      </Unit75>
-      <Unit76>
+        <UsageCount Value="9"/>
+      </Unit74>
+      <Unit75>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/sysinth.inc"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="68" Y="59"/>
-        <UsageCount Value="16"/>
+        <UsageCount Value="23"/>
+      </Unit75>
+      <Unit76>
+        <Filename Value="../../Laz/lazarus/lcl/controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="28"/>
+        <CursorPos X="11" Y="50"/>
+        <UsageCount Value="17"/>
         <Loaded Value="True"/>
       </Unit76>
       <Unit77>
-        <Filename Value="../../Laz/lazarus/lcl/controls.pp"/>
-        <UnitName Value="Controls"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1082"/>
-        <CursorPos X="5" Y="1105"/>
-        <UsageCount Value="18"/>
-      </Unit77>
-      <Unit78>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/sysunih.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="24"/>
-        <UsageCount Value="4"/>
-      </Unit78>
-      <Unit79>
+        <UsageCount Value="1"/>
+      </Unit77>
+      <Unit78>
         <Filename Value="../../Laz/fpcsrc/packages/rtl-objpas/src/inc/dateutils.pp"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="14"/>
-        <UsageCount Value="4"/>
-      </Unit79>
-      <Unit80>
+        <UsageCount Value="1"/>
+      </Unit78>
+      <Unit79>
         <Filename Value="../../Laz/fpcsrc/packages/rtl-objpas/src/inc/dateutil.inc"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="4"/>
-      </Unit80>
-      <Unit81>
+        <UsageCount Value="1"/>
+      </Unit79>
+      <Unit80>
         <Filename Value="../../Laz/lazarus/lcl/comctrls.pp"/>
         <UnitName Value="ComCtrls"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="977"/>
         <CursorPos X="3" Y="992"/>
-        <UsageCount Value="12"/>
-      </Unit81>
-      <Unit82>
+        <UsageCount Value="9"/>
+      </Unit80>
+      <Unit81>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/osutilsh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="17"/>
         <CursorPos X="17" Y="57"/>
-        <UsageCount Value="11"/>
-      </Unit82>
-      <Unit83>
+        <UsageCount Value="8"/>
+      </Unit81>
+      <Unit82>
         <Filename Value="../../Laz/fpcsrc/rtl/unix/sysutils.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="77"/>
         <CursorPos X="90" Y="125"/>
-        <UsageCount Value="10"/>
-      </Unit83>
-      <Unit84>
+        <UsageCount Value="7"/>
+      </Unit82>
+      <Unit83>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/finah.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="33"/>
-        <UsageCount Value="10"/>
-      </Unit84>
-      <Unit85>
+        <UsageCount Value="7"/>
+      </Unit83>
+      <Unit84>
         <Filename Value="../../Laz/lazarus/components/lazutils/fileutil.pas"/>
         <UnitName Value="FileUtil"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="96"/>
         <CursorPos X="142" Y="144"/>
-        <UsageCount Value="10"/>
-      </Unit85>
-      <Unit86>
+        <UsageCount Value="7"/>
+      </Unit84>
+      <Unit85>
         <Filename Value="../../Laz/lazarus/components/lazutils/lazfileutils.pas"/>
         <UnitName Value="LazFileUtils"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="84"/>
         <CursorPos X="41" Y="126"/>
-        <UsageCount Value="10"/>
-      </Unit86>
-      <Unit87>
+        <UsageCount Value="7"/>
+      </Unit85>
+      <Unit86>
         <Filename Value="../../Laz/fpcsrc/packages/winunits-jedi/src/jwawindows.pas"/>
         <UnitName Value="JwaWindows"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="381"/>
         <CursorPos X="45" Y="429"/>
-        <UsageCount Value="5"/>
-      </Unit87>
-      <Unit88>
+        <UsageCount Value="2"/>
+      </Unit86>
+      <Unit87>
         <Filename Value="../../Laz/fpcsrc/rtl/win/wininc/defines.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="6" Y="388"/>
-        <UsageCount Value="10"/>
-      </Unit88>
-      <Unit89>
+        <UsageCount Value="7"/>
+      </Unit87>
+      <Unit88>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/filutilh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="125"/>
         <CursorPos X="10" Y="149"/>
-        <UsageCount Value="5"/>
-      </Unit89>
-      <Unit90>
+        <UsageCount Value="2"/>
+      </Unit88>
+      <Unit89>
         <Filename Value="../../Laz/fpcsrc/packages/winunits-jedi/src/jwawinnt.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3800"/>
         <CursorPos X="3" Y="3857"/>
-        <UsageCount Value="10"/>
-      </Unit90>
-      <Unit91>
+        <UsageCount Value="7"/>
+      </Unit89>
+      <Unit90>
         <Filename Value="../../Laz/fpcsrc/packages/winunits-jedi/src/jwawinbase.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4107"/>
         <CursorPos X="41" Y="4131"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
+      </Unit90>
+      <Unit91>
+        <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/sysutilh.inc"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="99"/>
+        <CursorPos X="32" Y="99"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
       </Unit91>
       <Unit92>
-        <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/sysutilh.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="133"/>
-        <CursorPos X="21" Y="147"/>
-        <UsageCount Value="9"/>
-      </Unit92>
-      <Unit93>
         <Filename Value="../../Laz/lazarus/lcl/forms.pp"/>
         <UnitName Value="Forms"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="605"/>
         <CursorPos X="15" Y="629"/>
-        <UsageCount Value="9"/>
-      </Unit93>
-      <Unit94>
+        <UsageCount Value="6"/>
+      </Unit92>
+      <Unit93>
         <Filename Value="../../Laz/fpcsrc/packages/fcl-process/src/process.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="141"/>
         <CursorPos X="22" Y="204"/>
-        <UsageCount Value="8"/>
-      </Unit94>
-      <Unit95>
+        <UsageCount Value="5"/>
+      </Unit93>
+      <Unit94>
         <Filename Value="../../Laz/fpcsrc/packages/rtl-extra/src/unix/clocale.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="310"/>
         <CursorPos X="20" Y="358"/>
-        <UsageCount Value="8"/>
-      </Unit95>
-      <Unit96>
+        <UsageCount Value="5"/>
+      </Unit94>
+      <Unit95>
         <Filename Value="../../Laz/lazarus/lcl/extctrls.pp"/>
         <UnitName Value="ExtCtrls"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="234"/>
         <CursorPos X="31" Y="261"/>
-        <UsageCount Value="11"/>
-      </Unit96>
-      <Unit97>
+        <UsageCount Value="8"/>
+      </Unit95>
+      <Unit96>
         <Filename Value="../../Laz/lazarus/lcl/include/customedit.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="591"/>
         <CursorPos Y="615"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
+      </Unit96>
+      <Unit97>
+        <Filename Value="../../Laz/lazarus/lcl/lcltranslator.pas"/>
+        <UnitName Value="LCLTranslator"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="62"/>
+        <CursorPos X="59" Y="62"/>
+        <UsageCount Value="11"/>
       </Unit97>
+      <Unit98>
+        <Filename Value="../../Laz/lazarus/lcl/dialogs.pp"/>
+        <UnitName Value="Dialogs"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="13"/>
+        <CursorPos X="25" Y="54"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit98>
+      <Unit99>
+        <Filename Value="../../Laz/lazarus/lcl/stdctrls.pp"/>
+        <UnitName Value="StdCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="939"/>
+        <CursorPos X="14" Y="961"/>
+        <UsageCount Value="10"/>
+      </Unit99>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="429" Column="38" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="1583" Column="56" TopLine="1557"/>
       </Position1>
       <Position2>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="351" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="1610" Column="20" TopLine="1580"/>
       </Position2>
       <Position3>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="352" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="1611" Column="36" TopLine="1595"/>
       </Position3>
       <Position4>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="354" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="1295" Column="92" TopLine="1260"/>
       </Position4>
       <Position5>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="356" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="1357" Column="39" TopLine="1315"/>
       </Position5>
       <Position6>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="357" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="1368" Column="37" TopLine="1337"/>
       </Position6>
       <Position7>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="359" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="1394" Column="43" TopLine="1364"/>
       </Position7>
       <Position8>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="370" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="1598" Column="94" TopLine="1551"/>
       </Position8>
       <Position9>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="372" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="1642" TopLine="908"/>
       </Position9>
       <Position10>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="373" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="2407" Column="39" TopLine="2384"/>
       </Position10>
       <Position11>
         <Filename Value="spaceorienter_main.pas"/>
-        <Caret Line="2265" Column="36" TopLine="2239"/>
+        <Caret Line="2425" Column="42" TopLine="2389"/>
       </Position11>
       <Position12>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="356" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="39" Column="39"/>
       </Position12>
       <Position13>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="357" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="524" Column="21" TopLine="167"/>
       </Position13>
       <Position14>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="359" TopLine="331"/>
+        <Filename Value="spaceorienter_main.pas"/>
+        <Caret Line="1626" Column="46" TopLine="1586"/>
       </Position14>
       <Position15>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="370" TopLine="331"/>
+        <Caret Line="285" TopLine="158"/>
       </Position15>
       <Position16>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="372" TopLine="331"/>
+        <Caret Line="287" TopLine="158"/>
       </Position16>
       <Position17>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="373" TopLine="331"/>
+        <Caret Line="288" TopLine="158"/>
       </Position17>
       <Position18>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="354" TopLine="331"/>
+        <Caret Line="291" TopLine="158"/>
       </Position18>
       <Position19>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="362" TopLine="331"/>
+        <Caret Line="293" TopLine="158"/>
       </Position19>
       <Position20>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="364" TopLine="331"/>
+        <Caret Line="269" Column="2" TopLine="158"/>
       </Position20>
       <Position21>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="365" TopLine="331"/>
+        <Caret Line="285" TopLine="158"/>
       </Position21>
       <Position22>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="367" TopLine="331"/>
+        <Caret Line="287" TopLine="158"/>
       </Position22>
       <Position23>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="370" TopLine="331"/>
+        <Caret Line="288" TopLine="158"/>
       </Position23>
       <Position24>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="372" TopLine="331"/>
+        <Caret Line="291" Column="46" TopLine="158"/>
       </Position24>
       <Position25>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="373" TopLine="331"/>
+        <Caret Line="293" Column="44" TopLine="158"/>
       </Position25>
       <Position26>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="354" TopLine="331"/>
+        <Caret Line="285" TopLine="158"/>
       </Position26>
       <Position27>
-        <Filename Value="config.pas"/>
-        <Caret Line="1307" TopLine="1135"/>
+        <Filename Value="spori_main.pas"/>
+        <Caret Line="287" TopLine="158"/>
       </Position27>
       <Position28>
-        <Filename Value="config.pas"/>
-        <Caret Line="1339" Column="39" TopLine="1222"/>
+        <Filename Value="spori_main.pas"/>
+        <Caret Line="288" TopLine="158"/>
       </Position28>
       <Position29>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="373" Column="31" TopLine="314"/>
+        <Caret Line="291" TopLine="158"/>
       </Position29>
       <Position30>
-        <Filename Value="config.pas"/>
-        <Caret Line="1330" Column="23" TopLine="1306"/>
+        <Filename Value="spori_main.pas"/>
+        <Caret Line="293" TopLine="158"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

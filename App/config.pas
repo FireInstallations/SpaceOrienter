@@ -29,7 +29,7 @@ uses
   Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   Buttons, EditBtn, Spin, ExtCtrls, MaskEdit, DBGrids, DbCtrls, ECImageMenu,
   ECSwitch, ECEditBtns, LCLType,
-  GetHotkey;
+  GetHotkey; //Prevent overflow here
 
 type
 
@@ -143,7 +143,7 @@ type
     Sw_Redo: TECSwitch;
     Sw_AutoTime: TECSwitch;
     Sw_AutoCon: TECSwitch;
-    TbSht_Alg: TTabSheet;
+    TbSht_General: TTabSheet;
     TbSht_Con: TTabSheet;
     TbSht_Loc: TTabSheet;
     TbSht_Info: TTabSheet;
@@ -205,6 +205,11 @@ type
 
 var
   Frm_Config   : TFrm_Config;
+
+  //Multi langue deffinitions
+  Resourcestring
+    Lbl_Turnd_On  = 'Ein';
+    Lbl_Turnd_Off = 'Aus';
 
 implementation
 
@@ -982,7 +987,7 @@ procedure TFrm_Config.AllUpOff (); //ToDo: Comments; clean up
 procedure TFrm_Config.FormCreate(Sender: TObject); //ToDo: Comments
   begin
     ImgMn.ItemIndex       := 0;
-    PgCont_Pnl.ActivePage := TbSht_Alg;
+    PgCont_Pnl.ActivePage := TbSht_General;
   end;
 
 procedure TFrm_Config.Bt_UpClick(Sender: TObject);  //ToDo: Comments
@@ -1180,7 +1185,7 @@ procedure TFrm_Config.ImgMnSelectionChange(Sender: TObject; User: boolean); //Do
   begin
     //a different menu point was chosen, set the right  page active
     case ImgMn.itemIndex of
-      0: PgCont_Pnl.ActivePage := TbSht_Alg;
+      0: PgCont_Pnl.ActivePage := TbSht_General;
       1: PgCont_Pnl.ActivePage := TbSht_Up;
       2: PgCont_Pnl.ActivePage := TbSht_Con;
       3: PgCont_Pnl.ActivePage := TbSht_Loc;
@@ -1250,7 +1255,7 @@ procedure TFrm_Config.Sw_AutoTimeChange(Sender: TObject);  //Done
     IsActive := Sw_AutoTime.Checked;
 
     //Toggle lable caption
-    Lbl_Sw_AutoTime.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+    Lbl_Sw_AutoTime.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
 
     //Don't let the User chage time wihle the app is supposed to use the system time
     Lb_Time.Enabled         := not IsActive;
@@ -1278,7 +1283,7 @@ procedure TFrm_Config.Sw_ExprtChange(Sender: TObject);  //Done
     IsActive := Sw_Exprt.Checked;
 
     //Toggle lable caption
-    Lbl_Sw_Exprt.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+    Lbl_Sw_Exprt.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
 
     //Old
     Frm_Spori.MI_Sicht_Exp.Checked := IsActive;
@@ -1294,7 +1299,7 @@ procedure TFrm_Config.Sw_HtKyChange(Sender: TObject); //Done
     IsActive := Sw_HtKy.Checked;
 
     //Toggle Caption
-    Lbl_Sw_HtKy.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+    Lbl_Sw_HtKy.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
 
     //Don't let the User change the Hotkey while not using it
     Ed_HtKy.Enabled := IsActive;
@@ -1311,7 +1316,7 @@ procedure TFrm_Config.Sw_ManuValChange(Sender: TObject); //Done
     IsActive := Sw_ManuVal.Checked;
 
     //Set Caption
-    Lbl_Sw_ManW.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+    Lbl_Sw_ManW.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
 
     //Toggle visebility of FloatEditfields and make the decimal places userfrendly
     with Frm_Main do
@@ -1347,7 +1352,7 @@ procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject); //Done
     IsActive := Sw_PortableMode.Checked;
 
     //Toggle lable caption
-    Lbl_Sw_PortableMode.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+    Lbl_Sw_PortableMode.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
 
     //Save new Value
     Frm_Spori.Options[ON_PortableMode] := BoolToStr(IsActive, 'True', 'False');
@@ -1363,7 +1368,7 @@ procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //Done
     isActive :=  Sw_AutoCon.Checked;
 
     //Set Caption for the Button
-    Lbl_Sw_AutoCon.Caption := BoolToStr(IsActive, 'Ein', 'Aus');
+    Lbl_Sw_AutoCon.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
     //Save it
     Frm_Spori.Options[ON_AutoComMode] := BoolToStr(IsActive, 'True', 'False');
 
@@ -1383,7 +1388,7 @@ procedure TFrm_Config.Sw_RedoChange(Sender: TObject); //Done
     IsActive := Sw_Redo.Checked;
 
     //Toggle lable caption
-    Lbl_Sw_Redo.Caption   := BoolToStr(IsActive, 'Ein', 'Aus');
+    Lbl_Sw_Redo.Caption   := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
 
     //Save it
     Frm_Spori.Options[ON_UpRetry] := BoolToStr(IsActive, 'True', 'False');

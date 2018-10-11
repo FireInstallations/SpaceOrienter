@@ -154,11 +154,14 @@ type
 var
   Frm_Main: TFrm_Main;
 
+  //Multi langue deffinitions
+  Resourcestring
+    EdSearch_Default = 'Suchen...';
+
 implementation
 
 uses
   spaceorienter_main;
-
 
 {$R *.lfm}
 
@@ -281,22 +284,22 @@ procedure TFrm_Main.SearchInputEdit ();  //ToDo: Error handeling (Item not found
     TempItem: TListItem;
   begin
     //if there was vailid input
-     if not (Ed_Search4Bdy_Main.Text = 'Suchen...') and not (Ed_Search4Bdy_Main.Text = '') then
-       with Frm_Spori do
-         begin
-           TempItem := Search4Body (Trim(Ed_Search4Bdy_Main.Text)); //serch for the input
+    if not (Ed_Search4Bdy_Main.Text = EdSearch_Default) and not (Ed_Search4Bdy_Main.Text = '') then
+      with Frm_Spori do
+        begin
+          TempItem := Search4Body (Trim(Ed_Search4Bdy_Main.Text)); //serch for the input
 
-           if Assigned(TempItem) then
-             begin
-               ProgressList(TempItem);
+          if Assigned(TempItem) then
+            begin
+              ProgressList(TempItem);
 
-               //If the user searched for a constellation, change Bodymode
-               if (StrCompaire(Ed_Search4Bdy_Main.Text, TempItem.SubItems[2] , false) > 75) then
-                 ProgressBodyMode(5);
-             end
-           else
-           ; //Item not found
-         end;
+              //If the user searched for a constellation, change Bodymode
+              if (StrCompaire(Ed_Search4Bdy_Main.Text, TempItem.SubItems[2] , false) > 75) then
+                ProgressBodyMode(5);
+            end
+          else
+          ; //Item not found
+        end;
   end;
 
 procedure TFrm_Main.Btn_Search4Bdy_MainClick(Sender: TObject);  //done
@@ -313,7 +316,7 @@ procedure TFrm_Main.CmbBx_ModeChange(Sender: TObject); //Done
 
 procedure TFrm_Main.Ed_Search4Bdy_MainEnter(Sender: TObject);  //Buggy
   begin
-    if Ed_Search4Bdy_Main.Text = 'Suchen...' then
+    if Ed_Search4Bdy_Main.Text = EdSearch_Default then
       Ed_Search4Bdy_Main.Clear  //nothing was typed yet, so clear up the default value
      else
       begin
@@ -333,7 +336,7 @@ procedure TFrm_Main.Ed_Search4Bdy_MainExit(Sender: TObject); //Done
   begin
     //Reset to default if no text was given
     if (Ed_Search4Bdy_Main.Text = '') then
-      Ed_Search4Bdy_Main.Text  := 'Suchen...';
+      Ed_Search4Bdy_Main.Text  := EdSearch_Default;
 
   end;
 

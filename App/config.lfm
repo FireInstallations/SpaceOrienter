@@ -1,7 +1,7 @@
 object Frm_Config: TFrm_Config
-  Left = 116
+  Left = 13
   Height = 580
-  Top = 198
+  Top = 120
   Width = 960
   AlphaBlendValue = 250
   Caption = 'Einstellungen'
@@ -2513,18 +2513,18 @@ object Frm_Config: TFrm_Config
     Top = 72
     Width = 760
     TabStop = False
-    ActivePage = TbSht_Alg
+    ActivePage = TbSht_Info
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Color = clWhite
     Font.Height = -18
     ParentBiDiMode = False
     ParentFont = False
     ShowTabs = False
-    TabIndex = 0
+    TabIndex = 6
     TabOrder = 1
     TabPosition = tpLeft
     Options = [nboHidePageListPopup, nboKeyboardTabSwitch]
-    object TbSht_Alg: TTabSheet
+    object TbSht_General: TTabSheet
       Caption = 'A'
       ClientHeight = 506
       ClientWidth = 758
@@ -2563,8 +2563,8 @@ object Frm_Config: TFrm_Config
         OnChange = Sw_PortableModeChange
       end
       object Lbl_PortableMode: TLabel
-        AnchorSideLeft.Control = TbSht_Alg
-        AnchorSideTop.Control = TbSht_Alg
+        AnchorSideLeft.Control = TbSht_General
+        AnchorSideTop.Control = TbSht_General
         Left = 60
         Height = 26
         Top = 45
@@ -3065,7 +3065,7 @@ object Frm_Config: TFrm_Config
       end
       object BitBtn_NwCnfg: TBitBtn
         AnchorSideLeft.Control = Sw_PortableMode
-        AnchorSideBottom.Control = TbSht_Alg
+        AnchorSideBottom.Control = TbSht_General
         AnchorSideBottom.Side = asrBottom
         Left = 73
         Height = 32
@@ -4094,14 +4094,14 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Control = Lbl_Plan
         AnchorSideTop.Side = asrBottom
         Left = 73
-        Height = 35
+        Height = 31
         Top = 288
         Width = 191
         BorderSpacing.Top = 14
         Enabled = False
         Font.Color = clBlack
         Font.Height = -18
-        ItemHeight = 25
+        ItemHeight = 0
         ItemIndex = 0
         Items.Strings = (
           'Täglich'
@@ -4110,8 +4110,6 @@ object Frm_Config: TFrm_Config
         )
         OnEditingDone = CBx_RateEditingDone
         ParentFont = False
-        ReadOnly = True
-        Style = csOwnerDrawFixed
         TabOrder = 0
         Text = 'Täglich'
       end
@@ -4139,7 +4137,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 277
         Height = 26
-        Top = 292
+        Top = 290
         Width = 27
         BorderSpacing.Left = 13
         Caption = 'am'
@@ -4161,7 +4159,7 @@ object Frm_Config: TFrm_Config
         Enabled = False
         Font.Color = clBlack
         Font.Height = -18
-        ItemHeight = 25
+        ItemHeight = 0
         ItemIndex = 6
         Items.Strings = (
           'Montag'
@@ -4174,8 +4172,6 @@ object Frm_Config: TFrm_Config
         )
         OnEditingDone = CBx_TagEditingDone
         ParentFont = False
-        ReadOnly = True
-        Style = csOwnerDrawFixed
         TabOrder = 1
         Text = 'Sonntag'
       end
@@ -4186,7 +4182,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrCenter
         Left = 473
         Height = 26
-        Top = 292
+        Top = 290
         Width = 28
         BorderSpacing.Left = 13
         Caption = 'um'
@@ -4201,7 +4197,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 60
         Height = 33
-        Top = 431
+        Top = 427
         Width = 230
         BorderSpacing.Top = 20
         BorderSpacing.Bottom = 18
@@ -4471,7 +4467,7 @@ object Frm_Config: TFrm_Config
         AnchorSideRight.Side = asrBottom
         Left = 60
         Height = 26
-        Top = 343
+        Top = 339
         Width = 243
         BorderSpacing.Top = 20
         Caption = 'Falls Versäumt wiederholen?'
@@ -4487,7 +4483,7 @@ object Frm_Config: TFrm_Config
         AnchorSideBottom.Side = asrBottom
         Left = 312
         Height = 16
-        Top = 343
+        Top = 339
         Width = 16
         AutoSize = True
         BorderSpacing.Left = 9
@@ -4603,7 +4599,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrBottom
         Left = 73
         Height = 28
-        Top = 383
+        Top = 379
         Width = 66
         BevelOuter = bvSpace
         BevelWidth = 0
@@ -4640,7 +4636,7 @@ object Frm_Config: TFrm_Config
         AnchorSideTop.Side = asrCenter
         Left = 148
         Height = 26
-        Top = 384
+        Top = 380
         Width = 26
         BorderSpacing.Left = 9
         Caption = 'Ein'
