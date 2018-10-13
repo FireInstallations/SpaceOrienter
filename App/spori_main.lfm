@@ -1,9 +1,9 @@
 object Frm_Main: TFrm_Main
-  Left = 13
+  Left = 0
   Height = 600
-  Top = 120
+  Top = 356
   Width = 965
-  Caption = 'Frm_Main'
+  Caption = 'SpaceOrienter'
   ClientHeight = 600
   ClientWidth = 965
   Color = 2818816
@@ -2147,15 +2147,14 @@ object Frm_Main: TFrm_Main
     Top = 78
     Width = 771
     TabStop = False
-    ActivePage = TbSht_DashBord
+    ActivePage = TbSht_BodyList
     Anchors = [akTop, akLeft, akRight, akBottom]
     ShowTabs = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     TabPosition = tpLeft
     Options = [nboHidePageListPopup, nboKeyboardTabSwitch, nboDoChangeOnSetIndex]
     object TbSht_DashBord: TTabSheet
-      Caption = 'TbSht_DashBord'
       ClientHeight = 520
       ClientWidth = 769
       Font.Color = clWhite
@@ -2186,9 +2185,9 @@ object Frm_Main: TFrm_Main
           Left = 39
           Height = 21
           Top = 24
-          Width = 108
+          Width = 12
           BorderSpacing.Left = 39
-          Caption = '01.10.2018'
+          Caption = '0'
           Font.Color = clWhite
           Font.Height = -17
           Font.Name = 'Sans'
@@ -2272,11 +2271,11 @@ object Frm_Main: TFrm_Main
         object Lbl_Time: TLabel
           AnchorSideLeft.Control = Lbl_Date
           AnchorSideLeft.Side = asrCenter
-          Left = 50
+          Left = 39
           Height = 21
           Top = 48
-          Width = 86
-          Caption = '15:10:00'
+          Width = 12
+          Caption = '0'
           Font.Color = clWhite
           Font.Height = -17
           Font.Name = 'Sans'
@@ -2346,10 +2345,10 @@ object Frm_Main: TFrm_Main
           Left = 32
           Height = 19
           Top = 482
-          Width = 28
+          Width = 8
           BorderSpacing.Left = 13
           BorderSpacing.Top = 24
-          Caption = '3.80'
+          Caption = '0'
           ParentColor = False
         end
         object Lbl_Place_Name: TLabel
@@ -2419,7 +2418,6 @@ object Frm_Main: TFrm_Main
           BorderSpacing.Top = 25
           BorderSpacing.Right = 15
           BevelColor = clWhite
-          Caption = 'Pnl_Line_Status'
           Color = clWhite
           ParentColor = False
           TabOrder = 1
@@ -3026,10 +3024,10 @@ object Frm_Main: TFrm_Main
         Left = 35
         Height = 21
         Top = 25
-        Width = 121
+        Width = 130
         BorderSpacing.Left = 35
         BorderSpacing.Top = 25
-        Caption = 'Himmelkörper'
+        Caption = 'Himmelskörper'
         Font.Color = clWhite
         Font.Height = -17
         Font.Name = 'Sans'
@@ -3043,10 +3041,10 @@ object Frm_Main: TFrm_Main
         Left = 48
         Height = 23
         Top = 56
-        Width = 36
+        Width = 12
         BorderSpacing.Left = 13
         BorderSpacing.Top = 10
-        Caption = '206'
+        Caption = '0'
         Font.Color = clWhite
         Font.Height = -19
         Font.Name = 'Sans'
@@ -3057,12 +3055,12 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Nr
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Nr
-        Left = 99
+        Left = 75
         Height = 23
         Top = 56
-        Width = 60
+        Width = 7
         BorderSpacing.Left = 15
-        Caption = 'Sonne'
+        Caption = '-'
         Font.Color = clWhite
         Font.Height = -19
         Font.Name = 'Sans'
@@ -3073,7 +3071,7 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Title
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Title
-        Left = 296
+        Left = 305
         Height = 21
         Top = 25
         Width = 121
@@ -3089,7 +3087,7 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_BdyPrpty_Title
         AnchorSideTop.Control = Lbl_BdyPrpty_Title
         AnchorSideTop.Side = asrBottom
-        Left = 309
+        Left = 318
         Height = 23
         Top = 56
         Width = 7
@@ -3108,13 +3106,13 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_BdyPrpty_Title
         AnchorSideTop.Side = asrBottom
-        Left = 331
+        Left = 340
         Height = 23
         Top = 56
-        Width = 116
+        Width = 7
         BorderSpacing.Left = 15
         BorderSpacing.Top = 10
-        Caption = 'Ephemeride'
+        Caption = '-'
         Font.Color = clWhite
         Font.Height = -19
         Font.Name = 'Sans'
@@ -3125,12 +3123,12 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Split
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Nr
-        Left = 185
+        Left = 108
         Height = 23
         Top = 56
-        Width = 29
+        Width = 7
         BorderSpacing.Left = 10
-        Caption = 'Sol'
+        Caption = '-'
         Font.Color = clWhite
         Font.Height = -19
         Font.Name = 'Sans'
@@ -3141,7 +3139,7 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Name
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Nr
-        Left = 169
+        Left = 92
         Height = 23
         Top = 56
         Width = 6
@@ -3194,9 +3192,9 @@ object Frm_Main: TFrm_Main
         BorderSpacing.Right = 13
         Font.Height = -16
         Font.Name = 'Sans'
-        OnEnter = Ed_Search4Bdy_MainEnter
-        OnExit = Ed_Search4Bdy_MainExit
-        OnKeyDown = Ed_Search4Bdy_MainKeyDown
+        OnEnter = Ed_Search4Bdy_Enter
+        OnExit = Ed_Search4Bdy_Exit
+        OnKeyDown = Ed_Search4Bdy_KeyDown
         ParentFont = False
         TabOrder = 1
         Text = 'Suchen...'
@@ -3215,7 +3213,6 @@ object Frm_Main: TFrm_Main
         BorderSpacing.Top = 24
         BorderSpacing.Right = 40
         BevelColor = clWhite
-        Caption = 'Pnl_Line'
         TabOrder = 3
       end
       object CmbBx_Mode: TComboBox
@@ -4632,8 +4629,120 @@ object Frm_Main: TFrm_Main
         Shape = stTriangle
       end
     end
-    object TbSht_StarList: TTabSheet
-      Caption = 'TbSht_StarList'
+    object TbSht_BodyList: TTabSheet
+      ClientHeight = 520
+      ClientWidth = 769
+      object Ed_Search4Bdy_List: TEdit
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = TbSht_BodyList
+        AnchorSideRight.Control = TbSht_BodyList
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Side = asrBottom
+        Left = 615
+        Height = 31
+        Top = 20
+        Width = 119
+        Anchors = [akTop, akRight]
+        AutoSize = False
+        BorderSpacing.Top = 20
+        BorderSpacing.Right = 35
+        Font.Height = -16
+        Font.Name = 'Sans'
+        OnEnter = Ed_Search4Bdy_Enter
+        OnExit = Ed_Search4Bdy_Exit
+        OnKeyDown = Ed_Search4Bdy_KeyDown
+        ParentFont = False
+        TabOrder = 0
+        Text = 'Suchen...'
+      end
+      object LV_BodyList: TListView
+        AnchorSideLeft.Control = TbSht_BodyList
+        AnchorSideTop.Control = Ed_Search4Bdy_List
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TbSht_BodyList
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = TbSht_BodyList
+        AnchorSideBottom.Side = asrBottom
+        Left = 3
+        Height = 444
+        Top = 71
+        Width = 762
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        AutoSort = False
+        BorderSpacing.Left = 3
+        BorderSpacing.Top = 20
+        BorderSpacing.Right = 4
+        BorderSpacing.Bottom = 5
+        Checkboxes = True
+        Color = 16449535
+        Columns = <        
+          item
+            AutoSize = True
+            Caption = 'Nummer '
+            ImageIndex = 0
+            MinWidth = 32
+            Width = 67
+          end        
+          item
+            Caption = 'Himmelskörper'
+            MinWidth = 70
+            Width = 105
+          end        
+          item
+            Caption = 'Latein'
+            MinWidth = 50
+          end        
+          item
+            Caption = 'Eigenschaften'
+            MinWidth = 40
+            Width = 94
+          end        
+          item
+            Caption = 'Sternbild'
+            MinWidth = 56
+            Width = 62
+          end        
+          item
+            Caption = 'Rezi °'
+            MinWidth = 40
+            Width = 40
+          end        
+          item
+            Caption = 'Rezi Min'
+            MinWidth = 40
+            Width = 57
+          end        
+          item
+            Caption = 'Dekli °'
+            MinWidth = 40
+            Width = 46
+          end        
+          item
+            Caption = 'Dekli Min'
+            Width = 239
+          end>
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -10
+        Font.Name = 'Arial Unicode MS'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        HideSelection = False
+        IconOptions.Arrangement = iaLeft
+        IconOptions.AutoArrange = True
+        ParentFont = False
+        ReadOnly = True
+        RowSelect = True
+        ScrollBars = ssAutoBoth
+        SortColumn = 0
+        SortDirection = sdDescending
+        SortType = stData
+        TabOrder = 1
+        ViewStyle = vsReport
+        OnDblClick = LV_BodyListDblClick
+        OnItemChecked = LV_BodyListItemChecked
+        OnKeyPress = LV_BodyListKeyPress
+        OnResize = LV_BodyListResize
+      end
     end
   end
   object Pnl_Header: TPanel

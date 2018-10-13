@@ -1,7 +1,7 @@
 object Frm_GetHotKey: TFrm_GetHotKey
-  Left = 662
+  Left = 410
   Height = 156
-  Top = 342
+  Top = 444
   Width = 292
   HorzScrollBar.Page = 278
   HorzScrollBar.Range = 278

@@ -17,6 +17,8 @@ unit SpOri_Main;
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
     }
 
+    //Store StarList in own Array and supply it using OnData event ?
+
 {$mode objfpc}{$H+}
 
 interface
@@ -24,7 +26,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, ComCtrls, Buttons, Spin, ECImageMenu, LCLType, Math,
-  Config;
+  Config, MultiLangueStrings;
 
 type
 
@@ -36,6 +38,7 @@ type
     BitBtn_Navigate_Main: TBitBtn;
     CmbBx_Mode: TComboBox;
     Ed_Search4Bdy_Main: TEdit;
+    Ed_Search4Bdy_List: TEdit;
     FltSpnEd_AziCalcManu: TFloatSpinEdit;
     FltSpnEd_EleCalcManu: TFloatSpinEdit;
     Img_ChartEle: TImage;
@@ -88,6 +91,7 @@ type
     Lbl_Bdy_Name: TLabel;
     Lbl_BdyPrpty_Title: TLabel;
     Lbl_Time: TLabel;
+    LV_BodyList: TListView;
     Pnl_Line_Status: TPanel;
     Pnl_Line: TPanel;
     Pnl_Status: TPanel;
@@ -103,19 +107,17 @@ type
     Shape_EleNow: TShape;
     Shape_EleNow1: TShape;
     TbSht_DashBord: TTabSheet;
-    TbSht_StarList: TTabSheet;
+    TbSht_BodyList: TTabSheet;
     {tell the device to pilote to the body}
     procedure BitBtn_Navigate_MainClick(Sender: TObject);
-    {calls SearchInputEdit}
-    procedure Btn_Search4Bdy_MainClick(Sender: TObject);
     {A BodyMode was selecet, tell it}
     procedure CmbBx_ModeChange(Sender: TObject);
     {If just the default text is given clear it else Select all text (buggy)}
-    procedure Ed_Search4Bdy_MainEnter(Sender: TObject);
+    procedure Ed_Search4Bdy_Enter(Sender: TObject);
     {If the Editfild is emty reset it's text to 'Search for...'}
-    procedure Ed_Search4Bdy_MainExit(Sender: TObject);
+    procedure Ed_Search4Bdy_Exit(Sender: TObject);
     {If return (Enter) was pressed SearchInputEdit will be called}
-    procedure Ed_Search4Bdy_MainKeyDown(Sender: TObject; var Key: Word;
+    procedure Ed_Search4Bdy_KeyDown(Sender: TObject; var Key: Word;
       {%H-}Shift: TShiftState);
     procedure FltSpnEd_AziCalcManuChange(Sender: TObject);
     procedure FltSpnEd_EleCalcManuChange(Sender: TObject);
@@ -138,6 +140,15 @@ type
     {cosmetic: set color of label and image back to white (leftklick)}
     procedure Img_Settings_WMouseUp(Sender: TObject; Button: TMouseButton;
       {%H-}Shift: TShiftState; {%H-}X, {%H-}Y: Integer);
+    {If a vailed Item was seleceted tell it (call ProgressList)}
+    procedure LV_BodyListDblClick(Sender: TObject);
+    {A vailed Item was seleceted, tell it (call ProgressList)}
+    procedure LV_BodyListItemChecked(Sender: TObject; Item: TListItem);
+    {A vailed Item was seleceted, tell it (call ProgressList)}
+    procedure LV_BodyListKeyPress(Sender: TObject; var Key: char);
+    {sets the width of the colums of the LV_BodyLst fittig to the
+    avaible Space}
+    procedure LV_BodyListResize(Sender: TObject);
   private
     var
       KeyCount: byte;
@@ -153,10 +164,6 @@ type
 
 var
   Frm_Main: TFrm_Main;
-
-  //Multi langue deffinitions
-  Resourcestring
-    EdSearch_Default = 'Suchen...';
 
 implementation
 
@@ -284,7 +291,7 @@ procedure TFrm_Main.SearchInputEdit ();  //ToDo: Error handeling (Item not found
     TempItem: TListItem;
   begin
     //if there was vailid input
-    if not (Ed_Search4Bdy_Main.Text = EdSearch_Default) and not (Ed_Search4Bdy_Main.Text = '') then
+    if not (Ed_Search4Bdy_Main.Text = MLS_Error_ErrorWhile) and not (Ed_Search4Bdy_Main.Text = '') then
       with Frm_Spori do
         begin
           TempItem := Search4Body (Trim(Ed_Search4Bdy_Main.Text)); //serch for the input
@@ -295,28 +302,22 @@ procedure TFrm_Main.SearchInputEdit ();  //ToDo: Error handeling (Item not found
 
               //If the user searched for a constellation, change Bodymode
               if (StrCompaire(Ed_Search4Bdy_Main.Text, TempItem.SubItems[2] , false) > 75) then
-                ProgressBodyMode(5);
+                ProgressBodyMode(BMd_Constellation);
             end
           else
           ; //Item not found
         end;
   end;
 
-procedure TFrm_Main.Btn_Search4Bdy_MainClick(Sender: TObject);  //done
-  begin
-    //search for given text in Ed_Search4Bdy_Main
-    SearchInputEdit();
-  end;
-
 procedure TFrm_Main.CmbBx_ModeChange(Sender: TObject); //Done
   begin
     //Tell what Mode was selected
-    Frm_Spori.ProgressBodyMode(CmbBx_Mode.ItemIndex);
+    Frm_Spori.ProgressBodyMode(TBodyMode(CmbBx_Mode.ItemIndex));
   end;
 
-procedure TFrm_Main.Ed_Search4Bdy_MainEnter(Sender: TObject);  //Buggy
+procedure TFrm_Main.Ed_Search4Bdy_Enter(Sender: TObject);  //Buggy
   begin
-    if Ed_Search4Bdy_Main.Text = EdSearch_Default then
+    if Ed_Search4Bdy_Main.Text = MLS_Search_Default then
       Ed_Search4Bdy_Main.Clear  //nothing was typed yet, so clear up the default value
      else
       begin
@@ -332,15 +333,15 @@ procedure TFrm_Main.Ed_Search4Bdy_MainEnter(Sender: TObject);  //Buggy
 
   end;
 
-procedure TFrm_Main.Ed_Search4Bdy_MainExit(Sender: TObject); //Done
+procedure TFrm_Main.Ed_Search4Bdy_Exit(Sender: TObject); //Done
   begin
     //Reset to default if no text was given
     if (Ed_Search4Bdy_Main.Text = '') then
-      Ed_Search4Bdy_Main.Text  := EdSearch_Default;
+      Ed_Search4Bdy_Main.Text  := MLS_Search_Default;
 
   end;
 
-procedure TFrm_Main.Ed_Search4Bdy_MainKeyDown(Sender: TObject; var Key: Word; //Done
+procedure TFrm_Main.Ed_Search4Bdy_KeyDown(Sender: TObject; var Key: Word; //Done
   Shift: TShiftState);
   begin
     //If Enter was pressed search for the given text
@@ -445,6 +446,43 @@ procedure TFrm_Main.Img_Settings_WMouseUp(Sender: TObject; Button: TMouseButton;
         Img_Settings_G.Visible := false;
         Lbl_Settings.Font.Color := $00DFDFDF;
       end;
+  end;
+
+procedure TFrm_Main.LV_BodyListDblClick(Sender: TObject); //Done
+  begin
+    //if an Item was selected, tell it
+    if (LV_BodyList.SelCount = 1) then
+      Frm_Spori.ProgressList (LV_BodyList.Selected);
+  end;
+
+procedure TFrm_Main.LV_BodyListItemChecked(Sender: TObject; Item: TListItem);  //Done
+  begin
+    //tell everybody that a new Body was choosen
+    Frm_Spori.ProgressList(Item);
+  end;
+
+procedure TFrm_Main.LV_BodyListKeyPress(Sender: TObject; var Key: char); //Done
+  begin
+    //tell everybody that a new Body was choosen, if Enter was pressed
+    if ((LV_BodyList.SelCount = 1) and (Ord(Key) = VK_RETURN)) then
+      Frm_Spori.ProgressList (LV_BodyList.Selected);
+  end;
+
+procedure TFrm_Main.LV_BodyListResize(Sender: TObject); //Done
+  var
+    i: Integer;
+    WidthOfAll: Integer = 0;
+  begin
+    //Get the width of all captions together
+    for i := 0 to pred(LV_BodyList.Columns.Count) do
+      with LV_BodyList.Column[i] do
+        if Visible then
+          WidthOfAll += length(Caption);
+
+    //the new width is percent of overall width * avaible Space (the -20 stand for a possible Scrollbar)
+    for i := 0 to pred(LV_BodyList.Columns.Count) do
+       with LV_BodyList.Column[i] do
+          Width := Trunc((length(Caption) / WidthOfAll) * (LV_BodyList.Width -20));
   end;
 
 end.

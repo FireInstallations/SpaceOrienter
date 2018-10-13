@@ -2352,7 +2352,7 @@ var
   var FD : Cint;
   var Ser : TSerialStruct;
   begin
-    if FindFirst( ThisRootStr, $FFFFFFFF, sr) = 0 then
+    if FindFirst( ThisRootStr, $FFFFFFF, sr) = 0 then
     begin
       repeat
         if (sr.Attr and $FFFFFFFF) = Sr.Attr then

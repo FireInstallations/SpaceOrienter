@@ -268,22 +268,20 @@ interface
    }
 
   {ToDo List:
-    for unnown Errors do
-      on E: Exception do
-        writeln('Message', E.Message);
-
+    Range check while reading from config file (is it greater then a possible string / memory?
+    Keep in mind: http://wiki.freepascal.org/Secure_programming
+    Use http://wiki.freepascal.org/TTaskDialog for custom buttons
+    Maby using ready made Api for config file (http://wiki.freepascal.org/Using_INI_Files or /xmlconf)
+     - Pro: should shorten the program; Well known structure; could working faster
+     - Con  Doesn't uses StrCopmpaire - > not as stable as  the solution now
     If new mainform was rezised the shapes doesn't stay on thair charts
-
-    Use System langue until loaded from Options
-    Make resizing the forms more beuteful
+    High DPI awareness http://wiki.freepascal.org/High_DPI/de
     Remove number labels from po files
     Finish to change all text to Resourcestring
     Rename Resourcestrings so it isn't that difficult anymore o figure out what they are
     Add langue pick setting to config form
     Change config form buttons (etc) to autosize
-    move Resourcestrings to a own file
     Progressbar (Main / Config) for Update
-    Item Nr. 79 in StarList throws an error
     Use System DecimalSepperators for (default) StarList
     Move Ele/Azi charts up/down if ManuVal mode toggles
     Integrate follow timer in Calc timer
@@ -294,7 +292,7 @@ interface
     rename (kleiner) wagen -> (kleiner) Bär
     Warn if more then one inctance is runnig
     Lon /Lat to Timezone offset
-    Build up own Planetarium, to show where  is what located, to find and choose bodys on a graphicle way
+    Build up own Planetarium, to show where is what located, to find and choose bodys on a graphicle way
     Better handeling of globale variables (property)
     Throw a warning msg if config resett
     Make default WMM.COF, so the User doesn't have to install it
@@ -328,7 +326,6 @@ interface
       --> let the user decide if we get anything automatic online
     Add wave lengths in starlist
     Updates via Github
-    There might be a bug with time setting
     Add ISS and other space stations
     Add Hints (for Questionmark images)
     Finish rdesine main form
@@ -344,8 +341,8 @@ interface
      - Make custom paths happen
     Version check while load / save options
     Detect Arduinotype (and if it is the Spori); Synapser dosn't find right ports
-    Function IsCollection could be optimized
-    There seems to be an error in LoadStarList, but I coudn't determine what goes wrong yet
+    Function IsConstellation could be optimized
+    There seems to be an error in LoadStarList, but I coudn't figure out what goes wrong yet
     If portable mode was switched, clear at the old place up and move all files to the new location
     Make OlsOptions / Lists optional
     In ProgressList: test if the Item is vailed (mainpage)
@@ -369,16 +366,20 @@ interface
     {$IfDef Windows}
     JwaWindows, {windows, ShellApi,}
     {$Else}
-    clocale, process,
-    //Unix, baseunix,
+    clocale, process, {Unix,}
+    //baseunix,
     //lclintf,
+    {$IFDEF LCLCarbon}
+    MacOSAll,
+    {$ENDIF}
     {$EndIf}
 
+    gettext, LazUTF8,
     Classes, SysUtils, FileUtil, Forms, Controls, Graphics, LCLType,
     Dialogs, Menus, StrUtils, StdCtrls, ComCtrls, ActnList, ExtCtrls,
     PopupNotifier, EditBtn, Buttons, math, Types, DateUtils, typinfo,
-    LCLTranslator,
-    PlanEph, Utils, synaser, Config, SpOri_Main;
+    LCLTranslator,  //Be carefull, since it adds all kind of number displaying stuff too --> makes messy .po files
+    PlanEph, Utils, synaser, Config, SpOri_Main, MultiLangueStrings, GetHotkey;
 
   type
 
@@ -408,6 +409,19 @@ interface
       ON_BodyMode,
       ON_Body,
       ON_Langue
+      );
+
+    {Determines how the App will act}
+    TBodyMode = (
+      BMd_Normal,
+      //Follow a Body
+      BMd_Follow,
+      BMd_Scan,
+      BMd_Place,
+      BMd_Time,
+      //Navigate to all stars of a given constellation
+      BMd_Constellation,
+      BMd_Search
       );
 
       { TFrm_Spori }
@@ -573,11 +587,12 @@ interface
         Tmr_Nach: TTimer;
         Tmr_Berech: TTimer;
         TbS_Ephi: TTabSheet;
-        {if this Button was clicked, data wil be sended to the arduino (SendData will be called),
+        {If this Button was clicked, data wil be sended to the arduino (SendData will be called),
         like Bt_PilotClick (below) but located on the Starlist tab.}
         procedure BT_Main_TempClick(Sender: TObject);
+        {If this Button was clicked, data wil be sended to the arduino (SendData will be called)}
         procedure Bt_Pilot_StrLstClick(Sender: TObject);
-        {if this Button was clicked, data wil be sended to the arduino (SendData will be called)}
+        {If this Button was clicked, data wil be sended to the arduino (SendData will be called)}
         procedure Bt_PilotClick(Sender: TObject);
         {A new Body was selected, tell it (... will be called)}
         procedure CB_HKEditingDone(Sender: TObject);
@@ -652,6 +667,11 @@ interface
         function  LoadOptions (const LoadFromFile: Boolean = true): Boolean;
         {Looks for a choosen Constellation up, if it is valid}
         function  IsConstellation ():Boolean;
+        {platform-independent method to read the language of the user interface
+        Taken from: http://wiki.freepascal.org/Everything_else_about_translations
+        This dunction limits the app to Linux, Mac and windows, it have to be possible to
+        get it working for more OS. Until this was done, En will allways be retuned}
+        function  GetOSLanguage (): string;
         {Transfer lon, lat to Rad}
         procedure Angle ();
         {calculate the First Point of Aries}
@@ -697,7 +717,7 @@ interface
           {Diffrence between Now and the DateTime selected by the user
            Time goes on like expected but from point in time choosen by the user}
           DiffD:       TDate;
-          DiffT:       TTime;
+          DiffT:       System.TTime;  //Don't use Unix TTime
           {Don't save time while it is on change in Frm_config }
           NoEntry:     Boolean;
 
@@ -739,7 +759,7 @@ interface
         {Try to tell the Rest of the mainform what star was selecet by a given Item}
         procedure ProgressList (const Item:TListItem);
         {Tell the mainform what BodyMode was selected}
-        procedure ProgressBodyMode (const Mode: byte; Save: Boolean = true);
+        procedure ProgressBodyMode (const Mode: TBodyMode; Save: Boolean = true);
         {Compaires two strings and compute the sameness in percent
         The boolean  does that what it's name say: it determine if StrCompaire is casesensitive}
         function  StrCompaire(str1, str2: String; const CaseSensitive: Boolean = true): Real;
@@ -749,27 +769,6 @@ interface
     Frm_Spori: TFrm_Spori;
 
 implementation
-
-Resourcestring
-  Lbl_ComMsg_Connecting    = 'Verbinde...';
-  Lbl_ComMsg_ConnectedWith = 'Verbunden mit: ';
-  Lbl_ComMsg_NotConnected  = 'Nicht verbunden';
-  CbBx_Ort_Unnown          = 'Unbekannt';
-  Ed_HtKy_None             = 'none';  //LowerCase is importend!
-
-  Exception_ErrorMsg     = 'Error:';
-  Exception_ErrorCaption = 'ERROR';
-  Exception_ErrorWhile   = 'Fehler in ';
-  Exception_Loading      = 'Ladevorgang';
-  Exception_Because     = ' Grund: ';
-  Exception_NoIsReset    = ' (Nein = Einstellungen zurücksetzen)';
-  Exception_AskResetAll  = ' Optionen zurücksetzen?';
-  Exception_AskResetThis = ' Die fehlerhafte Option durch Defaultwert ersetzen?';
-  Exception_FoundNotAll  = ' Konnte nicht alle Optionen finden.';
-  Exception_AskDefault   = ' Die fehlerhafte(n) Option(en) durch Defaultwert(e) ersetzen?';
-  Exception_WrongType    = 'Falscher Datentyp';
-  Exception_OutOFRange   = 'Out of range';
-  Exception_UnnownFormat = 'Unbekanntes Format';
 
   {$R *.lfm}
 
@@ -823,7 +822,7 @@ function TFrm_Spori.Gleiche (str1, str2: string): Real;  inline; //Fertig?
 
         //look for same chararkters around of i
         //SameChar samechar will be diveded by 4 so if the char appiers 2 places away it's just 1/4 of the same place
-        for i := 0 to pred(MinLength) do
+        for i := low(str1) to pred(MinLength) do
           if (str1[i] = str2[i]) then
             Inc(SameChar, 4)
            else if ((Length(str2) - 1 >= i + 1) and (str1[i] = str2[i + 1])) then
@@ -836,7 +835,7 @@ function TFrm_Spori.Gleiche (str1, str2: string): Real;  inline; //Fertig?
              Inc(SameChar, 1);
 
         //count number of different chars in Str1
-        for j := 0 to high(Str1) do //while (length(str1) > 0) do
+        for j := low(Str1) to high(Str1) do //while (length(str1) > 0) do
           begin
             Found:=false;
             for Index:= 0 to length(NumberOfChar1)-1 do
@@ -856,7 +855,8 @@ function TFrm_Spori.Gleiche (str1, str2: string): Real;  inline; //Fertig?
             Delete(Str1,1,1);
            end;
 
-        while length(Str2) > 0 do
+        //count number of different chars in Str2
+        for j := low(Str2) to high(Str2) do
           begin
             Found:= false;
             for Index:= 0 to length(NumberOfChar2)-1 do
@@ -877,11 +877,12 @@ function TFrm_Spori.Gleiche (str1, str2: string): Real;  inline; //Fertig?
             Delete(Str2,1,1);
            end;
 
-       for Index := 0 to length(NumberofChar1)-1 do
-         for Index2 := 0 to length(NumberofChar2)-1 do
-           if NumberOfChar1[Index].Chara = NumberOfChar2[Index2].Chara then
-             if NumberOfChar1[Index].Count = NumberOfChar2[Index2].Count then
-               Inc(VariGleich2);
+        //Do the found chars appear as often as in both strings?
+        for i := 0 to high(NumberofChar1) do
+          for j := 0 to high(NumberofChar2) do
+            if NumberOfChar1[i].Chara = NumberOfChar2[j].Chara then
+              if NumberOfChar1[i].Count = NumberOfChar2[j].Count then
+                Inc(SaneNrChr);
 
        VariMin:= Max(length(NumberOfChar1),length(NumberOfChar2));
        end;
@@ -905,7 +906,7 @@ function TFrm_Spori.SendData ():Boolean; //ToDo
     Result:=false;
    end;
 
-function TFrm_Spori.OptionsEnumToStr(EnumVal: TOptionNames): String; //Done
+function  TFrm_Spori.OptionsEnumToStr(EnumVal: TOptionNames): String; //Done
   var
     Index: Byte;
   begin
@@ -955,8 +956,13 @@ function  TFrm_Spori.GetOptionIndex (const Str: String): ShortInt; //Done
 
         if (equality < Tempequality) and  (Tempequality > 60) then //if the match was over 60% use the greater equality
           begin
-            equality := Tempequality;
             Result := Ord(i);
+
+            //We got a 100% match, skip all the others
+            if (Tempequality = 100) then
+              exit;
+
+            equality := Tempequality;
           end;
       end;
   end;
@@ -1018,7 +1024,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
         with Frm_Config, Frm_Main do
           begin
             ImgLst_UsedPics.GetBitmap(1, Img_Conf_ComState.Picture.Bitmap);
-            Lbl_ComMsg.Caption  := Lbl_ComMsg_Connecting;
+            Lbl_ComMsg.Caption  := MLS_Connecting;
 
             PgsB_ComCon.Visible := true;
             Lbl_Ardo.Visible    := false;
@@ -1028,7 +1034,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
         with Frm_Main do
           begin
             ImgLst_UsedPics.GetBitmap(1, Img_ComState.Picture.Bitmap);
-            Lbl_ComState.Caption := Lbl_ComMsg_Connecting;
+            Lbl_ComState.Caption := MLS_Connecting;
 
             PrgrssBr_ComPCon.Visible := true;
             Lbl_ArdoType.Visible     := false;
@@ -1092,13 +1098,13 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
               begin
                 //Tell the user we are connected
                 ImgLst_UsedPics.GetBitmap(0, Img_Conf_ComState.Picture.Bitmap);
-                Lbl_ComMsg.Caption  := Lbl_ComMsg_ConnectedWith;
+                Lbl_ComMsg.Caption  := MLS_ConnectedWith;
                 Lbl_Ardo.Caption    := 'Arduino Leonardo'; //Defaultvalue
               end
             else  //Tell the user we are not connected
               begin
                 ImgLst_UsedPics.GetBitmap(2, Img_Conf_ComState.Picture.Bitmap);
-                Lbl_ComMsg.Caption    := Lbl_ComMsg_NotConnected;
+                Lbl_ComMsg.Caption    := MLS_NotConnected;
               end;
 
             Lbl_Ardo.Visible    := Result;
@@ -1110,7 +1116,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
             if Result then
               begin
                 ImgLst_UsedPics.GetBitmap(0, Img_ComState.Picture.Bitmap);
-                Lbl_ComState.Caption := Lbl_ComMsg_ConnectedWith;
+                Lbl_ComState.Caption := MLS_ConnectedWith;
                 Lbl_ArdoType.Caption := 'Arduino Leonardo'; //Defaultvalue
 
                 Img_UpStatus.AnchorSideTop.Control := Lbl_ArdoType;
@@ -1118,7 +1124,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
             else
               begin
                 ImgLst_UsedPics.GetBitmap(2, Img_ComState.Picture.Bitmap);
-                Lbl_ComState.Caption   := Lbl_ComMsg_NotConnected;
+                Lbl_ComState.Caption   := MLS_NotConnected;
 
                 Img_UpStatus.AnchorSideTop.Control := Img_ComState;
               end;
@@ -1157,7 +1163,7 @@ procedure TFrm_Spori.SendData (); //Done?
 
   end;
 
-function  TFrm_Spori.IsConstellation (): Boolean; //Can be optimized
+function  TFrm_Spori.IsConstellation (): Boolean; //Todo: Can get optimized
   var
      Options:TStrings;
      Help:Integer;
@@ -1176,13 +1182,13 @@ function  TFrm_Spori.IsConstellation (): Boolean; //Can be optimized
 
    end;
 
-function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
+function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Todo: ErrorCheck; optimize, it takes way to long
   var
      index, Beginpos, Index_L, Index_R, Counter, lengthList: Integer;
      Stars:  TStringlist;
      Item:   TListItem;
      Sortet: Boolean;
-     Tempproperty:  String;
+     TempProperty:  String;
      BtChoosen: integer = 0;
 
      {If there is no command or emty line and the left Number is bigger swap then.
@@ -1206,33 +1212,32 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
     		 Stars[Right] := TempStrLeft;
                  Sortet       := false;
 
+                 exit (true); //Everthing is fine skip the errorchecking
              	end
-              else  //Doubble definition
+              else  //Doubble definition?
                if (ValLeft = ValRight) then
-                   BTChoosen := MessageDlg('Warnung:' + Slinebreak +
-                                           '  Doppelte Sternendeklaration Nr. ' + TempStrLeft + 'gefunden!'+ slinebreak +
-                                           '  Laden abbrechen?',
+                   BTChoosen := MessageDlg(MLS_Warning + Slinebreak +
+                                           MLS_Warning_MultiLine + ' ' + TempStrLeft + ' ' + MLS_WasFound + slinebreak +
+                                           MLS_Error_AskAbortLoad,
                                            mtWarning, mbAbortRetryIgnore, 0, mbIgnore);
-
-              exit (true); //Everthing is fine skip the errorchecking
             end
-         else //Somthing dosent get turned into an integer, is it a commend?
+         else //Somthing dosent got turned into an integer, is it a comment?
            begin
              if not ((Trim(Stars[Left])[1] = '#') or (Trim(Stars[Left]) = '') or TryStrToInt (TempStrLeft, ValLeft)) then
-                 BTChoosen := MessageDlg('Error:' + Slinebreak +
-                                         '  Ungültige Zeile in SternenListe gefunden Nr: ' + IntToStr(succ(Left)) + slinebreak +
+                 BTChoosen := MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + Slinebreak +
+                                         MLS_Error_InvalidLine + ' ' + IntToStr(succ(Left)) + slinebreak +
                                          Stars[Left] + SlineBreak +
-                                         '  Laden abbrechen?',
+                                         MLS_Error_AskAbortLoad,
                                          mtError, mbAbortRetryIgnore, 0, mbCancel)
              else
                if not ((Trim(Stars[Right])[1] = '#') or (Trim(Stars[Right]) = '') or TryStrToInt (TempStrRight, ValRight))then
-                 BTChoosen := MessageDlg('Error:' + Slinebreak +
-                                         '  Ungültige Zeile in SternenListe gefunden Nr: ' + IntToStr(succ(Right)) + slinebreak +
+                 BTChoosen := MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + Slinebreak +
+                                         MLS_Error_InvalidLine + ' ' + IntToStr(succ(Right)) + slinebreak +
                                          Stars[Right] + SlineBreak +
-                                         '  Laden abbrechen?',
+                                         MLS_Error_AskAbortLoad,
                                          mtError, mbAbortRetryIgnore, 0, mbCancel)
                else
-                 exit (true); // it's just a command or a empty line
+                 exit (true); // it's just a command or an empty line
             end;
 	 Dec(Index_R);
        until Sortet;
@@ -1263,11 +1268,19 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
     if (Path = DefaultListPath) and not FileExists(DefaultListPath) then
       DefaultList ();
 
+    Frm_Main.LV_BodyList.BeginUpdate;
+    LV_List.BeginUpdate;
+
     try
       if not FileExists (DefaultPfad) then
         DefaultOptions();
 
-      Options.LoadFromFile(DefaultPfad);
+      //Sort the Numbers, start with the smallest and go to the biggest
+      //dont worry about the result of exchange, it will always be true, except somthing goes wrong
+      repeat
+        Index_R := lengthList - counter - 1;
+        Index_L := counter + 1;
+        Sortet  := true;
 
       Assert((Options.Count >= 16),'Fehler in Ladevorgang:' + SlineBreak +
                                'Zu wenig Argumente');
@@ -1288,11 +1301,12 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
         Inc (counter);
       until Sortet;
 
+      Frm_Main.LV_BodyList.Clear;
       LV_List.Clear;
       CB_HK.Clear;
       CB_StB.Clear;
 
-      //Outputof our sorted list into LV_List
+      //Output of our sorted list into LV_List
       for index:= 0 to lengthList do
         if not ((Trim(Stars[index])[1] = '#') or (Trim(Stars[index]) = '')) then //not a command nor an emty line
           begin
@@ -1322,10 +1336,10 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
                   if CB_StB.Items.IndexOf(AnsiLowerCase(Tempproperty)) < 0 then
                     if (Tempproperty <> '-') and (AnsiLowerCase(Tempproperty) <> 'unsichtbar') and (Tempproperty <> '')then //dont progress meaningless propertys
                       CB_StB.Items.Add(AnsiLowerCase(Tempproperty));
-               end;
+              end;
 
-
-           end;
+            Frm_Main.LV_BodyList.Items.Add.Assign(Item);
+          end;
 
       if (Path <> DefaultListPath) then  //Save it, if it doesnt come forme the defaultpath
             begin
@@ -1341,9 +1355,9 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
 
                   Stars.SaveToFile(DefaultListPath);
                 except
-                  BTChoosen := MessageDlg('Error:' + Slinebreak +   // Let the User decide if we retry or not
-                                          ' Fehler beim schreiben der SternenListe!' + slinebreak +
-                                          '  Erneut versuchen?',
+                  BTChoosen := MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + Slinebreak +   // Let the User decide if we retry or not
+                                          MLS_Error_StarWrite + slinebreak +
+                                          MLS_AskRetry,
                                           mtError, mbAbortRetryIgnore, 0, mbRetry);
                 end;
               until (BTChoosen <> mrRetry);
@@ -1355,32 +1369,28 @@ function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Error!
       end;
 
     except //UnnownError
-      if Assigned(Stars)then
-        FreeAndNil(Stars);
-
-      BTChoosen := MessageDlg('Error:' + Slinebreak +   // Let the User decide if we reesett the Starlist or
-                                          ' Unbekannter Fehler aufgetrenten.' + Slinebreak +
-                                          ' Laden der Sternenliste geschreitert.' + slinebreak +
-                                          ' Sternenliste zurücksetzen und erneut versuchen?' + Slinebreak +
-                                          ' (Okay = reset, Abbrechen = Laden Abbrechen)',
-                                          mtError, [mbOk, mbAbort, mbRetry], 0, mbRetry);
-
-      Case BTChoosen of
-        mrOk:
-          begin
-            if FileExists(DefaultListPath) then
-              begin
-                ForceDirectories (DefaultOldListPath);
-                RenameFile (DefaultListPath, DefaultOldListPath + PathDelim + ' StarList'+formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
-              end;
-            Result := LoadStarList(DefaultListPath); //it will create a defaultfile by its own
-          end;
-        mrAbort:
-          Result := false;
-        mrRetry:
-          Result := LoadStarList(Path);
-      end;
+      On E: Exception do
+        Case MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + Slinebreak +   // Let the User decide if we reset the Starlist or
+                                            ' ' + E.Message + slinebreak +
+                                            MLS_Error_AskResetStar,
+                                            mtError, [mbOk, mbAbort], 0, mbOk) of
+          mrOk:
+            begin
+              if FileExists(DefaultListPath) then
+                begin
+                  ForceDirectories (DefaultOldListPath);
+                  RenameFile (DefaultListPath, DefaultOldListPath + PathDelim + ' StarList'+formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
+                end;
+              Result := LoadStarList(DefaultListPath); //it will create a defaultfile by its own
+            end;
+          mrAbort:
+            Result := false;
+          mrRetry:
+            Result := LoadStarList(Path);
+        end;
     end;
+    LV_List.EndUpdate;
+    Frm_Main.LV_BodyList.EndUpdate;
 
     if Assigned(Stars)then
         FreeAndNil(Stars);
@@ -1390,82 +1400,86 @@ function  TFrm_Spori.GetDefaultOption (const OptnName: TOptionNames): String; //
   begin
     case OptnName of
       ON_Version:       Result := '0.0.0.2';
-      ON_PortableMode:  Result := 'False';
-      ON_ExpertMode:    Result := 'False';
+      ON_PortableMode:  Result := MLS_False;
+      ON_ExpertMode:    Result := MLS_False;
       ON_UpdateMode:    Result := '0';
       ON_UpdateRate:    Result := '1';
       ON_UpdateDay:     Result := '6';
       ON_UpdateTime:    Result := '00:00:00';
-      ON_UpRetry:       Result := 'True';
+      ON_UpRetry:       Result := MLS_True;
       ON_Place:         Result := 'Berlin';
       ON_Lon:           Result := '52,345';
       ON_Lat:           Result := '13,604';
-      ON_AutoTimeMode:  Result := 'True';
+      ON_AutoTimeMode:  Result := MLS_True;
       ON_Date:          Result := formatdatetime('dd/mm/yyyy', Now);
       ON_Time:          Result := formatdatetime('hh:nn:ss', Now);
-      ON_AutoComMode:   Result := 'False';
+      ON_AutoComMode:   Result := MLS_False;
       ON_ComPort:       Result := 'Com0';
       ON_BaudRate:      Result := '9600';
-      ON_AutoValueMode: Result := 'True';
-      ON_UseHotkey:     Result := 'False';
+      ON_AutoValueMode: Result := MLS_True;
+      ON_UseHotkey:     Result := MLS_False;
       ON_HotKey:        Result :=  IntToStr(VK_Q);
       ON_BodyMode:      Result := '0';
       ON_Body:          Result := '0';
-      ON_Langue:        Result := 'En';
+      ON_Langue:        Result := GetOSLanguage();
+    else  //Hint: Forgotten to set a default?
+     Result := '';
     end;
 
   end;
 
 function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Version; Chack if Langue was loaded; Comments
   var
-     LoadList: Tstringlist;
+    i: integer;
+    Index: Shortint;
+    NotGottenOptions: set of ToptionNames = [low(ToptionNames)..high(ToptionNames)];
+    j: TOptionNames;
 
-     i: integer;
-     Index: Shortint;
-     NotGottenOptions: set of ToptionNames = [low(ToptionNames)..high(ToptionNames)];
-     j: TOptionNames;
+    TempStr, TempOption: String;
+    TempInt: Integer;
+    TempKey: Integer;
+    TempBool: Boolean;
+    TempTime: TDateTime;
+    Temp_Koord: TCoord;
+    TempFloat: Real;
 
-     TempStr, TempOption: String;
-     TempInt: Integer;
-     TempKey: Integer;
-     TempBool: Boolean;
-     TempTime: TDateTime;
-     Temp_Koord: TCoord;
-     TempFloat: Real;
+    ErrorMessage: String = '';
 
-     ErrorMessage: String = '';
+    { ------------------------- }
 
-     { ------------------------- }
+    procedure LoadAndList ();
+      var
+         //just Because we can't use the orginal i
+         i: integer;
 
-     procedure LoadAndList (); inline;
-       var
-          //just Because we can't use the orginal i
-          i: integer;
-       begin
+         LoadList: Tstringlist;
+      begin
+        LoadList := Tstringlist.Create;
+
         if not FileExists (DefaultOptionsPath) then
-            DefaultOptions();
+          DefaultOptions();
 
-        try
-          LoadList.LoadFromFile(DefaultOptionsPath);
+          try
+            LoadList.LoadFromFile(DefaultOptionsPath);
 
-          for i := LoadList.count -1 downto 0 do //Ignore commants and empty lines
-            if (LoadList[i] = '') or (Trim(LoadList[i])[1] = '#') then
-              LoadList.Delete(i);
+            for i := pred(LoadList.count) downto 0 do //Ignore commants and empty lines
+              if (LoadList[i] = '') or (Trim(LoadList[i])[1] = '#') then
+                LoadList.Delete(i);
 
-          for i := 0 to pred(LoadList.count) do
-            begin
-              Index := GetOptionIndex(FindOptionName(LoadList[i])); //Find the Index of a possible Optionname
+            for i := 0 to pred(LoadList.count) do
+              begin
+                Index := GetOptionIndex(FindOptionName(LoadList[i])); //Find the Index of a possible Optionname
 
-              if (Index >= 0) then  // if no valid name was fond, -1 was returned
-                begin
-                  Options[ToptionNames(Index)] := FindOptionValue(LoadList[i]);
-                  Exclude(NotGottenOptions, ToptionNames(Index));  //we want to test, if every Option got min. one time a value.
-                end;
-            end;
+                if (Index >= 0) then  // if no valid name was fond, -1 was returned
+                  begin
+                    Options[ToptionNames(Index)] := FindOptionValue(LoadList[i]);
+                    Exclude(NotGottenOptions, ToptionNames(Index));  //we want to test, if every Option got min. one time a value.
+                  end;
+              end;
 
-        finally
-          FreeAndNil(LoadList);
-        end;
+         finally
+           FreeAndNil(LoadList);
+         end;
       end;
 
      function RightPath (): Boolean; inline;
@@ -1484,14 +1498,37 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
           Result := true;
     end;
 
-     function MakeErrorMsg (Where, Why: String):String; inline;
+     function MakeErrorMsg (const Where, Why: String): String; inline;
        begin
-         Result :=  Where + '-' + Exception_Loading + ': ' + Why;
+         Result :=  Where + '-' + MLS_Error_Loading + ': ' + Why;
        end;
+
+     function ThrowError (const Name: TOptionNames): Boolean;
+       begin
+        // Let the User decide if we retry, reset or abort
+         case MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + Slinebreak +
+                         '  ' + MLS_Error_ErrorWhile  + ErrorMessage + ' (' + Options[Name] + ')' + slinebreak +
+                         MLS_Error_AskResetThis + SlineBreak +
+                         MLS_Error_NoIsReset,
+                         mtError, mbYesNoCancel, 0, mbYes) of
+           mrYes:
+             begin
+               Options[Name] := GetDefaultOption(Name);
+               Result := LoadOptions(false);
+             end;
+           mrNo:
+             begin
+              DefaultOptions();
+
+               Result := Result and LoadOptions(false);
+             end;
+           mrCancel:
+             Result := false;
+         end; //End case
+       end; //End procedure
 
   begin
     //initialize
-    LoadList := Tstringlist.Create;
     Result      := true;
 
     if LoadFromFile then //switch, to not load from file, if one special Option was set to default (see below)
@@ -1504,10 +1541,10 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
         //Test if we got everything
         if not (NotGottenOptions = []) then
           // Let the User decide if we set the option to default, reset all options or abort
-          case MessageDlg(Exception_ErrorCaption, Exception_ErrorMsg + Slinebreak +
-                               Exception_FoundNotAll + slinebreak +
-                               Exception_AskDefault + SlineBreak +
-                               Exception_NoIsReset,
+          case MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + Slinebreak +
+                               MLS_Error_FoundNotAll + slinebreak +
+                               MLS_Error_AskDefault + SlineBreak +
+                               MLS_Error_NoIsReset,
                                mtError, mbYesNoCancel, 0, mbYes) of
             mrYes:   //set the missing Options to default
               begin
@@ -1531,7 +1568,18 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
           end;
 
         try
-          for j := low(TOptionNames) to high(TOptionNames) do
+          //Load On_Langue fist, sice it could mess all the other settings up
+          if (length(Options[On_Langue]) = 2) then
+            begin
+              SetDefaultLang(Options[On_Langue]);
+            end
+          else
+            begin
+              Result := ThrowError (On_Langue);
+              exit;
+            end;
+
+          for j in TOptionNames do
             begin
               case j of
                 ON_Version:;// Todo: Convert older Otions to new ones
@@ -1543,7 +1591,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                       SetPortableMode(Tempbool);
                     end
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                 ON_ExpertMode:
                   if TryStrToBool(Options[j], Tempbool) then
@@ -1554,7 +1602,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                       ProgressExpertMode(Tempbool);
                     end
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                 ON_UpdateMode:
                   if TryStrToInt (Options[j], TempInt) then
@@ -1594,45 +1642,45 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                             Frm_Config.Img_Non.Picture     := Frm_Config.Img_On.Picture;
                           end;
                         else
-                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_OutOFRange);
+                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_OutOFRange);
                       end;
                     end
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                 ON_UpdateRate:
                   if TryStrToInt (Options[j], TempInt) then
                     if (TempInt in [0..2]) then
                       Frm_Config.CBx_Rate.ItemIndex := TempInt
                     else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_OutOFRange)
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_OutOFRange)
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                 ON_UpdateDay:
                   if TryStrToInt (Options[j], i) then
                     if (TempInt in [0..6]) then
                       Frm_Config.CBx_Tag.ItemIndex := TempInt
                     else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_OutOFRange)
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_OutOFRange)
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                 ON_UpdateTime:
                   if TryStrToTime(Options[j], TempTime) then
                     Frm_Config.TE_Plan.Time := TempTime
                    else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                 ON_UpRetry:
                   if TryStrToBool(Options[j], TempBool)then
                    Frm_Config.Sw_Redo.Checked := TempBool
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                 On_Place:
                   begin
-                    if (Options[j] = Ed_HtKy_None) then
+                    if (Options[j] = AnsiLowerCase(MLS_None)) then
                       begin
                         //Inc(j);
                         if TryStrToFloat(Options[ON_Lon], TempFloat) then
@@ -1642,7 +1690,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                             Lb_Lon_G1.Caption           := Options[ON_Lon];
                           end
                         else
-                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(ON_Lon), Exception_WrongType);
+                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(ON_Lon), MLS_Error_WrongType);
 
                         //Inc(j);
                         if TryStrToFloat(Options[ON_Lat], TempFloat) then
@@ -1652,9 +1700,9 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                              Lb_Lat_G1.Caption           := Options[ON_Lat];
                            end
                         else
-                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(ON_Lat), Exception_WrongType);
+                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(ON_Lat), MLS_Error_WrongType);
 
-                        Frm_Config.CbBx_Ort.Caption := CbBx_Ort_Unnown;
+                        Frm_Config.CbBx_Ort.Caption := MLS_Unknown;
                         Frm_Main.Lbl_Place_Name.Caption := '-';
                       end
                     else
@@ -1691,7 +1739,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                     Frm_Config.DE_Day.enabled      := not Tempbool;
                   end
                 else
-                  ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                  ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                 ON_Date:
                   if TryStrToDate(Options[j], TempTime) then
@@ -1700,7 +1748,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                       Frm_Config.DE_Day.Date := Date + DiffD;
                     end
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                   ON_Time:
                     if TryStrToTime(Options[j], TempTime) then
@@ -1709,7 +1757,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         Frm_Config.TE_Time.Time := Time + DiffT
                        end
                      else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                   ON_AutoComMode:
                     if TryStrToBool(Options[j], Tempbool) then
@@ -1722,22 +1770,22 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         //Inc(j);
                       end
                     else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                   ON_BaudRate:
                     if TryStrToInt(Options[j], TempInt) then
                       if (Frm_Config.CmbBx_Baud.Items.IndexOf(Options[j]) >= 0) then
                           Frm_Config.CmbBx_Baud.Caption := Options[j]
                       else
-                        ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_OutOFRange)
+                        ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_OutOFRange)
                     else
-                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                   ON_AutoValueMode:
                     if TryStrToBool(Options[j], Tempbool) then
                       Frm_Config.Sw_ManuVal.Checked := not Tempbool
                     else
-                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                   ON_UseHotkey:
                     if TryStrToBool(Options[j], Tempbool) then
@@ -1747,11 +1795,11 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                           Ed_HtKy.Enabled := TempBool;
                           Bt_HtKy.Enabled := TempBool;
 
-                          Lbl_Sw_HtKy.Caption := BoolToStr(Tempbool, Lbl_Turnd_On, Lbl_Turnd_Off);
+                          Lbl_Sw_HtKy.Caption := BoolToStr(Tempbool, MLS_Turnd_On, MLS_Turnd_Off);
                         end;
                       end
                     else
-                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                   ON_HotKey:
                     begin
@@ -1791,14 +1839,14 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                               end
                             else
                               begin
-                                ErrorMessage := MakeErrorMsg (OptionsEnumToStr(On_Hotkey), Exception_OutOFRange);
+                                ErrorMessage := MakeErrorMsg (OptionsEnumToStr(On_Hotkey), MLS_Error_OutOFRange);
                                 break;
                               end;
 
                           until (i <= 0);
                         end
                       else
-                        Frm_Config.Ed_HtKy.Text := Ed_HtKy_None;
+                        Frm_Config.Ed_HtKy.Text := MLS_None;
                     end;
 
 
@@ -1808,12 +1856,12 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         begin
                           Frm_Main.CmbBx_Mode.ItemIndex := i;
 
-                          ProgressBodyMode(i, false);
+                          ProgressBodyMode(TBodyMode(i), false);
                         end
                       else
-                        ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_OutOFRange)
+                        ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_OutOFRange)
                     else
-                       ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                       ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
 
                   ON_Body:
                     if TryStrToInt (Options[j], i) then
@@ -1822,55 +1870,27 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         Frm_Main.Lbl_Bdy_Nr.Caption := Options[j];
                        end
                      else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_WrongType);
+                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+              end; //End case
 
-                  ON_Langue:
-                    if (length(Options[j]) = 2) then
-                      begin
-                        SetDefaultLang(Options[j]);
-                      end
-                    else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), Exception_UnnownFormat);
-              end;
-
-             if ErrorMessage <> '' then
-               begin
-                 case MessageDlg(Exception_ErrorCaption, Exception_ErrorMsg + Slinebreak +   // Let the User decide if we retry, reset or abort
-                                 '  ' + Exception_ErrorWhile  + ErrorMessage + ' (' + Options[j] + ')' + slinebreak +
-                                 Exception_AskResetThis + SlineBreak +
-                                 Exception_NoIsReset,
-                                 mtError, mbYesNoCancel, 0, mbYes) of
-                   mrYes:
-                     begin
-                       Options[j] := GetDefaultOption(j);
-                       Result := LoadOptions(false);
-                     end;
-                   mrNo:
-                     begin
-                      DefaultOptions();
-
-                       Result := Result and LoadOptions(false);
-                     end;
-                   mrCancel:
-                     Result := false;
-                 end;
-
-                 Break;
-               end;
+              if (ErrorMessage <> '') then
+                begin
+                  Result := ThrowError (j);
+                  exit;
+                end;
            end;
 
-           if Result then
-             begin
-               Result := LoadStarList(DefaultListPath);
-               ProgressNumber(False);
-             end;
+          if Result then
+            begin
+              Result := LoadStarList(DefaultListPath);
+              ProgressNumber(False);
+            end;
 
         except   //Unkown Error
           on E: Exception do
-            case MessageDlg(Exception_ErrorCaption, Exception_ErrorMsg + Slinebreak +   // Let the User decide if we reset or abort
-                            Exception_Because + E.Message + slinebreak +
-                            Exception_AskResetAll + SlineBreak +
-                            Exception_NoIsReset,
+            case MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + Slinebreak +   // Let the User decide if we reset or abort
+                            ' ' + E.Message + slinebreak +
+                            MLS_Error_AskResetAll,
                             mtError, [mbYes, mbCancel], 0, mbYes) of
               mrYes:
                 begin
@@ -1880,15 +1900,15 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
               mrCancel:
                 Result := false;
             end;
-         end;
-       end
+        end;
+      end
     else  //RightPath returned false, turn portable mode off and retry
       begin
         SetPortableMode(false);
         Result := LoadOptions();
       end;
 
-   end;
+  end;
 
 procedure TFrm_Spori.SetPortableMode (IsActive: Boolean); //ToDo: CleanUp after Mode has changed
   {$IfDef Windows}
@@ -2088,7 +2108,7 @@ procedure TFrm_Spori.DefaultList ();  //ToDo: put this into it's own File (engli
       List.Add('76;Enif;Enif;Pegasus;Keine;33;45,1;9;57,1;');
       List.Add('77;Al Nair;Al Nair;unsichtbar;Keine;27;41,2;-46;-52,8;');
       List.Add('78;Beta Gruis;Beta Gruis;unsichtbar;Keine;19;5,5;-46;-47,9;');
-      List.Add('79;Fomalhaut;Fomalhaut;Suedlicher Fisch;Keine;15;21,8;-29;-32,1');
+      List.Add('79;Fomalhaut;Fomalhaut;Suedlicher Fisch;Keine;15;21,8;-29;-32,1;');
       List.Add('80;Scheat;Scheat;Pegasus;Keine;13;51,4;28;10,4;');
       List.Add('81;Markab;Markab;Pegasus;Keine;13;36,3;15;17,7;');
       List.Add('82;Altarf;Altarf;Krebs;Tierkreis;235;52,5;9;11,1;');
@@ -2124,50 +2144,43 @@ procedure TFrm_Spori.DefaultList ();  //ToDo: put this into it's own File (engli
      end;
    end;
 
-procedure TFrm_Spori.ProgressBodyMode (const Mode: byte; Save: Boolean = true); //ToDo: implement search; make Md constances global enum
-  const
-    Md_Normal     = 0;
-    Md_Follow     = 1;
-    Md_Scan       = 2;
-    Md_Place      = 3;
-    Md_Time       = 4;
-    Md_Collection = 5;
-    Md_Search     = 6;
+procedure TFrm_Spori.ProgressBodyMode (const Mode: TBodyMode; Save: Boolean = true); //ToDo: implement search
+
   begin
     if Save then  //if a new Mode was seleced save it
-      Options[ON_BodyMode] := IntToStr(Mode);
+      Options[ON_BodyMode] := IntToStr(Ord(Mode));
 
-    CB_StrMode.ItemIndex := Mode;
-    Frm_Main.CmbBx_Mode.ItemIndex := Mode;
+    CB_StrMode.ItemIndex := Ord(Mode);
+    Frm_Main.CmbBx_Mode.ItemIndex := Ord(Mode);
 
     //Old; Multi langue will not be supported (but somewhere this information will still be placed...)
     case Mode of
-      Md_Normal:
+      BMd_Normal:
         begin
           Mmo_Bsbg.Text    := 'Peilt den ausgewählten Himmelskörper / die ausgewählte Position an.';
           Tmr_Nach.Enabled := false;
          end;
-      Md_Follow:
+      BMd_Follow:
         begin
           Mmo_Bsbg.Text    := 'Peilt den ausgewählten Himmelskörper an und verfolgt diesen auf dem Himmel';
           Tmr_Nach.Enabled := true;
          end;
-      Md_Scan:
+      BMd_Scan:
         begin
           Mmo_Bsbg.Text    := 'Sobald ein Himmelsköper (manuell) angestuert wurde, wird er identifiziert.';
           Tmr_Nach.Enabled := false;
          end;
-      Md_Place:
+      BMd_Place:
         begin
           Mmo_Bsbg.Text    := 'Gibt den eigenen Ort aus. '+#10+'Hierzu muss ein Himmelskörper angesteuert und richtig benannt werden.';
           Tmr_Nach.Enabled := false;
          end;
-      Md_Time:
+      BMd_Time:
         begin
           Mmo_Bsbg.Text    := 'Gibt die aktuelle Zeit aus. '+#10+'Hierzu muss ein Himmelskörper angesteuert und richtig benannt werden.';
           Tmr_Nach.Enabled := false;
          end;
-      Md_Collection:
+      BMd_Constellation:
         begin
           if IsConstellation () then
             begin
@@ -2175,23 +2188,23 @@ procedure TFrm_Spori.ProgressBodyMode (const Mode: byte; Save: Boolean = true); 
               Tmr_Nach.Enabled := true;
              end
            else
-             ProgressBodyMode(Md_Normal);
+             ProgressBodyMode(BMd_Normal);
         end;
-      Md_Search:
-        ProgressBodyMode(Md_Normal);
+      BMd_Search:
+        ProgressBodyMode(BMd_Normal);
      else
       begin
-        raise Exception.Create('Fehler in Change-Mode-Vorgang: Unbekannter Mode:' + IntToStr(Mode));
+        raise Exception.Create('Fehler in Change-Mode-Vorgang: Unbekannter Mode:' + IntToStr(Ord(Mode)));
         Mmo_Bsbg.Text := 'Error';
        end;
      end;
    end;
 
-procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate expert options in config; comments
+procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate expert options in config; comments; dynamic width
   begin
 
     if Save then
-      Options[ON_ExpertMode] := BoolToStr(MI_Sicht_Exp.checked, 'True', 'False');
+      Options[ON_ExpertMode] := BoolToStr(MI_Sicht_Exp.checked, MLS_True, MLS_False);
 
 
     if  MI_Sicht_Exp.Checked then
@@ -2202,7 +2215,7 @@ procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate
         TbS_Ephi.TabVisible         := true;
 
         LV_List.Column[0].Width     := 60;
-        LV_List.Column[0].Caption   := 'Nr.';
+        LV_List.Column[0].Caption   := MLS_NumberShort;
         LV_List.Column[1].Width     := 125;
         LV_List.Column[2].Width     := 110;
         LV_List.Column[3].Width     := 110;
@@ -2225,7 +2238,7 @@ procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate
          TbS_Ephi.TabVisible         := false;
 
          LV_List.Column[0].Width     := 110;
-         LV_List.Column[0].Caption   := 'Nummer';
+         LV_List.Column[0].Caption   := MLS_NumberLong;
          LV_List.Column[1].Width     := 180;
          LV_List.Column[2].Width     := 150;
          LV_List.Column[3].Width     := 160;
@@ -2237,27 +2250,27 @@ procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate
         end;
    end;
 
-procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the Item is vailed (mainpage); Commend what the subitems mean
+procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the Item is vailed (mainpage); Commend what the subitems mean; Test for vailed Number
   var
      TestFloat: Float;
      i: Integer;
 
     {Ask the User if we shoud reset the StarList}
-    function ProgressError (SubItem: String): boolean;
+    function ProgressError (const Number, SubItem: String): boolean;
       begin
         Result := true;
 
-        case MessageDlg('ERROR', 'Error:' + Slinebreak +   // Let the User decide if we reset the Starlist or
-                                      ' Unbekannter Fehler aufgetrenten.' + Slinebreak +
-                                      ' Laden des Sterns gescheitert bei SubItem: ' + SubItem + slinebreak +
-                                      ' Sternenliste zurücksetzen und neu Laden?',
+        // Let the User decide if we reset the Starlist or
+        case MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + slinebreak +
+                                      ' ' + MLS_Error_WrongType + ' ' + MLS_Error_AtSubItem + ' ' + Number + ' (' + SubItem + ') ' + MLS_WasFound + slinebreak +
+                                      MLS_Error_AskResetStar,
                                       mtError, [mbOk, mbIgnore], 0, mbRetry) of
           mrOk:
             begin
               if FileExists(DefaultListPath) then
                 begin
                   ForceDirectories (DefaultOldListPath);
-                  RenameFile (DefaultListPath, DefaultOldListPath + PathDelim + ' StarList'+formatdatetime('d.m.y-h;n;s;z',Now)+'.old');
+                  RenameFile (DefaultListPath, DefaultOldListPath + PathDelim + 'StarList'+formatdatetime('d.m.y-h;n;s;z', Now)+'.old');
                 end;
 
                LoadStarList(DefaultListPath); //it will create a defaultfile by its own
@@ -2265,19 +2278,22 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
           mrIgnore:
             Result := false;
         end;
-
-
      end;
 
   begin
     Options[ON_Body] := Item.Caption; //Save the current item as seleced
 
-    for i := 0 to LV_List.Items.Count-1 do  //Uncheck all the other items
+    for i := 0 to LV_List.Items.Count-1 do  //Uncheck all the other items (remenber both Lists have to be exacly the same)
       if not (LV_List.Items[i] = Item) then
-        LV_List.Items[i].Checked := false;
+        begin
+          LV_List.Items[i].Checked := false;
+          Frm_Main.LV_BodyList.Items[i].Checked := false;
+        end;
+    //note: this should just check the Item of the  current used list
     Item.Checked   := true;  //and check the current one
 
     //Tell the mainpage what item was selected
+
     Ed_Nr.Text     := Item.Caption;
     CB_HK.caption  := Item.SubItems[0];
     CB_StB.caption := Item.SubItems[2];
@@ -2295,13 +2311,14 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
               Visible := false
             else
               Visible := true;
+
             caption := Item.SubItems[2];
           end;
        //Toggle visibility if useful information was given or not
        //But show it anyway if body property 1 wasn't useful
         with Lbl_BdyPrpty_Val2 do
           begin
-            if Lbl_BdyPrpty_Val1.Visible and (Item.SubItems[3]= 'Keine') then
+            if Lbl_BdyPrpty_Val1.Visible and (Item.SubItems[3] = 'Keine') then
               Visible := false
             else
               Visible := true;
@@ -2317,25 +2334,25 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
         if TryStrToFloat (Item.SubItems[4], TestFloat) then
           Lb_Rtzn_Grd.Caption := Item.SubItems[4]
          else
-          if ProgressError ('4') then
+          if ProgressError ('4', Item.SubItems[4]) then
             exit;
 
         if TryStrToFloat (Item.SubItems[5], TestFloat) then
           Lb_Rtzn_Rd.Caption := Item.SubItems[5]
          else
-          if ProgressError ('5') then
+          if ProgressError ('5', Item.SubItems[5]) then
             exit;
 
         if TryStrToFloat (Item.SubItems[6], TestFloat) then
           Lb_Dekli_Grd.Caption := Item.SubItems[6]
          else
-          if ProgressError ('6') then
+          if ProgressError ('6', Item.SubItems[6]) then
             exit;
 
         if TryStrToFloat (Item.SubItems[7], TestFloat) then
           Lb_Dekli_Rd.Caption := Item.SubItems[7]
          else
-          if ProgressError ('7') then
+          if ProgressError ('7', Item.SubItems[7]) then
             exit;
       end
      else
@@ -2360,7 +2377,7 @@ procedure TFrm_Spori.ProgressList (const Item: TListItem); //ToDo: Test if the I
 
 procedure TFrm_Spori.ProgressNumber (Normal: Boolean = true); //ToDo: Errorhandeling if the Item doesnt exits
   var
-     Item:TListItem;
+     Item: TListItem;
   begin
     // Find The the ithem that is conneceted with the Number of ED_Nr
     Item := LV_List.Items.FindCaption(0, IntToStr(StrToInt(Ed_Nr.Text)), false, false, true);
@@ -2370,10 +2387,11 @@ procedure TFrm_Spori.ProgressNumber (Normal: Boolean = true); //ToDo: Errorhande
 
     if Assigned(Item) then // if a valid Item was found tell it
       begin
+        //Saves also the number
         ProgressList (Item);
 
         if (CB_StrMode.ItemIndex = 5) and Normal then //reset BodyMode
-          ProgressBodyMode (0);
+          ProgressBodyMode (BMd_Normal);
       end
      else; //Errorhandeling
    end;
@@ -2381,6 +2399,42 @@ procedure TFrm_Spori.ProgressNumber (Normal: Boolean = true); //ToDo: Errorhande
 procedure TFrm_Spori.Update_ (); //ToDo
   begin
 
+  end;
+
+function  TFrm_Spori.GetOSLanguage (): string;
+  var
+    l, fbl: string;
+    {$IFDEF LCLCarbon}
+    theLocaleRef: CFLocaleRef;
+    locale: CFStringRef;
+    buffer: StringPtr;
+    bufferSize: CFIndex;
+    encoding: CFStringEncoding;
+    success: boolean;
+    {$ENDIF}
+  begin
+    {$IFDEF LCLCarbon}
+    theLocaleRef := CFLocaleCopyCurrent;
+    locale := CFLocaleGetIdentifier(theLocaleRef);
+    encoding := 0;
+    bufferSize := 256;
+    buffer := new(StringPtr);
+
+    success := CFStringGetPascalString(locale, buffer, bufferSize, encoding);
+    if success then
+      l := string(buffer^)
+    else
+      l := '';
+
+    fbl := Copy(l, 1, 2);
+    dispose(buffer);
+
+    {$ELSE}
+    //Removed Linux extra since GetLangueIDs does exacly the same
+    GetLanguageIDs(l, fbl);
+    {$ENDIF}
+    Result := 'de';
+    //Result := fbl;
   end;
 
 procedure TFrm_Spori.Angle (); //ToDo: Comments
@@ -2588,7 +2642,7 @@ procedure TFrm_Spori.CalculateEphemerisLoc (); //ToDo: Comments; clean up
 
    end;
 
-function TFrm_Spori.Search4Body (SerchFor: String): TListItem;  //ToDo: Comments; better error handleling
+function  TFrm_Spori.Search4Body (SerchFor: String): TListItem;  //ToDo: Comments; better error handleling
   var
     i, j: Integer;
     sameness: Real = -1;
@@ -2614,9 +2668,13 @@ function TFrm_Spori.Search4Body (SerchFor: String): TListItem;  //ToDo: Comments
             if (TempSameness >= 60) and (TempSameness > Sameness) then
               begin
                 LV_List.Selected := LV_List.Items[i];
-                Sameness := TempSameness;
-
                 Result := LV_List.Items[i];
+
+                //We got a 100% match, skip all the others
+                if (TempSameness = 100) then
+                  exit;
+
+                Sameness := TempSameness;
               end;
           end;
 
@@ -2654,13 +2712,13 @@ procedure TFrm_Spori.Ed_NrEditingDone (Sender: TObject); //Done
 
 procedure TFrm_Spori.Ed_SuchEditingDone (Sender: TObject); //Done
   begin
-    if not (Ed_Such.Text = EdSearch_Default) and not (Ed_Such.Text = '') then //if there was input and the input was not empty
+    if not (Ed_Such.Text = MLS_Search_Default) and not (Ed_Such.Text = '') then //if there was input and the input was not empty
       searchStarList (Trim(Ed_Such.Text)) //serch for the input
   end;
 
 procedure TFrm_Spori.Ed_SuchEnter (Sender: TObject);  //Bug SelectAll does not work?
   begin
-    if Ed_Such.Text = EdSearch_Default then
+    if Ed_Such.Text = MLS_Search_Default then
       Ed_Such.Clear  //nothing was typed yet, so clear up the default value
      else
       begin
@@ -2677,7 +2735,7 @@ procedure TFrm_Spori.Ed_SuchEnter (Sender: TObject);  //Bug SelectAll does not w
 procedure TFrm_Spori.Ed_SuchExit (Sender: TObject);  //Done
   begin
     if (Ed_Such.Text = '') then
-      Ed_Such.Text  := EdSearch_Default;
+      Ed_Such.Text  := MLS_Search_Default;
   end;
 
 procedure TFrm_Spori.FndDFind (Sender: TObject); //ToDo: move Connect to LoadOptions and use Connact to all just if no vailid port was found; Update
@@ -2702,16 +2760,22 @@ procedure TFrm_Spori.FormCreate (Sender: TObject); //Done?
   begin
     //initialize
     ser := TBlockSerial.Create;
-    OwnDir :=  GetCurrentDir();
+    OwnDir :=  ExtractFilePath(ParamStrUTF8(0));
+    //old way:
+    //OwnDir := GetCurrentDir();
 
     //initialize Hotkey
     KeyCount    := 0;
     PressedKeys := [];
     HotKey      := [];
 
-    //Make sure these two Forms are already created when LoadOptions was called
+    //Make sure these Forms are already created when LoadOptions was called
     Application.CreateForm(TFrm_Config, Frm_Config);
     Application.CreateForm(TFrm_Main, Frm_Main);
+    Application.CreateForm(TFrm_GetHotKey, Frm_GetHotKey);
+
+    //Display everything in the OS langue until a choosen langue was loaded
+    SetDefaultLang(GetOSLanguage());
 
     //Tell LoadOptions to try to load from portable file if it exits
     SetPortableMode(FileExists(GetCurrentDir + PathDelim + 'Options.Space'));
@@ -2749,6 +2813,20 @@ procedure TFrm_Spori.FormDestroy (Sender: TObject);   //Version Dynamic; Comment
      Index: Integer;
      SaveStrings, LoadStrings: TStringList;
   begin
+    if Assigned(ser) then
+      begin
+        //If the buffer was not emty
+        if (ser.WaitingData > 0) or (ser.CanRead(0)) then
+          //Clear buffer
+          ser.Purge;
+
+        //close conncetion and free memory (importend, without you can't connect again, until next restart)
+        ser.CloseSocket;
+        FreeAndNil(ser);
+      end;
+
+    EndPlanetEphem();
+
     SaveStrings := TStringlist.create;
 
     if not FileExists (DefaultOptionsPath) then  //make a new clean file
@@ -2803,13 +2881,21 @@ procedure TFrm_Spori.FormDestroy (Sender: TObject);   //Version Dynamic; Comment
                      begin
                        TempValue := FindOptionValue(Line);
 
-                       //If there is no vaild value we ignore this line and
-                       //will add a new  line at the end, if it doesn't appear
-                       //some where else. Since we don't know what else is in this line
-                       if (TempValue <> '') or (TOptionNames(Index) = ON_Hotkey) then
+                       //everything stayed the same, leave it like it was
+                       //Should simply be faster than replacing the one string whith the same
+                       if (TempValue = Options[TOptionNames(Index)]) then
                          begin
-                           SaveStrings.Add(StringReplace(Line, TempValue, Options[TOptionNames(Index)], [rfIgnoreCase]));
+                           SaveStrings.Add(Line);
                            NotGottenOptions -= [Index];
+                         end
+                       else
+                         //If there is no vaild value we ignore this line and
+                         //will add a new  line at the end, if it doesn't appear
+                         //some where else. Since we don't know what else is in this line
+                         if (TempValue <> '') or (TOptionNames(Index) = ON_Hotkey) then
+                           begin
+                             SaveStrings.Add(StringReplace(Line, TempValue, Options[TOptionNames(Index)], [rfIgnoreCase]));
+                             NotGottenOptions -= [Index];
                          end;
                      end;
                  end
@@ -2905,6 +2991,7 @@ procedure TFrm_Spori.MI_ConnectionClick(Sender: TObject); //ToDo: Remove if new 
 
     procedure TFrm_Spori.MI_DatSchutzClick (Sender: TObject); //ToDo
       begin
+        //https://xkcd.com/1998/
         Showmessage('Wir von  FireInstallations möchten der gesammten ' +
                     'Datensammelwut etwas entgegensetzen. ' + //sLineBreak +
                     'Daher sind all unsere Produkte Open Source und nutzen nur ' +
@@ -3205,36 +3292,15 @@ procedure TFrm_Spori.BT_Main_TempClick(Sender: TObject); //Temp
 procedure TFrm_Spori.CB_StrModeChange (Sender: TObject); //Done
   begin
     //We got a now mode, tell it everything else
-    ProgressBodyMode(CB_StrMode.ItemIndex);
+    ProgressBodyMode(TBodyMode(CB_StrMode.ItemIndex));
    end;
 
 procedure TFrm_Spori.CB_StBEditingDone (Sender: TObject); //ToDo: Comments
   begin
     if IsConstellation () then
-      ProgressBodyMode(5)
+      ProgressBodyMode(BMd_Constellation)
      else
       ProgressNumber ();
    end;
-
-//Does exist just for compatibility
-initialization
-
-finalization
-  begin  //No Matter what, we have to clean Up!
-    with Frm_Spori do
-      if Assigned(ser) then
-       begin
-         //If the buffer is not emty
-         if (ser.SendingData > 0) or (ser.WaitingDataEx > 0) then
-           ser.Purge;
-
-         //close conncetion and free memory (importend, without you can't connect again, until next restart)
-         ser.CloseSocket;
-         FreeAndNil(ser);
-       end;
-
-    EndPlanetEphem();
-  end;
-
 
 end.

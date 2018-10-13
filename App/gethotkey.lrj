@@ -1,0 +1,5 @@
+{"version":1,"strings":[
+{"hash":162353486,"name":"tfrm_gethotkey.caption","sourcebytes":[72,111,116,107,101,121,32,102,97,110,103,101,110],"value":"Hotkey fangen"},
+{"hash":110129150,"name":"tfrm_gethotkey.lbl_gethotkey.caption","sourcebytes":[74,101,116,122,116,32,72,111,107,101,121,32,101,105,110,103,101,98,101,110],"value":"Jetzt Hokey eingeben"},
+{"hash":160160062,"name":"tfrm_gethotkey.btbtn_cancel.caption","sourcebytes":[65,98,98,114,101,99,104,101,110],"value":"Abbrechen"}
+]}

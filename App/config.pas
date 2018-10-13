@@ -29,7 +29,8 @@ uses
   Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   Buttons, EditBtn, Spin, ExtCtrls, MaskEdit, DBGrids, DbCtrls, ECImageMenu,
   ECSwitch, ECEditBtns, LCLType,
-  GetHotkey; //Prevent overflow here
+  GetHotkey, //Prevent overflow here
+  MultiLangueStrings;
 
 type
 
@@ -206,11 +207,6 @@ type
 var
   Frm_Config   : TFrm_Config;
 
-  //Multi langue deffinitions
-  Resourcestring
-    Lbl_Turnd_On  = 'Ein';
-    Lbl_Turnd_Off = 'Aus';
-
 implementation
 
 uses
@@ -222,6 +218,7 @@ uses
 
 function TFrm_Config.KeyToStr (Key: Word): String; //Label for virtuel; Array 4 bothh dicetions into own file
   begin
+    //http://wiki.freepascal.org/virtual_keyboard_strokes/de
     case Key of
       VK_HIGHESTVALUE,
       VK_UNKNOWN,
@@ -1255,7 +1252,7 @@ procedure TFrm_Config.Sw_AutoTimeChange(Sender: TObject);  //Done
     IsActive := Sw_AutoTime.Checked;
 
     //Toggle lable caption
-    Lbl_Sw_AutoTime.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
+    Lbl_Sw_AutoTime.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
     //Don't let the User chage time wihle the app is supposed to use the system time
     Lb_Time.Enabled         := not IsActive;
@@ -1273,7 +1270,7 @@ procedure TFrm_Config.Sw_AutoTimeChange(Sender: TObject);  //Done
         end;
 
     //Save new value
-    Frm_Spori.Options[ON_AutoTimeMode] := BoolToStr(IsActive, 'True', 'False');;
+    Frm_Spori.Options[ON_AutoTimeMode] := BoolToStr(IsActive, MLS_True, MLS_False);;
    end;
 
 procedure TFrm_Config.Sw_ExprtChange(Sender: TObject);  //Done
@@ -1283,7 +1280,7 @@ procedure TFrm_Config.Sw_ExprtChange(Sender: TObject);  //Done
     IsActive := Sw_Exprt.Checked;
 
     //Toggle lable caption
-    Lbl_Sw_Exprt.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
+    Lbl_Sw_Exprt.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
     //Old
     Frm_Spori.MI_Sicht_Exp.Checked := IsActive;
@@ -1299,14 +1296,14 @@ procedure TFrm_Config.Sw_HtKyChange(Sender: TObject); //Done
     IsActive := Sw_HtKy.Checked;
 
     //Toggle Caption
-    Lbl_Sw_HtKy.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
+    Lbl_Sw_HtKy.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
     //Don't let the User change the Hotkey while not using it
     Ed_HtKy.Enabled := IsActive;
     Bt_HtKy.Enabled := IsActive;
 
     //Save new value
-    Frm_Spori.Options[ON_UseHotkey] := BoolToStr(IsActive, 'True', 'False');
+    Frm_Spori.Options[ON_UseHotkey] := BoolToStr(IsActive, MLS_True, MLS_False);
   end;
 
 procedure TFrm_Config.Sw_ManuValChange(Sender: TObject); //Done
@@ -1316,7 +1313,7 @@ procedure TFrm_Config.Sw_ManuValChange(Sender: TObject); //Done
     IsActive := Sw_ManuVal.Checked;
 
     //Set Caption
-    Lbl_Sw_ManW.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
+    Lbl_Sw_ManW.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
     //Toggle visebility of FloatEditfields and make the decimal places userfrendly
     with Frm_Main do
@@ -1342,7 +1339,7 @@ procedure TFrm_Config.Sw_ManuValChange(Sender: TObject); //Done
       end;
 
     //save value
-    Frm_Spori.Options[ON_AutoValueMode] := BoolToStr(not IsActive, 'True', 'False');
+    Frm_Spori.Options[ON_AutoValueMode] := BoolToStr(not IsActive, MLS_True, MLS_False);
   end;
 
 procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject); //Done
@@ -1352,10 +1349,10 @@ procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject); //Done
     IsActive := Sw_PortableMode.Checked;
 
     //Toggle lable caption
-    Lbl_Sw_PortableMode.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
+    Lbl_Sw_PortableMode.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
     //Save new Value
-    Frm_Spori.Options[ON_PortableMode] := BoolToStr(IsActive, 'True', 'False');
+    Frm_Spori.Options[ON_PortableMode] := BoolToStr(IsActive, MLS_True, MLS_False);
 
     //Change used paths
     Frm_Spori.SetPortableMode(IsActive);
@@ -1368,9 +1365,9 @@ procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //Done
     isActive :=  Sw_AutoCon.Checked;
 
     //Set Caption for the Button
-    Lbl_Sw_AutoCon.Caption := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
+    Lbl_Sw_AutoCon.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
     //Save it
-    Frm_Spori.Options[ON_AutoComMode] := BoolToStr(IsActive, 'True', 'False');
+    Frm_Spori.Options[ON_AutoComMode] := BoolToStr(IsActive, MLS_True, MLS_False);
 
     //Disable Comport Editfield since we will test all avible ports
     CmbBx_ComPort.Enabled := not isActive;
@@ -1388,10 +1385,10 @@ procedure TFrm_Config.Sw_RedoChange(Sender: TObject); //Done
     IsActive := Sw_Redo.Checked;
 
     //Toggle lable caption
-    Lbl_Sw_Redo.Caption   := BoolToStr(IsActive, Lbl_Turnd_On, Lbl_Turnd_Off);
+    Lbl_Sw_Redo.Caption   := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
     //Save it
-    Frm_Spori.Options[ON_UpRetry] := BoolToStr(IsActive, 'True', 'False');
+    Frm_Spori.Options[ON_UpRetry] := BoolToStr(IsActive, MLS_True, MLS_False);
    end;
 
 procedure TFrm_Config.TE_PlanEditingDone(Sender: TObject); //Done

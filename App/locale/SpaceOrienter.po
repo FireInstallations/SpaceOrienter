@@ -1,23 +1,147 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8"
 
-#: config.turnd_off
-msgctxt "config.turnd_off"
-msgid "Aus"
+#: multilanguestrings.mls_askretry
+msgid " Erneut versuchen?"
 msgstr ""
 
-#: config.turnd_on
-msgctxt "config.turnd_on"
-msgid "Ein"
+#: multilanguestrings.mls_connectedwith
+msgid "Verbunden mit: "
 msgstr ""
 
-#: spaceorienter_main.lbl_commsg_connceting
+#: multilanguestrings.mls_connecting
 msgid "Verbinde..."
 msgstr ""
 
-#: spori_main.edsearch_default
-msgctxt "spori_main.edsearch_default"
+#: multilanguestrings.mls_error_askabortload
+msgid " Laden abbrechen?"
+msgstr ""
+
+#: multilanguestrings.mls_error_askdefault
+msgid " Die fehlerhafte(n) Option(en) durch Defaultwert(e) ersetzen?"
+msgstr ""
+
+#: multilanguestrings.mls_error_askresetall
+msgid " Optionen zurücksetzen?"
+msgstr ""
+
+#: multilanguestrings.mls_error_askresetstar
+msgid " Sternenliste zurücksetzen und neu Laden?"
+msgstr ""
+
+#: multilanguestrings.mls_error_askresetthis
+msgid " Die fehlerhafte Option durch Defaultwert ersetzen?"
+msgstr ""
+
+#: multilanguestrings.mls_error_atsubitem
+msgid "während laden von SupItem"
+msgstr ""
+
+#: multilanguestrings.mls_error_caption
+msgid "ERROR"
+msgstr ""
+
+#: multilanguestrings.mls_error_errorwhile
+msgid "Fehler in"
+msgstr ""
+
+#: multilanguestrings.mls_error_foundnotall
+msgid " Konnte nicht alle Optionen finden."
+msgstr ""
+
+#: multilanguestrings.mls_error_invalidline
+msgid " Ungültige Zeile in SternenListe gefunden Nr:"
+msgstr ""
+
+#: multilanguestrings.mls_error_loading
+msgid "Ladevorgang"
+msgstr ""
+
+#: multilanguestrings.mls_error_msgcaption
+msgid "Error:"
+msgstr ""
+
+#: multilanguestrings.mls_error_noisreset
+msgid " (Nein = Einstellungen zurücksetzen)"
+msgstr ""
+
+#: multilanguestrings.mls_error_outofrange
+msgid "Out of range"
+msgstr ""
+
+#: multilanguestrings.mls_error_starsubitem
+msgid " Laden des Sterns gescheitert bei SubItem:"
+msgstr ""
+
+#: multilanguestrings.mls_error_starwrite
+msgid " Fehler beim schreiben der SternenListe!"
+msgstr ""
+
+#: multilanguestrings.mls_error_unnownformat
+msgid "Unbekanntes Format"
+msgstr ""
+
+#: multilanguestrings.mls_error_wrongtype
+msgid "Falscher Datentyp"
+msgstr ""
+
+#: multilanguestrings.mls_false
+msgid "False"
+msgstr ""
+
+#: multilanguestrings.mls_none
+msgid "None"
+msgstr ""
+
+#: multilanguestrings.mls_notconnected
+msgctxt "multilanguestrings.mls_notconnected"
+msgid "Nicht verbunden"
+msgstr ""
+
+#: multilanguestrings.mls_numberlong
+msgctxt "multilanguestrings.mls_numberlong"
+msgid "Nummer"
+msgstr ""
+
+#: multilanguestrings.mls_numbershort
+msgctxt "multilanguestrings.mls_numbershort"
+msgid "Nr."
+msgstr ""
+
+#: multilanguestrings.mls_search_default
+msgctxt "multilanguestrings.mls_search_default"
 msgid "Suchen..."
+msgstr ""
+
+#: multilanguestrings.mls_true
+msgid "True"
+msgstr ""
+
+#: multilanguestrings.mls_turnd_off
+msgctxt "multilanguestrings.mls_turnd_off"
+msgid "Aus"
+msgstr ""
+
+#: multilanguestrings.mls_turnd_on
+msgctxt "multilanguestrings.mls_turnd_on"
+msgid "Ein"
+msgstr ""
+
+#: multilanguestrings.mls_unknown
+msgid "Unbekannt"
+msgstr ""
+
+#: multilanguestrings.mls_warning
+msgid "Warnung:"
+msgstr ""
+
+#: multilanguestrings.mls_warning_multiline
+msgid " Doppelte Sternendeklaration Nr."
+msgstr ""
+
+#: multilanguestrings.mls_wasfound
+msgctxt "multilanguestrings.mls_wasfound"
+msgid "gefunden"
 msgstr ""
 
 #: tfrm_config.bitbtn_nwcnfg.caption
@@ -33,6 +157,7 @@ msgid "Bearbeiten"
 msgstr ""
 
 #: tfrm_config.bt_htky.caption
+msgctxt "tfrm_config.bt_htky.caption"
 msgid "Hotkey fangen"
 msgstr ""
 
@@ -69,17 +194,9 @@ msgstr ""
 msgid "9600"
 msgstr ""
 
-#: tfrm_config.cmbbx_comport.text
-msgid "dev/ttyACM0"
-msgstr ""
-
 #: tfrm_config.de_day.textfornulldate
 msgctxt "tfrm_config.de_day.textfornulldate"
 msgid "NULL"
-msgstr ""
-
-#: tfrm_config.ed_htky.text
-msgid "Shift + Q"
 msgstr ""
 
 #: tfrm_config.imgmn.menuitems[0].caption
@@ -115,7 +232,7 @@ msgid "am"
 msgstr ""
 
 #: tfrm_config.lbl_ardo.caption
-msgid "Ardoino Leonardo"
+msgid "Arduino Leonardo"
 msgstr ""
 
 #: tfrm_config.lbl_auto.caption
@@ -165,6 +282,7 @@ msgid "Nutze Hotkey"
 msgstr ""
 
 #: tfrm_config.lbl_lat.caption
+msgctxt "tfrm_config.lbl_lat.caption"
 msgid "Latitude"
 msgstr ""
 
@@ -282,36 +400,6 @@ msgstr ""
 msgid "                  SpaceOrienter - Einstellungen"
 msgstr ""
 
-#: tfrm_config.tbsht_con.caption
-msgid "C"
-msgstr ""
-
-#: tfrm_config.tbsht_general.caption
-msgctxt "tfrm_config.tbsht_general.caption"
-msgid "A"
-msgstr ""
-
-#: tfrm_config.tbsht_info.caption
-msgid "I"
-msgstr ""
-
-#: tfrm_config.tbsht_loc.caption
-msgid "D"
-msgstr ""
-
-#: tfrm_config.tbsht_starlist.caption
-msgid "S"
-msgstr ""
-
-#: tfrm_config.tbsht_time.caption
-msgctxt "tfrm_config.tbsht_time.caption"
-msgid "T"
-msgstr ""
-
-#: tfrm_config.tbsht_up.caption
-msgid "U"
-msgstr ""
-
 #: tfrm_config.te_plan.textfornulldate
 msgctxt "tfrm_config.te_plan.textfornulldate"
 msgid "NULL"
@@ -322,17 +410,36 @@ msgctxt "tfrm_config.te_time.textfornulldate"
 msgid "NULL"
 msgstr ""
 
+#: tfrm_gethotkey.btbtn_cancel.caption
+msgid "Abbrechen"
+msgstr ""
+
+#: tfrm_gethotkey.caption
+msgctxt "tfrm_gethotkey.caption"
+msgid "Hotkey fangen"
+msgstr ""
+
+#: tfrm_gethotkey.lbl_gethotkey.caption
+msgid "Jetzt Hokey eingeben"
+msgstr ""
+
 #: tfrm_main.bitbtn_navigate_main.caption
 msgid "& Anfahren"
 msgstr ""
 
 #: tfrm_main.caption
-msgid "Frm_Main"
+msgctxt "tfrm_main.caption"
+msgid "SpaceOrienter"
 msgstr ""
 
 #: tfrm_main.cmbbx_mode.text
 msgctxt "tfrm_main.cmbbx_mode.text"
 msgid "Normal"
+msgstr ""
+
+#: tfrm_main.ed_search4bdy_list.text
+msgctxt "tfrm_main.ed_search4bdy_list.text"
+msgid "Suchen..."
 msgstr ""
 
 #: tfrm_main.ed_search4bdy_main.text
@@ -394,23 +501,28 @@ msgid "Eigenschaften"
 msgstr ""
 
 #: tfrm_main.lbl_bdyprpty_val1.caption
+msgctxt "tfrm_main.lbl_bdyprpty_val1.caption"
 msgid "-"
 msgstr ""
 
 #: tfrm_main.lbl_bdyprpty_val2.caption
-msgid "Ephemeride"
+msgctxt "tfrm_main.lbl_bdyprpty_val2.caption"
+msgid "-"
 msgstr ""
 
 #: tfrm_main.lbl_bdy_name.caption
-msgid "Sonne"
+msgctxt "tfrm_main.lbl_bdy_name.caption"
+msgid "-"
 msgstr ""
 
 #: tfrm_main.lbl_bdy_namelatain.caption
-msgid "Sol"
+msgctxt "tfrm_main.lbl_bdy_namelatain.caption"
+msgid "-"
 msgstr ""
 
 #: tfrm_main.lbl_bdy_nr.caption
-msgid "206"
+msgctxt "tfrm_main.lbl_bdy_nr.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_main.lbl_bdy_split.caption
@@ -418,7 +530,8 @@ msgid "/"
 msgstr ""
 
 #: tfrm_main.lbl_bdy_title.caption
-msgid "Himmelkörper"
+msgctxt "tfrm_main.lbl_bdy_title.caption"
+msgid "Himmelskörper"
 msgstr ""
 
 #: tfrm_main.lbl_comstate.caption
@@ -427,7 +540,8 @@ msgid "Nicht verbunden"
 msgstr ""
 
 #: tfrm_main.lbl_date.caption
-msgid "01.10.2018"
+msgctxt "tfrm_main.lbl_date.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_main.lbl_elecalc_grd.caption
@@ -471,7 +585,8 @@ msgid "Missweisung"
 msgstr ""
 
 #: tfrm_main.lbl_magdvtn_val.caption
-msgid "3.80"
+msgctxt "tfrm_main.lbl_magdvtn_val.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_main.lbl_place_name.caption
@@ -488,32 +603,62 @@ msgid "Einstellungen"
 msgstr ""
 
 #: tfrm_main.lbl_time.caption
-msgid "15:10:00"
+msgctxt "tfrm_main.lbl_time.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_main.lbl_update_title.caption
 msgid "Update!"
 msgstr ""
 
+#: tfrm_main.lv_bodylist.columns[0].caption
+msgctxt "tfrm_main.lv_bodylist.columns[0].caption"
+msgid "Nummer "
+msgstr ""
+
+#: tfrm_main.lv_bodylist.columns[1].caption
+msgctxt "tfrm_main.lv_bodylist.columns[1].caption"
+msgid "Himmelskörper"
+msgstr ""
+
+#: tfrm_main.lv_bodylist.columns[2].caption
+msgctxt "tfrm_main.lv_bodylist.columns[2].caption"
+msgid "Latein"
+msgstr ""
+
+#: tfrm_main.lv_bodylist.columns[3].caption
+msgctxt "tfrm_main.lv_bodylist.columns[3].caption"
+msgid "Eigenschaften"
+msgstr ""
+
+#: tfrm_main.lv_bodylist.columns[4].caption
+msgctxt "tfrm_main.lv_bodylist.columns[4].caption"
+msgid "Sternbild"
+msgstr ""
+
+#: tfrm_main.lv_bodylist.columns[5].caption
+msgctxt "tfrm_main.lv_bodylist.columns[5].caption"
+msgid "Rezi °"
+msgstr ""
+
+#: tfrm_main.lv_bodylist.columns[6].caption
+msgctxt "tfrm_main.lv_bodylist.columns[6].caption"
+msgid "Rezi Min"
+msgstr ""
+
+#: tfrm_main.lv_bodylist.columns[7].caption
+msgctxt "tfrm_main.lv_bodylist.columns[7].caption"
+msgid "Dekli °"
+msgstr ""
+
+#: tfrm_main.lv_bodylist.columns[8].caption
+msgctxt "tfrm_main.lv_bodylist.columns[8].caption"
+msgid "Dekli Min"
+msgstr ""
+
 #: tfrm_main.pnl_header.caption
 msgctxt "tfrm_main.pnl_header.caption"
 msgid "SpaceOrienter"
-msgstr ""
-
-#: tfrm_main.pnl_line.caption
-msgid "Pnl_Line"
-msgstr ""
-
-#: tfrm_main.pnl_line_status.caption
-msgid "Pnl_Line_Status"
-msgstr ""
-
-#: tfrm_main.tbsht_dashbord.caption
-msgid "TbSht_DashBord"
-msgstr ""
-
-#: tfrm_main.tbsht_starlist.caption
-msgid "TbSht_StarList"
 msgstr ""
 
 #: tfrm_spori.bt_main_temp.caption
@@ -656,17 +801,18 @@ msgid ""
 msgstr ""
 
 #: tfrm_spori.lb_akfrpnk.caption
-msgid "71,8228525205434"
+msgctxt "tfrm_spori.lb_akfrpnk.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_az.caption
 msgctxt "tfrm_spori.lb_az.caption"
-msgid "157,4783"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_az1.caption
 msgctxt "tfrm_spori.lb_az1.caption"
-msgid "157,4783"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_azi.caption
@@ -694,7 +840,8 @@ msgid "°"
 msgstr ""
 
 #: tfrm_spori.lb_az_n.caption
-msgid "-0,399245814"
+msgctxt "tfrm_spori.lb_az_n.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_az_n_.caption
@@ -702,7 +849,8 @@ msgid "Azimut Nenner"
 msgstr ""
 
 #: tfrm_spori.lb_az_z.caption
-msgid "0,354081145"
+msgctxt "tfrm_spori.lb_az_z.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_az_z_.caption
@@ -720,7 +868,7 @@ msgstr ""
 
 #: tfrm_spori.lb_day.caption
 msgctxt "tfrm_spori.lb_day.caption"
-msgid "01"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_day_.caption
@@ -733,11 +881,13 @@ msgid "Deklination"
 msgstr ""
 
 #: tfrm_spori.lb_dekli_grd.caption
-msgid "-90"
+msgctxt "tfrm_spori.lb_dekli_grd.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_dekli_rd.caption
-msgid "-59,9"
+msgctxt "tfrm_spori.lb_dekli_rd.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_delt.caption
@@ -750,7 +900,8 @@ msgid "δ"
 msgstr ""
 
 #: tfrm_spori.lb_diff.caption
-msgid "23,6262458333294"
+msgctxt "tfrm_spori.lb_diff.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_diff_.caption
@@ -764,12 +915,12 @@ msgstr ""
 
 #: tfrm_spori.lb_el.caption
 msgctxt "tfrm_spori.lb_el.caption"
-msgid "41,22780673"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_el1.caption
 msgctxt "tfrm_spori.lb_el1.caption"
-msgid "41,22780673"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_ele.caption
@@ -797,7 +948,8 @@ msgid "°"
 msgstr ""
 
 #: tfrm_spori.lb_franf.caption
-msgid "20.03.2018 00:00:00"
+msgctxt "tfrm_spori.lb_franf.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_franf_.caption
@@ -805,7 +957,8 @@ msgid "Frühingsanfang"
 msgstr ""
 
 #: tfrm_spori.lb_frpnk.caption
-msgid "68,2367618812729"
+msgctxt "tfrm_spori.lb_frpnk.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_frpnk_.caption
@@ -813,7 +966,8 @@ msgid "Frühjahrspunkt"
 msgstr ""
 
 #: tfrm_spori.lb_gmt.caption
-msgid "12.04.2017 14:40:00"
+msgctxt "tfrm_spori.lb_gmt.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_gmt_.caption
@@ -855,7 +1009,8 @@ msgid "GrT"
 msgstr ""
 
 #: tfrm_spori.lb_gsft.caption
-msgid "23,3050300228307"
+msgctxt "tfrm_spori.lb_gsft.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_gsft_.caption
@@ -869,7 +1024,7 @@ msgstr ""
 
 #: tfrm_spori.lb_hour.caption
 msgctxt "tfrm_spori.lb_hour.caption"
-msgid "00"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_hour_.caption
@@ -877,7 +1032,8 @@ msgid "Stunde"
 msgstr ""
 
 #: tfrm_spori.lb_jhr.caption
-msgid "2017"
+msgctxt "tfrm_spori.lb_jhr.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_jhr_.caption
@@ -885,31 +1041,33 @@ msgid "Jahr"
 msgstr ""
 
 #: tfrm_spori.lb_lat.caption
-msgid "Lattitude"
+msgctxt "tfrm_spori.lb_lat.caption"
+msgid "Latitude"
 msgstr ""
 
 #: tfrm_spori.lb_lat1.caption
-msgid "Lattiitude"
+msgctxt "tfrm_spori.lb_lat1.caption"
+msgid "Latitude"
 msgstr ""
 
 #: tfrm_spori.lb_lat_g.caption
 msgctxt "tfrm_spori.lb_lat_g.caption"
-msgid "13,604"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_lat_g1.caption
 msgctxt "tfrm_spori.lb_lat_g1.caption"
-msgid "13,604"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_lat_r.caption
 msgctxt "tfrm_spori.lb_lat_r.caption"
-msgid "0,23743459144130"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_lat_r1.caption
 msgctxt "tfrm_spori.lb_lat_r1.caption"
-msgid "0,23743459144130"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_lon.caption
@@ -923,26 +1081,27 @@ msgstr ""
 
 #: tfrm_spori.lb_lon_g.caption
 msgctxt "tfrm_spori.lb_lon_g.caption"
-msgid "52,345"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_lon_g1.caption
 msgctxt "tfrm_spori.lb_lon_g1.caption"
-msgid "52,345"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_lon_r.caption
 msgctxt "tfrm_spori.lb_lon_r.caption"
-msgid "0,913592597"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_lon_r1.caption
 msgctxt "tfrm_spori.lb_lon_r1.caption"
-msgid "0,913592597"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_mez.caption
-msgid "12.04.2017 16:40:00"
+msgctxt "tfrm_spori.lb_mez.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_mez_.caption
@@ -955,7 +1114,7 @@ msgstr ""
 
 #: tfrm_spori.lb_min.caption
 msgctxt "tfrm_spori.lb_min.caption"
-msgid "00"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_min_.caption
@@ -974,7 +1133,7 @@ msgstr ""
 
 #: tfrm_spori.lb_mon.caption
 msgctxt "tfrm_spori.lb_mon.caption"
-msgid "01"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_mon_.caption
@@ -987,7 +1146,8 @@ msgid "Missweisung"
 msgstr ""
 
 #: tfrm_spori.lb_mswg1.caption
-msgid "3,735619027"
+msgctxt "tfrm_spori.lb_mswg1.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_mswg1_.caption
@@ -996,11 +1156,13 @@ msgid "Missweisung"
 msgstr ""
 
 #: tfrm_spori.lb_nr.caption
+msgctxt "tfrm_spori.lb_nr.caption"
 msgid "Nr."
 msgstr ""
 
 #: tfrm_spori.lb_otz.caption
-msgid "12.04.2017 15:35:00"
+msgctxt "tfrm_spori.lb_otz.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_otz_.caption
@@ -1012,16 +1174,18 @@ msgid "Rektaszension"
 msgstr ""
 
 #: tfrm_spori.lb_rtzn_grd.caption
-msgid "360"
+msgctxt "tfrm_spori.lb_rtzn_grd.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_rtzn_rd.caption
-msgid "59,9"
+msgctxt "tfrm_spori.lb_rtzn_rd.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_sek.caption
 msgctxt "tfrm_spori.lb_sek.caption"
-msgid "00"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_sek_.caption
@@ -1042,7 +1206,8 @@ msgid "Sommerzeit"
 msgstr ""
 
 #: tfrm_spori.lb_stwk.caption
-msgid "450"
+msgctxt "tfrm_spori.lb_stwk.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_stwk_.caption
@@ -1055,7 +1220,6 @@ msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_t_.caption
-msgctxt "tfrm_spori.lb_t_.caption"
 msgid "T"
 msgstr ""
 
@@ -1064,7 +1228,8 @@ msgid "UTC1"
 msgstr ""
 
 #: tfrm_spori.lb_utc1_val.caption
-msgid "2457848,5"
+msgctxt "tfrm_spori.lb_utc1_val.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_utc2_nam.caption
@@ -1072,15 +1237,18 @@ msgid "UTC2"
 msgstr ""
 
 #: tfrm_spori.lb_utc2_val.caption
-msgid "0,449722222"
+msgctxt "tfrm_spori.lb_utc2_val.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_zeit.caption
-msgid "01.01.2017  00:00:00"
+msgctxt "tfrm_spori.lb_zeit.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_zw.caption
-msgid "2,99583333333333"
+msgctxt "tfrm_spori.lb_zw.caption"
+msgid "0"
 msgstr ""
 
 #: tfrm_spori.lb_zw_.caption
@@ -1088,6 +1256,7 @@ msgid "Zeitwinkel"
 msgstr ""
 
 #: tfrm_spori.lv_list.columns[0].caption
+msgctxt "tfrm_spori.lv_list.columns[0].caption"
 msgid "Nummer"
 msgstr ""
 
@@ -1097,6 +1266,7 @@ msgid "Himmelskörper"
 msgstr ""
 
 #: tfrm_spori.lv_list.columns[2].caption
+msgctxt "tfrm_spori.lv_list.columns[2].caption"
 msgid "Latein"
 msgstr ""
 
@@ -1111,18 +1281,22 @@ msgid "Eigenschaften"
 msgstr ""
 
 #: tfrm_spori.lv_list.columns[5].caption
+msgctxt "tfrm_spori.lv_list.columns[5].caption"
 msgid "Rezi °"
 msgstr ""
 
 #: tfrm_spori.lv_list.columns[6].caption
+msgctxt "tfrm_spori.lv_list.columns[6].caption"
 msgid "Rezi Min"
 msgstr ""
 
 #: tfrm_spori.lv_list.columns[7].caption
+msgctxt "tfrm_spori.lv_list.columns[7].caption"
 msgid "Dekli °"
 msgstr ""
 
 #: tfrm_spori.lv_list.columns[8].caption
+msgctxt "tfrm_spori.lv_list.columns[8].caption"
 msgid "Dekli Min"
 msgstr ""
 

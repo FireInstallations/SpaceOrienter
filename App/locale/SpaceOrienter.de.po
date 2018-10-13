@@ -10,7 +10,7 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Last-Translator: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: en\n"
+"Language: de\n"
 
 #: multilanguestrings.mls_askretry
 msgid " Erneut versuchen?"
@@ -18,11 +18,11 @@ msgstr ""
 
 #: multilanguestrings.mls_connectedwith
 msgid "Verbunden mit: "
-msgstr "Connected with: "
+msgstr "Verbunden mit: "
 
 #: multilanguestrings.mls_connecting
 msgid "Verbinde..."
-msgstr "Connecting..."
+msgstr "Verbinde..."
 
 #: multilanguestrings.mls_error_askabortload
 msgid " Laden abbrechen?"
@@ -30,19 +30,19 @@ msgstr ""
 
 #: multilanguestrings.mls_error_askdefault
 msgid " Die fehlerhafte(n) Option(en) durch Defaultwert(e) ersetzen?"
-msgstr " Replace defective Setting(s) with default value(s)?"
+msgstr " Die fehlerhafte(n) Option(en) durch Defaultwert(e) ersetzen?"
 
 #: multilanguestrings.mls_error_askresetall
 msgid " Optionen zurücksetzen?"
-msgstr " Reset configurations?"
+msgstr " Optionen zurücksetzen?"
 
 #: multilanguestrings.mls_error_askresetstar
 msgid " Sternenliste zurücksetzen und neu Laden?"
-msgstr "Reset BodyList and reload?"
+msgstr " Sternenliste zurücksetzen und neu Laden?"
 
 #: multilanguestrings.mls_error_askresetthis
 msgid " Die fehlerhafte Option durch Defaultwert ersetzen?"
-msgstr " Replace defective Setting with default value?"
+msgstr " Die fehlerhafte Option durch Defaultwert ersetzen?"
 
 #: multilanguestrings.mls_error_atsubitem
 msgid "während laden von SupItem"
@@ -56,11 +56,11 @@ msgstr "ERROR"
 #, fuzzy
 #| msgid "Fehler in "
 msgid "Fehler in"
-msgstr "Error while "
+msgstr "Fehler in "
 
 #: multilanguestrings.mls_error_foundnotall
 msgid " Konnte nicht alle Optionen finden."
-msgstr " Couldn't find all Settings."
+msgstr " Konnte nicht alle Optionen finden."
 
 #: multilanguestrings.mls_error_invalidline
 msgid " Ungültige Zeile in SternenListe gefunden Nr:"
@@ -68,7 +68,7 @@ msgstr ""
 
 #: multilanguestrings.mls_error_loading
 msgid "Ladevorgang"
-msgstr "Loading"
+msgstr "Ladevorgang"
 
 #: multilanguestrings.mls_error_msgcaption
 msgid "Error:"
@@ -76,7 +76,7 @@ msgstr "Error:"
 
 #: multilanguestrings.mls_error_noisreset
 msgid " (Nein = Einstellungen zurücksetzen)"
-msgstr " (No = reset Settings)"
+msgstr " (Nein = Einstellungen zurücksetzen)"
 
 #: multilanguestrings.mls_error_outofrange
 msgid "Out of range"
@@ -86,7 +86,7 @@ msgstr "Out of range"
 #, fuzzy
 #| msgid " Laden des Sterns gescheitert bei SubItem: "
 msgid " Laden des Sterns gescheitert bei SubItem:"
-msgstr "Loading the body failed by SubItem:"
+msgstr " Laden des Sterns gescheitert bei SubItem: "
 
 #: multilanguestrings.mls_error_starwrite
 msgid " Fehler beim schreiben der SternenListe!"
@@ -94,11 +94,11 @@ msgstr ""
 
 #: multilanguestrings.mls_error_unnownformat
 msgid "Unbekanntes Format"
-msgstr "Unknown format"
+msgstr "Unbekanntes Format"
 
 #: multilanguestrings.mls_error_wrongtype
 msgid "Falscher Datentyp"
-msgstr "Unknown type"
+msgstr "Falscher Datentyp"
 
 #: multilanguestrings.mls_false
 msgid "False"
@@ -106,17 +106,17 @@ msgstr "False"
 
 #: multilanguestrings.mls_none
 msgid "None"
-msgstr "none"
+msgstr "None"
 
 #: multilanguestrings.mls_notconnected
 msgctxt "multilanguestrings.mls_notconnected"
 msgid "Nicht verbunden"
-msgstr "Not connceted"
+msgstr "Nicht verbunden"
 
 #: multilanguestrings.mls_numberlong
 msgctxt "multilanguestrings.mls_numberlong"
 msgid "Nummer"
-msgstr "Number"
+msgstr "Nummer"
 
 #: multilanguestrings.mls_numbershort
 msgctxt "multilanguestrings.mls_numbershort"
@@ -126,7 +126,7 @@ msgstr "Nr."
 #: multilanguestrings.mls_search_default
 msgctxt "multilanguestrings.mls_search_default"
 msgid "Suchen..."
-msgstr "Search for..."
+msgstr "Suchen..."
 
 #: multilanguestrings.mls_true
 msgid "True"
@@ -135,16 +135,16 @@ msgstr "True"
 #: multilanguestrings.mls_turnd_off
 msgctxt "multilanguestrings.mls_turnd_off"
 msgid "Aus"
-msgstr "Off"
+msgstr "Aus"
 
 #: multilanguestrings.mls_turnd_on
 msgctxt "multilanguestrings.mls_turnd_on"
 msgid "Ein"
-msgstr "On"
+msgstr "Ein"
 
 #: multilanguestrings.mls_unknown
 msgid "Unbekannt"
-msgstr "Unknown"
+msgstr "Unbekannt"
 
 #: multilanguestrings.mls_warning
 msgid "Warnung:"
@@ -161,49 +161,49 @@ msgstr ""
 
 #: tfrm_config.bitbtn_nwcnfg.caption
 msgid "Einstellungen zurücksetzen"
-msgstr "Reset configurations"
+msgstr "Einstellungen zurücksetzen"
 
 #: tfrm_config.bt_con.caption
 msgid "Jetzt Verbinden"
-msgstr "Connect now"
+msgstr "Jetzt Verbinden"
 
 #: tfrm_config.bt_confstarlist.caption
 msgid "Bearbeiten"
-msgstr "Edit"
+msgstr "Bearbeiten"
 
 #: tfrm_config.bt_htky.caption
 msgctxt "tfrm_config.bt_htky.caption"
 msgid "Hotkey fangen"
-msgstr "Catch Hotkey"
+msgstr "Hotkey fangen"
 
 #: tfrm_config.bt_loadstarlist.caption
 msgid "Laden"
-msgstr "Load..."
+msgstr "Laden"
 
 #: tfrm_config.bt_resetstarlist.caption
 msgid "Zurücksetzen"
-msgstr "Reset config"
+msgstr "Zurücksetzen"
 
 #: tfrm_config.bt_up.caption
 msgid "Jetzt nach Updates suchen"
-msgstr "Search for Updates now"
+msgstr "Jetzt nach Updates suchen"
 
 #: tfrm_config.caption
 msgctxt "tfrm_config.caption"
 msgid "Einstellungen"
-msgstr "Settings"
+msgstr "Einstellungen"
 
 #: tfrm_config.cbbx_ort.text
 msgid "Zeuthen"
-msgstr ""
+msgstr "Zeuthen"
 
 #: tfrm_config.cbx_rate.text
 msgid "Täglich"
-msgstr "Daily"
+msgstr "Täglich"
 
 #: tfrm_config.cbx_tag.text
 msgid "Sonntag"
-msgstr "Sunday"
+msgstr "Sonntag"
 
 #: tfrm_config.cmbbx_baud.text
 msgid "9600"
@@ -216,7 +216,7 @@ msgstr "NULL"
 
 #: tfrm_config.imgmn.menuitems[0].caption
 msgid "  Allgemein"
-msgstr "   General"
+msgstr "  Allgemein"
 
 #: tfrm_config.imgmn.menuitems[1].caption
 msgid "  Update"
@@ -224,52 +224,52 @@ msgstr "  Update"
 
 #: tfrm_config.imgmn.menuitems[2].caption
 msgid "  Verbindung"
-msgstr "  Connection"
+msgstr "  Verbindung"
 
 #: tfrm_config.imgmn.menuitems[3].caption
 msgid "  Ort"
-msgstr " Location"
+msgstr "  Ort"
 
 #: tfrm_config.imgmn.menuitems[4].caption
 msgid "  Zeit"
-msgstr "  Time"
+msgstr "  Zeit"
 
 #: tfrm_config.imgmn.menuitems[5].caption
 msgid "  SternenListe"
-msgstr " BodyList"
+msgstr "  SternenListe"
 
 #: tfrm_config.imgmn.menuitems[6].caption
 msgid "  Über"
-msgstr " About"
+msgstr "  Über"
 
 #: tfrm_config.lbl_am_plan.caption
 msgid "am"
-msgstr "at"
+msgstr "am"
 
 #: tfrm_config.lbl_ardo.caption
 msgid "Arduino Leonardo"
-msgstr "ArduIno Leonardo"
+msgstr "Arduino Leonardo"
 
 #: tfrm_config.lbl_auto.caption
 msgid "Automatisch nach Updates suchen und installieren"
-msgstr "Handle Updates automatically"
+msgstr "Automatisch nach Updates suchen und installieren"
 
 #: tfrm_config.lbl_autocon.caption
 msgid "Verbinde automatisch"
-msgstr "Automatic connecting"
+msgstr "Verbinde automatisch"
 
 #: tfrm_config.lbl_autotime.caption
 msgid "Automatische Zeit"
-msgstr "Automatic time"
+msgstr "Automatische Zeit"
 
 #: tfrm_config.lbl_baud.caption
 msgid "BaudRate"
-msgstr "Baud rate"
+msgstr "BaudRate"
 
 #: tfrm_config.lbl_commsg.caption
 msgctxt "tfrm_config.lbl_commsg.caption"
 msgid "Nicht verbunden"
-msgstr "Not connceted"
+msgstr "Nicht verbunden"
 
 #: tfrm_config.lbl_comport.caption
 msgid "Comport"
@@ -277,24 +277,24 @@ msgstr "Comport"
 
 #: tfrm_config.lbl_con.caption
 msgid "Verbinden"
-msgstr "Connect"
+msgstr "Verbinden"
 
 #: tfrm_config.lbl_confstarlist.caption
 msgctxt "tfrm_config.lbl_confstarlist.caption"
 msgid "Liste bearbeiten"
-msgstr "Edit list"
+msgstr "Liste bearbeiten"
 
 #: tfrm_config.lbl_exprt.caption
 msgid "ExpertenModus"
-msgstr "Expert mode"
+msgstr "ExpertenModus"
 
 #: tfrm_config.lbl_height.caption
 msgid "Höhe"
-msgstr "Height"
+msgstr "Höhe"
 
 #: tfrm_config.lbl_htky.caption
 msgid "Nutze Hotkey"
-msgstr "Use Hotkey"
+msgstr "Nutze Hotkey"
 
 #: tfrm_config.lbl_lat.caption
 msgctxt "tfrm_config.lbl_lat.caption"
@@ -303,7 +303,7 @@ msgstr "Latitude"
 
 #: tfrm_config.lbl_loadstarlist.caption
 msgid "Liste laden"
-msgstr "Load List"
+msgstr "Liste laden"
 
 #: tfrm_config.lbl_lon.caption
 msgctxt "tfrm_config.lbl_lon.caption"
@@ -312,109 +312,108 @@ msgstr "Longitude"
 
 #: tfrm_config.lbl_manw.caption
 msgid "Manuelle Werte eingabe"
-msgstr "Manual values"
+msgstr "Manuelle Werte eingabe"
 
 #: tfrm_config.lbl_msg.caption
 msgid "Nach Updates suchen und benachrichtigen, falls ein Update verfügbar ist"
-msgstr "Search for Updates and notify if available"
+msgstr "Nach Updates suchen und benachrichtigen, falls ein Update verfügbar ist"
 
 #: tfrm_config.lbl_non.caption
 msgid "Nicht nach Updates suchen"
-msgstr "Don't search for Updates"
+msgstr "Nicht nach Updates suchen"
 
 #: tfrm_config.lbl_nwcnfg.caption
 msgid "Standartwerte wiederherstellen"
-msgstr "Reset to default values"
+msgstr "Standartwerte wiederherstellen"
 
 #: tfrm_config.lbl_ort.caption
 msgid "Ort"
-msgstr "Location"
+msgstr "Ort"
 
 #: tfrm_config.lbl_plan.caption
 msgid "Zeitplan"
-msgstr "Schedlue"
+msgstr "Zeitplan"
 
 #: tfrm_config.lbl_portablemode.caption
 msgid "Portable Version"
-msgstr "Portable mode"
+msgstr "Portable Version"
 
 #: tfrm_config.lbl_prvers.caption
 msgid "Neue Programmversionen"
-msgstr "Update policy"
+msgstr "Neue Programmversionen"
 
 #: tfrm_config.lbl_redo.caption
 msgid "Falls Versäumt wiederholen?"
-msgstr "Retry if missed?"
+msgstr "Falls Versäumt wiederholen?"
 
 #: tfrm_config.lbl_resetstarlist.caption
 msgid "Liste zurücksetzen"
-msgstr "Reset List"
+msgstr "Liste zurücksetzen"
 
 #: tfrm_config.lbl_sw_autocon.caption
 msgctxt "tfrm_config.lbl_sw_autocon.caption"
 msgid "Ein"
-msgstr "On"
+msgstr "Ein"
 
 #: tfrm_config.lbl_sw_autotime.caption
 msgctxt "tfrm_config.lbl_sw_autotime.caption"
 msgid "Ein"
-msgstr "On"
+msgstr "Ein"
 
 #: tfrm_config.lbl_sw_exprt.caption
 msgctxt "tfrm_config.lbl_sw_exprt.caption"
 msgid "Aus"
-msgstr "Off"
+msgstr "Aus"
 
 #: tfrm_config.lbl_sw_htky.caption
 msgctxt "tfrm_config.lbl_sw_htky.caption"
 msgid "Aus"
-msgstr "Off"
+msgstr "Aus"
 
 #: tfrm_config.lbl_sw_manw.caption
 msgctxt "tfrm_config.lbl_sw_manw.caption"
 msgid "Aus"
-msgstr "Off"
+msgstr "Aus"
 
 #: tfrm_config.lbl_sw_portablemode.caption
 msgctxt "tfrm_config.lbl_sw_portablemode.caption"
 msgid "Aus"
-msgstr "Off"
+msgstr "Aus"
 
 #: tfrm_config.lbl_sw_redo.caption
 msgctxt "tfrm_config.lbl_sw_redo.caption"
 msgid "Ein"
-msgstr "On"
+msgstr "Ein"
 
 #: tfrm_config.lbl_tm.caption
 msgid "Automatisch nach Updates suchen und nach Zeitplan installieren"
-msgstr "Search and install Updates on schedule"
+msgstr "Automatisch nach Updates suchen und nach Zeitplan installieren"
 
-# not nessesary in english
 #: tfrm_config.lbl_um_plan.caption
 msgid "um"
-msgstr " "
+msgstr "um"
 
 #: tfrm_config.lbl_zhs.caption
 msgid "Hauptseite"
-msgstr "Main page"
+msgstr "Hauptseite"
 
 #: tfrm_config.lb_day.caption
 msgctxt "tfrm_config.lb_day.caption"
 msgid "Tag"
-msgstr "Day"
+msgstr "Tag"
 
 #: tfrm_config.lb_time.caption
 msgctxt "tfrm_config.lb_time.caption"
 msgid "Zeit"
-msgstr "Time"
+msgstr "Zeit"
 
 #: tfrm_config.opnd_starlist.title
 msgid "SternenListe laden"
-msgstr "Load BodyList"
+msgstr "SternenListe laden"
 
 #: tfrm_config.pnl_ueber.caption
 msgid "                  SpaceOrienter - Einstellungen"
-msgstr "                  SpaceOrienter - Settings"
+msgstr "                  SpaceOrienter - Einstellungen"
 
 #: tfrm_config.te_plan.textfornulldate
 msgctxt "tfrm_config.te_plan.textfornulldate"
@@ -428,20 +427,20 @@ msgstr "NULL"
 
 #: tfrm_gethotkey.btbtn_cancel.caption
 msgid "Abbrechen"
-msgstr "Cancel"
+msgstr "Abbrechen"
 
 #: tfrm_gethotkey.caption
 msgctxt "tfrm_gethotkey.caption"
 msgid "Hotkey fangen"
-msgstr "Catch Hotkey"
+msgstr "Hotkey fangen"
 
 #: tfrm_gethotkey.lbl_gethotkey.caption
 msgid "Jetzt Hokey eingeben"
-msgstr "Hit Hotkeys now"
+msgstr "Jetzt Hokey eingeben"
 
 #: tfrm_main.bitbtn_navigate_main.caption
 msgid "& Anfahren"
-msgstr "& Navigate"
+msgstr "& Anfahren"
 
 #: tfrm_main.caption
 msgctxt "tfrm_main.caption"
@@ -457,21 +456,21 @@ msgstr "Normal"
 #, fuzzy
 msgctxt "tfrm_main.ed_search4bdy_list.text"
 msgid "Suchen..."
-msgstr "Search for..."
+msgstr "Suchen..."
 
 #: tfrm_main.ed_search4bdy_main.text
 msgctxt "tfrm_main.ed_search4bdy_main.text"
 msgid "Suchen..."
-msgstr "Search for..."
+msgstr "Suchen..."
 
 #: tfrm_main.imgmn_menue.menuitems[0].caption
 msgid "Übersicht"
-msgstr "Dashboard"
+msgstr "Übersicht"
 
 #: tfrm_main.imgmn_menue.menuitems[1].caption
 msgctxt "tfrm_main.imgmn_menue.menuitems[1].caption"
 msgid "Sternenliste"
-msgstr "BodyList"
+msgstr "Sternenliste"
 
 #: tfrm_main.lbl_ardotype.caption
 msgid "ArduIno Leonardo"
@@ -485,7 +484,7 @@ msgstr "°"
 #: tfrm_main.lbl_azicalc_title.caption
 msgctxt "tfrm_main.lbl_azicalc_title.caption"
 msgid "Soll:"
-msgstr "Calc:"
+msgstr "Soll:"
 
 #: tfrm_main.lbl_azicalc_val.caption
 msgctxt "tfrm_main.lbl_azicalc_val.caption"
@@ -495,7 +494,7 @@ msgstr ""
 #: tfrm_main.lbl_azichart_title.caption
 msgctxt "tfrm_main.lbl_azichart_title.caption"
 msgid "Azimut"
-msgstr "Azimuth"
+msgstr "Azimut"
 
 #: tfrm_main.lbl_azinow_grd.caption
 msgctxt "tfrm_main.lbl_azinow_grd.caption"
@@ -505,7 +504,7 @@ msgstr "°"
 #: tfrm_main.lbl_azinow_title.caption
 msgctxt "tfrm_main.lbl_azinow_title.caption"
 msgid "Jetzt:"
-msgstr "Now:"
+msgstr "Jetzt:"
 
 #: tfrm_main.lbl_azinow_val.caption
 msgctxt "tfrm_main.lbl_azinow_val.caption"
@@ -515,7 +514,7 @@ msgstr ""
 #: tfrm_main.lbl_bdyprpty_title.caption
 msgctxt "tfrm_main.lbl_bdyprpty_title.caption"
 msgid "Eigenschaften"
-msgstr "Properties"
+msgstr "Eigenschaften"
 
 #: tfrm_main.lbl_bdyprpty_val1.caption
 msgctxt "tfrm_main.lbl_bdyprpty_val1.caption"
@@ -549,12 +548,12 @@ msgstr "/"
 #: tfrm_main.lbl_bdy_title.caption
 msgctxt "tfrm_main.lbl_bdy_title.caption"
 msgid "Himmelskörper"
-msgstr "Luminary"
+msgstr "Himmelskörper"
 
 #: tfrm_main.lbl_comstate.caption
 msgctxt "tfrm_main.lbl_comstate.caption"
 msgid "Nicht verbunden"
-msgstr "Not connceted"
+msgstr "Nicht verbunden"
 
 #: tfrm_main.lbl_date.caption
 msgctxt "tfrm_main.lbl_date.caption"
@@ -569,7 +568,7 @@ msgstr "°"
 #: tfrm_main.lbl_elecalc_title.caption
 msgctxt "tfrm_main.lbl_elecalc_title.caption"
 msgid "Soll:"
-msgstr "Calc:"
+msgstr "Soll:"
 
 #: tfrm_main.lbl_elecalc_val.caption
 msgctxt "tfrm_main.lbl_elecalc_val.caption"
@@ -589,7 +588,7 @@ msgstr "°"
 #: tfrm_main.lbl_elenow_title.caption
 msgctxt "tfrm_main.lbl_elenow_title.caption"
 msgid "Jetzt:"
-msgstr "Now:"
+msgstr "Jetzt:"
 
 #: tfrm_main.lbl_elenow_val.caption
 msgctxt "tfrm_main.lbl_elenow_val.caption"
@@ -599,7 +598,7 @@ msgstr ""
 #: tfrm_main.lbl_magdvtn_title.caption
 msgctxt "tfrm_main.lbl_magdvtn_title.caption"
 msgid "Missweisung"
-msgstr "Magn. variation"
+msgstr "Missweisung"
 
 #: tfrm_main.lbl_magdvtn_val.caption
 msgctxt "tfrm_main.lbl_magdvtn_val.caption"
@@ -608,16 +607,16 @@ msgstr ""
 
 #: tfrm_main.lbl_place_name.caption
 msgid "Berlin"
-msgstr "Berlin"
+msgstr ""
 
 #: tfrm_main.lbl_place_title.caption
 msgid "Ort:"
-msgstr "Location:"
+msgstr "Ort:"
 
 #: tfrm_main.lbl_settings.caption
 msgctxt "tfrm_main.lbl_settings.caption"
 msgid "Einstellungen"
-msgstr "Settings"
+msgstr "Einstellungen"
 
 #: tfrm_main.lbl_time.caption
 msgctxt "tfrm_main.lbl_time.caption"
@@ -633,56 +632,56 @@ msgstr "Update!"
 #| msgid "Nummer"
 msgctxt "tfrm_main.lv_bodylist.columns[0].caption"
 msgid "Nummer "
-msgstr "Number"
+msgstr "Nummer"
 
 #: tfrm_main.lv_bodylist.columns[1].caption
 #, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[1].caption"
 msgid "Himmelskörper"
-msgstr "Luminary"
+msgstr "Himmelskörper"
 
 #: tfrm_main.lv_bodylist.columns[2].caption
 #, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[2].caption"
 msgid "Latein"
-msgstr "Latin"
+msgstr "Latein"
 
 #: tfrm_main.lv_bodylist.columns[3].caption
 #, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[3].caption"
 msgid "Eigenschaften"
-msgstr "Properties"
+msgstr "Eigenschaften"
 
 #: tfrm_main.lv_bodylist.columns[4].caption
 #, fuzzy
 #| msgid "Eigenschaften"
 msgctxt "tfrm_main.lv_bodylist.columns[4].caption"
 msgid "Sternbild"
-msgstr "Properties"
+msgstr "Eigenschaften"
 
 #: tfrm_main.lv_bodylist.columns[5].caption
 #, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[5].caption"
 msgid "Rezi °"
-msgstr "RAscn °"
+msgstr "Rezi °"
 
 #: tfrm_main.lv_bodylist.columns[6].caption
 #, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[6].caption"
 msgid "Rezi Min"
-msgstr "RAscn Min"
+msgstr "Rezi Min"
 
 #: tfrm_main.lv_bodylist.columns[7].caption
 #, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[7].caption"
 msgid "Dekli °"
-msgstr "Decli °"
+msgstr "Dekli °"
 
 #: tfrm_main.lv_bodylist.columns[8].caption
 #, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[8].caption"
 msgid "Dekli Min"
-msgstr "Decli Min"
+msgstr "Dekli Min"
 
 #: tfrm_main.pnl_header.caption
 msgctxt "tfrm_main.pnl_header.caption"
@@ -699,12 +698,12 @@ msgstr "Get me to the new Otions!"
 
 #: tfrm_spori.bt_pilot.caption
 msgid "& Position anfahren"
-msgstr "& Navigate"
+msgstr "& Position anfahren"
 
 #: tfrm_spori.bt_pilot_strlst.caption
 msgctxt "tfrm_spori.bt_pilot_strlst.caption"
 msgid "Anfahren"
-msgstr "Navigate"
+msgstr "& Anfahren"
 
 #: tfrm_spori.caption
 msgctxt "tfrm_spori.caption"
@@ -714,12 +713,12 @@ msgstr "SpaceOrienter"
 #: tfrm_spori.cb_hk.text
 msgctxt "tfrm_spori.cb_hk.text"
 msgid "Himmelskörper"
-msgstr "Luminary"
+msgstr "Himmelskörper"
 
 #: tfrm_spori.cb_stb.text
 msgctxt "tfrm_spori.cb_stb.text"
 msgid "Sternbild"
-msgstr "Constellation"
+msgstr "Sternbild"
 
 #: tfrm_spori.cb_strmode.text
 msgctxt "tfrm_spori.cb_strmode.text"
@@ -739,7 +738,7 @@ msgstr ""
 #: tfrm_spori.ed_egstn.text
 msgctxt "tfrm_spori.ed_egstn.text"
 msgid "Eigenschaften"
-msgstr "Properties"
+msgstr "Eigenschaften"
 
 #: tfrm_spori.ed_ele_ist.text
 msgctxt "tfrm_spori.ed_ele_ist.text"
@@ -754,7 +753,7 @@ msgstr ""
 #: tfrm_spori.ed_mswg.text
 msgctxt "tfrm_spori.ed_mswg.text"
 msgid "Missweisung"
-msgstr "Magn. variation"
+msgstr "Missweisung"
 
 #: tfrm_spori.ed_nr.text
 msgctxt "tfrm_spori.ed_nr.text"
@@ -764,71 +763,71 @@ msgstr ""
 #: tfrm_spori.ed_such.text
 msgctxt "tfrm_spori.ed_such.text"
 msgid "Suchen..."
-msgstr "Search for..."
+msgstr "Suchen..."
 
 #: tfrm_spori.gb_azi.caption
 msgctxt "tfrm_spori.gb_azi.caption"
 msgid "Azimut"
-msgstr "Azimuth"
+msgstr "Azimut"
 
 #: tfrm_spori.gb_brg.caption
 msgctxt "tfrm_spori.gb_brg.caption"
 msgid "Berechnet"
-msgstr "Calculated"
+msgstr "Berechnet"
 
 #: tfrm_spori.gb_brnt.caption
 msgctxt "tfrm_spori.gb_brnt.caption"
 msgid "Berechnet"
-msgstr "Calculated"
+msgstr "Berechnet"
 
 #: tfrm_spori.gb_frpnk.caption
 msgid "FrühlingsPunkt"
-msgstr "First Point of Aries"
+msgstr "FrühlingsPunkt"
 
 #: tfrm_spori.gb_ist.caption
 msgid "Ist"
-msgstr "Now"
+msgstr "Ist"
 
 #: tfrm_spori.gb_lage.caption
 msgid "SternenLage"
-msgstr "Star location"
+msgstr "SternenLage"
 
 #: tfrm_spori.gb_mswg.caption
 msgctxt "tfrm_spori.gb_mswg.caption"
 msgid "Missweisung"
-msgstr "Magn. variation"
+msgstr "Missweisung"
 
 #: tfrm_spori.gb_soll.caption
 msgid "Soll"
-msgstr "Calc."
+msgstr "Soll"
 
 #: tfrm_spori.gb_wink.caption
 msgctxt "tfrm_spori.gb_wink.caption"
 msgid "Winkel"
-msgstr "Angle"
+msgstr "Winkel"
 
 #: tfrm_spori.gb_wink1.caption
 msgctxt "tfrm_spori.gb_wink1.caption"
 msgid "Winkel"
-msgstr "Angle"
+msgstr "Winkel"
 
 #: tfrm_spori.gb_zeit.caption
 msgctxt "tfrm_spori.gb_zeit.caption"
 msgid "Zeit"
-msgstr "Time"
+msgstr "Zeit"
 
 #: tfrm_spori.gb_zeit1.caption
 msgctxt "tfrm_spori.gb_zeit1.caption"
 msgid "Zeit"
-msgstr "Time"
+msgstr "Zeit"
 
 #: tfrm_spori.lbakfrpnk_.caption
 msgid ""
 "Aktueller\n"
 "Frühlingspunkt\n"
 msgstr ""
-"Current First \n"
-"Point of Aries\n"
+"Aktueller\n"
+"Frühlingspunkt\n"
 
 #: tfrm_spori.lb_akfrpnk.caption
 msgctxt "tfrm_spori.lb_akfrpnk.caption"
@@ -848,7 +847,7 @@ msgstr ""
 #: tfrm_spori.lb_azi.caption
 msgctxt "tfrm_spori.lb_azi.caption"
 msgid "Azimut"
-msgstr "Azimuth"
+msgstr "Azimut"
 
 #: tfrm_spori.lb_az_.caption
 msgctxt "tfrm_spori.lb_az_.caption"
@@ -856,8 +855,8 @@ msgid ""
 "Azimut \n"
 "(berechnet)\n"
 msgstr ""
-"Azimuth\n"
-"(Calculated)\n"
+"Azimut \n"
+"(berechnet)\n"
 
 #: tfrm_spori.lb_az_1.caption
 msgctxt "tfrm_spori.lb_az_1.caption"
@@ -865,8 +864,8 @@ msgid ""
 "Azimut \n"
 "(berechnet)\n"
 msgstr ""
-"Azimuth\n"
-"(Calculated)\n"
+"Azimut \n"
+"(berechnet)\n"
 
 #: tfrm_spori.lb_az_grd1.caption
 msgctxt "tfrm_spori.lb_az_grd1.caption"
@@ -880,7 +879,7 @@ msgstr ""
 
 #: tfrm_spori.lb_az_n_.caption
 msgid "Azimut Nenner"
-msgstr "Denominator"
+msgstr "Azimut Nenner"
 
 #: tfrm_spori.lb_az_z.caption
 msgctxt "tfrm_spori.lb_az_z.caption"
@@ -889,7 +888,7 @@ msgstr ""
 
 #: tfrm_spori.lb_az_z_.caption
 msgid "Azimut Zähler"
-msgstr "Numerator"
+msgstr "Azimut Zähler"
 
 #: tfrm_spori.lb_beta.caption
 msgctxt "tfrm_spori.lb_beta.caption"
@@ -908,11 +907,11 @@ msgstr ""
 #: tfrm_spori.lb_day_.caption
 msgctxt "tfrm_spori.lb_day_.caption"
 msgid "Tag"
-msgstr "Day"
+msgstr "Tag"
 
 #: tfrm_spori.lb_dekli_.caption
 msgid "Deklination"
-msgstr "Declination"
+msgstr "Deklination"
 
 #: tfrm_spori.lb_dekli_grd.caption
 msgctxt "tfrm_spori.lb_dekli_grd.caption"
@@ -940,12 +939,12 @@ msgstr ""
 
 #: tfrm_spori.lb_diff_.caption
 msgid "Differenz"
-msgstr "Deviation"
+msgstr "Differenz"
 
 #: tfrm_spori.lb_egnstn.caption
 msgctxt "tfrm_spori.lb_egnstn.caption"
 msgid "Eigenschaften"
-msgstr "Properties"
+msgstr "Eigenschaften"
 
 #: tfrm_spori.lb_el.caption
 msgctxt "tfrm_spori.lb_el.caption"
@@ -968,8 +967,8 @@ msgid ""
 "Elevation \n"
 "(berechnet)\n"
 msgstr ""
-"Elevation\n"
-"(Calculated)\n"
+"Elevation \n"
+"(berechnet)\n"
 
 #: tfrm_spori.lb_el_1.caption
 msgctxt "tfrm_spori.lb_el_1.caption"
@@ -977,8 +976,8 @@ msgid ""
 "Elevation \n"
 "(berechnet)\n"
 msgstr ""
-"Elevation\n"
-"(Calculated)\n"
+"Elevation \n"
+"(berechnet)\n"
 
 #: tfrm_spori.lb_el_grd_.caption
 msgctxt "tfrm_spori.lb_el_grd_.caption"
@@ -992,7 +991,7 @@ msgstr ""
 
 #: tfrm_spori.lb_franf_.caption
 msgid "Frühingsanfang"
-msgstr "First day of Spring"
+msgstr "Frühingsanfang"
 
 #: tfrm_spori.lb_frpnk.caption
 msgctxt "tfrm_spori.lb_frpnk.caption"
@@ -1001,7 +1000,7 @@ msgstr ""
 
 #: tfrm_spori.lb_frpnk_.caption
 msgid "Frühjahrspunkt"
-msgstr "First Point of Aries"
+msgstr "Frühjahrspunkt"
 
 #: tfrm_spori.lb_gmt.caption
 msgctxt "tfrm_spori.lb_gmt.caption"
@@ -1053,12 +1052,12 @@ msgstr ""
 
 #: tfrm_spori.lb_gsft_.caption
 msgid "Gradshift"
-msgstr "Degree shift"
+msgstr "Gradshift"
 
 #: tfrm_spori.lb_hk.caption
 msgctxt "tfrm_spori.lb_hk.caption"
 msgid "Himmelskörper"
-msgstr "Luminary"
+msgstr "Himmelskörper"
 
 #: tfrm_spori.lb_hour.caption
 msgctxt "tfrm_spori.lb_hour.caption"
@@ -1067,7 +1066,7 @@ msgstr ""
 
 #: tfrm_spori.lb_hour_.caption
 msgid "Stunde"
-msgstr "Hour"
+msgstr "Stunde"
 
 #: tfrm_spori.lb_jhr.caption
 msgctxt "tfrm_spori.lb_jhr.caption"
@@ -1076,7 +1075,7 @@ msgstr ""
 
 #: tfrm_spori.lb_jhr_.caption
 msgid "Jahr"
-msgstr "Year"
+msgstr "Jahr"
 
 #: tfrm_spori.lb_lat.caption
 msgctxt "tfrm_spori.lb_lat.caption"
@@ -1115,7 +1114,7 @@ msgstr "Longitude"
 
 #: tfrm_spori.lb_lon1.caption
 msgid "Londitude"
-msgstr "Longitude"
+msgstr "Londitude"
 
 #: tfrm_spori.lb_lon_g.caption
 msgctxt "tfrm_spori.lb_lon_g.caption"
@@ -1144,11 +1143,11 @@ msgstr ""
 
 #: tfrm_spori.lb_mez_.caption
 msgid "MEZ:"
-msgstr "CET:"
+msgstr "MEZ:"
 
 #: tfrm_spori.lb_mez_.hint
 msgid "MittelEuropäische Zeit"
-msgstr "Central European Time"
+msgstr "MittelEuropäische Zeit"
 
 #: tfrm_spori.lb_min.caption
 msgctxt "tfrm_spori.lb_min.caption"
@@ -1176,12 +1175,12 @@ msgstr ""
 
 #: tfrm_spori.lb_mon_.caption
 msgid "Monat"
-msgstr "Month"
+msgstr "Monat"
 
 #: tfrm_spori.lb_mswg.caption
 msgctxt "tfrm_spori.lb_mswg.caption"
 msgid "Missweisung"
-msgstr "Magn. variation"
+msgstr "Missweisung"
 
 #: tfrm_spori.lb_mswg1.caption
 msgctxt "tfrm_spori.lb_mswg1.caption"
@@ -1191,7 +1190,7 @@ msgstr ""
 #: tfrm_spori.lb_mswg1_.caption
 msgctxt "tfrm_spori.lb_mswg1_.caption"
 msgid "Missweisung"
-msgstr "Magn. variation"
+msgstr "Missweisung"
 
 #: tfrm_spori.lb_nr.caption
 msgctxt "tfrm_spori.lb_nr.caption"
@@ -1205,11 +1204,11 @@ msgstr ""
 
 #: tfrm_spori.lb_otz_.caption
 msgid "OrtsZeit UT"
-msgstr "Local time UTC"
+msgstr "OrtsZeit UTC"
 
 #: tfrm_spori.lb_rtzn_.caption
 msgid "Rektaszension"
-msgstr "Right ascension"
+msgstr "Rektaszension"
 
 #: tfrm_spori.lb_rtzn_grd.caption
 msgctxt "tfrm_spori.lb_rtzn_grd.caption"
@@ -1228,20 +1227,20 @@ msgstr ""
 
 #: tfrm_spori.lb_sek_.caption
 msgid "Sekunde"
-msgstr "Second"
+msgstr "Sekunde"
 
 #: tfrm_spori.lb_sk.caption
 msgctxt "tfrm_spori.lb_sk.caption"
 msgid "Sternbild"
-msgstr "Constellation"
+msgstr "Sternbild"
 
 #: tfrm_spori.lb_smrz1.caption
 msgid "Wahr"
-msgstr "True"
+msgstr "Wahr"
 
 #: tfrm_spori.lb_smrz_1.caption
 msgid "Sommerzeit"
-msgstr "Summertime"
+msgstr "Sommerzeit"
 
 #: tfrm_spori.lb_stwk.caption
 msgctxt "tfrm_spori.lb_stwk.caption"
@@ -1250,7 +1249,7 @@ msgstr ""
 
 #: tfrm_spori.lb_stwk_.caption
 msgid "SternenWinkel"
-msgstr "Sidereal hour angle"
+msgstr "SternenWinkel"
 
 #: tfrm_spori.lb_t.caption
 msgctxt "tfrm_spori.lb_t.caption"
@@ -1291,77 +1290,77 @@ msgstr ""
 
 #: tfrm_spori.lb_zw_.caption
 msgid "Zeitwinkel"
-msgstr "Time angle"
+msgstr "Zeitwinkel"
 
 #: tfrm_spori.lv_list.columns[0].caption
 msgctxt "tfrm_spori.lv_list.columns[0].caption"
 msgid "Nummer"
-msgstr "Number"
+msgstr "Nummer"
 
 #: tfrm_spori.lv_list.columns[1].caption
 msgctxt "tfrm_spori.lv_list.columns[1].caption"
 msgid "Himmelskörper"
-msgstr "Luminary"
+msgstr "Himmelskörper"
 
 #: tfrm_spori.lv_list.columns[2].caption
 msgctxt "tfrm_spori.lv_list.columns[2].caption"
 msgid "Latein"
-msgstr "Latin"
+msgstr "Latein"
 
 #: tfrm_spori.lv_list.columns[3].caption
 msgctxt "tfrm_spori.lv_list.columns[3].caption"
 msgid "Sternbild"
-msgstr "Constellation"
+msgstr "Sternbild"
 
 #: tfrm_spori.lv_list.columns[4].caption
 msgctxt "tfrm_spori.lv_list.columns[4].caption"
 msgid "Eigenschaften"
-msgstr "Properties"
+msgstr "Eigenschaften"
 
 #: tfrm_spori.lv_list.columns[5].caption
 msgctxt "tfrm_spori.lv_list.columns[5].caption"
 msgid "Rezi °"
-msgstr "RAscn °"
+msgstr "Rezi °"
 
 #: tfrm_spori.lv_list.columns[6].caption
 msgctxt "tfrm_spori.lv_list.columns[6].caption"
 msgid "Rezi Min"
-msgstr "RAscn Min"
+msgstr "Rezi Min"
 
 #: tfrm_spori.lv_list.columns[7].caption
 msgctxt "tfrm_spori.lv_list.columns[7].caption"
 msgid "Dekli °"
-msgstr "Decli °"
+msgstr "Dekli °"
 
 #: tfrm_spori.lv_list.columns[8].caption
 msgctxt "tfrm_spori.lv_list.columns[8].caption"
 msgid "Dekli Min"
-msgstr "Decli Min"
+msgstr "Dekli Min"
 
 #: tfrm_spori.mi_anfahren.caption
 msgctxt "tfrm_spori.mi_anfahren.caption"
 msgid "Anfahren"
-msgstr "Navigate"
+msgstr "& Anfahren"
 
 #: tfrm_spori.mi_connection.caption
 msgid "Verbindung..."
-msgstr "Connection..."
+msgstr "Verbindung..."
 
 #: tfrm_spori.mi_dar_quit.caption
 msgid "Beenden"
-msgstr "Quit"
+msgstr "Beenden"
 
 #: tfrm_spori.mi_datschutz.caption
 msgid "Datenschutz"
-msgstr "Privacy"
+msgstr "Datenschutz"
 
 #: tfrm_spori.mi_hilf_feh.caption
 msgid "Fehler melden"
-msgstr "Report Bug"
+msgstr "Fehler melden"
 
 #: tfrm_spori.mi_hilf_on.caption
 msgid "Online Hilfe"
-msgstr "Online Help"
+msgstr "Online Hilfe"
 
 #: tfrm_spori.mi_hilf_up.caption
 msgid "Update"
@@ -1369,33 +1368,33 @@ msgstr "Update"
 
 #: tfrm_spori.mi_sicht_exp.caption
 msgid "Experten Mode"
-msgstr "Expert mode"
+msgstr "Experten Mode"
 
 #: tfrm_spori.mi_stnlist.caption
 msgid "SternenListe"
-msgstr "BodyList"
+msgstr "SternenListe"
 
 #: tfrm_spori.mi_stnlist_chng.caption
 msgctxt "tfrm_spori.mi_stnlist_chng.caption"
 msgid "Liste bearbeiten"
-msgstr "Edit list"
+msgstr "Liste bearbeiten"
 
 #: tfrm_spori.mi_stnlist_load.caption
 msgid "Liste Laden"
-msgstr "Load list"
+msgstr "Liste Laden"
 
 #: tfrm_spori.mi_stn_rstt.caption
 msgid "Liste Zurücksetzen"
-msgstr "Reset list"
+msgstr "Liste Zurücksetzen"
 
 #: tfrm_spori.mi_such.caption
 msgctxt "tfrm_spori.mi_such.caption"
 msgid "Suchen..."
-msgstr "Search for..."
+msgstr "Suchen..."
 
 #: tfrm_spori.mi_ueber.caption
 msgid "Über"
-msgstr "About"
+msgstr "Über"
 
 #: tfrm_spori.mi_unbe2.caption
 msgctxt "tfrm_spori.mi_unbe2.caption"
@@ -1409,37 +1408,37 @@ msgstr ""
 
 #: tfrm_spori.mmo_bsbg.hint
 msgid "Beschreibung der Modi"
-msgstr "Description of modes"
+msgstr "Beschreibung der Modi"
 
 #: tfrm_spori.mp_hilf_off.caption
 msgid "Offline Hilfe"
-msgstr "Offline Help"
+msgstr "Offline Hilfe"
 
 #: tfrm_spori.m_dat.caption
 msgid "Datei"
-msgstr "File"
+msgstr "Datei"
 
 #: tfrm_spori.m_hilf.caption
 msgid "Hilfe"
-msgstr "Help"
+msgstr "Hilfe"
 
 #: tfrm_spori.m_sicht.caption
 msgid "Ansicht"
-msgstr "View"
+msgstr "Ansicht"
 
 #: tfrm_spori.m_stern.caption
 msgctxt "tfrm_spori.m_stern.caption"
 msgid "Himmelskörper"
-msgstr "Luminary"
+msgstr "Himmelskörper"
 
 #: tfrm_spori.tbs_einst.caption
 msgctxt "tfrm_spori.tbs_einst.caption"
 msgid "Einstellungen"
-msgstr "Settings"
+msgstr "Einstellungen"
 
 #: tfrm_spori.tbs_ephi.caption
 msgid "Ephemeriden"
-msgstr "Ephemeris"
+msgstr "Ephemeriden"
 
 #: tfrm_spori.tbs_inter.caption
 msgid "Interface"
@@ -1447,10 +1446,10 @@ msgstr "Interface"
 
 #: tfrm_spori.tbs_lag.caption
 msgid "Lageberechnung"
-msgstr "Star calculation"
+msgstr "Lageberechnung"
 
 #: tfrm_spori.tbs_stlst.caption
 msgctxt "tfrm_spori.tbs_stlst.caption"
 msgid "Sternenliste"
-msgstr "BodyList"
+msgstr "Sternenliste"
 
