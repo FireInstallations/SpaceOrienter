@@ -4025,7 +4025,7 @@ object Frm_Spori: TFrm_Spori
     Enabled = False
     Interval = 250
     OnTimer = Tmr_Calc_All
-    left = 608
+    left = 672
   end
   object PpNt: TPopupNotifier
     Color = 14483455
@@ -4053,11 +4053,5 @@ object Frm_Spori: TFrm_Spori
     Options = [frHideWholeWord, frHideUpDown, frHideEntireScope, frHidePromptOnReplace]
     OnFind = FndDFind
     left = 632
-  end
-  object Tmr_GetData: TTimer
-    Enabled = False
-    Interval = 100
-    OnTimer = Tmr_GetDataTimer
-    left = 662
   end
 end

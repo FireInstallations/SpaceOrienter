@@ -2378,11 +2378,13 @@ function  InitPlanetEphem(deNum: integer): boolean;
 procedure EndPlanetEphem();
   begin
     if NRASSIGNED then
-      CloseFile(NRFILE);
+      begin
+        CloseFile(NRFILE);
+        NRASSIGNED := False;
+      end;
 
-    NRASSIGNED := False;
-
-    fileYear := -100000;
+    If fileYear <> -100000 then
+      fileYear := -100000;
   end;
 
 function  CheckBinaryFileHeader(const deSolution: integer; const ET: Real): integer;  //Read

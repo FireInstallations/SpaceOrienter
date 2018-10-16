@@ -267,7 +267,9 @@ interface
     If you want to do somthing about take a look at the ToDoList (below)
    }
 
+  //Make sure ser is closed and freed in any possible case --> make it a global varible, so finalization works or  use destructor of TFrm_Spori
   {ToDo List:
+    Add Compas to charts in (new) main from, so it becomes more clear Up means Up / North and down mean Dorn / South
     Range check while reading from config file (is it greater then a possible string / memory?
     Keep in mind: http://wiki.freepascal.org/Secure_programming
     Use http://wiki.freepascal.org/TTaskDialog for custom buttons
@@ -369,9 +371,9 @@ interface
     clocale, process, {Unix,}
     //baseunix,
     //lclintf,
-    {$IFDEF LCLCarbon}
+      {$IFDEF LCLCarbon}
     MacOSAll,
-    {$ENDIF}
+      {$ENDIF}
     {$EndIf}
 
     gettext, LazUTF8,
@@ -423,6 +425,53 @@ interface
       BMd_Constellation,
       BMd_Search
       );
+
+
+    TArmConnect = class(TThread)
+      private
+          {Handel for the connecteion to the arduino (Synapser)}
+          ser: TBlockSerial;
+
+          {}
+          FConnectionStatus: Boolean;
+          FReconnectStatus: Boolean;
+          FPort: String;
+          FBaudRate: Word;
+          FNewConnect: Boolean;
+
+          {In / Out data}
+          FSendAzimuth: Real;
+          FSendElevation: Real;
+          FReceiveAzimuth: Real;
+          FReceiveElevation: Real;
+
+        procedure Connect ();
+        function ReceiveData (): Boolean;
+
+      protected
+        procedure Execute; override;
+        procedure ShowReceivedData ();
+
+      public
+        Constructor Create(const CreateSuspended : boolean = True);
+        Destructor  Destroy();  override;
+
+        {The port we are trying t connect to, in windows it's called ComPort.}
+        property Port: String read FPort write FPort;
+        {Determines how fast the state of the Bits can change per secound.
+        However, setting the value higher doesn't mean automaticly the connection is also faster}
+        property BaudRate: Word read FBaudRate write FBaudRate;
+
+        property NewConnect: Boolean read FNewConnect write FNewConnect;
+        {stores ser.InstanceActive status.
+        that means it is true as long as we are connected}
+        property IsConnected: Boolean read FConnectionStatus;
+        {If we should try to automaticly reconnect if we lost the connection}
+        property Reconnect: Boolean read FReconnectStatus write FReconnectStatus;
+        {The new Outgoing Data}
+        property SendAzimuth: Real read FSendAzimuth write FSendAzimuth;
+        property SendElevation: Real read FSendElevation write FSendElevation;
+      end;
 
       { TFrm_Spori }
 
@@ -583,7 +632,6 @@ interface
         TbS_Inter: TTabSheet;
         TbS_Lag: TTabSheet;
         TbS_StLst: TTabSheet;
-        Tmr_GetData: TTimer;
         Tmr_Nach: TTimer;
         Tmr_Berech: TTimer;
         TbS_Ephi: TTabSheet;
@@ -647,7 +695,7 @@ interface
          where Star, ehem location calculating is called}
         procedure Tmr_Calc_All(Sender: TObject);
         {Read incomming data from the ArduIno}
-        procedure Tmr_GetDataTimer(Sender: TObject);
+        //procedure Tmr_GetDataTimer(Sender: TObject);
         {Follow moving bodys}
         procedure Tmr_Follow(Sender: TObject);
       private
@@ -700,8 +748,6 @@ interface
           {Contains the last Keys pressed in a row}
           PressedKeys: Set of byte;
 
-          {Handel for the connecteion to the arduino (Synapser)}
-          ser: TBlockSerial;
           {boolean to determine if we loaded all Options correctly}
           OptionsLoaded: Boolean;
       public
@@ -767,10 +813,163 @@ interface
 
   var
     Frm_Spori: TFrm_Spori;
+    ARMConnection: TArmConnect;
 
 implementation
 
   {$R *.lfm}
+
+  {TARMConnect}
+
+Constructor TArmConnect.Create (const CreateSuspended : boolean);
+  begin
+    inherited Create (CreateSuspended); // because this is black box in OOP and can reset inherited to the opposite again...
+    FreeOnTerminate := True;
+
+    ser := TBlockSerial.Create;
+
+    SendAzimuth       := -404;
+    SendElevation     := -404;
+    FReceiveAzimuth   := 0;
+    FReceiveElevation := 0;
+    Port              := '';
+    BaudRate          := 9600;
+
+    FConnectionStatus := false;
+    NewConnect        := false;
+  end;
+
+Destructor TArmConnect.Destroy (); //Done
+  begin
+    if Assigned(ser) then
+      begin
+        //If the buffer was not emty
+        if (ser.WaitingData > 0) or (ser.CanRead(0)) then
+          //Clear buffer
+          ser.Purge;
+
+        //close conncetion and free memory (importend, without you can't connect again, until next restart)
+        ser.CloseSocket;
+        ser.Free;
+      end;
+
+    inherited Destroy ();
+  end;
+
+procedure TArmConnect.Connect (); //ToDo: Detect Arduinotype (and if it is the Spori)
+  begin
+    //Close Connection if there is one
+    if (ser.InstanceActive) then
+      begin
+         ser.CloseSocket;
+
+        //empty all buffers
+        ser.Purge;
+      end;
+
+    //Try to connect
+    ser.Connect(Port);
+    Sleep(700);
+
+    if ser.InstanceActive then
+      begin
+        //configure
+        ser.config(BaudRate, 8, 'N', SB1, False, False); //Is this nessesaryfor ervery connection?
+        Sleep(500);
+      end
+    else //Didn't worked
+      ser.CloseSocket;
+  end;
+
+procedure TArmConnect.ShowReceivedData (); //Done
+  var
+    EleStr, AziStr: String;
+  begin
+    if IsConnected then
+      begin
+        //Get norm strings
+        AziStr := FloatToStrF(FReceiveAzimuth, ffFixed, 3, 2);
+        EleStr := FloatToStrF(FReceiveElevation, ffFixed, 3, 2);
+
+        //Show the value on old Mainform
+        with Frm_Spori do
+          begin
+            Ed_Azi_Ist.Text := AziStr;
+            Ed_Ele_Ist.Text := EleStr;
+          end;
+
+          with Frm_Main do
+            begin
+              //Shows the new Data on new MainFrom too
+              Lbl_AziNow_Val.Caption := AziStr;
+              Lbl_EleNow_Val.Caption := EleStr;
+
+              //Set the Position of the charts to the new value
+              SetShapePos(ShpN_AziNow, FReceiveAzimuth);
+              SetShapePos(ShpN_EleNow, FReceiveElevation);
+            end;
+        end;
+  end;
+
+function TArmConnect.ReceiveData (): Boolean; //Done
+  var
+    StrIn, StrVal: String;
+    BeginPos, Endpos: Byte;
+  begin
+    //Clear buffer if too much ingoing Data is waiting
+    //That are old values and wie don't need them.
+    if (ser.WaitingDataEx > 3) then
+      begin
+        ser.Purge;
+        Sleep(50);
+      end;
+
+    //If the Buffer was not emty in the next 100 milli secounds
+    if ser.CanRead(100) then
+      begin
+        //Get new Data
+        StrIn := ser.Recvstring (20);
+
+        //Make sure we can find the given floats
+        StrIn := StringReplace (StrIn, '.', DefaultFormatSettings.DecimalSeparator, [rfReplaceAll]);
+
+        //Message from ArduIno: >>ElevationNow;AzimuthNow;<<
+        //Get Elevation (Altitude)
+        Endpos := Pos(';', StrIn);
+        StrVal := Copy(StrIn, 1, pred(Endpos));
+        Result := TryStrToFloat(StrVal, FReceiveElevation);
+
+        //Get Azimuth
+        BeginPos := succ(Endpos);
+        Endpos   := PosEx(';', StrIn, BeginPos);
+        StrVal   := Copy(StrIn, BeginPos, Endpos-BeginPos);
+
+        //Result is only true, if we got both: elevation and azimuth
+        //So we will know if we got valid data
+        Result := Result and TryStrToFloat(StrVal, FReceiveAzimuth);
+      end;
+  end;
+
+procedure TArmConnect.Execute;
+  begin
+    if (not Terminated) and (NewConnect or (Reconnect and not IsConnected)) then
+       Connect ();
+
+    FConnectionStatus :=  ser.InstanceActive;
+
+    if (not Terminated) and IsConnected then
+      begin
+        if (SendAzimuth <> -404) and (SendElevation <> -404) then
+          ;
+
+        //If we got vailid input
+        if ReceiveData () then
+          //Give the new Data to the main thread
+          Synchronize(@ShowReceivedData);
+      end;
+  end;
+
+
 
   { Frm_Spori }
 
@@ -989,7 +1188,7 @@ procedure TFrm_Spori.GetComPorts (); //ToDo: look Up how Arduino IDE gets the po
     if (Ports.count = 0) then
       for i := 0 to 10 do
         Ports.Add('/dev/ttyACM' + IntToStr(i));
-    {$Else IfDef Windows} //Backfall if No ports where found
+    {$Else IfDef Windows} //Backfall if no ports where found
     if (Ports.count = 0) then
       for i := 0 to 10 do
         Ports.Add('COM' + IntToStr(i));
@@ -1002,20 +1201,21 @@ procedure TFrm_Spori.GetComPorts (); //ToDo: look Up how Arduino IDE gets the po
           BeginUpdate;
           try
              AddStrings(Ports, true);
+
           finally
             EndUpdate;
           end;
         end;
 
-                 if Index_R = 3 then
-                   if CB_StB.Items.IndexOf(AnsiLowerCase(Merke)) < 0 then
-                     if (Merke <> '-') and (AnsiLowerCase(Merke) <> 'unsichtbar') and (Merke <> '')then
-                       CB_StB.Items.Add(AnsiLowerCase(Merke));
+    Frm_Config.CmbBx_ComPort.ItemIndex := 0;
 
-function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect Arduinotype (and if it is the Spori); Synapser doesn't find right ports
+    FreeAndNil(Ports);
+  end;
+
+function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Synapser doesn't find right ports
   var
     Port: String;
-    Baud: integer;
+    Baud: Integer;
   begin
     //to make sure everything was loaded
     if OptionsLoaded then
@@ -1043,16 +1243,10 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
         //give the forms time to update
         Application.ProcessMessages;
 
-        //Close Connection if there is one
-        if (ser.InstanceActive) then
-          begin
-            ser.CloseSocket;
-            //empty all buffers
-            ser.Purge;
-          end;
-
         if not TryStrToInt(Frm_Config.CmbBx_Baud.Caption, Baud) then
-          Baud := 9600; //DefaultValue, shoud work, if there was no change at the Arduino
+          Baud := 9600; //DefaultValue, should work, if there was no change at the Arduino
+
+        ARMConnection.BaudRate := Baud;
 
         //Try to connect to all found ports
         if TryAll then
@@ -1060,14 +1254,10 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
             for Port in Frm_Config.CmbBx_ComPort.Items do
               begin
                 //Try to connect
-                ser.Connect(Port);
-                Delay(700);
+                ARMConnection.Port := Port;
 
-                //configure
-                ser.config(Baud, 8, 'N', SB1, False, False); //Is this nessesary?
-                Delay(500);
 
-                if (ser.InstanceActive) then
+               { if (ser.InstanceActive) then
                   begin
                     //We are connected, save the active port
                     Frm_Config.CmbBx_ComPort.Caption := Port;
@@ -1077,20 +1267,21 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
                   end
                 else
                   //It didn't worked, try next
-                  ser.CloseSocket;
+                  ser.CloseSocket; }
               end;
           end
         else
           begin
             //Connect to configured port
-            ser.Connect(Frm_Config.CmbBx_ComPort.Caption);
+            //ser.Connect(Frm_Config.CmbBx_ComPort.Caption);
             Delay(700);
-            ser.config(Baud, 8, 'N', SB1, False, False);
+            //ser.config(Baud, 8, 'N', SB1, False, False);
             Delay(500);
           end;
 
         //Set Result to the connections state
-        Result := ser.InstanceActive;
+        //Result := ser.InstanceActive;
+        Result := false;
 
         with Frm_Config, Frm_Main do
           begin
@@ -1137,10 +1328,7 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Detect 
          Application.ProcessMessages;
 
         //Read upcoming data from ArduIno, if connected
-        Tmr_GetData.Enabled := Result;
-
-          if not Result then
-            ser.CloseSocket;
+        //Tmr_GetData.Enabled := Result;
       end;
   end;
 
@@ -1158,8 +1346,8 @@ procedure TFrm_Spori.SendData (); //Done?
     AzStr  := FloatToStrF(Frm_Main.FltSpnEd_AziCalcManu.Value, ffFixed, 3, 5, PointAsSep);
 
     //If a Connection is active and stable elevation and azimuth to the ArduIno.
-    if ser.InstanceActive and ser.CanWrite(200) then
-        ser.SendString(EleStr + ';' + AzStr);
+    //if ser.InstanceActive and ser.CanWrite(200) then
+    //    ser.SendString(EleStr + ';' + AzStr);
 
   end;
 
@@ -2759,7 +2947,6 @@ procedure TFrm_Spori.FndDFind (Sender: TObject); //ToDo: move Connect to LoadOpt
 procedure TFrm_Spori.FormCreate (Sender: TObject); //Done?
   begin
     //initialize
-    ser := TBlockSerial.Create;
     OwnDir :=  ExtractFilePath(ParamStrUTF8(0));
     //old way:
     //OwnDir := GetCurrentDir();
@@ -2813,18 +3000,6 @@ procedure TFrm_Spori.FormDestroy (Sender: TObject);   //Version Dynamic; Comment
      Index: Integer;
      SaveStrings, LoadStrings: TStringList;
   begin
-    if Assigned(ser) then
-      begin
-        //If the buffer was not emty
-        if (ser.WaitingData > 0) or (ser.CanRead(0)) then
-          //Clear buffer
-          ser.Purge;
-
-        //close conncetion and free memory (importend, without you can't connect again, until next restart)
-        ser.CloseSocket;
-        FreeAndNil(ser);
-      end;
-
     EndPlanetEphem();
 
     SaveStrings := TStringlist.create;
@@ -2881,8 +3056,8 @@ procedure TFrm_Spori.FormDestroy (Sender: TObject);   //Version Dynamic; Comment
                      begin
                        TempValue := FindOptionValue(Line);
 
-                       //everything stayed the same, leave it like it was
-                       //Should simply be faster than replacing the one string whith the same
+                       //If everything stayed the same, leave it like it was
+                       //Should simply be faster than replacing a string whith the same one
                        if (TempValue = Options[TOptionNames(Index)]) then
                          begin
                            SaveStrings.Add(Line);
@@ -2890,8 +3065,9 @@ procedure TFrm_Spori.FormDestroy (Sender: TObject);   //Version Dynamic; Comment
                          end
                        else
                          //If there is no vaild value we ignore this line and
-                         //will add a new  line at the end, if it doesn't appear
+                         //will add a new line at the end, if it doesn't appear
                          //some where else. Since we don't know what else is in this line
+                         //please note: On_Hotkey can be emty if no Hotkey was choosen
                          if (TempValue <> '') or (TOptionNames(Index) = ON_Hotkey) then
                            begin
                              SaveStrings.Add(StringReplace(Line, TempValue, Options[TOptionNames(Index)], [rfIgnoreCase]));
@@ -2920,6 +3096,8 @@ procedure TFrm_Spori.FormDestroy (Sender: TObject);   //Version Dynamic; Comment
             FreeAndNil(SaveStrings);
          end;
        end;
+
+      //OptionsLoaded := false;
   end;
 
 procedure TFrm_Spori.FormKeyDown(Sender: TObject; var Key: Word; //Done
@@ -3130,52 +3308,6 @@ procedure TFrm_Spori.Tmr_Calc_All (Sender: TObject);   //ToDo: comments; Lb_Gmt 
     else
       CalculateStarLoc () ;
    end;
-
-procedure TFrm_Spori.Tmr_GetDataTimer (Sender: TObject); //ToDo: Comments
-  var
-     TempFloat: Real;
-     StrIn, StrVal: String;
-     Beginpos, Endpos: byte;
-  begin
-
-    if (ser.WaitingData > 3) then
-      begin
-        Delay(50);
-        ser.Purge;
-        Delay(50);
-      end;
-
-    if ser.InstanceActive and ser.CanRead(100) then
-      begin
-        StrIn := ser.Recvstring(20); //EleIst;AziIst;
-
-        StrIn := StringReplace(StrIn, '.', DefaultFormatSettings.DecimalSeparator, [rfReplaceAll]);
-
-        Endpos := Pos(';', StrIn);
-        StrVal := Copy(StrIn, 1, pred(Endpos));
-
-        if TryStrToFloat(StrVal, TempFloat) then
-          begin
-            StrVal := FloatToStrF(TempFloat, ffFixed, 3, 2);
-
-            Ed_Ele_Ist.Text := StrVal;
-
-            with Frm_Main do
-              begin
-                Lbl_EleNow_Val.Caption := StrVal;
-
-                SetShapePos(ShpN_EleNow, TempFloat);
-              end;
-          end;
-
-        BeginPos := succ(Endpos);
-        Endpos := PosEx(';', StrIn, BeginPos);
-        StrVal := Copy(StrIn, BeginPos, Endpos-BeginPos);
-
-        if TryStrToFloat(StrVal, TempFloat) then
-          Ed_Azi_Ist.Text := StrVal;
-      end;
-  end;
 
 procedure TFrm_Spori.Tmr_Follow (Sender: TObject); //Done?
   var

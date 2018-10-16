@@ -29,7 +29,7 @@ Resourcestring
   MLS_ConnectedWith      = 'Verbunden mit: ';
   MLS_NotConnected       = 'Nicht verbunden';
 
-  //Saved in Config file, as long as long as latin letters are used thex shuold stay english
+  //undo this maby do BoolToStr intead
   MLS_True               = 'True';
   MLS_False              = 'False';
 
