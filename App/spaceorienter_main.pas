@@ -360,9 +360,9 @@ interface
 
     Add proritys and kinds to this ToDoList like in examble below
 
-    TODO 02 -oFireInstall -cUser : Shortcuts
-    TODO 02 -oFireInstall -cCode : Beschreibung hinzufügen bei Lizenz
-    TODO 02 -oFireInstall -cFunc : Sternbildsuche - Liste}
+    ToDo 02 -oFireInstall -cUser : Shortcuts
+    ToDo 02 -oFireInstall -cCode : Beschreibung hinzufügen bei Lizenz
+    ToDo 02 -oFireInstall -cFunc : Sternbildsuche - Liste}
 
   uses
     {$IfDef Windows}
@@ -426,13 +426,13 @@ interface
       BMd_Search
       );
 
-
     TArmConnect = class(TThread)
+      //General: Using a Delay is pritty importend, the app would lag if sleep was used
       private
           {Handel for the connecteion to the arduino (Synapser)}
           ser: TBlockSerial;
 
-          {}
+          {Connection Info}
           FConnectionStatus: Boolean;
           FReconnectStatus: Boolean;
           FPort: String;
@@ -445,15 +445,25 @@ interface
           FReceiveAzimuth: Real;
           FReceiveElevation: Real;
 
+          Loop: TTimer;
+
+        {Try to connect to the ArduIno}
         procedure Connect ();
-        function ReceiveData (): Boolean;
+        {Send Azimuth and Elevation to ARM (ArduIno)}
+        procedure SendData ();
+        {Receive Azimuth and Elevation from ARM (ArduIno)}
+        function  ReceiveData (): Boolean;
+
+        {Like a While not Terminated loop but cleaner in code terms}
+        procedure OnLoopTimer (Sender: TObject);
 
       protected
         procedure Execute; override;
+        {Give the received data to the (main) form}
         procedure ShowReceivedData ();
 
       public
-        Constructor Create(const CreateSuspended : boolean = True);
+        Constructor Create(const CreateSuspended : boolean);
         Destructor  Destroy();  override;
 
         {The port we are trying t connect to, in windows it's called ComPort.}
@@ -469,8 +479,8 @@ interface
         {If we should try to automaticly reconnect if we lost the connection}
         property Reconnect: Boolean read FReconnectStatus write FReconnectStatus;
         {The new Outgoing Data}
-        property SendAzimuth: Real read FSendAzimuth write FSendAzimuth;
-        property SendElevation: Real read FSendElevation write FSendElevation;
+        property SendAzimuth: Real read FSendAzimuth  write FSendAzimuth;
+        property SendElevation: Real read FSendAzimuth write FSendElevation;
       end;
 
       { TFrm_Spori }
@@ -747,9 +757,6 @@ interface
           KeyCount: byte;
           {Contains the last Keys pressed in a row}
           PressedKeys: Set of byte;
-
-          {boolean to determine if we loaded all Options correctly}
-          OptionsLoaded: Boolean;
       public
         {path to the working area of the App, part of the imported pathes}
         property ListPath: String read DefaultListPath;
@@ -759,6 +766,8 @@ interface
         var
           {importend cofigurations, saved in Options.Space at the end}
           Options: Array[TOptionNames] of String;
+          {boolean to determine if we loaded all Options correctly}
+          OptionsLoaded: Boolean;
 
           {Diffrence between Now and the DateTime selected by the user
            Time goes on like expected but from point in time choosen by the user}
@@ -821,32 +830,44 @@ implementation
 
   {TARMConnect}
 
-Constructor TArmConnect.Create (const CreateSuspended : boolean);
+Constructor TArmConnect.Create (const CreateSuspended : boolean); //Done?
   begin
     inherited Create (CreateSuspended); // because this is black box in OOP and can reset inherited to the opposite again...
-    FreeOnTerminate := True;
+    FreeOnTerminate := False;
 
+    //New serial handel
     ser := TBlockSerial.Create;
 
-    SendAzimuth       := -404;
-    SendElevation     := -404;
+    //Setup intern used variables
     FReceiveAzimuth   := 0;
     FReceiveElevation := 0;
-    Port              := '';
-    BaudRate          := 9600;
+    Port := '';
+    BaudRate := 9600;
+    SendAzimuth := -404;
+    SendElevation := -404;
 
-    FConnectionStatus := false;
-    NewConnect        := false;
+    //Set Up timer (with no owner)
+    Loop := TTimer.Create(nil);
+    Loop.Interval := 500;  //The ArduIno sends itself with a rate of 500 ms. (Defaultly)
+    Loop.enabled  := false;
+    Loop.OnTimer  := @OnLoopTimer;
+
+    //Setup conncetion status
+    FConnectionStatus := true;
+    NewConnect := false;
+    Reconnect  := false;
   end;
 
-Destructor TArmConnect.Destroy (); //Done
+Destructor TArmConnect.Destroy (); //Done?
   begin
+    //Stop Timer if not already done and free it
+    Loop.Enabled := false;
+    FreeAndNil(Loop);
+
     if Assigned(ser) then
       begin
         //If the buffer was not emty
         if (ser.WaitingData > 0) or (ser.CanRead(0)) then
-          //Clear buffer
-          ser.Purge;
 
         //close conncetion and free memory (importend, without you can't connect again, until next restart)
         ser.CloseSocket;
@@ -856,58 +877,55 @@ Destructor TArmConnect.Destroy (); //Done
     inherited Destroy ();
   end;
 
-procedure TArmConnect.Connect (); //ToDo: Detect Arduinotype (and if it is the Spori)
+procedure TArmConnect.Connect (); //ToDo: Detect Arduinotype (and if it is the SpOri)
   begin
     //Close Connection if there is one
-    if (ser.InstanceActive) then
-      begin
+    if (ser.InstanceActive and (not Terminated)) then
          ser.CloseSocket;
 
-        //empty all buffers
-        ser.Purge;
-      end;
-
     //Try to connect
-    ser.Connect(Port);
-    Sleep(700);
+    if (not Terminated) then
+      begin
+        ser.Connect(Port);
+        Frm_Spori.Delay(700);
+      end;
 
     if ser.InstanceActive then
       begin
         //configure
         ser.config(BaudRate, 8, 'N', SB1, False, False); //Is this nessesaryfor ervery connection?
-        Sleep(500);
+        Frm_Spori.Delay(500);
       end
     else //Didn't worked
       ser.CloseSocket;
+
+    NewConnect := false;
   end;
 
 procedure TArmConnect.ShowReceivedData (); //Done
   var
     EleStr, AziStr: String;
   begin
-    if IsConnected then
+    //Get norm strings
+    AziStr := FloatToStrF(FReceiveAzimuth, ffFixed, 3, 2);
+    EleStr := FloatToStrF(FReceiveElevation, ffFixed, 3, 2);
+
+    //Show the value on old Mainform
+    with Frm_Spori do
       begin
-        //Get norm strings
-        AziStr := FloatToStrF(FReceiveAzimuth, ffFixed, 3, 2);
-        EleStr := FloatToStrF(FReceiveElevation, ffFixed, 3, 2);
+        Ed_Azi_Ist.Text := AziStr;
+        Ed_Ele_Ist.Text := EleStr;
+      end;
 
-        //Show the value on old Mainform
-        with Frm_Spori do
-          begin
-            Ed_Azi_Ist.Text := AziStr;
-            Ed_Ele_Ist.Text := EleStr;
-          end;
+      with Frm_Main do
+        begin
+          //Shows the new Data on new MainFrom too
+          Lbl_AziNow_Val.Caption := AziStr;
+          Lbl_EleNow_Val.Caption := EleStr;
 
-          with Frm_Main do
-            begin
-              //Shows the new Data on new MainFrom too
-              Lbl_AziNow_Val.Caption := AziStr;
-              Lbl_EleNow_Val.Caption := EleStr;
-
-              //Set the Position of the charts to the new value
-              SetShapePos(ShpN_AziNow, FReceiveAzimuth);
-              SetShapePos(ShpN_EleNow, FReceiveElevation);
-            end;
+          //Set the Position of the charts to the new value
+          SetShapePos(ShpN_AziNow, FReceiveAzimuth);
+          SetShapePos(ShpN_EleNow, FReceiveElevation);
         end;
   end;
 
@@ -916,12 +934,12 @@ function TArmConnect.ReceiveData (): Boolean; //Done
     StrIn, StrVal: String;
     BeginPos, Endpos: Byte;
   begin
-    //Clear buffer if too much ingoing Data is waiting
+    //Clear buffer if too much in going Data is waiting
     //That are old values and wie don't need them.
-    if (ser.WaitingDataEx > 3) then
+    if (ser.WaitingDataEx > 5) then
       begin
         ser.Purge;
-        Sleep(50);
+        Frm_Spori.Delay(5);
       end;
 
     //If the Buffer was not emty in the next 100 milli secounds
@@ -950,23 +968,67 @@ function TArmConnect.ReceiveData (): Boolean; //Done
       end;
   end;
 
-procedure TArmConnect.Execute;
+procedure TArmConnect.SendData (); //Done
+  var
+    PointAsSep: TFormatSettings;
+    EleStr, AzStr: String;
   begin
-    if (not Terminated) and (NewConnect or (Reconnect and not IsConnected)) then
-       Connect ();
-
-    FConnectionStatus :=  ser.InstanceActive;
-
-    if (not Terminated) and IsConnected then
+    if (SendAzimuth <> -404) and (SendElevation <> -404) then
       begin
-        if (SendAzimuth <> -404) and (SendElevation <> -404) then
-          ;
+        //Clear buffer if too much out going Data is waiting
+        //That are old values and wie don't need them.
+        if (ser.SendingData > 5) then
+          begin
+            ser.Purge;
+            Frm_Spori.Delay(5);
+          end;
 
-        //If we got vailid input
-        if ReceiveData () then
-          //Give the new Data to the main thread
-          Synchronize(@ShowReceivedData);
+
+        //Make sure a point was used as decimal separator
+        PointAsSep := DefaultFormatSettings;
+        PointAsSep.DecimalSeparator := '.';
+
+        //Get values to navigate to
+        EleStr := FloatToStrF(SendElevation, ffFixed, 3, 5, PointAsSep);
+        AzStr  := FloatToStrF(SendAzimuth,   ffFixed, 3, 5, PointAsSep);
+
+        //If a Connection is active and stable, send elevation and azimuth to the ArduIno.
+        if IsConnected and ser.CanWrite(200) then
+          ser.SendString(EleStr + ';' + AzStr);
+
+        //signalize that we sended it
+        SendElevation := -404;
+        SendAzimuth   := -404;
       end;
+  end;
+
+procedure TArmConnect.OnLoopTimer (Sender: TObject); //Done
+  begin
+    if (not Terminated) then
+      begin
+        if (NewConnect or (Reconnect and not IsConnected)) then
+          Connect ();
+
+        //Get Connection status
+        FConnectionStatus := ser.InstanceActive;
+
+        if IsConnected and (not Terminated) then
+          begin
+            //Send Azimuth and Elevation to the ARM (ArduIno)
+            SendData ();
+
+            //If we got vailid input
+            if ReceiveData () and (not Terminated) then
+              //Give the new Data to the main thread
+              Synchronize(@ShowReceivedData);
+          end;
+      end;
+  end;
+
+procedure TArmConnect.Execute; //Done?
+  begin
+    //Start Timer
+    Loop.Enabled := true;
   end;
 
 
@@ -1212,7 +1274,7 @@ procedure TFrm_Spori.GetComPorts (); //ToDo: look Up how Arduino IDE gets the po
     FreeAndNil(Ports);
   end;
 
-function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Synapser doesn't find right ports
+function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Waiting for a thread should be changed; Synapser doesn't find the right ports
   var
     Port: String;
     Baud: Integer;
@@ -1253,35 +1315,35 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Synapse
           begin
             for Port in Frm_Config.CmbBx_ComPort.Items do
               begin
-                //Try to connect
+                //SetUp Port
                 ARMConnection.Port := Port;
 
-
-               { if (ser.InstanceActive) then
+                //Try to connect
+                with ARMConnection do
                   begin
-                    //We are connected, save the active port
-                    Frm_Config.CmbBx_ComPort.Caption := Port;
-                    Options[ON_ComPort] := Port;
+                    NewConnect := true;
 
-                    break;
-                  end
-                else
-                  //It didn't worked, try next
-                  ser.CloseSocket; }
+                    //Wait for conncetion status
+                    While NewConnect do
+                      Application.ProcessMessages;
+                  end;
               end;
           end
         else
           begin
             //Connect to configured port
-            //ser.Connect(Frm_Config.CmbBx_ComPort.Caption);
-            Delay(700);
-            //ser.config(Baud, 8, 'N', SB1, False, False);
-            Delay(500);
+            with ARMConnection do
+              begin
+                Port := Frm_Config.CmbBx_ComPort.Caption;
+
+                //Wait for conncetion status
+                While NewConnect do
+                  Application.ProcessMessages;
+              end;
           end;
 
         //Set Result to the connections state
-        //Result := ser.InstanceActive;
-        Result := false;
+        Result := ARMConnection.IsConnected;
 
         with Frm_Config, Frm_Main do
           begin
@@ -1326,32 +1388,20 @@ function  TFrm_Spori.Connect (TryAll: Boolean = false): Boolean; //ToDo: Synapse
 
          //give the forms time to update
          Application.ProcessMessages;
-
-        //Read upcoming data from ArduIno, if connected
-        //Tmr_GetData.Enabled := Result;
       end;
   end;
 
 procedure TFrm_Spori.SendData (); //Done?
-  var
-    PointAsSep: TFormatSettings;
-    EleStr, AzStr: String;
   begin
-    //Make sure a point was used as decimal separator
-    PointAsSep := DefaultFormatSettings;
-    PointAsSep.DecimalSeparator := '.';
-
     //Get values to navigate to
-    EleStr := FloatToStrF(Frm_Main.FltSpnEd_EleCalcManu.Value, ffFixed, 3, 5, PointAsSep);
-    AzStr  := FloatToStrF(Frm_Main.FltSpnEd_AziCalcManu.Value, ffFixed, 3, 5, PointAsSep);
-
-    //If a Connection is active and stable elevation and azimuth to the ArduIno.
-    //if ser.InstanceActive and ser.CanWrite(200) then
-    //    ser.SendString(EleStr + ';' + AzStr);
-
+    with ARMConnection, Frm_Main do
+      begin
+        SendElevation := FltSpnEd_EleCalcManu.Value;
+        SendAzimuth   := FltSpnEd_AziCalcManu.Value;
+      end;
   end;
 
-function  TFrm_Spori.IsConstellation (): Boolean; //Todo: Can get optimized
+function  TFrm_Spori.IsConstellation (): Boolean; //ToDo: Can get optimized
   var
      Options:TStrings;
      Help:Integer;
@@ -1370,7 +1420,7 @@ function  TFrm_Spori.IsConstellation (): Boolean; //Todo: Can get optimized
 
    end;
 
-function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //Todo: ErrorCheck; optimize, it takes way to long
+function  TFrm_Spori.LoadStarList (const Path: String): Boolean; //ToDo: ErrorCheck; optimize, it takes way to long
   var
      index, Beginpos, Index_L, Index_R, Counter, lengthList: Integer;
      Stars:  TStringlist;
@@ -1588,24 +1638,24 @@ function  TFrm_Spori.GetDefaultOption (const OptnName: TOptionNames): String; //
   begin
     case OptnName of
       ON_Version:       Result := '0.0.0.2';
-      ON_PortableMode:  Result := MLS_False;
-      ON_ExpertMode:    Result := MLS_False;
+      ON_PortableMode:  Result := 'False';
+      ON_ExpertMode:    Result := 'False';
       ON_UpdateMode:    Result := '0';
       ON_UpdateRate:    Result := '1';
       ON_UpdateDay:     Result := '6';
       ON_UpdateTime:    Result := '00:00:00';
-      ON_UpRetry:       Result := MLS_True;
+      ON_UpRetry:       Result := 'True';
       ON_Place:         Result := 'Berlin';
       ON_Lon:           Result := '52,345';
       ON_Lat:           Result := '13,604';
-      ON_AutoTimeMode:  Result := MLS_True;
+      ON_AutoTimeMode:  Result := 'True';
       ON_Date:          Result := formatdatetime('dd/mm/yyyy', Now);
       ON_Time:          Result := formatdatetime('hh:nn:ss', Now);
-      ON_AutoComMode:   Result := MLS_False;
+      ON_AutoComMode:   Result := 'False';
       ON_ComPort:       Result := 'Com0';
       ON_BaudRate:      Result := '9600';
-      ON_AutoValueMode: Result := MLS_True;
-      ON_UseHotkey:     Result := MLS_False;
+      ON_AutoValueMode: Result := 'True';
+      ON_UseHotkey:     Result := 'False';
       ON_HotKey:        Result :=  IntToStr(VK_Q);
       ON_BodyMode:      Result := '0';
       ON_Body:          Result := '0';
@@ -1686,9 +1736,10 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
           Result := true;
     end;
 
-     function MakeErrorMsg (const Where, Why: String): String; inline;
+     function MakeErrorMsg (const Where: TOptionNames; const Why: String): String; inline;
        begin
-         Result :=  Where + '-' + MLS_Error_Loading + ': ' + Why;
+
+         Result :=  OptionsEnumToStr(Where) + '-' + MLS_Error_Loading + ': ' + Why;
        end;
 
      function ThrowError (const Name: TOptionNames): Boolean;
@@ -1770,7 +1821,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
           for j in TOptionNames do
             begin
               case j of
-                ON_Version:;// Todo: Convert older Otions to new ones
+                ON_Version:;// ToDo: Convert older Otions to new ones
 
                 ON_PortableMode:
                   if TryStrToBool(Options[j], Tempbool) then
@@ -1779,7 +1830,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                       SetPortableMode(Tempbool);
                     end
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                    ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                 ON_ExpertMode:
                   if TryStrToBool(Options[j], Tempbool) then
@@ -1790,7 +1841,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                       ProgressExpertMode(Tempbool);
                     end
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                    ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                 ON_UpdateMode:
                   if TryStrToInt (Options[j], TempInt) then
@@ -1830,41 +1881,41 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                             Frm_Config.Img_Non.Picture     := Frm_Config.Img_On.Picture;
                           end;
                         else
-                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_OutOFRange);
+                          ErrorMessage := MakeErrorMsg (j, MLS_Error_OutOFRange);
                       end;
                     end
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                    ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                 ON_UpdateRate:
                   if TryStrToInt (Options[j], TempInt) then
                     if (TempInt in [0..2]) then
                       Frm_Config.CBx_Rate.ItemIndex := TempInt
                     else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_OutOFRange)
+                      ErrorMessage := MakeErrorMsg (j, MLS_Error_OutOFRange)
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                    ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                 ON_UpdateDay:
                   if TryStrToInt (Options[j], i) then
                     if (TempInt in [0..6]) then
                       Frm_Config.CBx_Tag.ItemIndex := TempInt
                     else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_OutOFRange)
+                      ErrorMessage := MakeErrorMsg (j, MLS_Error_OutOFRange)
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                    ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                 ON_UpdateTime:
                   if TryStrToTime(Options[j], TempTime) then
                     Frm_Config.TE_Plan.Time := TempTime
                    else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                    ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                 ON_UpRetry:
                   if TryStrToBool(Options[j], TempBool)then
                    Frm_Config.Sw_Redo.Checked := TempBool
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                    ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                 On_Place:
                   begin
@@ -1878,7 +1929,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                             Lb_Lon_G1.Caption           := Options[ON_Lon];
                           end
                         else
-                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(ON_Lon), MLS_Error_WrongType);
+                          ErrorMessage := MakeErrorMsg (ON_Lon, MLS_Error_WrongType);
 
                         //Inc(j);
                         if TryStrToFloat(Options[ON_Lat], TempFloat) then
@@ -1888,7 +1939,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                              Lb_Lat_G1.Caption           := Options[ON_Lat];
                            end
                         else
-                          ErrorMessage := MakeErrorMsg (OptionsEnumToStr(ON_Lat), MLS_Error_WrongType);
+                          ErrorMessage := MakeErrorMsg (ON_Lat, MLS_Error_WrongType);
 
                         Frm_Config.CbBx_Ort.Caption := MLS_Unknown;
                         Frm_Main.Lbl_Place_Name.Caption := '-';
@@ -1927,7 +1978,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                     Frm_Config.DE_Day.enabled      := not Tempbool;
                   end
                 else
-                  ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                  ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                 ON_Date:
                   if TryStrToDate(Options[j], TempTime) then
@@ -1936,7 +1987,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                       Frm_Config.DE_Day.Date := Date + DiffD;
                     end
                   else
-                    ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                    ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                   ON_Time:
                     if TryStrToTime(Options[j], TempTime) then
@@ -1945,35 +1996,40 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         Frm_Config.TE_Time.Time := Time + DiffT
                        end
                      else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                      ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                   ON_AutoComMode:
                     if TryStrToBool(Options[j], Tempbool) then
                       begin
                         Frm_Config.Sw_AutoCon.checked :=  Tempbool;
 
+                        //If we should automatily reconnect
+                        ARMConnection.Reconnect := Tempbool;
+
                         if not Tempbool then
                           if TryStrToInt(Options[ON_ComPort], i) then
-                            Frm_Config.CmbBx_ComPort.Caption := Options[ON_ComPort];
+                            Frm_Config.CmbBx_ComPort.Caption := Options[ON_ComPort]
+                          else
+                            ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
                         //Inc(j);
                       end
                     else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                      ErrorMessage := MakeErrorMsg (ON_ComPort, MLS_Error_WrongType);
 
                   ON_BaudRate:
                     if TryStrToInt(Options[j], TempInt) then
                       if (Frm_Config.CmbBx_Baud.Items.IndexOf(Options[j]) >= 0) then
                           Frm_Config.CmbBx_Baud.Caption := Options[j]
                       else
-                        ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_OutOFRange)
+                        ErrorMessage := MakeErrorMsg (j, MLS_Error_OutOFRange)
                     else
-                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                     ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                   ON_AutoValueMode:
                     if TryStrToBool(Options[j], Tempbool) then
                       Frm_Config.Sw_ManuVal.Checked := not Tempbool
                     else
-                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                     ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                   ON_UseHotkey:
                     if TryStrToBool(Options[j], Tempbool) then
@@ -1987,7 +2043,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         end;
                       end
                     else
-                     ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                     ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                   ON_HotKey:
                     begin
@@ -2027,7 +2083,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                               end
                             else
                               begin
-                                ErrorMessage := MakeErrorMsg (OptionsEnumToStr(On_Hotkey), MLS_Error_OutOFRange);
+                                ErrorMessage := MakeErrorMsg (On_Hotkey, MLS_Error_OutOFRange);
                                 break;
                               end;
 
@@ -2047,9 +2103,9 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                           ProgressBodyMode(TBodyMode(i), false);
                         end
                       else
-                        ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_OutOFRange)
+                        ErrorMessage := MakeErrorMsg (j, MLS_Error_OutOFRange)
                     else
-                       ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                       ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
 
                   ON_Body:
                     if TryStrToInt (Options[j], i) then
@@ -2058,7 +2114,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                         Frm_Main.Lbl_Bdy_Nr.Caption := Options[j];
                        end
                      else
-                      ErrorMessage := MakeErrorMsg (OptionsEnumToStr(j), MLS_Error_WrongType);
+                      ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
               end; //End case
 
               if (ErrorMessage <> '') then
@@ -2066,7 +2122,7 @@ function  TFrm_Spori.LoadOptions (const LoadFromFile: Boolean  = true): Boolean;
                   Result := ThrowError (j);
                   exit;
                 end;
-           end;
+           end; //End for loop
 
           if Result then
             begin
@@ -2392,7 +2448,7 @@ procedure TFrm_Spori.ProgressExpertMode (Save:Boolean = True); //ToDo: sepperate
   begin
 
     if Save then
-      Options[ON_ExpertMode] := BoolToStr(MI_Sicht_Exp.checked, MLS_True, MLS_False);
+      Options[ON_ExpertMode] := BoolToStr(MI_Sicht_Exp.checked, 'True', 'False');
 
 
     if  MI_Sicht_Exp.Checked then
@@ -2619,7 +2675,7 @@ function  TFrm_Spori.GetOSLanguage (): string;
 
     {$ELSE}
     //Removed Linux extra since GetLangueIDs does exacly the same
-    GetLanguageIDs(l, fbl);
+    GetLanguageIDs(l{%H-}, fbl{%H-});
     {$ENDIF}
     Result := 'de';
     //Result := fbl;
@@ -2868,7 +2924,7 @@ function  TFrm_Spori.Search4Body (SerchFor: String): TListItem;  //ToDo: Comment
 
   end;
 
-procedure TFrm_Spori.searchStarList (SerchFor: String); //ToDo: Comments; ErrorHandeling(Item not Found)
+procedure TFrm_Spori.SearchStarList (SerchFor: String); //ToDo: Comments; ErrorHandeling(Item not Found)
   var
     FoundBody: TListItem;
   begin
@@ -2951,6 +3007,9 @@ procedure TFrm_Spori.FormCreate (Sender: TObject); //Done?
     //old way:
     //OwnDir := GetCurrentDir();
 
+    //Create thread
+    ARMConnection := TArmConnect.Create(True);
+
     //initialize Hotkey
     KeyCount    := 0;
     PressedKeys := [];
@@ -2973,13 +3032,18 @@ procedure TFrm_Spori.FormCreate (Sender: TObject); //Done?
     if not OptionsLoaded then //was not able to load the config flie -> clean up
       Halt;
 
-    //Search for commports and try to connect
+    //Search for commports
     GetComPorts ();
-    Connect (true);
 
-    //Search for commports and try to connect
-    GetComPorts ();
-    Connect (true);
+    //start thread
+    ARMConnection.Start;
+
+    //Get last Error in thread
+    if Assigned(ARMConnection.FatalException) then
+       raise ARMConnection.FatalException;
+
+    //Try to connect
+    Connect (StrToBool(Options[ON_AutoComMode]));
 
     { if ChkB_Up.Checked then
       Update_ (); }
@@ -3200,7 +3264,7 @@ procedure TFrm_Spori.MI_Dar_QuitClick  (Sender: TObject);  //Done
     Halt;
    end;
 
-procedure TFrm_Spori.MI_Hilf_FehClick (Sender: TObject);  //toDo
+procedure TFrm_Spori.MI_Hilf_FehClick (Sender: TObject);  //ToDo
   begin
 
    end;
@@ -3231,12 +3295,12 @@ procedure TFrm_Spori.MI_SuchClick (Sender: TObject); //ToDo: Test if there was n
                     'Hilfsmittel oder Netzteile als den USB Port eines Laptops.');
        end;
 
-procedure TFrm_Spori.MP_Hilf_OffClick (Sender: TObject);  //toDo
+procedure TFrm_Spori.MP_Hilf_OffClick (Sender: TObject);  //ToDo
   begin
 
    end;
 
-procedure TFrm_Spori.MI_Hilf_OnClick (Sender: TObject);   //toDo
+procedure TFrm_Spori.MI_Hilf_OnClick (Sender: TObject);   //ToDo
   begin
 
    end;
@@ -3434,5 +3498,24 @@ procedure TFrm_Spori.CB_StBEditingDone (Sender: TObject); //ToDo: Comments
      else
       ProgressNumber ();
    end;
+
+//Exists just for compatibility
+initialization
+
+finalization
+  begin  //No Matter what, we have to clean Up!
+    if Assigned(ARMConnection) then
+      begin
+        if not ARMConnection.Terminated then
+           ARMConnection.Terminate;
+
+        FreeAndNil(ARMConnection);
+      end;
+
+    //I know, it's already called in FormDestroy but you realy can't do anything wrong
+    //calling it again.
+    //Futhermore that way PlanEph will be freed in any given case correctly
+    EndPlanetEphem();
+  end;
 
 end.

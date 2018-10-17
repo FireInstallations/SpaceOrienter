@@ -2,7 +2,7 @@
 <CONFIG>
   <ProjectSession>
     <Version Value="10"/>
-    <BuildModes Count="4" Active="Debug">
+    <BuildModes Count="4" Active="Linux32_Release">
       <Item1 Name="Linux32_Release">
         <MacroValues Count="1">
           <Macro3 Name="LCLWidgetType" Value="gtk2"/>
@@ -168,11 +168,11 @@
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="177"/>
-        <CursorPos X="19" Y="183"/>
-        <FoldState Value=" TLB2F2 T4k52H T7meH~{ T3vS0H3 pigjO0W2Y"/>
+        <CursorPos X="121" Y="24"/>
+        <FoldState Value=" TL62F2 T4k02H T7lJIt1 T3ua0Q4 pjGk90W3 pkDlE0B[I47jS0{Y31]r0i$P2DF"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="config.pas"/>
@@ -182,7 +182,7 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Config"/>
         <TopLine Value="1356"/>
-        <CursorPos X="64" Y="1364"/>
+        <CursorPos X="83" Y="1380"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit2>
@@ -720,7 +720,7 @@
         <EditorIndex Value="3"/>
         <TopLine Value="20"/>
         <CursorPos X="46" Y="30"/>
-        <UsageCount Value="105"/>
+        <UsageCount Value="106"/>
         <Loaded Value="True"/>
       </Unit64>
       <Unit65>
@@ -741,7 +741,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="77"/>
         <CursorPos X="6" Y="125"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
       </Unit67>
       <Unit68>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/classes/classesh.inc"/>
@@ -956,7 +956,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="939"/>
         <CursorPos X="14" Y="961"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
       </Unit97>
       <Unit98>
         <Filename Value="../../Laz/fpcsrc/rtl/inc/systemh.inc"/>
@@ -1110,7 +1110,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="151"/>
         <CursorPos Y="176"/>
-        <UsageCount Value="19"/>
+        <UsageCount Value="18"/>
       </Unit119>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">

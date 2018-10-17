@@ -1270,7 +1270,7 @@ procedure TFrm_Config.Sw_AutoTimeChange(Sender: TObject);  //Done
         end;
 
     //Save new value
-    Frm_Spori.Options[ON_AutoTimeMode] := BoolToStr(IsActive, MLS_True, MLS_False);;
+    Frm_Spori.Options[ON_AutoTimeMode] := BoolToStr(IsActive, 'True', 'False');;
    end;
 
 procedure TFrm_Config.Sw_ExprtChange(Sender: TObject);  //Done
@@ -1303,7 +1303,7 @@ procedure TFrm_Config.Sw_HtKyChange(Sender: TObject); //Done
     Bt_HtKy.Enabled := IsActive;
 
     //Save new value
-    Frm_Spori.Options[ON_UseHotkey] := BoolToStr(IsActive, MLS_True, MLS_False);
+    Frm_Spori.Options[ON_UseHotkey] := BoolToStr(IsActive, 'True', 'False');
   end;
 
 procedure TFrm_Config.Sw_ManuValChange(Sender: TObject); //Done
@@ -1339,7 +1339,7 @@ procedure TFrm_Config.Sw_ManuValChange(Sender: TObject); //Done
       end;
 
     //save value
-    Frm_Spori.Options[ON_AutoValueMode] := BoolToStr(not IsActive, MLS_True, MLS_False);
+    Frm_Spori.Options[ON_AutoValueMode] := BoolToStr(not IsActive, 'True', 'False');
   end;
 
 procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject); //Done
@@ -1352,7 +1352,7 @@ procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject); //Done
     Lbl_Sw_PortableMode.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
     //Save new Value
-    Frm_Spori.Options[ON_PortableMode] := BoolToStr(IsActive, MLS_True, MLS_False);
+    Frm_Spori.Options[ON_PortableMode] := BoolToStr(IsActive, 'True', 'False');
 
     //Change used paths
     Frm_Spori.SetPortableMode(IsActive);
@@ -1367,7 +1367,7 @@ procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //Done
     //Set Caption for the Button
     Lbl_Sw_AutoCon.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
     //Save it
-    Frm_Spori.Options[ON_AutoComMode] := BoolToStr(IsActive, MLS_True, MLS_False);
+    Frm_Spori.Options[ON_AutoComMode] := BoolToStr(IsActive, 'True', 'False');
 
     //Disable Comport Editfield since we will test all avible ports
     CmbBx_ComPort.Enabled := not isActive;
@@ -1375,7 +1375,11 @@ procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //Done
 
     //Try to connect to all avible ports
     if isActive then
-        Frm_Spori.Connect (true);
+        Frm_Spori.Connect (isActive);
+
+    //If the Thread is running set how it's supposed to act if connection was lost
+    If Frm_Spori.OptionsLoaded then
+      ARMConnection.Reconnect := isActive;
    end;
 
 procedure TFrm_Config.Sw_RedoChange(Sender: TObject); //Done
@@ -1388,7 +1392,7 @@ procedure TFrm_Config.Sw_RedoChange(Sender: TObject); //Done
     Lbl_Sw_Redo.Caption   := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
     //Save it
-    Frm_Spori.Options[ON_UpRetry] := BoolToStr(IsActive, MLS_True, MLS_False);
+    Frm_Spori.Options[ON_UpRetry] := BoolToStr(IsActive, 'True', 'False');
    end;
 
 procedure TFrm_Config.TE_PlanEditingDone(Sender: TObject); //Done

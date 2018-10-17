@@ -29,10 +29,6 @@ Resourcestring
   MLS_ConnectedWith      = 'Verbunden mit: ';
   MLS_NotConnected       = 'Nicht verbunden';
 
-  //undo this maby do BoolToStr intead
-  MLS_True               = 'True';
-  MLS_False              = 'False';
-
   MLS_NumberLong         = 'Nummer';
   MLS_NumberShort        = 'Nr.';
 
