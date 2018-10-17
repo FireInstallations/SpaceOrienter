@@ -100,10 +100,6 @@ msgstr "Unknown format"
 msgid "Falscher Datentyp"
 msgstr "Unknown type"
 
-#: multilanguestrings.mls_false
-msgid "False"
-msgstr "False"
-
 #: multilanguestrings.mls_none
 msgid "None"
 msgstr "none"
@@ -127,10 +123,6 @@ msgstr "Nr."
 msgctxt "multilanguestrings.mls_search_default"
 msgid "Suchen..."
 msgstr "Search for..."
-
-#: multilanguestrings.mls_true
-msgid "True"
-msgstr "True"
 
 #: multilanguestrings.mls_turnd_off
 msgctxt "multilanguestrings.mls_turnd_off"

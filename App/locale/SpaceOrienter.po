@@ -85,10 +85,6 @@ msgstr ""
 msgid "Falscher Datentyp"
 msgstr ""
 
-#: multilanguestrings.mls_false
-msgid "False"
-msgstr ""
-
 #: multilanguestrings.mls_none
 msgid "None"
 msgstr ""
@@ -111,10 +107,6 @@ msgstr ""
 #: multilanguestrings.mls_search_default
 msgctxt "multilanguestrings.mls_search_default"
 msgid "Suchen..."
-msgstr ""
-
-#: multilanguestrings.mls_true
-msgid "True"
 msgstr ""
 
 #: multilanguestrings.mls_turnd_off

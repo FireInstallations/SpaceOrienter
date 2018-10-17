@@ -1,7 +1,7 @@
 object Frm_Spori: TFrm_Spori
-  Left = 463
+  Left = 109
   Height = 420
-  Top = 120
+  Top = 139
   Width = 724
   AlphaBlendValue = 250
   Caption = 'SpaceOrienter'
