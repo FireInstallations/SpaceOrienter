@@ -1,234 +1,58 @@
-// set Serial Monitor to 9600 Baud, insert values <elevation> ; <azimuth> and the Space Orienter will direct the beam
+// set Serial Monitor to 9600 Baud, insert values "<elevation>;<azimuth>;" and the Space Orienter will direct the beam
 #include <Wire.h> //I2C Arduino Library
 #include "Print.h"
 
+/* ----------------- { MMA } ----------------- */
+#define MMA8451_ADDRESS                (0x3A >> 1)    // this is  0x1D and means SA0 = 1
 
+// register keys
 #define MMA8451_REG_OUT_X_MSB     0x01
 #define MMA8451_REG_WHOAMI        0x0D
 
 #define MMA8451_REG_CTRL_REG1     0x2A
 #define MMA8451_REG_CTRL_REG2     0x2B
 
+// sensor values
+float mx = 0, mz = 0;
 
-#define MMA8451_ADDRESS                (0x3A >> 1)    // this is  0x1D and means SA0 = 1
+
+/* ----------------- { HMC } ----------------- */
 #define HMC5883_ADDRESS_MAG            (0x3C >> 1)    // this is  0x1E
 
-float elevation, azimut, Roh_elevation, Roh_azimut;
-float elevationIn, azimutIn, Roh_azimutIn, Roh_elevationIn;
+// scaling constants
+#define xp 730
+#define xm 690
+#define yp 750
+#define ym 720
+#define cpemf 543
 
-String stringin, Test_In;
+float sx = 0, sy = 0;// scaled sensor values
 
-int signum;
-int stepsize = 120;
-int backlash_elevation = 10;
-int backlash_azimut = 10;
-int elapse = 60;
-int Zaehler = 1;
+
+/* ----------------- { general } ----------------- */
+
+#define backlash_motor 10
+#define elapse         60
+
+#define LaserWeak   12
+#define LaserStrong 11
+
+bool LaserIsRunning = false;
+bool NewInput       = false;
+
+// We are working with raw values, which means if the azimuth goes over 180° the elevation will be flipped (> 90°)
+// and the azimuth will decreased by 180°.
+// the INput values are comming from the serial port
+float Raw_azimuth,   Raw_elevation;
+float Raw_azimuthIn, Raw_elevationIn;
+
 long oldtime = 0;
 
-int cpemf = 543;
-//int cpemf = 685; //Earthmagnetic field should be 685 counts (here in Berlin).
-float rx = 0, ry = 0;// raw values directly red from the sensor and avaraged
-float sx = 0, sy = 0;// scaled sensor values
-//float xp = cpemf, xm = cpemf;// scaling constants
-//float yp = cpemf, ym = cpemf;
-
-//MMA
-float mx, my, mz;
-
-float xp = 730, xm = 690;// scaling constants
-float yp = 750, ym = 720;
-
-bool Weiter = true;
-
-void Regler ()
-{
-  if (Serial.available())
-    Test_In = Serial.readString();
-
-  if (!(Test_In == ""))
-  {
-    if (!( Test_In == stringin))
-    {
-      stringin = Test_In;
-      Weiter = true;
-    }
-
-    if (Weiter)
-    {
-      elevationIn = (stringin.substring(0, stringin.indexOf(";", 0))).toFloat();
-      azimutIn   = (stringin.substring(stringin.indexOf(";", 0) + 1, (stringin.length()))).toFloat(); azimutIn -= 15;
-      Roh_elevationIn = elevationIn;
-      Roh_azimutIn = azimutIn;
-
-      if (azimutIn >= 180)
-      {
-        Roh_elevationIn = 180 - elevationIn; //if the given azimutIn is greater than 180 degrees, the elevation flips to the other side
-        Roh_azimutIn  -= 180;//the Roh_azimut knows values between -10 up to 190 degrees only
-      }
-
-      //for a step width of 120 the motor moves about 10 degrees
-
-      float Bewegung = Roh_azimutIn - Roh_azimut;
-      if (Bewegung > 0) signum = 1; else signum = -1; //signum determines the direction of movement
-      if (abs(Bewegung) <= 10)Bewegung = Bewegung * 20; else Bewegung = signum * 120; //the maximum step width is limited to 120
-      if (abs(Bewegung) < 1)Bewegung = signum * 20; //the minimum step width is limited to 20
-      //Serial.println("Azimut: "+String(Bewegung)+"  "+String(Roh_azimutIn));
-      stepsize = (int)abs(Bewegung);
-      //movement of the motor to compensate the azimut difference
-      if (signum > 0)AzimutG(); else AzimutK();
+//If you want to run whith Twedge decomment this and in ProgressInput too!
+//String LastStrIn;
 
 
-
-      Bewegung = Roh_elevationIn - Roh_elevation;
-
-
-      if (Bewegung > 0)signum = 1; else signum = -1;
-      if (abs(Bewegung) <= 10)Bewegung = Bewegung * 20; else Bewegung = signum * 120;
-      if (abs(Bewegung) < 1)Bewegung = signum * 20;
-      //Serial.println("Elevation: "+String(Bewegung)+"  "+String(Roh_elevationIn));
-      stepsize = (int)abs(Bewegung);
-      //movement of the motor to compensate the elevation difference
-      if (signum > 0) ElevationG(); else ElevationK();
-
-      if (Bewegung <= 2 && Bewegung >= -2 &&  Roh_azimutIn - Roh_azimut <= 2 &&  Roh_azimutIn - Roh_azimut >= -2)
-      {
-        Weiter = false;
-        LaserOn_Schwach();
-        delay(3000);
-        LaserOff_Schwach();
-      }
-
-      stepsize = 120;
-
-    }
-  }
-}
-
-void AzimutK ()
-
-{
-  if (Roh_azimut >= -20)
-  {
-    digitalWrite(8, LOW); //remove backlash
-    digitalWrite(7, HIGH); //moves in opposit direction
-    delay(backlash_azimut);
-    digitalWrite(7, LOW); //the motor is stopped
-    digitalWrite(8, HIGH); //counter clockwise movement
-    delay(stepsize);
-    digitalWrite(8, LOW); ////the motor is stopped
-    delay(elapse);
-    tone(13, 600, 10);
-  }
-}
-
-
-void AzimutG ()
-{
-  if (Roh_azimut <= 200)
-  {
-    digitalWrite(7, LOW); //remove backlash
-    digitalWrite(8, HIGH); //moves in opposit direction
-    delay(backlash_azimut);
-    digitalWrite(8, LOW); //the motor is stopped
-    digitalWrite(7, HIGH); //clockwise movement
-    delay(stepsize);
-    digitalWrite(7, LOW); //the motor is stopped
-    delay(elapse);
-    tone(13, 600, 10);
-  }
-}
-
-void ElevationG ()
-
-{
-  if (Roh_elevation <= 190)
-  {
-    digitalWrite(10, LOW); //remove backlash
-    digitalWrite(9, HIGH); //moves in opposit direction
-    delay(backlash_elevation);
-    digitalWrite(9, LOW); //the motor is stopped
-    digitalWrite(10, HIGH); //clockwise movement
-    delay(stepsize);
-    digitalWrite(10, LOW); //the motor is stopped
-    delay(elapse);
-    tone(13, 600, 10);
-  }
-}
-
-void ElevationK ()
-{
-  if (Roh_elevation >= -10)
-  {
-    digitalWrite(9, LOW); //remove backlash
-    digitalWrite(10, HIGH); //moves in opposit direction
-    delay(backlash_elevation);
-    digitalWrite(10, LOW); //the motor is stopped
-    digitalWrite(9, HIGH); //clockwise movement
-    delay(stepsize);
-    digitalWrite(9, LOW); //the motor is stopped
-    delay(elapse);
-    tone(13, 600, 10);
-  }
-}
-
-void LaserOn_Stark()
-{
-  tone(13, 440);
-  delay(1000);
-  digitalWrite(11, HIGH);
-}
-
-void LaserOff_Stark ()
-{
-  digitalWrite(11, LOW);
-  noTone(13);
-}
-
-void LaserOn_Schwach()
-{
-  tone(13, 440);
-  delay(1000);
-  digitalWrite(12, HIGH);
-}
-
-void LaserOff_Schwach ()
-{
-  digitalWrite(12, LOW);
-  noTone(13);
-}
-
-void HMCread()
-{
-  int16_t helperx = 0, helpery = 0;
-  uint8_t zvoid;
-
-  // Read the magnetometer
-  Wire.beginTransmission((byte)HMC5883_ADDRESS_MAG);
-  Wire.write(0x03); //HMC5883_REGISTER
-  Wire.endTransmission();
-  // 6 Bytes are requested, the addresses are counted firther automatically
-  Wire.requestFrom((byte)HMC5883_ADDRESS_MAG, (byte)6);
-
-  // Wait around until enough data are available
-  while (Wire.available() < 6);
-
-  // Note high before low (different than accelerometer)
-  // Shift values to create properly formed integer (low byte first)
-  helperx = Wire.read(); helperx <<= 8; helperx |= Wire.read();
-  //Dismiss z
-  Wire.read();                          Wire.read();
-  helpery = Wire.read(); helpery <<= 8; helpery |= Wire.read();
-
-  //filStering values with gliding avarage
-  rx = rx * 0.90 + (float)helperx * 0.10;
-  ry = ry * 0.90 + (float)helpery * 0.10;
-
-  // correct the values to gauging values xp ... ym, see document Magnetometer Extreme Calibration.doc
-  sx = cpemf * (2 * (rx + xm) / (xp + xm) - 1);
-  sy = cpemf * (2 * (ry + ym) / (yp + ym) - 1);
-}
-
+/* ----------------- { setup } ----------------- */
 
 //Reads 8-bits from MMA
 uint8_t readRegister8(uint8_t reg) {
@@ -249,29 +73,6 @@ void writeRegister8(uint8_t reg, uint8_t value) {
   Wire.endTransmission();
 }
 
-void MMAread () {
-  int16_t helperx, helperz;
-
-  // read x y z at once
-  Wire.beginTransmission(MMA8451_ADDRESS);
-  Wire.write((uint8_t)MMA8451_REG_OUT_X_MSB);
-  Wire.endTransmission(false); // MMA8451 + friends uses repeated start!!
-
-  Wire.requestFrom(MMA8451_ADDRESS, 6);
-
-  // Note high before low (different than accelerometer)
-  helperx = Wire.read(); helperx <<= 8; helperx |= Wire.read(); helperx >>= 2;
-  //Dismiss y
-  Wire.read();              Wire.read();
-  helperz = Wire.read(); helperz <<= 8; helperz |= Wire.read(); helperz >>= 2;
-
-  // Shift values to create properly formed integer (MSB first)
-  mx = (float)helperx;
-  mz = (float)helperz;
-
-  //Serial.println(("Roh" + (String)mx) + " " + (String)mz);
-}
-
 void setup() {
   oldtime = millis();
 
@@ -283,9 +84,9 @@ void setup() {
   // Check if MMA sensor was found
   if (readRegister8(MMA8451_REG_WHOAMI) != 0x1A)
   {
-    /* No MMA8451 detected ... */
+    /* No MMA8451 detected don't do anything */
     Serial.println("MMA not found");
-    delay(1000);
+    while (true);
   }
 
   //Reset MMA
@@ -293,8 +94,6 @@ void setup() {
   while (readRegister8(MMA8451_REG_CTRL_REG2) & 0x40);
   //  set data rate 12.5 Hz(0x28), low noise mode (0x04), activate operation(0x01)
   writeRegister8(MMA8451_REG_CTRL_REG1, 0x28 | 0x04 | 0x01);
-
-
 
   // Set magnetometer to continuous operation, since default is single measurement
   Wire.beginTransmission(HMC5883_ADDRESS_MAG);
@@ -323,64 +122,315 @@ void setup() {
 
 }
 
+/* ----------------- { loop } ----------------- */
 
+//clockwise means increasing and counter clockwise means decreasing 
+void MoveAzimuth (byte stepsize, bool clockwise)
 
-void loop()
-{ //digitalWrite(12,HIGH);
+{
+  byte backward = 7;
+  byte forword = 8;
+ 
+  //counter clockwise is default
+  if (clockwise)
+  {
+    backward = 8;
+    forword = 7;
+  }
 
-  MMAread ();
-  float za = za * 0.5 + mz * 0.5;
-  float xa = xa * 0.5 + mx * 0.5;
-  Roh_elevation = (atan2(za, -xa) * 180 / M_PI);
+  if (Raw_azimuth >= -20 && Raw_azimuth <= 200)
+  {
+    digitalWrite(forword, LOW); //remove backlash
 
-  if (Roh_elevation < -90) Roh_elevation += 360;
-  elevation = Roh_elevation;
+    digitalWrite(backward, HIGH); //moves in opposit direction
+    delay(backlash_motor);
+    digitalWrite(backward, LOW); //the motor is stopped
 
-  if (Roh_elevation >= 90) elevation = 180 - Roh_elevation;
+    digitalWrite(forword, HIGH); //forwad movement
+    delay(stepsize);
+    digitalWrite(forword, LOW); ////the motor is stopped
+    delay(elapse);
 
-  HMCread();
-  Roh_azimut = atan2(-sx, sy) * 180 / M_PI;
-  if (Roh_azimut < -90) Roh_azimut += 360;
+    tone(13, 600, 10);
+  }
+}
 
-  // Roh_azimut = Roh_azimut*1800/2025 + 4,5;   //NEUAUFGESTELLT
-  azimut = Roh_azimut + 15;
-  if (Roh_elevation > 90) azimut += 180;
-  if (azimut < 0) azimut += 360;
-  if (azimut > 360) azimut -= 360;
+//clockwise means increasing and counter clockwise means decreasing
+void MoveElevation (byte stepsize, bool clockwise)
+{
+  byte backward = 9;
+  byte forword = 10;
+ 
+  //counter clockwise is default
+  if (clockwise)
+  {
+    backward = 10;
+    forword  = 9;
+  }
 
-  if (((millis() - oldtime) > 700) || Weiter){ 
-    Serial.println (String((int) (elevation + 0.5)) + ";" + String((int) (azimut + 0.5)) + ";");// + String((int)( Roh_elevation + 0.5)) + ";" + String((int) (Roh_azimut + 0.5)));
+  if (Raw_elevation >= -10 && Raw_elevation <= 190)
+  {
+    digitalWrite(forword, LOW); //remove backlash
 
-    if (!(Weiter))
-      oldtime = millis();
+    digitalWrite(backward, HIGH); //moves in opposit direction
+    delay(backlash_motor);
+    digitalWrite(backward, LOW); //the motor is stopped
+
+    digitalWrite(forword, HIGH); //forwad movement
+    delay(stepsize);
+    digitalWrite(forword, LOW); ////the motor is stopped
+    delay(elapse);
+
+    tone(13, 600, 10);
+  }
+}
+
+void PutLaserOn(byte type)
+{
+  if (!(LaserIsRunning))
+  {
+    //Do a waring beep
+    tone(13, 440);
+    delay(1000);
+
+    digitalWrite(type, HIGH);
+
+    LaserIsRunning = true;
+  }
+}
+
+void PutLaserOff (byte type)
+{
+  if (LaserIsRunning)
+  {
+    digitalWrite(type, LOW);
+    //stop warning beep
+    noTone(13);
+
+    LaserIsRunning = false;
+  }
+}
+
+short sign (float ToTest)
+{
+  if (ToTest >= 0)
+    return (1);
+  else
+    return (-1);
+}
+
+void ProgressInput ()
+{
+  if (Serial.available())
+  {
+    String StrIn;
+    short Start, End;
+    float elevationIn, azimuthIn;
+
+    StrIn = Serial.readString();
+    if ((StrIn != "") && (StrIn.endsWith(";")) /* && (StrIn != LastStrIn)*/)
+    {
+      Start = 0;
+      End   = StrIn.indexOf(";", Start) - 1;
+      elevationIn = (StrIn.substring(Start, End)).toFloat();
+
+      //jump over ";"
+      Start = End + 2;
+      End   = StrIn.indexOf(";", Start) - 1;
+      azimuthIn   = (StrIn.substring(Start, End)).toFloat() - 15.0L;
+
+      if (azimuthIn >= 180)
+      {
+        Raw_elevationIn = 180 - elevationIn; //if the given azimuthIn is greater than 180 degrees, the elevation flips to the other side
+        Raw_azimuthIn  -= 180;//the Raw_azimuth knows values between -20 up to 200 degrees only
+      }
+
+      //We got valid input
+      NewInput = true;
+    }
   }
 
 
-  if ((millis() - oldtime) > 30) {
-    if (digitalRead(0) == LOW & digitalRead(1) == HIGH  ) //kleiner
-      AzimutK ();
+  if (NewInput)
+  {
+    float Movement;
+    //for a stepsize of 120 the motor moves about 10 degrees
+    byte  stepsize;
 
-    if (digitalRead(0) == HIGH & digitalRead(1) == LOW ) //größer
-      AzimutG ();
+    //----- { Azimuth } -----
+    Movement = Raw_azimuthIn - Raw_azimuth;
 
-    if (digitalRead(4) == LOW & digitalRead(5) == HIGH ) //vergrößern
-      ElevationG ();
+    //the maximum step width is limited to 120
+    if (Movement >= 6)
+      Movement = 120 * sign(Movement);
+    else
+    {
+      //the minimum step width is limited to 20
+      if (abs(Movement) < 20)
+        Movement = sign(Movement) * 20.0;
+      else
+        Movement *= 20.0;
+    }
 
-    if (digitalRead(4) == HIGH & digitalRead(5) == LOW ) //kleiner
-      ElevationK ();
+    stepsize = round(abs(Movement));
+    //movement of the motor to compensate the azimuth difference
+    if (Movement > 0)
+      MoveAzimuth(stepsize, true); //Inc
+    else if (Movement < 0)
+      MoveAzimuth(stepsize, false); //Dec
 
-    Regler ();
+    //----- { Elevation } -----
+    Movement = Raw_elevationIn - Raw_elevation;
 
-    if (Weiter)
-      oldtime = millis();
+    //the maximum step width is limited to 120
+    if (Movement >= 6)
+      Movement = 120 * sign(Movement);
+    else
+    {
+      //the minimum step width is limited to 20
+      if (abs(Movement) < 20)
+        Movement = sign(Movement) * 20.0;
+      else
+        Movement *= 20.0;
+    }
+
+    stepsize = round(abs(Movement));
+    //movement of the motor to compensate the elevation difference
+    if (Movement > 0)
+      MoveElevation(stepsize, true); //Inc
+    else if (Movement < 0)
+      MoveElevation(stepsize, false); //Dec
+
+    if (abs(Raw_azimuthIn - Raw_azimuth) <= 1 && abs(Raw_elevationIn - Raw_elevation) >= 1)
+    {
+      NewInput = false;
+
+      PutLaserOn(LaserWeak);
+      delay(3000);
+      PutLaserOff(LaserWeak);
+    }
+  }
+}
+
+void MMAread () {
+  int16_t helperx, helperz;
+
+  // read x y z at once
+  Wire.beginTransmission(MMA8451_ADDRESS);
+  Wire.write((uint8_t)MMA8451_REG_OUT_X_MSB);
+  Wire.endTransmission(false); // MMA8451 + friends uses repeated start!!
+
+  Wire.requestFrom(MMA8451_ADDRESS, 6);
+
+  // Shift values to create properly formed integer (MSB first)
+  // Note high before low (different than accelerometer)
+  helperx = Wire.read() << 8; helperx |= Wire.read(); helperx >>= 2;
+  //Dismiss y
+  Wire.read(); Wire.read();
+  helperz = Wire.read() << 8; helperz |= Wire.read(); helperz >>= 2;
+
+  //filStering values with gliding avarage
+  mx = (float)helperx * 0.5 + mx * 0.5;
+  mz = (float)helperz * 0.5 + mz * 0.5;
+}
+
+void HMCread()
+{
+  // raw values directly read from the sensor and avaraged
+  int16_t rx, ry;
+
+  // Read the magnetometer
+  Wire.beginTransmission((byte)HMC5883_ADDRESS_MAG);
+  Wire.write(0x03); //HMC5883_REGISTER
+  Wire.endTransmission();
+  // 6 Bytes are requested, the addresses are counted firther automatically
+  Wire.requestFrom((byte)HMC5883_ADDRESS_MAG, (byte)6);
+
+  // Wait around until enough data are available
+  while (Wire.available() < 6);
+
+  // Note high before low (different than accelerometer)
+  // Shift values to create properly formed integer (low byte first)
+  rx = Wire.read() << 8; rx |= Wire.read();
+  //Dismiss z
+  Wire.read(); Wire.read();
+  ry = Wire.read() << 8; ry |= Wire.read();
+
+  //filStering values with gliding avarage
+  //correct the values to gauging values xp ... ym
+  sx = (cpemf * (2 * ((float)rx + xm) / (xp + xm) - 1)) * 0.1 + sx * 0.9;
+  sy = (cpemf * (2 * ((float)ry + ym) / (yp + ym) - 1)) * 0.1 + sy * 0.9;
+}
+
+void loop()
+{
+  float elevation, azimuth;
+
+  //Get value from MMA
+  MMAread ();
+  Raw_elevation = (atan2(mz, -mx) * 180 / M_PI);
+
+  while (Raw_elevation < -90) Raw_elevation += 360;
+  elevation = Raw_elevation;
+
+  if (Raw_elevation >= 90) elevation = 180 - Raw_elevation;
+
+
+  //Get values from HMC
+  HMCread();
+  Raw_azimuth = atan2(-sx, sy) * 180 / M_PI;
+  while (Raw_azimuth < -90) Raw_azimuth += 360;
+
+  azimuth = Raw_azimuth;
+  if (Raw_elevation > 90) azimuth += 180;
+  if (azimuth < 0) azimuth += 360;
+  if (azimuth > 360) azimuth -= 360;
+
+  if (((millis() - oldtime) > 700) || NewInput) {
+    Serial.println (String(elevation) + ";" + String(azimuth + 15) + ";");// + String(Raw_elevation) + ";" + String(Raw_azimuth));
+
+
+    // if (!(NewInput))
+    oldtime = millis();
+  }
+
+  //if ((millis() - oldtime) > 30) {
+
+  //progress input from the manual control
+  if (digitalRead(0) == LOW & digitalRead(1) == HIGH  ) //decrease
+  {
+    MoveAzimuth (120, true);
+    NewInput = false;
+  }
+
+  if (digitalRead(0) == HIGH & digitalRead(1) == LOW ) //increase
+  {
+    MoveAzimuth (120, false);
+    NewInput = false;
+  }
+
+  if (digitalRead(4) == LOW & digitalRead(5) == HIGH ) //increase
+  {
+    MoveElevation (120, true);
+    NewInput = false;
+  }
+
+  if (digitalRead(4) == HIGH & digitalRead(5) == LOW ) //decrease
+  {
+    MoveElevation (120, false);
+    NewInput = false;
   }
 
   //Laser with warning tone
   if (digitalRead(6) == HIGH)
-    LaserOn_Stark();
+    PutLaserOn(LaserStrong);
   else
-    LaserOff_Stark ();
+    PutLaserOff (LaserStrong);
 
-  //delay(100);
+  //progress input from the serial port
+  ProgressInput ();
+
+  //if (NewInput)
+  //  oldtime = millis();
+  // }
 }
-
