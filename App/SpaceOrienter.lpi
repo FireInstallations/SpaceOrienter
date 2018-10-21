@@ -22,8 +22,8 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
-      <RevisionNr Value="3"/>
-      <BuildNr Value="3"/>
+      <RevisionNr Value="4"/>
+      <BuildNr Value="4"/>
       <Language Value="0407"/>
       <Attributes pvaPreRelease="True" pvaPatched="True"/>
       <StringTable CompanyName="FireInstallations" FileDescription="Finding all kinds of heavenly bodies at the sky" InternalName="SpaceOrienter" LegalCopyright="GNU Lesser General Public License v3.0" ProductName="SpaceOrienter" ProductVersion="0.0.2.0"/>
@@ -98,285 +98,278 @@
         <PackageName Value="LCL"/>
       </Item3>
     </RequiredPackages>
-    <Units Count="65">
+    <Units Count="64">
       <Unit0>
         <Filename Value="SpaceOrienter.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit0>
       <Unit1>
-        <Filename Value="spaceorienter_main.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="Frm_Spori"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit1>
-      <Unit2>
         <Filename Value="config.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Frm_Config"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Config"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="requirements/data.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit2>
       <Unit3>
-        <Filename Value="requirements/data.pas"/>
+        <Filename Value="requirements/iausofa.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit3>
       <Unit4>
-        <Filename Value="requirements/iausofa.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit4>
-      <Unit5>
         <Filename Value="requirements/planeph.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="PlanEph"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="requirements/synafpc.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit5>
       <Unit6>
-        <Filename Value="requirements/synafpc.pas"/>
+        <Filename Value="requirements/synaser.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit6>
       <Unit7>
-        <Filename Value="requirements/synaser.pas"/>
+        <Filename Value="requirements/synautil.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit7>
       <Unit8>
-        <Filename Value="requirements/synautil.pas"/>
+        <Filename Value="requirements/utils.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit8>
       <Unit9>
-        <Filename Value="requirements/utils.pas"/>
+        <Filename Value="requirements/wmm.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit9>
       <Unit10>
-        <Filename Value="requirements/wmm.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit10>
-      <Unit11>
         <Filename Value="requirements/VSOP/vsop87.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="VSOP87"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="requirements/VSOP/vsopeara.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit11>
       <Unit12>
-        <Filename Value="requirements/VSOP/vsopeara.pas"/>
+        <Filename Value="requirements/VSOP/vsopearb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit12>
       <Unit13>
-        <Filename Value="requirements/VSOP/vsopearb.pas"/>
+        <Filename Value="requirements/VSOP/vsopearc.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit13>
       <Unit14>
-        <Filename Value="requirements/VSOP/vsopearc.pas"/>
+        <Filename Value="requirements/VSOP/vsopeard.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit14>
       <Unit15>
-        <Filename Value="requirements/VSOP/vsopeard.pas"/>
+        <Filename Value="requirements/VSOP/vsopeare.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit15>
       <Unit16>
-        <Filename Value="requirements/VSOP/vsopeare.pas"/>
+        <Filename Value="requirements/VSOP/vsopemba.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit16>
       <Unit17>
-        <Filename Value="requirements/VSOP/vsopemba.pas"/>
+        <Filename Value="requirements/VSOP/vsopjup.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit17>
       <Unit18>
-        <Filename Value="requirements/VSOP/vsopjup.pas"/>
+        <Filename Value="requirements/VSOP/vsopjupa.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit18>
       <Unit19>
-        <Filename Value="requirements/VSOP/vsopjupa.pas"/>
+        <Filename Value="requirements/VSOP/vsopjupb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit19>
       <Unit20>
-        <Filename Value="requirements/VSOP/vsopjupb.pas"/>
+        <Filename Value="requirements/VSOP/vsopjupc.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit20>
       <Unit21>
-        <Filename Value="requirements/VSOP/vsopjupc.pas"/>
+        <Filename Value="requirements/VSOP/vsopjupd.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit21>
       <Unit22>
-        <Filename Value="requirements/VSOP/vsopjupd.pas"/>
+        <Filename Value="requirements/VSOP/vsopjupe.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit22>
       <Unit23>
-        <Filename Value="requirements/VSOP/vsopjupe.pas"/>
+        <Filename Value="requirements/VSOP/vsopmar.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit23>
       <Unit24>
-        <Filename Value="requirements/VSOP/vsopmar.pas"/>
+        <Filename Value="requirements/VSOP/vsopmara.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit24>
       <Unit25>
-        <Filename Value="requirements/VSOP/vsopmara.pas"/>
+        <Filename Value="requirements/VSOP/vsopmarb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit25>
       <Unit26>
-        <Filename Value="requirements/VSOP/vsopmarb.pas"/>
+        <Filename Value="requirements/VSOP/vsopmarc.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit26>
       <Unit27>
-        <Filename Value="requirements/VSOP/vsopmarc.pas"/>
+        <Filename Value="requirements/VSOP/vsopmard.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit27>
       <Unit28>
-        <Filename Value="requirements/VSOP/vsopmard.pas"/>
+        <Filename Value="requirements/VSOP/vsopmare.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit28>
       <Unit29>
-        <Filename Value="requirements/VSOP/vsopmare.pas"/>
+        <Filename Value="requirements/VSOP/vsopmer.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit29>
       <Unit30>
-        <Filename Value="requirements/VSOP/vsopmer.pas"/>
+        <Filename Value="requirements/VSOP/vsopmera.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit30>
       <Unit31>
-        <Filename Value="requirements/VSOP/vsopmera.pas"/>
+        <Filename Value="requirements/VSOP/vsopmerb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit31>
       <Unit32>
-        <Filename Value="requirements/VSOP/vsopmerb.pas"/>
+        <Filename Value="requirements/VSOP/vsopmerc.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit32>
       <Unit33>
-        <Filename Value="requirements/VSOP/vsopmerc.pas"/>
+        <Filename Value="requirements/VSOP/vsopmerd.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit33>
       <Unit34>
-        <Filename Value="requirements/VSOP/vsopmerd.pas"/>
+        <Filename Value="requirements/VSOP/vsopmere.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit34>
       <Unit35>
-        <Filename Value="requirements/VSOP/vsopmere.pas"/>
+        <Filename Value="requirements/VSOP/vsopnep.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit35>
       <Unit36>
-        <Filename Value="requirements/VSOP/vsopnep.pas"/>
+        <Filename Value="requirements/VSOP/vsopnepa.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit36>
       <Unit37>
-        <Filename Value="requirements/VSOP/vsopnepa.pas"/>
+        <Filename Value="requirements/VSOP/vsopnepb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit37>
       <Unit38>
-        <Filename Value="requirements/VSOP/vsopnepb.pas"/>
+        <Filename Value="requirements/VSOP/vsopnepc.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit38>
       <Unit39>
-        <Filename Value="requirements/VSOP/vsopnepc.pas"/>
+        <Filename Value="requirements/VSOP/vsopnepd.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit39>
       <Unit40>
-        <Filename Value="requirements/VSOP/vsopnepd.pas"/>
+        <Filename Value="requirements/VSOP/vsopnepe.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit40>
       <Unit41>
-        <Filename Value="requirements/VSOP/vsopnepe.pas"/>
+        <Filename Value="requirements/VSOP/vsopsat.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit41>
       <Unit42>
-        <Filename Value="requirements/VSOP/vsopsat.pas"/>
+        <Filename Value="requirements/VSOP/vsopsata.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit42>
       <Unit43>
-        <Filename Value="requirements/VSOP/vsopsata.pas"/>
+        <Filename Value="requirements/VSOP/vsopsatb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit43>
       <Unit44>
-        <Filename Value="requirements/VSOP/vsopsatb.pas"/>
+        <Filename Value="requirements/VSOP/vsopsatc.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit44>
       <Unit45>
-        <Filename Value="requirements/VSOP/vsopsatc.pas"/>
+        <Filename Value="requirements/VSOP/vsopsatd.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit45>
       <Unit46>
-        <Filename Value="requirements/VSOP/vsopsatd.pas"/>
+        <Filename Value="requirements/VSOP/vsopsate.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit46>
       <Unit47>
-        <Filename Value="requirements/VSOP/vsopsate.pas"/>
+        <Filename Value="requirements/VSOP/vsopsune.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit47>
       <Unit48>
-        <Filename Value="requirements/VSOP/vsopsune.pas"/>
+        <Filename Value="requirements/VSOP/vsopura.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit48>
       <Unit49>
-        <Filename Value="requirements/VSOP/vsopura.pas"/>
+        <Filename Value="requirements/VSOP/vsopuraa.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit49>
       <Unit50>
-        <Filename Value="requirements/VSOP/vsopuraa.pas"/>
+        <Filename Value="requirements/VSOP/vsopurab.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit50>
       <Unit51>
-        <Filename Value="requirements/VSOP/vsopurab.pas"/>
+        <Filename Value="requirements/VSOP/vsopurac.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit51>
       <Unit52>
-        <Filename Value="requirements/VSOP/vsopurac.pas"/>
+        <Filename Value="requirements/VSOP/vsopurad.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit52>
       <Unit53>
-        <Filename Value="requirements/VSOP/vsopurad.pas"/>
+        <Filename Value="requirements/VSOP/vsopurae.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit53>
       <Unit54>
-        <Filename Value="requirements/VSOP/vsopurae.pas"/>
+        <Filename Value="requirements/VSOP/vsopven.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit54>
       <Unit55>
-        <Filename Value="requirements/VSOP/vsopven.pas"/>
+        <Filename Value="requirements/VSOP/vsopvena.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit55>
       <Unit56>
-        <Filename Value="requirements/VSOP/vsopvena.pas"/>
+        <Filename Value="requirements/VSOP/vsopvenb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit56>
       <Unit57>
-        <Filename Value="requirements/VSOP/vsopvenb.pas"/>
+        <Filename Value="requirements/VSOP/vsopvenc.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit57>
       <Unit58>
-        <Filename Value="requirements/VSOP/vsopvenc.pas"/>
+        <Filename Value="requirements/VSOP/vsopvend.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit58>
       <Unit59>
-        <Filename Value="requirements/VSOP/vsopvend.pas"/>
+        <Filename Value="requirements/VSOP/vsopvene.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit59>
       <Unit60>
-        <Filename Value="requirements/VSOP/vsopvene.pas"/>
+        <Filename Value="requirements/VSOP/vspopemb.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit60>
       <Unit61>
-        <Filename Value="requirements/VSOP/vspopemb.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit61>
-      <Unit62>
         <Filename Value="gethotkey.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Frm_GetHotKey"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="GetHotkey"/>
-      </Unit62>
-      <Unit63>
+      </Unit61>
+      <Unit62>
         <Filename Value="spori_main.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Frm_Main"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="SpOri_Main"/>
-      </Unit63>
-      <Unit64>
+      </Unit62>
+      <Unit63>
         <Filename Value="multilanguestrings.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="MultiLangueStrings"/>
-      </Unit64>
+      </Unit63>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

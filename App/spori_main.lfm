@@ -1,7 +1,7 @@
 object Frm_Main: TFrm_Main
   Left = 0
   Height = 600
-  Top = 356
+  Top = 387
   Width = 965
   Caption = 'SpaceOrienter'
   ClientHeight = 600
@@ -2129,6 +2129,7 @@ object Frm_Main: TFrm_Main
   }
   KeyPreview = True
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   Position = poMainFormCenter
@@ -2147,24 +2148,24 @@ object Frm_Main: TFrm_Main
     Top = 78
     Width = 771
     TabStop = False
-    ActivePage = TbSht_BodyList
+    ActivePage = TabSht_Calculation
     Anchors = [akTop, akLeft, akRight, akBottom]
     ShowTabs = False
-    TabIndex = 1
+    TabIndex = 2
     TabOrder = 1
     TabPosition = tpLeft
     Options = [nboHidePageListPopup, nboKeyboardTabSwitch, nboDoChangeOnSetIndex]
-    object TbSht_DashBord: TTabSheet
+    object TabSht_DashBord: TTabSheet
       ClientHeight = 520
       ClientWidth = 769
       Font.Color = clWhite
       Font.Height = 21
       ParentFont = False
       object Pnl_Status: TPanel
-        AnchorSideTop.Control = TbSht_DashBord
-        AnchorSideRight.Control = TbSht_DashBord
+        AnchorSideTop.Control = TabSht_DashBord
+        AnchorSideRight.Control = TabSht_DashBord
         AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = TbSht_DashBord
+        AnchorSideBottom.Control = TabSht_DashBord
         AnchorSideBottom.Side = asrBottom
         Left = 579
         Height = 520
@@ -2183,11 +2184,10 @@ object Frm_Main: TFrm_Main
         object Lbl_Date: TLabel
           AnchorSideLeft.Control = Pnl_Status
           Left = 39
-          Height = 21
+          Height = 1
           Top = 24
-          Width = 12
+          Width = 1
           BorderSpacing.Left = 39
-          Caption = '0'
           Font.Color = clWhite
           Font.Height = -17
           Font.Name = 'Sans'
@@ -2204,7 +2204,7 @@ object Frm_Main: TFrm_Main
           AnchorSideBottom.Side = asrCenter
           Left = 48
           Height = 18
-          Top = 122
+          Top = 102
           Width = 104
           Anchors = [akTop, akLeft, akBottom]
           BorderSpacing.Left = 10
@@ -2217,7 +2217,7 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Side = asrBottom
           Left = 15
           Height = 8
-          Top = 155
+          Top = 135
           Width = 156
           BorderSpacing.Top = 12
           Smooth = True
@@ -2232,7 +2232,7 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Side = asrCenter
           Left = 53
           Height = 19
-          Top = 176
+          Top = 156
           Width = 51
           BorderSpacing.Left = 15
           Caption = 'Update!'
@@ -2244,7 +2244,7 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Side = asrBottom
           Left = 19
           Height = 19
-          Top = 228
+          Top = 208
           Width = 31
           BorderSpacing.Left = 19
           BorderSpacing.Top = 31
@@ -2272,10 +2272,9 @@ object Frm_Main: TFrm_Main
           AnchorSideLeft.Control = Lbl_Date
           AnchorSideLeft.Side = asrCenter
           Left = 39
-          Height = 21
+          Height = 1
           Top = 48
-          Width = 12
-          Caption = '0'
+          Width = 1
           Font.Color = clWhite
           Font.Height = -17
           Font.Name = 'Sans'
@@ -2289,7 +2288,7 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Side = asrBottom
           Left = 29
           Height = 19
-          Top = 150
+          Top = 130
           Width = 116
           BorderSpacing.Left = 14
           BorderSpacing.Top = 7
@@ -2305,7 +2304,7 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Side = asrBottom
           Left = 15
           Height = 23
-          Top = 120
+          Top = 100
           Width = 23
           AutoSize = True
           BorderSpacing.Left = 15
@@ -2343,12 +2342,11 @@ object Frm_Main: TFrm_Main
           AnchorSideLeft.Control = Lbl_MagDvtn_Title
           AnchorSideTop.Control = Lbl_MagDvtn_Title
           Left = 32
-          Height = 19
+          Height = 1
           Top = 482
-          Width = 8
+          Width = 1
           BorderSpacing.Left = 13
           BorderSpacing.Top = 24
-          Caption = '0'
           ParentColor = False
         end
         object Lbl_Place_Name: TLabel
@@ -2357,7 +2355,7 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Side = asrBottom
           Left = 32
           Height = 19
-          Top = 254
+          Top = 234
           Width = 37
           BorderSpacing.Left = 13
           BorderSpacing.Top = 7
@@ -2370,7 +2368,7 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Side = asrBottom
           Left = 15
           Height = 23
-          Top = 174
+          Top = 154
           Width = 23
           AutoSize = True
           BorderSpacing.Top = 31
@@ -2411,7 +2409,7 @@ object Frm_Main: TFrm_Main
           AnchorSideRight.Side = asrBottom
           Left = 15
           Height = 1
-          Top = 94
+          Top = 74
           Width = 160
           Anchors = [akTop, akLeft, akRight]
           BorderSpacing.Left = 15
@@ -2550,7 +2548,7 @@ object Frm_Main: TFrm_Main
           AnchorSideBottom.Control = Lbl_ComState
           Left = 162
           Height = 16
-          Top = 106
+          Top = 86
           Width = 16
           Anchors = [akRight, akBottom]
           AutoSize = True
@@ -2669,7 +2667,7 @@ object Frm_Main: TFrm_Main
           AnchorSideBottom.Control = Lbl_Update_Title
           Left = 162
           Height = 16
-          Top = 160
+          Top = 140
           Width = 16
           Anchors = [akBottom]
           AutoSize = True
@@ -2788,7 +2786,7 @@ object Frm_Main: TFrm_Main
           AnchorSideBottom.Side = asrCenter
           Left = 162
           Height = 16
-          Top = 229
+          Top = 209
           Width = 16
           Anchors = [akBottom]
           AutoSize = True
@@ -3017,10 +3015,22 @@ object Frm_Main: TFrm_Main
             99DF5A3BFF0583F5BFE6564DA3BF0000000049454E44AE426082
           }
         end
+        object Lbl_MagDvtn_Deg: TLabel
+          AnchorSideLeft.Control = Lbl_MagDvtn_Val
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Lbl_MagDvtn_Val
+          Left = 38
+          Height = 19
+          Top = 482
+          Width = 6
+          BorderSpacing.Left = 5
+          Caption = '°'
+          ParentColor = False
+        end
       end
       object Lbl_Bdy_Title: TLabel
-        AnchorSideLeft.Control = TbSht_DashBord
-        AnchorSideTop.Control = TbSht_DashBord
+        AnchorSideLeft.Control = TabSht_DashBord
+        AnchorSideTop.Control = TabSht_DashBord
         Left = 35
         Height = 21
         Top = 25
@@ -3039,12 +3049,11 @@ object Frm_Main: TFrm_Main
         AnchorSideTop.Control = Lbl_Bdy_Title
         AnchorSideTop.Side = asrBottom
         Left = 48
-        Height = 23
+        Height = 1
         Top = 56
-        Width = 12
+        Width = 1
         BorderSpacing.Left = 13
         BorderSpacing.Top = 10
-        Caption = '0'
         Font.Color = clWhite
         Font.Height = -19
         Font.Name = 'Sans'
@@ -3055,12 +3064,11 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Nr
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Nr
-        Left = 75
-        Height = 23
+        Left = 64
+        Height = 1
         Top = 56
-        Width = 7
+        Width = 1
         BorderSpacing.Left = 15
-        Caption = '-'
         Font.Color = clWhite
         Font.Height = -19
         Font.Name = 'Sans'
@@ -3088,12 +3096,11 @@ object Frm_Main: TFrm_Main
         AnchorSideTop.Control = Lbl_BdyPrpty_Title
         AnchorSideTop.Side = asrBottom
         Left = 318
-        Height = 23
+        Height = 1
         Top = 56
-        Width = 7
+        Width = 1
         BorderSpacing.Left = 13
         BorderSpacing.Top = 10
-        Caption = '-'
         Font.Color = clWhite
         Font.Height = -19
         Font.Name = 'Sans'
@@ -3106,13 +3113,12 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_BdyPrpty_Title
         AnchorSideTop.Side = asrBottom
-        Left = 340
-        Height = 23
+        Left = 334
+        Height = 1
         Top = 56
-        Width = 7
+        Width = 1
         BorderSpacing.Left = 15
         BorderSpacing.Top = 10
-        Caption = '-'
         Font.Color = clWhite
         Font.Height = -19
         Font.Name = 'Sans'
@@ -3123,12 +3129,11 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Split
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Nr
-        Left = 108
-        Height = 23
+        Left = 91
+        Height = 1
         Top = 56
-        Width = 7
+        Width = 1
         BorderSpacing.Left = 10
-        Caption = '-'
         Font.Color = clWhite
         Font.Height = -19
         Font.Name = 'Sans'
@@ -3139,7 +3144,7 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Bdy_Name
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Bdy_Nr
-        Left = 92
+        Left = 75
         Height = 23
         Top = 56
         Width = 6
@@ -3153,7 +3158,7 @@ object Frm_Main: TFrm_Main
       end
       object BitBtn_Navigate_Main: TBitBtn
         AnchorSideRight.Control = Pnl_Status
-        AnchorSideBottom.Control = TbSht_DashBord
+        AnchorSideBottom.Control = TabSht_DashBord
         AnchorSideBottom.Side = asrBottom
         Left = 407
         Height = 37
@@ -3178,7 +3183,7 @@ object Frm_Main: TFrm_Main
       end
       object Ed_Search4Bdy_Main: TEdit
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = TbSht_DashBord
+        AnchorSideTop.Control = TabSht_DashBord
         AnchorSideRight.Control = Pnl_Status
         AnchorSideBottom.Side = asrBottom
         Left = 447
@@ -3200,13 +3205,13 @@ object Frm_Main: TFrm_Main
         Text = 'Suchen...'
       end
       object Pnl_Line: TPanel
-        AnchorSideLeft.Control = TbSht_DashBord
+        AnchorSideLeft.Control = TabSht_DashBord
         AnchorSideTop.Control = Lbl_Bdy_Nr
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = Pnl_Status
         Left = 40
         Height = 1
-        Top = 103
+        Top = 81
         Width = 499
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Left = 40
@@ -3216,9 +3221,9 @@ object Frm_Main: TFrm_Main
         TabOrder = 3
       end
       object CmbBx_Mode: TComboBox
-        AnchorSideLeft.Side = asrCenter
+        AnchorSideLeft.Side = asrBottom
         AnchorSideRight.Control = BitBtn_Navigate_Main
-        AnchorSideBottom.Control = TbSht_DashBord
+        AnchorSideBottom.Control = TabSht_DashBord
         AnchorSideBottom.Side = asrBottom
         Left = 246
         Height = 37
@@ -4025,7 +4030,7 @@ object Frm_Main: TFrm_Main
         ParentColor = False
         ParentFont = False
       end
-      object Lbl_EleNow_Grd: TLabel
+      object Lbl_EleNow_Deg: TLabel
         AnchorSideLeft.Control = Lbl_EleNow_Val
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_EleNow_Val
@@ -4056,7 +4061,7 @@ object Frm_Main: TFrm_Main
         ParentColor = False
         ParentFont = False
       end
-      object Lbl_AziNow_Grd: TLabel
+      object Lbl_AziNow_Deg: TLabel
         AnchorSideLeft.Control = Lbl_AziNow_Val
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_AziNow_Val
@@ -4108,10 +4113,10 @@ object Frm_Main: TFrm_Main
         ParentFont = False
       end
       object Img_Info_Ele: TImage
-        AnchorSideLeft.Control = Lbl_EleNow_Grd
+        AnchorSideLeft.Control = Lbl_EleNow_Deg
         AnchorSideLeft.Side = asrBottom
         AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = Lbl_EleNow_Grd
+        AnchorSideBottom.Control = Lbl_EleNow_Deg
         Left = 220
         Height = 16
         Top = 211
@@ -4228,10 +4233,10 @@ object Frm_Main: TFrm_Main
         }
       end
       object Img_Info_Azi: TImage
-        AnchorSideLeft.Control = Lbl_AziNow_Grd
+        AnchorSideLeft.Control = Lbl_AziNow_Deg
         AnchorSideLeft.Side = asrBottom
         AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = Lbl_AziNow_Grd
+        AnchorSideBottom.Control = Lbl_AziNow_Deg
         Left = 481
         Height = 16
         Top = 211
@@ -4434,7 +4439,7 @@ object Frm_Main: TFrm_Main
         ParentColor = False
         ParentFont = False
       end
-      object Lbl_AziCalc_Grd: TLabel
+      object Lbl_AziCalc_Deg: TLabel
         AnchorSideLeft.Control = Lbl_AziCalc_Val
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_AziCalc_Val
@@ -4462,7 +4467,7 @@ object Frm_Main: TFrm_Main
         ParentColor = False
         ParentFont = False
       end
-      object Lbl_EleCalc_Grd: TLabel
+      object Lbl_EleCalc_Deg: TLabel
         AnchorSideLeft.Control = Lbl_EleCalc_Val
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_EleCalc_Val
@@ -4629,13 +4634,13 @@ object Frm_Main: TFrm_Main
         Shape = stTriangle
       end
     end
-    object TbSht_BodyList: TTabSheet
+    object TabSht_BodyList: TTabSheet
       ClientHeight = 520
       ClientWidth = 769
       object Ed_Search4Bdy_List: TEdit
         AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = TbSht_BodyList
-        AnchorSideRight.Control = TbSht_BodyList
+        AnchorSideTop.Control = TabSht_BodyList
+        AnchorSideRight.Control = TabSht_BodyList
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Side = asrBottom
         Left = 615
@@ -4656,12 +4661,12 @@ object Frm_Main: TFrm_Main
         Text = 'Suchen...'
       end
       object LV_BodyList: TListView
-        AnchorSideLeft.Control = TbSht_BodyList
+        AnchorSideLeft.Control = TabSht_BodyList
         AnchorSideTop.Control = Ed_Search4Bdy_List
         AnchorSideTop.Side = asrBottom
-        AnchorSideRight.Control = TbSht_BodyList
+        AnchorSideRight.Control = TabSht_BodyList
         AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = TbSht_BodyList
+        AnchorSideBottom.Control = TabSht_BodyList
         AnchorSideBottom.Side = asrBottom
         Left = 3
         Height = 444
@@ -4742,6 +4747,939 @@ object Frm_Main: TFrm_Main
         OnItemChecked = LV_BodyListItemChecked
         OnKeyPress = LV_BodyListKeyPress
         OnResize = LV_BodyListResize
+      end
+    end
+    object TabSht_Calculation: TTabSheet
+      ClientHeight = 520
+      ClientWidth = 769
+      Font.Color = clWhite
+      ParentFont = False
+      object Lbl_Long_Title: TLabel
+        Left = 56
+        Height = 19
+        Top = 432
+        Width = 79
+        Anchors = [akTop]
+        Caption = 'Longitude'
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lbl_Lat_Title: TLabel
+        AnchorSideLeft.Control = Lbl_Long_Title
+        AnchorSideTop.Control = Lbl_Long_Title
+        AnchorSideTop.Side = asrBottom
+        Left = 56
+        Height = 19
+        Top = 476
+        Width = 65
+        BorderSpacing.Top = 25
+        Caption = 'Latitude'
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lbl_AziNum_Title: TLabel
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = Lbl_Long_Title
+        Left = 295
+        Height = 19
+        Top = 432
+        Width = 112
+        Caption = 'Azimut Zähler'
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lbl_AziDeNom_Title: TLabel
+        AnchorSideLeft.Control = Lbl_AziNum_Title
+        AnchorSideTop.Control = Lbl_Lat_Title
+        Left = 295
+        Height = 19
+        Top = 476
+        Width = 119
+        Caption = 'Azimut Nenner'
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Sans'
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lbl_Azi_Title: TLabel
+        AnchorSideTop.Control = Lbl_Long_Title
+        Left = 552
+        Height = 19
+        Top = 432
+        Width = 62
+        BorderSpacing.Left = 25
+        Caption = 'Azimut'
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Sans'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lbl_Ele_Title: TLabel
+        AnchorSideLeft.Control = Lbl_Azi_Title
+        AnchorSideTop.Control = Lbl_Lat_Title
+        Left = 552
+        Height = 19
+        Top = 476
+        Width = 83
+        Caption = 'Elevation'
+        Font.Color = clWhite
+        Font.Height = -16
+        Font.Name = 'Sans'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lbl_Long_ValDeg: TLabel
+        AnchorSideLeft.Control = Lbl_Long_Title
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Lbl_Long_Title
+        AnchorSideTop.Side = asrCenter
+        Left = 153
+        Height = 1
+        Top = 441
+        Width = 1
+        BorderSpacing.Left = 18
+        ParentColor = False
+      end
+      object Lbl_Long_ValRad: TLabel
+        AnchorSideLeft.Control = Lbl_Long_Deg
+        AnchorSideTop.Control = Lbl_Long_ValDeg
+        Left = 177
+        Height = 1
+        Top = 441
+        Width = 1
+        BorderSpacing.Left = 18
+        ParentColor = False
+      end
+      object Lbl_Lat_ValDeg: TLabel
+        AnchorSideLeft.Control = Lbl_Long_ValDeg
+        AnchorSideTop.Control = Lbl_Lat_Title
+        AnchorSideTop.Side = asrCenter
+        Left = 153
+        Height = 1
+        Top = 485
+        Width = 1
+        ParentColor = False
+      end
+      object Lbl_Lat_ValRad: TLabel
+        AnchorSideLeft.Control = Lbl_Lat_Deg
+        AnchorSideTop.Control = Lbl_Lat_ValDeg
+        Left = 177
+        Height = 1
+        Top = 485
+        Width = 1
+        BorderSpacing.Left = 18
+        ParentColor = False
+      end
+      object Lbl_Long_Deg: TLabel
+        AnchorSideLeft.Control = Lbl_Long_ValDeg
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Lbl_Long_ValDeg
+        Left = 159
+        Height = 19
+        Top = 441
+        Width = 6
+        BorderSpacing.Left = 5
+        Caption = '°'
+        ParentColor = False
+      end
+      object Lbl_Long_Rad: TLabel
+        AnchorSideLeft.Control = Lbl_Long_ValRad
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Lbl_Long_ValRad
+        Left = 183
+        Height = 19
+        Top = 441
+        Width = 3
+        BorderSpacing.Left = 5
+        Caption = ''''
+        ParentColor = False
+      end
+      object Lbl_Lat_Deg: TLabel
+        AnchorSideLeft.Control = Lbl_Lat_ValDeg
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Lbl_Lat_ValDeg
+        Left = 159
+        Height = 19
+        Top = 485
+        Width = 6
+        BorderSpacing.Left = 5
+        Caption = '°'
+        ParentColor = False
+      end
+      object Lbl_Lat_Rad: TLabel
+        AnchorSideLeft.Control = Lbl_Lat_ValRad
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Lbl_Lat_ValRad
+        Left = 183
+        Height = 19
+        Top = 485
+        Width = 3
+        BorderSpacing.Left = 5
+        Caption = ''''
+        ParentColor = False
+      end
+      object Lbl_AziNum_Val: TLabel
+        AnchorSideLeft.Control = Lbl_AziDeNom_Val
+        AnchorSideTop.Control = Lbl_AziNum_Title
+        AnchorSideTop.Side = asrCenter
+        Left = 432
+        Height = 1
+        Top = 441
+        Width = 1
+        ParentColor = False
+      end
+      object Lbl_AziDeNom_Val: TLabel
+        AnchorSideLeft.Control = Lbl_AziDeNom_Title
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Lbl_AziDeNom_Title
+        AnchorSideTop.Side = asrCenter
+        Left = 432
+        Height = 1
+        Top = 485
+        Width = 1
+        BorderSpacing.Left = 18
+        ParentColor = False
+      end
+      object Lbl_Azi_Val: TLabel
+        AnchorSideLeft.Control = Lbl_Ele_Val
+        AnchorSideTop.Control = Lbl_Azi_Title
+        AnchorSideTop.Side = asrCenter
+        Left = 660
+        Height = 1
+        Top = 441
+        Width = 1
+        Font.Color = clWhite
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lbl_Ele_Val: TLabel
+        AnchorSideLeft.Control = Lbl_Ele_Title
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Lbl_Ele_Title
+        AnchorSideTop.Side = asrCenter
+        Left = 660
+        Height = 1
+        Top = 485
+        Width = 1
+        BorderSpacing.Left = 25
+        Font.Color = clWhite
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+      object Lbl_Azi_Deg: TLabel
+        AnchorSideLeft.Control = Lbl_Azi_Val
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Lbl_Azi_Val
+        Left = 666
+        Height = 19
+        Top = 441
+        Width = 6
+        BorderSpacing.Left = 5
+        Caption = '°'
+        ParentColor = False
+      end
+      object Lbl_Ele_Deg: TLabel
+        AnchorSideLeft.Control = Lbl_Ele_Val
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = Lbl_Ele_Val
+        Left = 666
+        Height = 19
+        Top = 485
+        Width = 6
+        BorderSpacing.Left = 5
+        Caption = '°'
+        ParentColor = False
+      end
+      object ECTabCtrl_CalcSections: TECTabCtrl
+        AnchorSideLeft.Control = TabSht_Calculation
+        AnchorSideTop.Control = TabSht_Calculation
+        AnchorSideRight.Control = TabSht_Calculation
+        AnchorSideRight.Side = asrBottom
+        Left = 0
+        Height = 29
+        Top = 1
+        Width = 768
+        Alignment = taCenter
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 1
+        BorderSpacing.Right = 1
+        ColorActiveTab = clWhite
+        ColorHighlighted = clCream
+        OnChange = ECTabCtrl_CalcSectionsChange
+        Options = [etcoAutoSizeTabsHeight, etcoDontEnlargeTopRow, etcoEnlargeTabsToFit, etcoFixedPosition, etcoLoopTabSelection, etcoShrinkTabsToMin, etcoVertTabsHorizontal]
+        ParentFont = False
+        Style = eosFinePanel
+        TabActiveRise = 2
+        TabClosing = etcPrevious
+        TabFixedWidth = 120
+        TabHeight = 25
+        TabIndex = 0
+        TabMinWidth = 90
+        TabOrder = 0
+        Tabs = <        
+          item
+            FontOptions.FontSize = 0
+            FontOptions.FontStyles = []
+            Text = 'Zeit'
+          end        
+          item
+            FontOptions.FontSize = 0
+            FontOptions.FontStyles = []
+            Text = 'Frühlingspunkt'
+          end        
+          item
+            FontOptions.FontSize = 0
+            FontOptions.FontStyles = []
+            Text = 'Stern'
+          end>
+      end
+      object PgCtrl_CalcSections: TPageControl
+        AnchorSideLeft.Control = TabSht_Calculation
+        AnchorSideTop.Control = ECTabCtrl_CalcSections
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = TabSht_Calculation
+        AnchorSideRight.Side = asrBottom
+        Left = 0
+        Height = 378
+        Top = 30
+        Width = 769
+        TabStop = False
+        ActivePage = TabSht_VernalP
+        Anchors = [akTop, akLeft, akRight]
+        ShowTabs = False
+        TabIndex = 1
+        TabOrder = 1
+        Options = [nboHidePageListPopup]
+        object TabSht_Time: TTabSheet
+          ClientHeight = 376
+          ClientWidth = 767
+          object Lbl_UTC1_Title: TLabel
+            AnchorSideLeft.Control = TabSht_Time
+            AnchorSideTop.Control = TabSht_Time
+            Left = 60
+            Height = 23
+            Top = 40
+            Width = 50
+            BorderSpacing.Left = 60
+            BorderSpacing.Top = 40
+            Caption = 'UTC1'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_UTC2_Title: TLabel
+            AnchorSideLeft.Control = Lbl_UTC1_Title
+            AnchorSideTop.Control = Lbl_UTC1_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 83
+            Width = 50
+            BorderSpacing.Top = 20
+            Caption = 'UTC2'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_TZ_Title: TLabel
+            AnchorSideLeft.Control = Lbl_UTC1_Title
+            AnchorSideTop.Control = Lbl_UTC2_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 126
+            Width = 25
+            BorderSpacing.Top = 20
+            Caption = 'TZ'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_CET_Title: TLabel
+            AnchorSideLeft.Control = Lbl_UTC1_Title
+            AnchorSideTop.Control = Lbl_TZ_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 169
+            Width = 41
+            BorderSpacing.Top = 20
+            Caption = 'MEZ'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_GMT_Title: TLabel
+            AnchorSideLeft.Control = Lbl_UTC1_Title
+            AnchorSideTop.Control = Lbl_CET_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 212
+            Width = 43
+            BorderSpacing.Top = 20
+            Caption = 'GMT'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_LocalUT_Title: TLabel
+            AnchorSideLeft.Control = Lbl_UTC1_Title
+            AnchorSideTop.Control = Lbl_GMT_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 46
+            Top = 255
+            Width = 74
+            BorderSpacing.Top = 20
+            Caption = 'Ortszeit'#10' in UT'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_LocalUT_Val: TLabel
+            AnchorSideLeft.Control = Lbl_LocalUT_Title
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = Lbl_LocalUT_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 152
+            Height = 1
+            Top = 278
+            Width = 1
+            BorderSpacing.Left = 18
+            ParentColor = False
+          end
+          object Lbl_UTC2_Val: TLabel
+            AnchorSideLeft.Control = Lbl_LocalUT_Val
+            AnchorSideTop.Control = Lbl_UTC2_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 152
+            Height = 1
+            Top = 94
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_UTC1_Val: TLabel
+            AnchorSideLeft.Control = Lbl_LocalUT_Val
+            AnchorSideTop.Control = Lbl_UTC1_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 152
+            Height = 1
+            Top = 51
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_TZ_Val: TLabel
+            AnchorSideLeft.Control = Lbl_LocalUT_Val
+            AnchorSideTop.Control = Lbl_TZ_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 152
+            Height = 1
+            Top = 137
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_CET_Val: TLabel
+            AnchorSideLeft.Control = Lbl_LocalUT_Val
+            AnchorSideTop.Control = Lbl_CET_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 152
+            Height = 1
+            Top = 180
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_GMT_Val: TLabel
+            AnchorSideLeft.Control = Lbl_LocalUT_Val
+            AnchorSideTop.Control = Lbl_GMT_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 152
+            Height = 1
+            Top = 223
+            Width = 1
+            ParentColor = False
+          end
+        end
+        object TabSht_VernalP: TTabSheet
+          ClientHeight = 376
+          ClientWidth = 767
+          object Lbl_Aries1P_Title: TLabel
+            AnchorSideLeft.Control = TabSht_VernalP
+            AnchorSideTop.Control = TabSht_VernalP
+            Left = 60
+            Height = 23
+            Top = 40
+            Width = 153
+            BorderSpacing.Left = 60
+            BorderSpacing.Top = 40
+            Caption = 'Frühlingsanfang'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_Diff_Title: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Title
+            AnchorSideTop.Control = Lbl_Aries1P_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 83
+            Width = 87
+            BorderSpacing.Top = 20
+            Caption = 'Differenz'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_DegShift_Title: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Title
+            AnchorSideTop.Control = Lbl_Diff_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 126
+            Width = 90
+            BorderSpacing.Top = 20
+            Caption = 'GradShift'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_VernalP_Title: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Title
+            AnchorSideTop.Control = Lbl_DegShift_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 169
+            Width = 140
+            BorderSpacing.Top = 20
+            Caption = 'Frühlingspunkt'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_HourAngle_Title: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Title
+            AnchorSideTop.Control = Lbl_VernalP_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 212
+            Width = 100
+            BorderSpacing.Top = 20
+            Caption = 'ZeitWinkel'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_VernalPNow_Title: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Title
+            AnchorSideTop.Control = Lbl_HourAngle_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 46
+            Top = 255
+            Width = 140
+            BorderSpacing.Top = 20
+            Caption = 'Frühlingspunkt'#10'aktuell'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_Aries1P_Val: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Title
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = Lbl_Aries1P_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 231
+            Height = 1
+            Top = 51
+            Width = 1
+            BorderSpacing.Left = 18
+            ParentColor = False
+          end
+          object Lbl_Diff_Val: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Val
+            AnchorSideTop.Control = Lbl_Diff_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 231
+            Height = 1
+            Top = 94
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_DegShift_Val: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Val
+            AnchorSideTop.Control = Lbl_DegShift_Title
+            Left = 231
+            Height = 1
+            Top = 126
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_VernalP_Val: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Val
+            AnchorSideTop.Control = Lbl_VernalP_Title
+            Left = 231
+            Height = 1
+            Top = 169
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_HourAngle_Val: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Val
+            AnchorSideTop.Control = Lbl_HourAngle_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 231
+            Height = 1
+            Top = 223
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_VernalPNow_Val: TLabel
+            AnchorSideLeft.Control = Lbl_Aries1P_Val
+            AnchorSideTop.Control = Lbl_VernalPNow_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 231
+            Height = 1
+            Top = 278
+            Width = 1
+            ParentColor = False
+          end
+        end
+        object TabSht_StarCalc: TTabSheet
+          ClientHeight = 376
+          ClientWidth = 767
+          object Lbl_RightAc_Title: TLabel
+            AnchorSideLeft.Control = TabSht_StarCalc
+            AnchorSideTop.Control = TabSht_StarCalc
+            Left = 60
+            Height = 23
+            Top = 40
+            Width = 54
+            BorderSpacing.Left = 60
+            BorderSpacing.Top = 40
+            Caption = 'Rekta'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_Decli_Title: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_Title
+            AnchorSideTop.Control = Lbl_RightAc_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 101
+            Width = 48
+            BorderSpacing.Top = 38
+            Caption = 'Dekli'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_StarAngle_Title: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_Title
+            AnchorSideTop.Control = Lbl_Decli_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 27
+            Top = 162
+            Width = 132
+            BorderSpacing.Top = 38
+            Caption = 'SternenWinkel'
+            Font.Color = clWhite
+            Font.Height = -19
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_Delta_Title: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_Title
+            AnchorSideTop.Control = Lbl_StarAngle_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 209
+            Width = 12
+            BorderSpacing.Top = 20
+            Caption = 'δ'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_Beta_Title: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_Title
+            AnchorSideTop.Control = Lbl_Delta_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 252
+            Width = 12
+            BorderSpacing.Top = 20
+            Caption = 'β'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_GrT_Title: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_Title
+            AnchorSideTop.Control = Lbl_Beta_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 295
+            Width = 35
+            BorderSpacing.Top = 20
+            Caption = 'GrT'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_T_Title: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_Title
+            AnchorSideTop.Control = Lbl_GrT_Title
+            AnchorSideTop.Side = asrBottom
+            Left = 60
+            Height = 23
+            Top = 338
+            Width = 12
+            BorderSpacing.Top = 20
+            Caption = 'T'
+            Font.Color = clWhite
+            Font.Height = -19
+            Font.Name = 'Sans'
+            ParentColor = False
+            ParentFont = False
+          end
+          object Lbl_Beta_Deg: TLabel
+            AnchorSideLeft.Control = Lbl_Beta_Val
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = Lbl_Beta_Val
+            Left = 216
+            Height = 19
+            Top = 263
+            Width = 6
+            BorderSpacing.Left = 5
+            Caption = '°'
+            ParentColor = False
+          end
+          object Lbl_Delta_Deg: TLabel
+            AnchorSideLeft.Control = Lbl_Delta_Val
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = Lbl_Delta_Val
+            Left = 216
+            Height = 19
+            Top = 220
+            Width = 6
+            BorderSpacing.Left = 5
+            Caption = '°'
+            ParentColor = False
+          end
+          object Lbl_StarAngle_Deg: TLabel
+            AnchorSideLeft.Control = Lbl_StarAngle_Val
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = Lbl_StarAngle_Val
+            Left = 216
+            Height = 19
+            Top = 175
+            Width = 6
+            BorderSpacing.Left = 5
+            Caption = '°'
+            ParentColor = False
+          end
+          object Lbl_Decli_Min: TLabel
+            AnchorSideLeft.Control = Lbl_Decli_ValMin
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = Lbl_Decli_ValMin
+            Left = 216
+            Height = 19
+            Top = 118
+            Width = 24
+            BorderSpacing.Left = 5
+            Caption = 'min'
+            ParentColor = False
+          end
+          object Lbl_Decli_Deg: TLabel
+            AnchorSideLeft.Control = Lbl_Decli_ValDeg
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = Lbl_Decli_ValDeg
+            Left = 216
+            Height = 19
+            Top = 112
+            Width = 6
+            BorderSpacing.Left = 5
+            Caption = '°'
+            ParentColor = False
+          end
+          object Lbl_RightAc_Min: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_ValMin
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = Lbl_RightAc_ValMin
+            Left = 216
+            Height = 19
+            Top = 62
+            Width = 24
+            BorderSpacing.Left = 5
+            Caption = 'min'
+            ParentColor = False
+          end
+          object Lbl_RightAc_Deg: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_ValDeg
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = Lbl_RightAc_ValDeg
+            Left = 216
+            Height = 19
+            Top = 51
+            Width = 6
+            BorderSpacing.Left = 5
+            Caption = '°'
+            ParentColor = False
+          end
+          object Lbl_RightAc_ValDeg: TLabel
+            AnchorSideLeft.Control = Lbl_StarAngle_Val
+            AnchorSideTop.Control = Lbl_RightAc_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 210
+            Height = 1
+            Top = 51
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_Decli_ValDeg: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_ValDeg
+            AnchorSideTop.Control = Lbl_Decli_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 210
+            Height = 1
+            Top = 112
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_Delta_Val: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_ValDeg
+            AnchorSideTop.Control = Lbl_Delta_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 210
+            Height = 1
+            Top = 220
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_Beta_Val: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_ValDeg
+            AnchorSideTop.Control = Lbl_Beta_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 210
+            Height = 1
+            Top = 263
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_GrT_Val: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_ValDeg
+            AnchorSideTop.Control = Lbl_GrT_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 210
+            Height = 1
+            Top = 306
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_T_Val: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_ValDeg
+            AnchorSideTop.Control = Lbl_T_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 210
+            Height = 1
+            Top = 349
+            Width = 1
+            ParentColor = False
+          end
+          object Lbl_RightAc_ValMin: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_ValDeg
+            AnchorSideTop.Control = Lbl_RightAc_ValDeg
+            AnchorSideTop.Side = asrBottom
+            Left = 210
+            Height = 1
+            Top = 62
+            Width = 1
+            BorderSpacing.Top = 10
+            ParentColor = False
+          end
+          object Lbl_Decli_ValMin: TLabel
+            AnchorSideLeft.Control = Lbl_RightAc_ValDeg
+            AnchorSideTop.Control = Lbl_Decli_ValDeg
+            AnchorSideTop.Side = asrBottom
+            Left = 210
+            Height = 1
+            Top = 118
+            Width = 1
+            BorderSpacing.Top = 5
+            ParentColor = False
+          end
+          object Lbl_StarAngle_Val: TLabel
+            AnchorSideLeft.Control = Lbl_StarAngle_Title
+            AnchorSideLeft.Side = asrBottom
+            AnchorSideTop.Control = Lbl_StarAngle_Title
+            AnchorSideTop.Side = asrCenter
+            Left = 210
+            Height = 1
+            Top = 175
+            Width = 1
+            BorderSpacing.Left = 18
+            ParentColor = False
+          end
+        end
       end
     end
   end
@@ -5389,10 +6327,15 @@ object Frm_Main: TFrm_Main
     MenuItems = <    
       item
         Caption = 'Übersicht'
+        ImageIndex = 0
       end    
       item
         Caption = 'Sternenliste'
-        ImageIndex = 0
+        ImageIndex = 1
+      end    
+      item
+        Caption = 'Berechnungen'
+        ImageIndex = 2
       end>
     ItemIndex = 0
     OnSelectionChange = ImgMn_MenueSelectionChange
@@ -5407,7 +6350,135 @@ object Frm_Main: TFrm_Main
     left = 880
     top = 16
     Bitmap = {
-      4C69010000002000000020000000000000000000000000000000000000000000
+      4C69040000002000000020000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000B8A94539B8A94566B8A9457DB8A94580B8A94571B8A9454CB8A9450E0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000B8A94543B8A945B9B8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45DEB8A945730000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000B8A94525B8A945D6B8A945FFBBAD4EFFCDC2
+      7CFFE3DEB8FFF3F0DFFFFBFBF6FFFFFFFFFFFBFBF6FFF3F0E0FFE3DDB7FFCDC3
+      7EFFB9AB49FFB8A945FEB8A94567000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000B8A9456DB8A945FFBCAE51FFD4CB90FFF7F5EBFFFFFF
+      FFFFFFFFFFFFFEFEFDFFFDFCFAFFFDFCFAFFFDFDFBFFFEFEFDFFFFFFFFFFFFFF
+      FFFFF9F7EFFFD6CD94FFBAAC4BFFB8A945C5B8A9450200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000B8A9458EB8A945FFC5B867FFECE8CEFFFFFFFFFFFFFFFFFFFBFA
+      F4FFF3F1E1FFE5DFBBFFD9D19CFFD7D0A2FFDAD2A0FFE4DFBAFFF4F2E4FFFAF9
+      F3FFFFFFFFFFFFFFFFFFF0EDD8FFC4B865FFB8A945E6B8A94507000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000B8A94575B8A945FFC9BD72FFF6F5E9FFFFFFFFFFFBFBF6FFEAE6C9FFCCC1
+      79FFB8A945FFB8A945FFB8A945FFBEB680FFB6A848FFB8A945FFB8A945FFCCC1
+      79FFEBE7CCFFFBFAF5FFFFFFFFFFF7F5EBFFCABF75FFB8A945DC000000000000
+      000000000000000000000000000000000000000000000000000000000000B8A9
+      452FB8A945FFC5B867FFF6F5E9FFFFFFFFFFF7F5EBFFD6CE95FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFBBAF5FFFC5C2ABFFB9AC53FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFD5CD93FFF8F6ECFFFFFFFFFFF5F3E6FFC8BC6FFFB8A9459C0000
+      000000000000000000000000000000000000000000000000000000000000B8A9
+      45E4BCAE51FFECE8CEFFFFFFFFFFF7F5EBFFD0C785FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFBEB578FFC9C9C7FFBBAF5EFFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFCCC17AFFF8F6ECFFFFFFFFFFEDE9D0FFBEB157FFB8A9
+      452C000000000000000000000000000000000000000000000000B8A94559B8A9
+      45FFD4CB90FFFFFFFFFFFBFBF6FFD6CE95FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFC3BD96FFCACACAFFBFB67CFFB8A947FFB8A945FFB8A9
+      45FFC8BC70FFC2B55FFFB8A945FFD1C787FFFEFDFCFFFEFDFCFFDBD3A1FFB8A9
+      45C3000000000000000000000000000000000000000000000000B8A945D2BBAD
+      4EFFF7F5EBFFFFFFFFFFEAE6C9FFB8A945FFB8A945FFB8A945FFB9AC52FFBAAC
+      54FFB8A945FFB8A945FFC1BB8EFFC5C1A9FFC0B780FFB8A945FFBBAD4EFFD6CD
+      93FFECE8CEFFC5B968FFB8A945FFBBAD4DFFE2DCB5FFFFFFFFFFEFECD6FFC3B6
+      62FFB8A9451900000000000000000000000000000000B8A94510B8A945FFCDC2
+      7CFFFFFFFFFFFBFAF4FFCCC17AFFB8A945FFB8A945FFB8A945FFBAAC54FFC0B8
+      83FFBCB063FFB8A945FFBAAC54FFB9AC53FFB6A84AFFC6BA6BFFE4DEB8FFFEFD
+      FCFFD3CA8CFFB8A945FFB8A945FFB8A945FFC9BE72FFFCFBF7FFFDFDFCFFD4CB
+      90FFB8A9457900000000000000000000000000000000B8A94559B8A945FFE3DD
+      B7FFFFFFFFFFF3F1E1FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFBCB0
+      64FFBBAE5BFFB8A945FFB8A945FFB9AB49FFD5CC91FFF0EDD9FFFFFFFFFFE2DC
+      B4FFB8A945FFB8A945FFB8A945FFB8A945FFBFB259FFE9E4C5FFFFFFFFFFE0D9
+      AEFFB8A945C000000000000000000000000000000000B8A9458AB8A945FFF2F0
+      DEFFFEFEFEFFE5E0BCFFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFC4B865FFEDEAD1FFFFFFFFFFF2F0DEFFBDB0
+      54FFB8A945FFB8A945FFB8A945FFB8A945FFB9AA48FFDAD3A0FFFFFFFFFFE7E2
+      C1FFB8A945F000000000000000000000000000000000B8A945A7B8A945FFFBFA
+      F6FFFDFDFBFFD9D19DFFB8A945FFBAAE5AFFBEB473FFC2BC92FFC1BA8BFFBAAD
+      55FFB8A945FFB8A945FFB8A945FFBBAD4EFFC3B662FFF6F4E9FFC8BC6FFFB8A9
+      45FFC4BF9EFFC2BC94FFBFB579FFBBAF60FFB7A845FFD1C787FFFFFFFFFFEFEC
+      D6FFB8A945FF00000000000000000000000000000000B8A945ADB8A945FFFEFE
+      FEFFFDFCFAFFD8D2A5FFBEB682FFC6C3AEFFC9C9C7FFCACACAFFC5C1A8FFB9AC
+      54FFB9AA47FFC6BA6AFFBCAE4FFFB8A945FFB8A945FFC8BD70FFB8A946FFB8A9
+      45FFC7C5B9FFCACACAFFC9C9C6FFC5C2ABFFBEB57EFFD3CB99FFFFFFFFFFFBFA
+      F4FFB8A945FF00000000000000000000000000000000B8A9459EB8A945FFFBFA
+      F6FFFDFDFBFFDAD3A2FFB6A848FFBAAC54FFBBAF61FFC0B881FFC0B884FFB6A8
+      4CFFD4CB8EFFF0EDD9FFC6BA6AFFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFC2BB8FFFBFB679FFBBAF5DFFB9AC52FFB7A94AFFD3CA8EFFFFFFFFFFEEEA
+      D3FFB8A945FF00000000000000000000000000000000B8A9457CB8A945FFF2F0
+      DEFFFEFEFDFFE5DFBBFFB8A945FFB8A945FFB8A945FFB8A948FFB8A945FFC6BA
+      6AFFF0EDD9FFFFFFFFFFF8F6EDFFCABF75FFB8A946FFB8A945FFB8A945FFB8A9
+      45FFB8AA49FFB8A947FFB8A945FFB8A945FFB9AB49FFDBD3A0FFFFFFFFFFE7E3
+      C2FFB8A945E100000000000000000000000000000000B8A94544B8A945FFE3DD
+      B7FFFFFFFFFFF4F2E4FFB8A945FFB8A945FFB8A945FFB8A945FFBBAD4DFFE3DD
+      B7FFFFFFFFFFF1EFDCFFC7BB6DFFB8A946FFB8A945FFB8A945FFB9AC53FFBCB0
+      63FFB8A945FFB8A945FFB8A945FFB8A945FFC0B25AFFE9E4C6FFFFFFFFFFE0D9
+      AEFFB8A945A80000000000000000000000000000000000000000B8A945FFCDC3
+      7EFFFFFFFFFFFAF9F3FFCCC17AFFB8A945FFB8A945FFB8A945FFD5CC92FFFDFD
+      FBFFE1DBB2FFBDAF53FFB8A945FFB8A945FFB8A945FFB8A945FFBBAF5EFFC4C0
+      A3FFB8A948FFB8A945FFB8A945FFB8A945FFC8BD71FFFDFCFAFFFDFDFBFFD4CB
+      90FFB8A945590000000000000000000000000000000000000000B8A945ADB9AB
+      49FFF9F7EFFFFFFFFFFFECE8CEFFB8A945FFB8A945FFC7BC6EFFEBE7CBFFD2C9
+      8BFFB8A945FFB8A945FFC3BE9CFFC7C5B9FFC3BD96FFB8AA4AFFB8A945FFB8A9
+      45FFBAAD55FFB8A945FFB8A945FFBDAF52FFE2DBB3FFFFFFFFFFEFEBD5FFC4B8
+      65FF000000000000000000000000000000000000000000000000B8A94528B8A9
+      45FFD6CD94FFFFFFFFFFFBFAF5FFD6CE95FFB8A945FFC0B35BFFC3B763FFB8A9
+      45FFB8A945FFB8A945FFC1BB8EFFCACACAFFBFB77FFFB8A947FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A946FFCFC481FFFFFFFFFFFEFEFEFFDBD4A2FFB8A9
+      458E00000000000000000000000000000000000000000000000000000000B8A9
+      45ADBAAC4BFFEFECD7FFFFFFFFFFF8F6EDFFCDC27CFFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFBEB472FFC9C9C6FFBCB062FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A946FFC9BE73FFF9F8F1FFFFFFFFFFECE8CDFFC0B35BFCB8A9
+      450200000000000000000000000000000000000000000000000000000000B8A9
+      4504B8A945F6C4B765FFF7F5EBFFFFFFFFFFF8F7EEFFD2C889FFBBAD4EFFB8A9
+      45FFB8A945FFB8A945FFBAAD58FFC6C3B0FFB9AC52FFB8A945FFB8A945FFB8A9
+      45FFBDAF52FFCFC481FFF9F8F1FFFFFFFFFFF4F1E2FFCBC078FFB8A9454A0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000B8A94527B8A945FFCABF75FFF5F3E6FFFFFFFFFFFEFEFDFFE3DDB7FFC9BE
+      73FFC0B25AFFB9AB4AFFB8A945FFBEB681FFB8AA4BFFB9AB4AFFC0B25AFFC9BD
+      72FFE2DBB3FFFFFFFFFFFFFFFFFFF4F1E2FFD0C685FFB8A94584000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000B8A9452FB8A945FFC7BC6EFFECE9CFFFFEFDFCFFFFFFFFFFFCFB
+      F8FFE9E5C7FFDBD4A2FFD2C889FFD3CB99FFD4CB90FFDBD3A1FFE9E4C6FFFDFD
+      FBFFFFFFFFFFFEFEFEFFECE8CDFFCBC078FFB8A9458800000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000B5A94516B7A945DEBEB156FFDAD3A0FFEFEBD5FFFDFD
+      FBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFD
+      FBFFEEEBD4FFDBD3A1FFC0B25AFFB8A945530000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000B6A9456EB7A945F9C3B662FFD4CB
+      8FFFE0D9AEFFE7E2C1FFECE8CEFFF6F5E9FFEDEAD1FFE7E3C2FFE0D9AEFFD4CB
+      8FFFC4B765FFB8A945A0B8A9450A000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000B6A94553B8A9
+      45AEB8A945F2B8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945C5B8A9
+      4572B8A9450A0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000B8A94519B8A9451DB7A9450A00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -5535,14 +6606,270 @@ object Frm_Main: TFrm_Main
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000B8A94539B8A94566B8A9457DB8A94580B8A94571B8A9454CB8A9450E0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000B8A94543B8A945B9B8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45DEB8A945730000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000B8A94525B8A945D6B8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FEB8A94567000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000B8A9456DB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945C5B8A9450200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000B8A9458EB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB7A843FFB7A844FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945E6B8A94507000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000B8A94575B8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945DC000000000000
+      000000000000000000000000000000000000000000000000000000000000B8A9
+      452FB8A945FFB8AA47FFCDC786FFEFF2E4FFFBFDFBFFFFFFFFFFBBAD4CFFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9459C0000
+      000000000000000000000000000000000000000000000000000000000000B8A9
+      45E4B8A945FFD2CD93FFFFFFFEFFE3DEB5FFD4CB8EFFD6CD93FFB9AA47FFB8A9
+      45FFB8A945FFC7BD70FFC0B45CFFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFC2B865FFC8BE70FFB8A945FFB8A9
+      452C000000000000000000000000000000000000000000000000B8A94559B8A9
+      45FFB9AA47FFFAFDFAFFDED7A7FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFBDB055FFEFEFDAFFBBAD4EFFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFBAAD4EFFFCFDFAFFBCAE50FFB8A9
+      45C3000000000000000000000000000000000000000000000000B8A945D2B8A9
+      45FFB8A946FFFAFFFDFFD3CA8BFFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFDCDCB1FFD7CF95FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFD9D6A6FFE4E0B8FFB8A9
+      45FFB8A9451900000000000000000000000000000000B8A94510B8A945FFD3CC
+      90FFDAD29FFFFDFFFEFFEEEAD2FFD5CD93FFD6CE95FFC6BB6BFFB8A945FFBAAD
+      4DFFF9FAF2FFBFB359FFB8A945FFBAAD4DFFC1B45EFFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFC1B45EFFB9AB49FFB8A945FFBCB156FFFFFFFEFFBBAD
+      4DFFB8A9457900000000000000000000000000000000B8A94559B8A945FFE3E0
+      BCFFE9E5C6FFFEFFFFFFF5F3E5FFE6E1BEFFE8E4C4FFCFC681FFB8A945FFCAC3
+      7DFFF3F0DFFFB8A945FFB8A945FFBAAC4CFFEBE9D0FFD0C885FFB8A945FFB8A9
+      45FFB8A945FFCEC887FFE6E2BEFFBAAC4BFFB8A945FFB8A945FFFAFCF8FFCFC7
+      83FFB8A945C000000000000000000000000000000000B8A9458AB8A945FFB8A9
+      45FFBAAC4BFFF9FFFDFFD6CE95FFB8A945FFB8A945FFB8A945FFB8A945FFE3E4
+      C2FFE6E3BEFFB8A945FFB8A945FFB8A945FFC4BC6DFFFCFCFAFFC1B55DFFB8A9
+      45FFBFB45DFFFBFDF9FFC4B865FFB8A945FFB8A945FFB8A945FFE2E2BFFFEBE9
+      CCFFB8A945F000000000000000000000000000000000B8A945A7B8A945FFB8A9
+      45FFB9AA48FFF9FFFDFFD4CC8FFFB8A945FFB8A945FFB8A945FFB8A945FFF6FC
+      F6FFD8D29BFFB8A945FFB8A945FFB8A945FFB8A945FFD7D4A0FFFAFBF4FFBDB1
+      55FFF7F9F1FFD4CD90FFB8A945FFB8A945FFB8A945FFB8A945FFD4D098FFF9F9
+      F2FFB8A945FF00000000000000000000000000000000B8A945ADB8A945FFB8A9
+      45FFB9AA48FFF9FFFDFFD4CC8FFFB8A945FFB8A945FFB8A945FFB8A945FFFCFF
+      FEFFD3CC8DFFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFEEEFDCFFFFFF
+      FFFFE9E5C5FFB8A946FFB8A945FFB8A945FFB8A945FFB8A945FFD0CA8BFFFDFF
+      FCFFB8A945FF00000000000000000000000000000000B8A9459EB8A945FFB8A9
+      45FFB9AA48FFF9FFFDFFD4CC8FFFB8A945FFB8A945FFB8A945FFB8A945FFFAFF
+      FDFFD6CF95FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFDBD8AAFFFEFF
+      FEFFD6CF94FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFD2CD92FFFCFC
+      F7FFB8A945FF00000000000000000000000000000000B8A9457CB8A945FFB8A9
+      45FFB9AA48FFF9FFFDFFD4CC8FFFB8A945FFB8A945FFB8A945FFB8A945FFE8EA
+      D0FFE2DDB4FFB8A945FFB8A945FFB8A945FFB8A945FFC9C27AFFFEFDFAFFCFC8
+      87FFF7F7EEFFC4B864FFB8A945FFB8A945FFB8A945FFB8A945FFDEDDB3FFF1EF
+      DAFFB8A945E100000000000000000000000000000000B8A94544B8A945FFB8A9
+      45FFB9AA48FFF9FFFDFFD4CC8FFFB8A945FFB8A945FFB8A945FFB8A945FFD0CC
+      8EFFF0EDD7FFB8A945FFB8A945FFB8A945FFBFB35BFFFDFFFEFFC8BE6FFFB8A9
+      45FFCFC989FFF4F4E5FFBBAE4FFFB8A945FFB8A945FFB8A945FFF4F6ECFFD7D1
+      98FFB8A945A80000000000000000000000000000000000000000B8A945FFB8A9
+      45FFB9AA48FFF9FFFDFFD4CC8FFFB8A945FFB8A945FFB8A945FFB8A945FFBCAF
+      52FFFCFBF7FFBCAF50FFB8A945FFBAAD4EFFF1F1E1FFD7D095FFB8A945FFB8A9
+      45FFB8AA47FFDFDDB5FFE5E0B9FFB9AA47FFB8A945FFBAAD4DFFFFFFFFFFBFB2
+      57FFB8A945590000000000000000000000000000000000000000B8A945ADB8A9
+      45FFB9AA48FFF9FFFDFFD4CC8FFFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFE8E9CCFFCFC681FFB8A945FFC8BE72FFDAD39EFFB8AA47FFB8A945FFB8A9
+      45FFB8A945FFBBAD4EFFDBD6A6FFC1B45CFFB8A945FFCEC988FFF1F1DCFFB8A9
+      45FF000000000000000000000000000000000000000000000000B8A94528B8A9
+      45FFB9AA48FFF9FFFDFFD5CD91FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFC1B762FFECE9CEFFB8AA47FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFF6F6EDFFC3B862FFB8A9
+      458E00000000000000000000000000000000000000000000000000000000B8A9
+      45ADB8AA47FFEBECD6FFCBC076FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A946FFDFDEB5FFC8BD6EFFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFCAC37DFFE6E5C1FFB8A945FCB8A9
+      450200000000000000000000000000000000000000000000000000000000B8A9
+      4504B8A945F6B8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9454A0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000B8A94527B8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A94584000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000B8A9452FB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9458800000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000B5A94516B7A945DEB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945530000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000B6A9456EB7A945F9B8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945A0B8A9450A000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000B6A94553B8A9
+      45AEB8A945F2B8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945C5B8A9
+      4572B8A9450A0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000B8A94519B8A9451DB7A9450A00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000B8A94539B8A94566B8A9457DB8A94580B8A94571B8A9454CB8A9450E0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000B8A94543B8A945B9B8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45DEB8A945730000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000B8A94525B8A945D6B8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FEB8A94567000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000B8A9456DB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945C5B8A9450200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000B8A9458EB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB7A843FFB7A844FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945E6B8A94507000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000B8A94575B8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945DC000000000000
+      000000000000000000000000000000000000000000000000000000000000B8A9
+      452FB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFBAAC4BFFE2DCB3FFF1EFDCFFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9459C0000
+      000000000000000000000000000000000000000000000000000000000000B8A9
+      45E4B8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB9AA48FFEEEBD4FFFDFCF9FFFFFFFFFFC4B866FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      452C000000000000000000000000000000000000000000000000B8A94559B8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFDCD5A4FFFFFFFFFFE0D9AEFFFFFFFFFFDFD8ACFFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45C3000000000000000000000000000000000000000000000000B8A945D2B8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFBCAE
+      51FFFEFEFDFFFFFFFFFFC5B968FFFFFFFFFFF8F6EDFFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A9451900000000000000000000000000000000B8A94510B8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFE2DC
+      B5FFFFFFFFFFE9E4C5FFB8A945FFF8F7EEFFFFFFFFFFC5B867FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A9457900000000000000000000000000000000B8A94559B8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFC1B45DFFFFFF
+      FFFFFFFFFFFFC1B45DFFB8A945FFE0D9AEFFFFFFFFFFDFD9ADFFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945C000000000000000000000000000000000B8A9458AB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFE9E4C5FFFFFF
+      FFFFE2DCB5FFB8A945FFB8A945FFC5B968FFFFFFFFFFF8F6EDFFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945F000000000000000000000000000000000B8A945A7B8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFC6BA6AFFFFFFFFFFFEFE
+      FDFFBCAE51FFB8A945FFB8A945FFB8A945FFF8F6EDFFFFFFFFFFC5B968FFB8A9
+      45FFB8A945FFCABF75FFB8AA47FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FF00000000000000000000000000000000B8A945ADB8A945FFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDCD5
+      A4FFB8A945FFB8A945FFB8A945FFB8A945FFDFD9ADFFFFFFFFFFE0D9AEFFB8A9
+      45FFC0B35BFFFFFFFFFFFCFBF7FFFFFFFFFFFFFFFFFFFFFFFFFFB8A945FFB8A9
+      45FFB8A945FF00000000000000000000000000000000B8A9459EB8A945FFFFFF
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEEEBD4FFB9AA
+      48FFB8A945FFB8A945FFB8A945FFB8A945FFC5B867FFFFFFFFFFF8F7EEFFB8A9
+      45FFEDE9D1FFFFFFFFFFE6E0BEFFFFFFFFFFFFFFFFFFFFFFFFFFB8A945FFB8A9
+      45FFB8A945FF00000000000000000000000000000000B8A9457CB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFF8F6EDFFFFFFFFFFDCD4
+      A3FFFFFFFFFFFAF9F3FFBAAC4BFFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945E100000000000000000000000000000000B8A94544B8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFDFD8ACFFFFFFFFFFFEFD
+      FCFFFFFFFFFFCFC481FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945A80000000000000000000000000000000000000000B8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFC4B866FFFFFFFFFFFFFF
+      FFFFE9E4C5FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945590000000000000000000000000000000000000000B8A945ADB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFBCAE4FFFFDFCFAFFFFFF
+      FFFFBFB157FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FF000000000000000000000000000000000000000000000000B8A94528B8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFC4B8
+      66FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      458E00000000000000000000000000000000000000000000000000000000B8A9
+      45ADB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FCB8A9
+      450200000000000000000000000000000000000000000000000000000000B8A9
+      4504B8A945F6B8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9454A0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000B8A94527B8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A94584000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000B8A9452FB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9458800000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000B5A94516B7A945DEB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945530000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000B6A9456EB7A945F9B8A945FFB8A9
+      45FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A9
+      45FFB8A945FFB8A945A0B8A9450A000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000B6A94553B8A9
+      45AEB8A945F2B8A945FFB8A945FFB8A945FFB8A945FFB8A945FFB8A945C5B8A9
+      4572B8A9450A0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000B8A94519B8A9451DB7A9450A00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000
     }
   end
   object ImgLst_UsedPics: TImageList
     Height = 32
     Width = 32
-    left = 755
-    top = 15
+    left = 784
+    top = 16
     Bitmap = {
       4C690300000020000000200000000000000000000000000000002CA02C000000
       0000000000002CA02C0B2CA02C2E2CA02C812CA02CC52CA02CEC2CA02CF82CA0
@@ -5930,5 +7257,25 @@ object Frm_Main: TFrm_Main
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000
     }
+  end
+  object FndD: TFindDialog
+    FindText = 'test'
+    Options = [frHideWholeWord, frHideUpDown, frDisableWholeWord, frHideEntireScope, frHidePromptOnReplace, frButtonsAtBottom]
+    OnFind = FndDFind
+    left = 720
+    top = 16
+  end
+  object Tmr_Follow: TTimer
+    Enabled = False
+    OnTimer = Tmr_FollowOnTimer
+    left = 672
+    top = 16
+  end
+  object Tmr_CalcAll: TTimer
+    Enabled = False
+    Interval = 250
+    OnTimer = Tmr_CalcAllOnTimer
+    left = 616
+    top = 16
   end
 end

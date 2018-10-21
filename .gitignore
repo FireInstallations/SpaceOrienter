@@ -71,7 +71,8 @@ __recovery/
 Debug/
 Release/
 
-# SpaceOrienter generated generated files (Old)
+# SpaceOrienter generated generated files 
+*.exe.po
 #*.Space
 #*.xml
 #OldOptions/

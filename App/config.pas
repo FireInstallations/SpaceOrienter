@@ -210,7 +210,7 @@ var
 implementation
 
 uses
-  spaceorienter_main, SpOri_Main;
+  SpOri_Main;
 
 {$R *.lfm}
 
@@ -989,7 +989,7 @@ procedure TFrm_Config.FormCreate(Sender: TObject); //ToDo: Comments
 
 procedure TFrm_Config.Bt_UpClick(Sender: TObject);  //ToDo: Comments
   begin
-    Frm_Spori.Update_ ();
+    Frm_Main.Update_ ();
    end;
 
 procedure TFrm_Config.Bt_Con1Click(Sender: TObject); //Todo
@@ -1002,34 +1002,16 @@ procedure TFrm_Config.Ed_HtKyEditingDone(Sender: TObject); //ToDo
 
   end;
 
-procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject); //ToDo: Comments
+procedure TFrm_Config.BitBtn_NwCnfgClick(Sender: TObject); //ToDo: Comments; Set switches right
   var
-    HK: String;
-    PortableMode: boolean;
-
     OptName: TOptionNames;
   begin
-    with Frm_Spori do
+    with Frm_Main do
       begin
-        HK     := Ed_Nr.Text;
-        PortableMode := StrToBool(Options[ON_PortableMode]);
-
       //Set default Options
       for OptName := low(TOptionNames) to High(TOptionNames) do
-        Options[OptName] := GetDefaultOption(OptName);
-
-      //Remove old file
-      if FileExists (OptionsPath)  then
-        begin
-          ForceDirectories (OldOptionsPath);
-          RenameFile (OptionsPath, OldOptionsPath + PathDelim + 'Options'+formatdatetime('d.m.y-h;n;s;z', Now)+'.old');
-        end;
-
-        //Since the sitch would call it, there is no need to call SetPortableMode(PortableMode);
-        Sw_PortableMode.Checked := PortableMode;
-
-        Ed_Nr.Text := HK;
-        ProgressNumber ();
+        if not (OptName = ON_Body) or (OptName = ON_PortableMode) then
+          Options[OptName] := GetDefaultOption(OptName);
       end;
   end;
 
@@ -1042,15 +1024,15 @@ procedure TFrm_Config.Bt_LoadStarListClick(Sender: TObject); //ToDo: Comments
   begin
     if (OpnD_StarList.Execute) then
       begin
-        Frm_Spori.LV_List.Items.Clear;
+       Frm_Main.LV_BodyList.Items.Clear;
 
-        Frm_Spori.LoadStarList(OpnD_StarList.Files[0]);
+        Frm_Main.LoadStarList(OpnD_StarList.Files[0]);
       end;
   end;
 
 procedure TFrm_Config.Bt_ResetStarListClick(Sender: TObject); //ToDo: Comments
   begin
-    with Frm_Spori do
+    with Frm_Main do
       begin
         DefaultList ();
 
@@ -1065,7 +1047,7 @@ procedure TFrm_Config.Bt_HtKyClick(Sender: TObject); //ToDo: Comments
 
 procedure TFrm_Config.Bt_ConClick(Sender: TObject); //ToDo: Comments
   begin
-    Frm_Spori.Connect();
+    Frm_Main.Connect();
    end;
 
 procedure TFrm_Config.CbBx_OrtEditingDone(Sender: TObject); //ToDo: Comments
@@ -1079,9 +1061,9 @@ procedure TFrm_Config.CbBx_OrtEditingDone(Sender: TObject); //ToDo: Comments
     FlSpEd_Lat.Value := TempKoord.Lat;
     FlSpEd_Lon.Value := TempKoord.Lon;
 
-    Frm_Spori.Options[ON_Place] := PlaceName;
-    Frm_Spori.Options[ON_Lon]   := FloatToStrF(TempKoord.Lon, ffFixed, 3, 4);
-    Frm_Spori.Options[ON_Lat]   := FloatToStrF(TempKoord.Lat, ffFixed, 3, 4);
+    Frm_Main.Options[ON_Place] := PlaceName;
+    Frm_Main.Options[ON_Lon]   := FloatToStrF(TempKoord.Lon, ffFixed, 3, 4);
+    Frm_Main.Options[ON_Lat]   := FloatToStrF(TempKoord.Lat, ffFixed, 3, 4);
 
     PlaceName := AnsiUpperCase(String(PlaceName[1])) + copy(PlaceName, 2, pred(Length(PlaceName)));
     Frm_Main.Lbl_Place_Name.Caption     := PlaceName;
@@ -1089,49 +1071,47 @@ procedure TFrm_Config.CbBx_OrtEditingDone(Sender: TObject); //ToDo: Comments
 
 procedure TFrm_Config.CBx_RateEditingDone(Sender: TObject); //ToDo: Comments
   begin
-    Frm_Spori.Options[ON_UpdateRate] := IntToStr(CBx_Rate.ItemIndex);
+    Frm_Main.Options[ON_UpdateRate] := IntToStr(CBx_Rate.ItemIndex);
    end;
 
 procedure TFrm_Config.CBx_TagEditingDone(Sender: TObject); //ToDo: Comments
   begin
-    Frm_Spori.Options[ON_UpdateDay] := IntToStr(CBx_Tag.ItemIndex);
+    Frm_Main.Options[ON_UpdateDay] := IntToStr(CBx_Tag.ItemIndex);
    end;
 
 procedure TFrm_Config.DE_DayChange(Sender: TObject); //ToDo: Comments
   begin
-    Frm_Spori.DiffD   := De_Day.Date - Date;
-    Frm_Spori.NoEntry := true;
+    Frm_Main.DiffD   := De_Day.Date - Date;
+    Frm_Main.NoEntry := true;
    end;
 
 procedure TFrm_Config.De_DayEditingDone(Sender: TObject); //ToDo: Comments
   begin
-    Frm_Spori.Options[ON_Date] := DateToStr(De_Day.Date);
-    Frm_Spori.NoEntry := false;
+    Frm_Main.Options[ON_Date] := DateToStr(De_Day.Date);
+    Frm_Main.NoEntry := false;
    end;
 
 procedure TFrm_Config.FlSpEd_LatEditingDone(Sender: TObject); //ToDo: Comments
 begin
-  Frm_Spori.Lb_Lat_G.Caption  := FloatToStr(FlSpEd_Lat.Value);
-  Frm_Spori.Lb_Lat_G1.Caption := FloatToStr(FlSpEd_Lat.Value);
+  Frm_Main.Lbl_Lat_ValDeg.Caption := FloatToStrF(FlSpEd_Lat.Value, ffFixed, 3, 4);
 
-  //Frm_Spori.Angle ();
+  //Frm_Main.Angle ();
 
-  Frm_Spori.Options[ON_Lat] := FloatToStr(FlSpEd_Lat.Value);
+  Frm_Main.Options[ON_Lat] := FloatToStr(FlSpEd_Lat.Value);
 end;
 
 procedure TFrm_Config.FlSpEd_LonEditingDone(Sender: TObject); //ToDo: Comments
 begin
-  Frm_Spori.Lb_Lon_G.Caption  := FloatToStr(FlSpEd_Lon.Value);
-  Frm_Spori.Lb_Lon_G1.Caption := FloatToStr(FlSpEd_Lon.Value);
+  Frm_Main.Lbl_Long_ValDeg.Caption := FloatToStrF(FlSpEd_Lat.Value, ffFixed, 3, 4);
 
-  //Frm_Spori.Angle ();
+  //Frm_Main.Angle ();
 
-  Frm_Spori.Options[ON_Lon] := FloatToStr(FlSpEd_Lon.Value);
+  Frm_Main.Options[ON_Lon] := FloatToStr(FlSpEd_Lon.Value);
 end;
 
 procedure TFrm_Config.FormClose(Sender: TObject; var CloseAction: TCloseAction); //ToDo: Comments
 begin
-  Frm_Spori.Show;
+  Frm_Main.Show;
 end;
 
 procedure TFrm_Config.Img_AutoClick(Sender: TObject); //ToDo: Comments, Clean up
@@ -1139,7 +1119,7 @@ procedure TFrm_Config.Img_AutoClick(Sender: TObject); //ToDo: Comments, Clean up
     AllUpOff ();
     Img_Auto.Picture :=  Img_On.Picture;
 
-    Frm_Spori.Options[ON_UpdateMode] := '0';
+    Frm_Main.Options[ON_UpdateMode] := '0';
    end;
 
 procedure TFrm_Config.Img_MsgClick(Sender: TObject); //ToDo: Comments, Clean up
@@ -1147,7 +1127,7 @@ procedure TFrm_Config.Img_MsgClick(Sender: TObject); //ToDo: Comments, Clean up
     AllUpOff ();
     Img_Msg.Picture  := Img_On.Picture;
 
-    Frm_Spori.Options[ON_UpdateMode] := '1';
+    Frm_Main.Options[ON_UpdateMode] := '1';
    end;
 
 procedure TFrm_Config.Img_tmClick(Sender: TObject); //ToDo: Comments, Clean up
@@ -1167,7 +1147,7 @@ procedure TFrm_Config.Img_tmClick(Sender: TObject); //ToDo: Comments, Clean up
     Lbl_Sw_Redo.Enabled := true;
     TE_Plan.Enabled     := true;
 
-    Frm_Spori.Options[ON_UpdateMode] := '2';
+    Frm_Main.Options[ON_UpdateMode] := '2';
    end;
 
 procedure TFrm_Config.Img_NonClick(Sender: TObject); //ToDo: Comments, Clean up
@@ -1175,7 +1155,7 @@ procedure TFrm_Config.Img_NonClick(Sender: TObject); //ToDo: Comments, Clean up
     AllUpOff ();
     Img_Non.Picture  := Img_On.Picture;
 
-    Frm_Spori.Options[ON_UpdateMode] := '3';
+    Frm_Main.Options[ON_UpdateMode] := '3';
    end;
 
 procedure TFrm_Config.ImgMnSelectionChange(Sender: TObject; User: boolean); //Done
@@ -1263,14 +1243,14 @@ procedure TFrm_Config.Sw_AutoTimeChange(Sender: TObject);  //Done
     //Set time and date difference, should already be the same but who knows
     //Used for setting a point in time
     if IsActive then
-      with Frm_Spori do
+      with Frm_Main do
         begin
           DiffD := DE_Day.Date - Date;
-         DiffT  := StrToTime(TimeToStr(TE_Time.Time)) - Time;
+          DiffT  := StrToTime(TimeToStr(TE_Time.Time)) - Time;
         end;
 
     //Save new value
-    Frm_Spori.Options[ON_AutoTimeMode] := BoolToStr(IsActive, 'True', 'False');;
+    Frm_Main.Options[ON_AutoTimeMode] := BoolToStr(IsActive, 'True', 'False');;
    end;
 
 procedure TFrm_Config.Sw_ExprtChange(Sender: TObject);  //Done
@@ -1282,11 +1262,8 @@ procedure TFrm_Config.Sw_ExprtChange(Sender: TObject);  //Done
     //Toggle lable caption
     Lbl_Sw_Exprt.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
-    //Old
-    Frm_Spori.MI_Sicht_Exp.Checked := IsActive;
-
     //Hide or show high level programmparts; saves mode automaticly
-    Frm_Spori.ProgressExpertMode ();
+    Frm_Main.ProgressExpertMode ();
    end;
 
 procedure TFrm_Config.Sw_HtKyChange(Sender: TObject); //Done
@@ -1303,7 +1280,7 @@ procedure TFrm_Config.Sw_HtKyChange(Sender: TObject); //Done
     Bt_HtKy.Enabled := IsActive;
 
     //Save new value
-    Frm_Spori.Options[ON_UseHotkey] := BoolToStr(IsActive, 'True', 'False');
+    Frm_Main.Options[ON_UseHotkey] := BoolToStr(IsActive, 'True', 'False');
   end;
 
 procedure TFrm_Config.Sw_ManuValChange(Sender: TObject); //Done
@@ -1326,20 +1303,20 @@ procedure TFrm_Config.Sw_ManuValChange(Sender: TObject); //Done
         if (IsActive) then
           begin
             FltSpnEd_EleCalcManu.DecimalPlaces := 2;
-            FltSpnEd_AziCalcManu.DecimalPlaces  := 2;
+            FltSpnEd_AziCalcManu.DecimalPlaces := 2;
 
             //Call for number agin, to support static modes like DefaultPos ("Ruhelage")
-            Frm_Spori.ProgressNumber();
+            //Frm_Main.ProgressNumber();
           end
         else
           begin //We will work intern with more places
             FltSpnEd_EleCalcManu.DecimalPlaces := 5;
-            FltSpnEd_AziCalcManu.DecimalPlaces  := 5;
+            FltSpnEd_AziCalcManu.DecimalPlaces := 5;
           end;
       end;
 
     //save value
-    Frm_Spori.Options[ON_AutoValueMode] := BoolToStr(not IsActive, 'True', 'False');
+    Frm_Main.Options[ON_AutoValueMode] := BoolToStr(not IsActive, 'True', 'False');
   end;
 
 procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject); //Done
@@ -1352,10 +1329,10 @@ procedure TFrm_Config.Sw_PortableModeChange(Sender: TObject); //Done
     Lbl_Sw_PortableMode.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
     //Save new Value
-    Frm_Spori.Options[ON_PortableMode] := BoolToStr(IsActive, 'True', 'False');
+    Frm_Main.Options[ON_PortableMode] := BoolToStr(IsActive, 'True', 'False');
 
     //Change used paths
-    Frm_Spori.SetPortableMode(IsActive);
+    Frm_Main.SetPortableMode(IsActive);
    end;
 
 procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //Done
@@ -1367,7 +1344,7 @@ procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //Done
     //Set Caption for the Button
     Lbl_Sw_AutoCon.Caption := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
     //Save it
-    Frm_Spori.Options[ON_AutoComMode] := BoolToStr(IsActive, 'True', 'False');
+    Frm_Main.Options[ON_AutoComMode] := BoolToStr(IsActive, 'True', 'False');
 
     //Disable Comport Editfield since we will test all avible ports
     CmbBx_ComPort.Enabled := not isActive;
@@ -1375,10 +1352,10 @@ procedure TFrm_Config.Sw_AutoConChange(Sender: TObject); //Done
 
     //Try to connect to all avible ports
     if isActive then
-        Frm_Spori.Connect (isActive);
+        Frm_Main.Connect (isActive);
 
     //If the Thread is running set how it's supposed to act if connection was lost
-    If Frm_Spori.OptionsLoaded then
+    If Frm_Main.OptionsLoaded then
       ARMConnection.Reconnect := isActive;
    end;
 
@@ -1392,31 +1369,31 @@ procedure TFrm_Config.Sw_RedoChange(Sender: TObject); //Done
     Lbl_Sw_Redo.Caption   := BoolToStr(IsActive, MLS_Turnd_On, MLS_Turnd_Off);
 
     //Save it
-    Frm_Spori.Options[ON_UpRetry] := BoolToStr(IsActive, 'True', 'False');
+    Frm_Main.Options[ON_UpRetry] := BoolToStr(IsActive, 'True', 'False');
    end;
 
 procedure TFrm_Config.TE_PlanEditingDone(Sender: TObject); //Done
   begin
     //Save new time
-    Frm_Spori.Options[ON_UpdateTime] := TimeToStr(TE_Plan.Time);
+    Frm_Main.Options[ON_UpdateTime] := TimeToStr(TE_Plan.Time);
    end;
 
 procedure TFrm_Config.TE_TimeChange(Sender: TObject);  //Done
   begin
     //Set new time differenz
-    Frm_Spori.DiffT   := StrToTime(TimeToStr(TE_Time.Time)) - Time;
+    Frm_Main.DiffT   := StrToTime(TimeToStr(TE_Time.Time)) - Time;
 
     //Don't save time while it is on change
-    Frm_Spori.NoEntry := true;
+    Frm_Main.NoEntry := true;
    end;
 
 procedure TFrm_Config.TE_TimeEditingDone(Sender: TObject); //Done
   begin
     //Save the new time
-    Frm_Spori.Options[ON_Time] := TimeToStr(TE_Time.Time);
+    Frm_Main.Options[ON_Time] := TimeToStr(TE_Time.Time);
 
     //Editing is over we can save it savely
-    Frm_Spori.NoEntry := false;
+    Frm_Main.NoEntry := false;
    end;
 
 { TFrm_Config }

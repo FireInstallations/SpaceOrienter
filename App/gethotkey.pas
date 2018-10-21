@@ -55,7 +55,7 @@ var
 implementation
 
 uses
-  Config, spaceorienter_main;
+  Config, SpOri_Main;
 
 {$R *.lfm}
 
@@ -106,7 +106,7 @@ procedure TFrm_GetHotKey.BtBtn_OkClick(Sender: TObject); //Done
       Frm_Config.Ed_HtKy.Text := Ed_shwHotkey.Text;
 
     //Set Hotkeys
-    with Frm_Spori do begin
+    with Frm_Main do begin
       HotKey := PressedHotKeys;
       Options[ON_Hotkey] := OptionsHotkey;
     end;

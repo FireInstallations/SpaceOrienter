@@ -1,7 +1,7 @@
 object Frm_Config: TFrm_Config
-  Left = 24
+  Left = 23
   Height = 580
-  Top = 407
+  Top = 371
   Width = 960
   AlphaBlendValue = 250
   Caption = 'Einstellungen'
@@ -2513,14 +2513,14 @@ object Frm_Config: TFrm_Config
     Top = 72
     Width = 760
     TabStop = False
-    ActivePage = TbSht_Con
+    ActivePage = TbSht_Loc
     Anchors = [akTop, akLeft, akRight, akBottom]
     Font.Color = clWhite
     Font.Height = -18
     ParentBiDiMode = False
     ParentFont = False
     ShowTabs = False
-    TabIndex = 3
+    TabIndex = 1
     TabOrder = 1
     TabPosition = tpLeft
     Options = [nboHidePageListPopup, nboKeyboardTabSwitch]

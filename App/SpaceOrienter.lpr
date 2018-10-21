@@ -9,14 +9,14 @@ uses
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, datetimectrls, lazcontrols,
-  spaceorienter_main, Config, GetHotkey, SpOri_Main, MultiLangueStrings;
+  Config, GetHotkey, SpOri_Main, MultiLangueStrings;
 
 {$R *.res}
 
 begin
   RequireDerivedFormResource:=True;
   Application.Initialize;
-  Application.CreateForm(TFrm_Spori, Frm_Spori);
+  Application.CreateForm(TFrm_Main, Frm_Main);
   //Please Note: CreateForm of all other Froms are locaded in the Form.Create function of the main form
   Application.Run;
 end.

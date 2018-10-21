@@ -53,8 +53,6 @@ msgid "ERROR"
 msgstr "ERROR"
 
 #: multilanguestrings.mls_error_errorwhile
-#, fuzzy
-#| msgid "Fehler in "
 msgid "Fehler in"
 msgstr "Error while "
 
@@ -83,10 +81,8 @@ msgid "Out of range"
 msgstr "Out of range"
 
 #: multilanguestrings.mls_error_starsubitem
-#, fuzzy
-#| msgid " Laden des Sterns gescheitert bei SubItem: "
 msgid " Laden des Sterns gescheitert bei SubItem:"
-msgstr "Loading the body failed by SubItem:"
+msgstr "Loading the body failed at sub item:"
 
 #: multilanguestrings.mls_error_starwrite
 msgid " Fehler beim schreiben der SternenListe!"
@@ -445,8 +441,22 @@ msgctxt "tfrm_main.cmbbx_mode.text"
 msgid "Normal"
 msgstr "Normal"
 
-#: tfrm_main.ed_search4bdy_list.text
+#: tfrm_main.ectabctrl_calcsections.tabs[0].text
 #, fuzzy
+msgctxt "tfrm_main.ectabctrl_calcsections.tabs[0].text"
+msgid "Zeit"
+msgstr "Time"
+
+#: tfrm_main.ectabctrl_calcsections.tabs[1].text
+msgctxt "tfrm_main.ectabctrl_calcsections.tabs[1].text"
+msgid "Frühlingspunkt"
+msgstr ""
+
+#: tfrm_main.ectabctrl_calcsections.tabs[2].text
+msgid "Stern"
+msgstr ""
+
+#: tfrm_main.ed_search4bdy_list.text
 msgctxt "tfrm_main.ed_search4bdy_list.text"
 msgid "Suchen..."
 msgstr "Search for..."
@@ -465,12 +475,21 @@ msgctxt "tfrm_main.imgmn_menue.menuitems[1].caption"
 msgid "Sternenliste"
 msgstr "BodyList"
 
+#: tfrm_main.imgmn_menue.menuitems[2].caption
+msgid "Berechnungen"
+msgstr ""
+
 #: tfrm_main.lbl_ardotype.caption
 msgid "ArduIno Leonardo"
 msgstr "ArduIno Leonardo"
 
-#: tfrm_main.lbl_azicalc_grd.caption
-msgctxt "tfrm_main.lbl_azicalc_grd.caption"
+#: tfrm_main.lbl_aries1p_title.caption
+msgid "Frühlingsanfang"
+msgstr ""
+
+#: tfrm_main.lbl_azicalc_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_azicalc_deg.caption"
 msgid "°"
 msgstr "°"
 
@@ -489,8 +508,15 @@ msgctxt "tfrm_main.lbl_azichart_title.caption"
 msgid "Azimut"
 msgstr "Azimuth"
 
-#: tfrm_main.lbl_azinow_grd.caption
-msgctxt "tfrm_main.lbl_azinow_grd.caption"
+#: tfrm_main.lbl_azidenom_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_azidenom_title.caption"
+msgid "Azimut Nenner"
+msgstr "Denominator"
+
+#: tfrm_main.lbl_azinow_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_azinow_deg.caption"
 msgid "°"
 msgstr "°"
 
@@ -504,35 +530,28 @@ msgctxt "tfrm_main.lbl_azinow_val.caption"
 msgid "00.00"
 msgstr ""
 
+#: tfrm_main.lbl_azinum_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_azinum_title.caption"
+msgid "Azimut Zähler"
+msgstr "Numerator"
+
+#: tfrm_main.lbl_azi_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_azi_deg.caption"
+msgid "°"
+msgstr "°"
+
+#: tfrm_main.lbl_azi_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_azi_title.caption"
+msgid "Azimut"
+msgstr "Azimuth"
+
 #: tfrm_main.lbl_bdyprpty_title.caption
 msgctxt "tfrm_main.lbl_bdyprpty_title.caption"
 msgid "Eigenschaften"
 msgstr "Properties"
-
-#: tfrm_main.lbl_bdyprpty_val1.caption
-msgctxt "tfrm_main.lbl_bdyprpty_val1.caption"
-msgid "-"
-msgstr "-"
-
-#: tfrm_main.lbl_bdyprpty_val2.caption
-msgctxt "tfrm_main.lbl_bdyprpty_val2.caption"
-msgid "-"
-msgstr "-"
-
-#: tfrm_main.lbl_bdy_name.caption
-msgctxt "tfrm_main.lbl_bdy_name.caption"
-msgid "-"
-msgstr "-"
-
-#: tfrm_main.lbl_bdy_namelatain.caption
-msgctxt "tfrm_main.lbl_bdy_namelatain.caption"
-msgid "-"
-msgstr "-"
-
-#: tfrm_main.lbl_bdy_nr.caption
-msgctxt "tfrm_main.lbl_bdy_nr.caption"
-msgid "0"
-msgstr ""
 
 #: tfrm_main.lbl_bdy_split.caption
 msgid "/"
@@ -543,18 +562,67 @@ msgctxt "tfrm_main.lbl_bdy_title.caption"
 msgid "Himmelskörper"
 msgstr "Luminary"
 
+#: tfrm_main.lbl_beta_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_beta_deg.caption"
+msgid "°"
+msgstr "°"
+
+#: tfrm_main.lbl_beta_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_beta_title.caption"
+msgid "β"
+msgstr "β"
+
+#: tfrm_main.lbl_cet_title.caption
+msgid "MEZ"
+msgstr ""
+
 #: tfrm_main.lbl_comstate.caption
 msgctxt "tfrm_main.lbl_comstate.caption"
 msgid "Nicht verbunden"
 msgstr "Not connceted"
 
-#: tfrm_main.lbl_date.caption
-msgctxt "tfrm_main.lbl_date.caption"
-msgid "0"
+#: tfrm_main.lbl_decli_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_decli_deg.caption"
+msgid "°"
+msgstr "°"
+
+#: tfrm_main.lbl_decli_min.caption
+msgctxt "tfrm_main.lbl_decli_min.caption"
+msgid "min"
 msgstr ""
 
-#: tfrm_main.lbl_elecalc_grd.caption
-msgctxt "tfrm_main.lbl_elecalc_grd.caption"
+#: tfrm_main.lbl_decli_title.caption
+msgid "Dekli"
+msgstr ""
+
+#: tfrm_main.lbl_degshift_title.caption
+msgid "GradShift"
+msgstr ""
+
+#: tfrm_main.lbl_delta_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_delta_deg.caption"
+msgid "°"
+msgstr "°"
+
+#: tfrm_main.lbl_delta_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_delta_title.caption"
+msgid "δ"
+msgstr "δ"
+
+#: tfrm_main.lbl_diff_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_diff_title.caption"
+msgid "Differenz"
+msgstr "Deviation"
+
+#: tfrm_main.lbl_elecalc_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_elecalc_deg.caption"
 msgid "°"
 msgstr "°"
 
@@ -573,8 +641,9 @@ msgctxt "tfrm_main.lbl_elechart_title.caption"
 msgid "Elevation"
 msgstr "Elevation"
 
-#: tfrm_main.lbl_elenow_grd.caption
-msgctxt "tfrm_main.lbl_elenow_grd.caption"
+#: tfrm_main.lbl_elenow_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_elenow_deg.caption"
 msgid "°"
 msgstr "°"
 
@@ -588,15 +657,84 @@ msgctxt "tfrm_main.lbl_elenow_val.caption"
 msgid "00.00"
 msgstr ""
 
+#: tfrm_main.lbl_ele_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_ele_deg.caption"
+msgid "°"
+msgstr "°"
+
+#: tfrm_main.lbl_ele_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_ele_title.caption"
+msgid "Elevation"
+msgstr "Elevation"
+
+#: tfrm_main.lbl_gmt_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_gmt_title.caption"
+msgid "GMT"
+msgstr "GMT"
+
+#: tfrm_main.lbl_grt_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_grt_title.caption"
+msgid "GrT"
+msgstr "GrT"
+
+#: tfrm_main.lbl_hourangle_title.caption
+msgid "ZeitWinkel"
+msgstr ""
+
+#: tfrm_main.lbl_lat_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_lat_deg.caption"
+msgid "°"
+msgstr "°"
+
+#: tfrm_main.lbl_lat_rad.caption
+msgctxt "tfrm_main.lbl_lat_rad.caption"
+msgid "'"
+msgstr ""
+
+#: tfrm_main.lbl_lat_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_lat_title.caption"
+msgid "Latitude"
+msgstr "Latitude"
+
+#: tfrm_main.lbl_localut_title.caption
+msgid ""
+"Ortszeit\n"
+" in UT\n"
+msgstr ""
+
+#: tfrm_main.lbl_long_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_long_deg.caption"
+msgid "°"
+msgstr "°"
+
+#: tfrm_main.lbl_long_rad.caption
+msgctxt "tfrm_main.lbl_long_rad.caption"
+msgid "'"
+msgstr ""
+
+#: tfrm_main.lbl_long_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_long_title.caption"
+msgid "Longitude"
+msgstr "Longitude"
+
+#: tfrm_main.lbl_magdvtn_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_magdvtn_deg.caption"
+msgid "°"
+msgstr "°"
+
 #: tfrm_main.lbl_magdvtn_title.caption
 msgctxt "tfrm_main.lbl_magdvtn_title.caption"
 msgid "Missweisung"
 msgstr "Magn. variation"
-
-#: tfrm_main.lbl_magdvtn_val.caption
-msgctxt "tfrm_main.lbl_magdvtn_val.caption"
-msgid "0"
-msgstr ""
 
 #: tfrm_main.lbl_place_name.caption
 msgid "Berlin"
@@ -606,41 +744,96 @@ msgstr "Berlin"
 msgid "Ort:"
 msgstr "Location:"
 
+#: tfrm_main.lbl_rightac_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_rightac_deg.caption"
+msgid "°"
+msgstr "°"
+
+#: tfrm_main.lbl_rightac_min.caption
+msgctxt "tfrm_main.lbl_rightac_min.caption"
+msgid "min"
+msgstr ""
+
+#: tfrm_main.lbl_rightac_title.caption
+msgid "Rekta"
+msgstr ""
+
 #: tfrm_main.lbl_settings.caption
 msgctxt "tfrm_main.lbl_settings.caption"
 msgid "Einstellungen"
 msgstr "Settings"
 
-#: tfrm_main.lbl_time.caption
-msgctxt "tfrm_main.lbl_time.caption"
-msgid "0"
+#: tfrm_main.lbl_starangle_deg.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_starangle_deg.caption"
+msgid "°"
+msgstr "°"
+
+#: tfrm_main.lbl_starangle_title.caption
+#, fuzzy
+#| msgid ""
+#| "Sternen-\n"
+#| "Winkel\n"
+msgctxt "tfrm_main.lbl_starangle_title.caption"
+msgid "SternenWinkel"
+msgstr "Sidereal hour angle"
+
+#: tfrm_main.lbl_tz_title.caption
+msgid "TZ"
 msgstr ""
+
+#: tfrm_main.lbl_t_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_t_title.caption"
+msgid "T"
+msgstr "T"
 
 #: tfrm_main.lbl_update_title.caption
 msgid "Update!"
 msgstr "Update!"
 
-#: tfrm_main.lv_bodylist.columns[0].caption
+#: tfrm_main.lbl_utc1_title.caption
 #, fuzzy
-#| msgid "Nummer"
+msgctxt "tfrm_main.lbl_utc1_title.caption"
+msgid "UTC1"
+msgstr "UTC1"
+
+#: tfrm_main.lbl_utc2_title.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_utc2_title.caption"
+msgid "UTC2"
+msgstr "UTC2"
+
+#: tfrm_main.lbl_vernalpnow_title.caption
+msgid ""
+"Frühlingspunkt\n"
+"aktuell\n"
+msgstr ""
+
+#: tfrm_main.lbl_vernalp_title.caption
+#, fuzzy
+#| msgid "Frühjahrspunkt"
+msgctxt "tfrm_main.lbl_vernalp_title.caption"
+msgid "Frühlingspunkt"
+msgstr "First Point of Aries"
+
+#: tfrm_main.lv_bodylist.columns[0].caption
 msgctxt "tfrm_main.lv_bodylist.columns[0].caption"
 msgid "Nummer "
 msgstr "Number"
 
 #: tfrm_main.lv_bodylist.columns[1].caption
-#, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[1].caption"
 msgid "Himmelskörper"
 msgstr "Luminary"
 
 #: tfrm_main.lv_bodylist.columns[2].caption
-#, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[2].caption"
 msgid "Latein"
 msgstr "Latin"
 
 #: tfrm_main.lv_bodylist.columns[3].caption
-#, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[3].caption"
 msgid "Eigenschaften"
 msgstr "Properties"
@@ -653,13 +846,11 @@ msgid "Sternbild"
 msgstr "Properties"
 
 #: tfrm_main.lv_bodylist.columns[5].caption
-#, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[5].caption"
 msgid "Rezi °"
 msgstr "RAscn °"
 
 #: tfrm_main.lv_bodylist.columns[6].caption
-#, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[6].caption"
 msgid "Rezi Min"
 msgstr "RAscn Min"
@@ -685,764 +876,8 @@ msgstr "SpaceOrienter"
 msgid "Get me to the new main Form!"
 msgstr "Get me to the new main Form!"
 
-#: tfrm_spori.bt_opt_temp.caption
-msgid "Get me to the new Otions!"
-msgstr "Get me to the new Otions!"
-
-#: tfrm_spori.bt_pilot.caption
-msgid "& Position anfahren"
-msgstr "& Navigate"
-
-#: tfrm_spori.bt_pilot_strlst.caption
-msgctxt "tfrm_spori.bt_pilot_strlst.caption"
-msgid "Anfahren"
-msgstr "Navigate"
-
 #: tfrm_spori.caption
 msgctxt "tfrm_spori.caption"
 msgid "SpaceOrienter"
 msgstr "SpaceOrienter"
-
-#: tfrm_spori.cb_hk.text
-msgctxt "tfrm_spori.cb_hk.text"
-msgid "Himmelskörper"
-msgstr "Luminary"
-
-#: tfrm_spori.cb_stb.text
-msgctxt "tfrm_spori.cb_stb.text"
-msgid "Sternbild"
-msgstr "Constellation"
-
-#: tfrm_spori.cb_strmode.text
-msgctxt "tfrm_spori.cb_strmode.text"
-msgid "Normal"
-msgstr "Normal"
-
-#: tfrm_spori.ed_azi_ist.text
-msgctxt "tfrm_spori.ed_azi_ist.text"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.ed_azi_soll.text
-msgctxt "tfrm_spori.ed_azi_soll.text"
-msgid "89"
-msgstr ""
-
-#: tfrm_spori.ed_egstn.text
-msgctxt "tfrm_spori.ed_egstn.text"
-msgid "Eigenschaften"
-msgstr "Properties"
-
-#: tfrm_spori.ed_ele_ist.text
-msgctxt "tfrm_spori.ed_ele_ist.text"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.ed_ele_soll.text
-msgctxt "tfrm_spori.ed_ele_soll.text"
-msgid "89"
-msgstr ""
-
-#: tfrm_spori.ed_mswg.text
-msgctxt "tfrm_spori.ed_mswg.text"
-msgid "Missweisung"
-msgstr "Magn. variation"
-
-#: tfrm_spori.ed_nr.text
-msgctxt "tfrm_spori.ed_nr.text"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.ed_such.text
-msgctxt "tfrm_spori.ed_such.text"
-msgid "Suchen..."
-msgstr "Search for..."
-
-#: tfrm_spori.gb_azi.caption
-msgctxt "tfrm_spori.gb_azi.caption"
-msgid "Azimut"
-msgstr "Azimuth"
-
-#: tfrm_spori.gb_brg.caption
-msgctxt "tfrm_spori.gb_brg.caption"
-msgid "Berechnet"
-msgstr "Calculated"
-
-#: tfrm_spori.gb_brnt.caption
-msgctxt "tfrm_spori.gb_brnt.caption"
-msgid "Berechnet"
-msgstr "Calculated"
-
-#: tfrm_spori.gb_frpnk.caption
-msgid "FrühlingsPunkt"
-msgstr "First Point of Aries"
-
-#: tfrm_spori.gb_ist.caption
-msgid "Ist"
-msgstr "Now"
-
-#: tfrm_spori.gb_lage.caption
-msgid "SternenLage"
-msgstr "Star location"
-
-#: tfrm_spori.gb_mswg.caption
-msgctxt "tfrm_spori.gb_mswg.caption"
-msgid "Missweisung"
-msgstr "Magn. variation"
-
-#: tfrm_spori.gb_soll.caption
-msgid "Soll"
-msgstr "Calc."
-
-#: tfrm_spori.gb_wink.caption
-msgctxt "tfrm_spori.gb_wink.caption"
-msgid "Winkel"
-msgstr "Angle"
-
-#: tfrm_spori.gb_wink1.caption
-msgctxt "tfrm_spori.gb_wink1.caption"
-msgid "Winkel"
-msgstr "Angle"
-
-#: tfrm_spori.gb_zeit.caption
-msgctxt "tfrm_spori.gb_zeit.caption"
-msgid "Zeit"
-msgstr "Time"
-
-#: tfrm_spori.gb_zeit1.caption
-msgctxt "tfrm_spori.gb_zeit1.caption"
-msgid "Zeit"
-msgstr "Time"
-
-#: tfrm_spori.lbakfrpnk_.caption
-msgid ""
-"Aktueller\n"
-"Frühlingspunkt\n"
-msgstr ""
-"Current First \n"
-"Point of Aries\n"
-
-#: tfrm_spori.lb_akfrpnk.caption
-msgctxt "tfrm_spori.lb_akfrpnk.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_az.caption
-msgctxt "tfrm_spori.lb_az.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_az1.caption
-msgctxt "tfrm_spori.lb_az1.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_azi.caption
-msgctxt "tfrm_spori.lb_azi.caption"
-msgid "Azimut"
-msgstr "Azimuth"
-
-#: tfrm_spori.lb_az_.caption
-msgctxt "tfrm_spori.lb_az_.caption"
-msgid ""
-"Azimut \n"
-"(berechnet)\n"
-msgstr ""
-"Azimuth\n"
-"(Calculated)\n"
-
-#: tfrm_spori.lb_az_1.caption
-msgctxt "tfrm_spori.lb_az_1.caption"
-msgid ""
-"Azimut \n"
-"(berechnet)\n"
-msgstr ""
-"Azimuth\n"
-"(Calculated)\n"
-
-#: tfrm_spori.lb_az_grd1.caption
-msgctxt "tfrm_spori.lb_az_grd1.caption"
-msgid "°"
-msgstr "°"
-
-#: tfrm_spori.lb_az_n.caption
-msgctxt "tfrm_spori.lb_az_n.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_az_n_.caption
-msgid "Azimut Nenner"
-msgstr "Denominator"
-
-#: tfrm_spori.lb_az_z.caption
-msgctxt "tfrm_spori.lb_az_z.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_az_z_.caption
-msgid "Azimut Zähler"
-msgstr "Numerator"
-
-#: tfrm_spori.lb_beta.caption
-msgctxt "tfrm_spori.lb_beta.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_beta_.caption
-msgid "β"
-msgstr "β"
-
-#: tfrm_spori.lb_day.caption
-msgctxt "tfrm_spori.lb_day.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_day_.caption
-msgctxt "tfrm_spori.lb_day_.caption"
-msgid "Tag"
-msgstr "Day"
-
-#: tfrm_spori.lb_dekli_.caption
-msgid "Deklination"
-msgstr "Declination"
-
-#: tfrm_spori.lb_dekli_grd.caption
-msgctxt "tfrm_spori.lb_dekli_grd.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_dekli_rd.caption
-msgctxt "tfrm_spori.lb_dekli_rd.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_delt.caption
-msgctxt "tfrm_spori.lb_delt.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_delt_.caption
-msgid "δ"
-msgstr "δ"
-
-#: tfrm_spori.lb_diff.caption
-msgctxt "tfrm_spori.lb_diff.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_diff_.caption
-msgid "Differenz"
-msgstr "Deviation"
-
-#: tfrm_spori.lb_egnstn.caption
-msgctxt "tfrm_spori.lb_egnstn.caption"
-msgid "Eigenschaften"
-msgstr "Properties"
-
-#: tfrm_spori.lb_el.caption
-msgctxt "tfrm_spori.lb_el.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_el1.caption
-msgctxt "tfrm_spori.lb_el1.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_ele.caption
-msgctxt "tfrm_spori.lb_ele.caption"
-msgid "Elevation"
-msgstr "Elevation"
-
-#: tfrm_spori.lb_el_.caption
-msgctxt "tfrm_spori.lb_el_.caption"
-msgid ""
-"Elevation \n"
-"(berechnet)\n"
-msgstr ""
-"Elevation\n"
-"(Calculated)\n"
-
-#: tfrm_spori.lb_el_1.caption
-msgctxt "tfrm_spori.lb_el_1.caption"
-msgid ""
-"Elevation \n"
-"(berechnet)\n"
-msgstr ""
-"Elevation\n"
-"(Calculated)\n"
-
-#: tfrm_spori.lb_el_grd_.caption
-msgctxt "tfrm_spori.lb_el_grd_.caption"
-msgid "°"
-msgstr "°"
-
-#: tfrm_spori.lb_franf.caption
-msgctxt "tfrm_spori.lb_franf.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_franf_.caption
-msgid "Frühingsanfang"
-msgstr "First day of Spring"
-
-#: tfrm_spori.lb_frpnk.caption
-msgctxt "tfrm_spori.lb_frpnk.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_frpnk_.caption
-msgid "Frühjahrspunkt"
-msgstr "First Point of Aries"
-
-#: tfrm_spori.lb_gmt.caption
-msgctxt "tfrm_spori.lb_gmt.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_gmt_.caption
-msgid "GMT"
-msgstr "GMT"
-
-#: tfrm_spori.lb_grd_1.caption
-msgctxt "tfrm_spori.lb_grd_1.caption"
-msgid "°"
-msgstr "°"
-
-#: tfrm_spori.lb_grd_2.caption
-msgctxt "tfrm_spori.lb_grd_2.caption"
-msgid "°"
-msgstr "°"
-
-#: tfrm_spori.lb_grd_3.caption
-msgctxt "tfrm_spori.lb_grd_3.caption"
-msgid "°"
-msgstr "°"
-
-#: tfrm_spori.lb_grd_4.caption
-msgctxt "tfrm_spori.lb_grd_4.caption"
-msgid "°"
-msgstr "°"
-
-#: tfrm_spori.lb_grd_5.caption
-msgctxt "tfrm_spori.lb_grd_5.caption"
-msgid "°"
-msgstr "°"
-
-#: tfrm_spori.lb_grt.caption
-msgctxt "tfrm_spori.lb_grt.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_grt_.caption
-msgid "GrT"
-msgstr "GrT"
-
-#: tfrm_spori.lb_gsft.caption
-msgctxt "tfrm_spori.lb_gsft.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_gsft_.caption
-msgid "Gradshift"
-msgstr "Degree shift"
-
-#: tfrm_spori.lb_hk.caption
-msgctxt "tfrm_spori.lb_hk.caption"
-msgid "Himmelskörper"
-msgstr "Luminary"
-
-#: tfrm_spori.lb_hour.caption
-msgctxt "tfrm_spori.lb_hour.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_hour_.caption
-msgid "Stunde"
-msgstr "Hour"
-
-#: tfrm_spori.lb_jhr.caption
-msgctxt "tfrm_spori.lb_jhr.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_jhr_.caption
-msgid "Jahr"
-msgstr "Year"
-
-#: tfrm_spori.lb_lat.caption
-msgctxt "tfrm_spori.lb_lat.caption"
-msgid "Latitude"
-msgstr "Latitude"
-
-#: tfrm_spori.lb_lat1.caption
-msgctxt "tfrm_spori.lb_lat1.caption"
-msgid "Latitude"
-msgstr "Latitude"
-
-#: tfrm_spori.lb_lat_g.caption
-msgctxt "tfrm_spori.lb_lat_g.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_lat_g1.caption
-msgctxt "tfrm_spori.lb_lat_g1.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_lat_r.caption
-msgctxt "tfrm_spori.lb_lat_r.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_lat_r1.caption
-msgctxt "tfrm_spori.lb_lat_r1.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_lon.caption
-msgctxt "tfrm_spori.lb_lon.caption"
-msgid "Longitude"
-msgstr "Longitude"
-
-#: tfrm_spori.lb_lon1.caption
-msgid "Londitude"
-msgstr "Longitude"
-
-#: tfrm_spori.lb_lon_g.caption
-msgctxt "tfrm_spori.lb_lon_g.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_lon_g1.caption
-msgctxt "tfrm_spori.lb_lon_g1.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_lon_r.caption
-msgctxt "tfrm_spori.lb_lon_r.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_lon_r1.caption
-msgctxt "tfrm_spori.lb_lon_r1.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_mez.caption
-msgctxt "tfrm_spori.lb_mez.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_mez_.caption
-msgid "MEZ:"
-msgstr "CET:"
-
-#: tfrm_spori.lb_mez_.hint
-msgid "MittelEuropäische Zeit"
-msgstr "Central European Time"
-
-#: tfrm_spori.lb_min.caption
-msgctxt "tfrm_spori.lb_min.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_min_.caption
-msgid "Minute"
-msgstr "Minute"
-
-#: tfrm_spori.lb_min_1.caption
-msgctxt "tfrm_spori.lb_min_1.caption"
-msgid "Min"
-msgstr "Min"
-
-#: tfrm_spori.lb_min_2.caption
-msgctxt "tfrm_spori.lb_min_2.caption"
-msgid "Min"
-msgstr "Min"
-
-#: tfrm_spori.lb_mon.caption
-msgctxt "tfrm_spori.lb_mon.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_mon_.caption
-msgid "Monat"
-msgstr "Month"
-
-#: tfrm_spori.lb_mswg.caption
-msgctxt "tfrm_spori.lb_mswg.caption"
-msgid "Missweisung"
-msgstr "Magn. variation"
-
-#: tfrm_spori.lb_mswg1.caption
-msgctxt "tfrm_spori.lb_mswg1.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_mswg1_.caption
-msgctxt "tfrm_spori.lb_mswg1_.caption"
-msgid "Missweisung"
-msgstr "Magn. variation"
-
-#: tfrm_spori.lb_nr.caption
-msgctxt "tfrm_spori.lb_nr.caption"
-msgid "Nr."
-msgstr "Nr."
-
-#: tfrm_spori.lb_otz.caption
-msgctxt "tfrm_spori.lb_otz.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_otz_.caption
-msgid "OrtsZeit UT"
-msgstr "Local time UTC"
-
-#: tfrm_spori.lb_rtzn_.caption
-msgid "Rektaszension"
-msgstr "Right ascension"
-
-#: tfrm_spori.lb_rtzn_grd.caption
-msgctxt "tfrm_spori.lb_rtzn_grd.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_rtzn_rd.caption
-msgctxt "tfrm_spori.lb_rtzn_rd.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_sek.caption
-msgctxt "tfrm_spori.lb_sek.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_sek_.caption
-msgid "Sekunde"
-msgstr "Second"
-
-#: tfrm_spori.lb_sk.caption
-msgctxt "tfrm_spori.lb_sk.caption"
-msgid "Sternbild"
-msgstr "Constellation"
-
-#: tfrm_spori.lb_smrz1.caption
-msgid "Wahr"
-msgstr "True"
-
-#: tfrm_spori.lb_smrz_1.caption
-msgid "Sommerzeit"
-msgstr "Summertime"
-
-#: tfrm_spori.lb_stwk.caption
-msgctxt "tfrm_spori.lb_stwk.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_stwk_.caption
-msgid "SternenWinkel"
-msgstr "Sidereal hour angle"
-
-#: tfrm_spori.lb_t.caption
-msgctxt "tfrm_spori.lb_t.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_t_.caption
-msgid "T"
-msgstr "T"
-
-#: tfrm_spori.lb_utc1_nam.caption
-msgid "UTC1"
-msgstr "UTC1"
-
-#: tfrm_spori.lb_utc1_val.caption
-msgctxt "tfrm_spori.lb_utc1_val.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_utc2_nam.caption
-msgid "UTC2"
-msgstr "UTC2"
-
-#: tfrm_spori.lb_utc2_val.caption
-msgctxt "tfrm_spori.lb_utc2_val.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_zeit.caption
-msgctxt "tfrm_spori.lb_zeit.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_zw.caption
-msgctxt "tfrm_spori.lb_zw.caption"
-msgid "0"
-msgstr ""
-
-#: tfrm_spori.lb_zw_.caption
-msgid "Zeitwinkel"
-msgstr "Time angle"
-
-#: tfrm_spori.lv_list.columns[0].caption
-msgctxt "tfrm_spori.lv_list.columns[0].caption"
-msgid "Nummer"
-msgstr "Number"
-
-#: tfrm_spori.lv_list.columns[1].caption
-msgctxt "tfrm_spori.lv_list.columns[1].caption"
-msgid "Himmelskörper"
-msgstr "Luminary"
-
-#: tfrm_spori.lv_list.columns[2].caption
-msgctxt "tfrm_spori.lv_list.columns[2].caption"
-msgid "Latein"
-msgstr "Latin"
-
-#: tfrm_spori.lv_list.columns[3].caption
-msgctxt "tfrm_spori.lv_list.columns[3].caption"
-msgid "Sternbild"
-msgstr "Constellation"
-
-#: tfrm_spori.lv_list.columns[4].caption
-msgctxt "tfrm_spori.lv_list.columns[4].caption"
-msgid "Eigenschaften"
-msgstr "Properties"
-
-#: tfrm_spori.lv_list.columns[5].caption
-msgctxt "tfrm_spori.lv_list.columns[5].caption"
-msgid "Rezi °"
-msgstr "RAscn °"
-
-#: tfrm_spori.lv_list.columns[6].caption
-msgctxt "tfrm_spori.lv_list.columns[6].caption"
-msgid "Rezi Min"
-msgstr "RAscn Min"
-
-#: tfrm_spori.lv_list.columns[7].caption
-msgctxt "tfrm_spori.lv_list.columns[7].caption"
-msgid "Dekli °"
-msgstr "Decli °"
-
-#: tfrm_spori.lv_list.columns[8].caption
-msgctxt "tfrm_spori.lv_list.columns[8].caption"
-msgid "Dekli Min"
-msgstr "Decli Min"
-
-#: tfrm_spori.mi_anfahren.caption
-msgctxt "tfrm_spori.mi_anfahren.caption"
-msgid "Anfahren"
-msgstr "Navigate"
-
-#: tfrm_spori.mi_connection.caption
-msgid "Verbindung..."
-msgstr "Connection..."
-
-#: tfrm_spori.mi_dar_quit.caption
-msgid "Beenden"
-msgstr "Quit"
-
-#: tfrm_spori.mi_datschutz.caption
-msgid "Datenschutz"
-msgstr "Privacy"
-
-#: tfrm_spori.mi_hilf_feh.caption
-msgid "Fehler melden"
-msgstr "Report Bug"
-
-#: tfrm_spori.mi_hilf_on.caption
-msgid "Online Hilfe"
-msgstr "Online Help"
-
-#: tfrm_spori.mi_hilf_up.caption
-msgid "Update"
-msgstr "Update"
-
-#: tfrm_spori.mi_sicht_exp.caption
-msgid "Experten Mode"
-msgstr "Expert mode"
-
-#: tfrm_spori.mi_stnlist.caption
-msgid "SternenListe"
-msgstr "BodyList"
-
-#: tfrm_spori.mi_stnlist_chng.caption
-msgctxt "tfrm_spori.mi_stnlist_chng.caption"
-msgid "Liste bearbeiten"
-msgstr "Edit list"
-
-#: tfrm_spori.mi_stnlist_load.caption
-msgid "Liste Laden"
-msgstr "Load list"
-
-#: tfrm_spori.mi_stn_rstt.caption
-msgid "Liste Zurücksetzen"
-msgstr "Reset list"
-
-#: tfrm_spori.mi_such.caption
-msgctxt "tfrm_spori.mi_such.caption"
-msgid "Suchen..."
-msgstr "Search for..."
-
-#: tfrm_spori.mi_ueber.caption
-msgid "Über"
-msgstr "About"
-
-#: tfrm_spori.mi_unbe2.caption
-msgctxt "tfrm_spori.mi_unbe2.caption"
-msgid "New Item2"
-msgstr ""
-
-#: tfrm_spori.mi_unbek.caption
-msgctxt "tfrm_spori.mi_unbek.caption"
-msgid "New Item2"
-msgstr ""
-
-#: tfrm_spori.mmo_bsbg.hint
-msgid "Beschreibung der Modi"
-msgstr "Description of modes"
-
-#: tfrm_spori.mp_hilf_off.caption
-msgid "Offline Hilfe"
-msgstr "Offline Help"
-
-#: tfrm_spori.m_dat.caption
-msgid "Datei"
-msgstr "File"
-
-#: tfrm_spori.m_hilf.caption
-msgid "Hilfe"
-msgstr "Help"
-
-#: tfrm_spori.m_sicht.caption
-msgid "Ansicht"
-msgstr "View"
-
-#: tfrm_spori.m_stern.caption
-msgctxt "tfrm_spori.m_stern.caption"
-msgid "Himmelskörper"
-msgstr "Luminary"
-
-#: tfrm_spori.tbs_einst.caption
-msgctxt "tfrm_spori.tbs_einst.caption"
-msgid "Einstellungen"
-msgstr "Settings"
-
-#: tfrm_spori.tbs_ephi.caption
-msgid "Ephemeriden"
-msgstr "Ephemeris"
-
-#: tfrm_spori.tbs_inter.caption
-msgid "Interface"
-msgstr "Interface"
-
-#: tfrm_spori.tbs_lag.caption
-msgid "Lageberechnung"
-msgstr "Star calculation"
-
-#: tfrm_spori.tbs_stlst.caption
-msgctxt "tfrm_spori.tbs_stlst.caption"
-msgid "Sternenliste"
-msgstr "BodyList"
 
