@@ -266,6 +266,9 @@ type
     FltSpnEd_AziCalcManu: TFloatSpinEdit;
     FltSpnEd_EleCalcManu: TFloatSpinEdit;
     FndD: TFindDialog;
+    Img_Compas_Ele: TImage;
+    Img_Compas_Azi: TImage;
+    Image6: TImage;
     Img_ChartEle: TImage;
     Img_ChartAzi: TImage;
     Img_Info_DateTime: TImage;
@@ -283,6 +286,12 @@ type
     ImgLst_Menue: TImageList;
     Img_Settings_G: TImage;
     Img_ShootingStar: TImage;
+    Lbl_Compas_UpTitle: TLabel;
+    Lbl_Compas_NorthTitle: TLabel;
+    Lbl_Compas_DownTitle: TLabel;
+    Lbl_Compas_SouthTitle: TLabel;
+    Lbl_Compas_EastTitle: TLabel;
+    Lbl_Compas_WestTitle: TLabel;
     Lbl_MagDvtn_Deg: TLabel;
     Lbl_Aries1P_Title: TLabel;
     Lbl_Aries1P_Val: TLabel;
@@ -349,7 +358,6 @@ type
     Lbl_Ele_Title: TLabel;
     Lbl_EleChart_Title: TLabel;
     Lbl_AziChart_Title: TLabel;
-    Lbl_HeightHelper: TLabel;
     Lbl_AziCalc_Val: TLabel;
     Lbl_AziCalc_Deg: TLabel;
     Lbl_AziCalc_Title: TLabel;
@@ -2237,7 +2245,7 @@ procedure TFrm_Main.SetShapePos (const ShapeNum: TShapeNums; Angle: Real); //ToD
 
     function FImod(const ValLeft,  ValRhight: Real): Real; inline;
       begin
-        FImod := ValLeft - ValRhight * round(ValLeft / ValRhight);
+        FImod := ValLeft - ValRhight * Int(ValLeft / ValRhight);
       end;
 
     function Sign_custom (const Value: Real): ShortInt; inline;
@@ -2255,14 +2263,14 @@ procedure TFrm_Main.SetShapePos (const ShapeNum: TShapeNums; Angle: Real); //ToD
         CalcTop  := Img_ChartAzi.Top  + round(R) - Shape_Height;
         CalcLeft := Img_ChartAzi.Left + round(R) - Shape_Height;
 
-        CalcTop  -= Round(R * cos(Angle * Pi/180));
-        CalcLeft += Round(R * sin(Angle * Pi/180));
+        CalcTop  += Round(R * sin(Angle * Pi/180));
+        CalcLeft += Round(R * cos(Angle * Pi/180));
 
         case Round(Angle) of
-          316..359, 0..45: TempShpeType := stTriangle;
-          46..135:         TempShpeType := stTriangleRight;
-          136..225:        TempShpeType := stTriangleDown;
-          226..315:        TempShpeType := stTriangleLeft;
+          226..315:        TempShpeType := stTriangle;
+          316..359, 0..45: TempShpeType := stTriangleRight;
+          46..135:         TempShpeType := stTriangleDown;
+          136..225:        TempShpeType := stTriangleLeft;
         end;
       end;
 
@@ -3091,6 +3099,7 @@ procedure TFrm_Main.Tmr_CalcAllOnTimer (Sender: TObject);   //ToDo: comments; Lb
     if (AnsiLowerCase(Lbl_BdyPrpty_Val2.Caption) = 'ephemeride') then
       CalculateEphemerisLoc ()
     else
+     if not (AnsiLowerCase(Lbl_Bdy_Name.Caption) = 'ruheposition') then
       CalculateStarLoc () ;
    end;
 

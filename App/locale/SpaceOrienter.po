@@ -466,6 +466,30 @@ msgstr ""
 msgid "Berechnungen"
 msgstr ""
 
+#: tfrm_main.label1.caption
+msgid "Up"
+msgstr ""
+
+#: tfrm_main.label2.caption
+msgid "N"
+msgstr ""
+
+#: tfrm_main.label3.caption
+msgid "Down"
+msgstr ""
+
+#: tfrm_main.label4.caption
+msgid "S"
+msgstr ""
+
+#: tfrm_main.label5.caption
+msgid "E"
+msgstr ""
+
+#: tfrm_main.label6.caption
+msgid "W"
+msgstr ""
+
 #: tfrm_main.lbl_ardotype.caption
 msgid "ArduIno Leonardo"
 msgstr ""
