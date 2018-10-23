@@ -152,7 +152,7 @@
         <Item4 Mode="Win32_Release" Option="329045115240"/>
       </SessionEnabledMatrixOptions>
     </BuildModes>
-    <Units Count="90">
+    <Units Count="92">
       <Unit0>
         <Filename Value="SpaceOrienter.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -196,8 +196,8 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="PlanEph"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="2340"/>
-        <CursorPos X="40" Y="2349"/>
+        <TopLine Value="3855"/>
+        <CursorPos X="54" Y="3878"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit4>
@@ -235,10 +235,11 @@
       <Unit9>
         <Filename Value="requirements/wmm.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1954"/>
-        <CursorPos X="7" Y="1973"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="655"/>
+        <CursorPos X="69" Y="679"/>
         <UsageCount Value="200"/>
+        <Loaded Value="True"/>
       </Unit9>
       <Unit10>
         <Filename Value="requirements/VSOP/vsop87.pas"/>
@@ -719,9 +720,8 @@
         <UnitName Value="SpOri_Main"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="2554"/>
-        <CursorPos X="71" Y="2575"/>
-        <FoldState Value=" TL20F1 T7lSGt]83uO0Q4 pj9k20W]9kDlG0h1]90l40B[R48jT0R2 T0i!R2D,"/>
+        <CursorPos X="27" Y="1711"/>
+        <FoldState Value=" TL20F1 T7lSGt]83uO0Q31113 pjZoK0h1 pk0l40B4]I8jT0R]d0i!T2D$"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -771,7 +771,7 @@
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/sysstrh.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="50" Y="25"/>
-        <UsageCount Value="0"/>
+        <UsageCount Value="10"/>
       </Unit68>
       <Unit69>
         <Filename Value="../../Laz/fpcsrc/rtl/objpas/sysutils/sysinth.inc"/>
@@ -929,127 +929,143 @@
         <CursorPos X="14" Y="436"/>
         <UsageCount Value="7"/>
       </Unit89>
+      <Unit90>
+        <Filename Value="../../Laz/lazarus/components/lazutils/lazutf8.pas"/>
+        <UnitName Value="LazUTF8"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="495"/>
+        <CursorPos X="53" Y="519"/>
+        <UsageCount Value="10"/>
+      </Unit90>
+      <Unit91>
+        <Filename Value="../../Laz/lazarus/lcl/interfaces/win32/win32wsbuttons.pp"/>
+        <UnitName Value="Win32WSButtons"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="468"/>
+        <CursorPos X="62" Y="491"/>
+        <UsageCount Value="10"/>
+      </Unit91>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2275" Column="69" TopLine="2259"/>
+        <Caret Line="2607" Column="75" TopLine="2552"/>
       </Position1>
       <Position2>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2605" Column="75" TopLine="19"/>
+        <Caret Line="2608" Column="75" TopLine="2554"/>
       </Position2>
       <Position3>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2606" Column="75" TopLine="2550"/>
+        <Caret Line="2607" Column="75" TopLine="2552"/>
       </Position3>
       <Position4>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2607" Column="75" TopLine="2552"/>
+        <Caret Line="2608" Column="75" TopLine="2554"/>
       </Position4>
       <Position5>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2608" Column="75" TopLine="2554"/>
+        <Caret Line="2609" Column="75" TopLine="2556"/>
       </Position5>
       <Position6>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2609" Column="75" TopLine="2556"/>
+        <Caret Line="2608" Column="75" TopLine="2554"/>
       </Position6>
       <Position7>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2608" Column="75" TopLine="2554"/>
+        <Caret Line="2609" Column="75" TopLine="2556"/>
       </Position7>
       <Position8>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2609" Column="75" TopLine="2556"/>
+        <Caret Line="2608" Column="75" TopLine="2554"/>
       </Position8>
       <Position9>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2608" Column="75" TopLine="2554"/>
+        <Caret Line="2607" Column="75" TopLine="2552"/>
       </Position9>
       <Position10>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2607" Column="75" TopLine="2552"/>
+        <Caret Line="2606" Column="75" TopLine="2550"/>
       </Position10>
       <Position11>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2606" Column="75" TopLine="2550"/>
+        <Caret Line="2605" Column="75" TopLine="2549"/>
       </Position11>
       <Position12>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2607" Column="75" TopLine="2552"/>
+        <Caret Line="2604" Column="75" TopLine="2548"/>
       </Position12>
       <Position13>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2608" Column="75" TopLine="2554"/>
+        <Caret Line="2603" Column="75" TopLine="2547"/>
       </Position13>
       <Position14>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2607" Column="75" TopLine="2552"/>
+        <Caret Line="2604" Column="75" TopLine="2549"/>
       </Position14>
       <Position15>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2608" Column="75" TopLine="2554"/>
+        <Caret Line="2575" Column="71" TopLine="2554"/>
       </Position15>
       <Position16>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2609" Column="75" TopLine="2556"/>
+        <Caret Line="2576" Column="71" TopLine="2556"/>
       </Position16>
       <Position17>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2608" Column="75" TopLine="2554"/>
+        <Caret Line="2577" Column="71" TopLine="2558"/>
       </Position17>
       <Position18>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2609" Column="75" TopLine="2556"/>
+        <Caret Line="2576" Column="71" TopLine="2556"/>
       </Position18>
       <Position19>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2608" Column="75" TopLine="2554"/>
+        <Caret Line="2575" Column="71" TopLine="2565"/>
       </Position19>
       <Position20>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2607" Column="75" TopLine="2552"/>
+        <Caret Line="2248" Column="45" TopLine="2234"/>
       </Position20>
       <Position21>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="2606" Column="75" TopLine="2550"/>
+        <Filename Value="multilanguestrings.pas"/>
+        <Caret Line="37" Column="21" TopLine="20"/>
       </Position21>
       <Position22>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="2605" Column="75" TopLine="2549"/>
+        <Filename Value="requirements/planeph.pas"/>
+        <Caret Line="2349" Column="40" TopLine="2340"/>
       </Position22>
       <Position23>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="2604" Column="75" TopLine="2548"/>
+        <Filename Value="requirements/wmm.pas"/>
+        <Caret Line="679" Column="69" TopLine="655"/>
       </Position23>
       <Position24>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="2603" Column="75" TopLine="2547"/>
+        <Filename Value="requirements/planeph.pas"/>
+        <Caret Line="2591" Column="5" TopLine="2568"/>
       </Position24>
       <Position25>
-        <Filename Value="spori_main.pas"/>
-        <Caret Line="2604" Column="75" TopLine="2549"/>
+        <Filename Value="requirements/planeph.pas"/>
+        <Caret Line="3878" Column="54" TopLine="3855"/>
       </Position25>
       <Position26>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2575" Column="71" TopLine="2554"/>
+        <Caret Line="714" Column="7" TopLine="184"/>
       </Position26>
       <Position27>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2576" Column="71" TopLine="2556"/>
+        <Caret Line="680" Column="3" TopLine="656"/>
       </Position27>
       <Position28>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2577" Column="71" TopLine="2558"/>
+        <Caret Line="1355" Column="36" TopLine="1322"/>
       </Position28>
       <Position29>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2576" Column="71" TopLine="2556"/>
+        <Caret Line="1338" Column="70" TopLine="1315"/>
       </Position29>
       <Position30>
         <Filename Value="spori_main.pas"/>
-        <Caret Line="2575" Column="71" TopLine="2554"/>
+        <Caret Line="1410" Column="54" TopLine="1387"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

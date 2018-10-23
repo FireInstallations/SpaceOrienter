@@ -483,30 +483,6 @@ msgstr "Sternenliste"
 msgid "Berechnungen"
 msgstr ""
 
-#: tfrm_main.label1.caption
-msgid "Up"
-msgstr ""
-
-#: tfrm_main.label2.caption
-msgid "N"
-msgstr ""
-
-#: tfrm_main.label3.caption
-msgid "Down"
-msgstr ""
-
-#: tfrm_main.label4.caption
-msgid "S"
-msgstr ""
-
-#: tfrm_main.label5.caption
-msgid "E"
-msgstr ""
-
-#: tfrm_main.label6.caption
-msgid "W"
-msgstr ""
-
 #: tfrm_main.lbl_ardotype.caption
 msgid "ArduIno Leonardo"
 msgstr "ArduIno Leonardo"
@@ -604,6 +580,36 @@ msgstr "β"
 
 #: tfrm_main.lbl_cet_title.caption
 msgid "MEZ"
+msgstr ""
+
+#: tfrm_main.lbl_compas_downtitle.caption
+msgctxt "tfrm_main.lbl_compas_downtitle.caption"
+msgid "Down"
+msgstr ""
+
+#: tfrm_main.lbl_compas_easttitle.caption
+msgctxt "tfrm_main.lbl_compas_easttitle.caption"
+msgid "E"
+msgstr ""
+
+#: tfrm_main.lbl_compas_northtitle.caption
+msgctxt "tfrm_main.lbl_compas_northtitle.caption"
+msgid "N"
+msgstr ""
+
+#: tfrm_main.lbl_compas_southtitle.caption
+msgctxt "tfrm_main.lbl_compas_southtitle.caption"
+msgid "S"
+msgstr ""
+
+#: tfrm_main.lbl_compas_uptitle.caption
+msgctxt "tfrm_main.lbl_compas_uptitle.caption"
+msgid "Up"
+msgstr ""
+
+#: tfrm_main.lbl_compas_westtitle.caption
+msgctxt "tfrm_main.lbl_compas_westtitle.caption"
+msgid "W"
 msgstr ""
 
 #: tfrm_main.lbl_comstate.caption

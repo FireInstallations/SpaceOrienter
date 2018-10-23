@@ -14,7 +14,7 @@ msgstr ""
 
 #: multilanguestrings.mls_askretry
 msgid " Erneut versuchen?"
-msgstr ""
+msgstr " Retry?"
 
 #: multilanguestrings.mls_connectedwith
 msgid "Verbunden mit: "
@@ -26,7 +26,7 @@ msgstr "Connecting..."
 
 #: multilanguestrings.mls_error_askabortload
 msgid " Laden abbrechen?"
-msgstr ""
+msgstr " Abort loading?"
 
 #: multilanguestrings.mls_error_askdefault
 msgid " Die fehlerhafte(n) Option(en) durch Defaultwert(e) ersetzen?"
@@ -38,7 +38,7 @@ msgstr " Reset configurations?"
 
 #: multilanguestrings.mls_error_askresetstar
 msgid " Sternenliste zurücksetzen und neu Laden?"
-msgstr "Reset BodyList and reload?"
+msgstr " Reset BodyList and reload?"
 
 #: multilanguestrings.mls_error_askresetthis
 msgid " Die fehlerhafte Option durch Defaultwert ersetzen?"
@@ -46,7 +46,7 @@ msgstr " Replace defective Setting with default value?"
 
 #: multilanguestrings.mls_error_atsubitem
 msgid "während laden von SupItem"
-msgstr ""
+msgstr "while loading sub item"
 
 #: multilanguestrings.mls_error_caption
 msgid "ERROR"
@@ -54,7 +54,7 @@ msgstr "ERROR"
 
 #: multilanguestrings.mls_error_errorwhile
 msgid "Fehler in"
-msgstr "Error while "
+msgstr "Error while"
 
 #: multilanguestrings.mls_error_foundnotall
 msgid " Konnte nicht alle Optionen finden."
@@ -82,11 +82,11 @@ msgstr "Out of range"
 
 #: multilanguestrings.mls_error_starsubitem
 msgid " Laden des Sterns gescheitert bei SubItem:"
-msgstr "Loading the body failed at sub item:"
+msgstr " Loading the body failed at sub item:"
 
 #: multilanguestrings.mls_error_starwrite
 msgid " Fehler beim schreiben der SternenListe!"
-msgstr ""
+msgstr " Error while writing the BodyList!"
 
 #: multilanguestrings.mls_error_unnownformat
 msgid "Unbekanntes Format"
@@ -136,7 +136,7 @@ msgstr "Unknown"
 
 #: multilanguestrings.mls_warning
 msgid "Warnung:"
-msgstr ""
+msgstr "Warning:"
 
 #: multilanguestrings.mls_warning_multiline
 msgid " Doppelte Sternendeklaration Nr."
@@ -145,7 +145,7 @@ msgstr ""
 #: multilanguestrings.mls_wasfound
 msgctxt "multilanguestrings.mls_wasfound"
 msgid "gefunden"
-msgstr ""
+msgstr "was found"
 
 #: tfrm_config.bitbtn_nwcnfg.caption
 msgid "Einstellungen zurücksetzen"
@@ -442,7 +442,6 @@ msgid "Normal"
 msgstr "Normal"
 
 #: tfrm_main.ectabctrl_calcsections.tabs[0].text
-#, fuzzy
 msgctxt "tfrm_main.ectabctrl_calcsections.tabs[0].text"
 msgid "Zeit"
 msgstr "Time"
@@ -450,11 +449,11 @@ msgstr "Time"
 #: tfrm_main.ectabctrl_calcsections.tabs[1].text
 msgctxt "tfrm_main.ectabctrl_calcsections.tabs[1].text"
 msgid "Frühlingspunkt"
-msgstr ""
+msgstr "Vernal point"
 
 #: tfrm_main.ectabctrl_calcsections.tabs[2].text
 msgid "Stern"
-msgstr ""
+msgstr "Star"
 
 #: tfrm_main.ed_search4bdy_list.text
 msgctxt "tfrm_main.ed_search4bdy_list.text"
@@ -477,31 +476,7 @@ msgstr "BodyList"
 
 #: tfrm_main.imgmn_menue.menuitems[2].caption
 msgid "Berechnungen"
-msgstr ""
-
-#: tfrm_main.label1.caption
-msgid "Up"
-msgstr ""
-
-#: tfrm_main.label2.caption
-msgid "N"
-msgstr ""
-
-#: tfrm_main.label3.caption
-msgid "Down"
-msgstr ""
-
-#: tfrm_main.label4.caption
-msgid "S"
-msgstr ""
-
-#: tfrm_main.label5.caption
-msgid "E"
-msgstr ""
-
-#: tfrm_main.label6.caption
-msgid "W"
-msgstr ""
+msgstr "Calculation"
 
 #: tfrm_main.lbl_ardotype.caption
 msgid "ArduIno Leonardo"
@@ -509,10 +484,9 @@ msgstr "ArduIno Leonardo"
 
 #: tfrm_main.lbl_aries1p_title.caption
 msgid "Frühlingsanfang"
-msgstr ""
+msgstr "First point of Aries"
 
 #: tfrm_main.lbl_azicalc_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_azicalc_deg.caption"
 msgid "°"
 msgstr "°"
@@ -533,13 +507,11 @@ msgid "Azimut"
 msgstr "Azimuth"
 
 #: tfrm_main.lbl_azidenom_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_azidenom_title.caption"
 msgid "Azimut Nenner"
 msgstr "Denominator"
 
 #: tfrm_main.lbl_azinow_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_azinow_deg.caption"
 msgid "°"
 msgstr "°"
@@ -555,19 +527,16 @@ msgid "00.00"
 msgstr ""
 
 #: tfrm_main.lbl_azinum_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_azinum_title.caption"
 msgid "Azimut Zähler"
 msgstr "Numerator"
 
 #: tfrm_main.lbl_azi_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_azi_deg.caption"
 msgid "°"
 msgstr "°"
 
 #: tfrm_main.lbl_azi_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_azi_title.caption"
 msgid "Azimut"
 msgstr "Azimuth"
@@ -587,20 +556,54 @@ msgid "Himmelskörper"
 msgstr "Luminary"
 
 #: tfrm_main.lbl_beta_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_beta_deg.caption"
 msgid "°"
 msgstr "°"
 
 #: tfrm_main.lbl_beta_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_beta_title.caption"
 msgid "β"
 msgstr "β"
 
 #: tfrm_main.lbl_cet_title.caption
 msgid "MEZ"
-msgstr ""
+msgstr "CET"
+
+#: tfrm_main.lbl_compas_downtitle.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_compas_downtitle.caption"
+msgid "Down"
+msgstr "Down"
+
+#: tfrm_main.lbl_compas_easttitle.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_compas_easttitle.caption"
+msgid "E"
+msgstr "E"
+
+#: tfrm_main.lbl_compas_northtitle.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_compas_northtitle.caption"
+msgid "N"
+msgstr "N"
+
+#: tfrm_main.lbl_compas_southtitle.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_compas_southtitle.caption"
+msgid "S"
+msgstr "S"
+
+#: tfrm_main.lbl_compas_uptitle.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_compas_uptitle.caption"
+msgid "Up"
+msgstr "Up"
+
+#: tfrm_main.lbl_compas_westtitle.caption
+#, fuzzy
+msgctxt "tfrm_main.lbl_compas_westtitle.caption"
+msgid "W"
+msgstr "W"
 
 #: tfrm_main.lbl_comstate.caption
 msgctxt "tfrm_main.lbl_comstate.caption"
@@ -608,7 +611,6 @@ msgid "Nicht verbunden"
 msgstr "Not connceted"
 
 #: tfrm_main.lbl_decli_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_decli_deg.caption"
 msgid "°"
 msgstr "°"
@@ -616,24 +618,22 @@ msgstr "°"
 #: tfrm_main.lbl_decli_min.caption
 msgctxt "tfrm_main.lbl_decli_min.caption"
 msgid "min"
-msgstr ""
+msgstr "min"
 
 #: tfrm_main.lbl_decli_title.caption
 msgid "Dekli"
-msgstr ""
+msgstr "Decli"
 
 #: tfrm_main.lbl_degshift_title.caption
 msgid "GradShift"
-msgstr ""
+msgstr "DegreeShift"
 
 #: tfrm_main.lbl_delta_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_delta_deg.caption"
 msgid "°"
 msgstr "°"
 
 #: tfrm_main.lbl_delta_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_delta_title.caption"
 msgid "δ"
 msgstr "δ"
@@ -645,7 +645,6 @@ msgid "Differenz"
 msgstr "Deviation"
 
 #: tfrm_main.lbl_elecalc_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_elecalc_deg.caption"
 msgid "°"
 msgstr "°"
@@ -666,7 +665,6 @@ msgid "Elevation"
 msgstr "Elevation"
 
 #: tfrm_main.lbl_elenow_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_elenow_deg.caption"
 msgid "°"
 msgstr "°"
@@ -682,25 +680,21 @@ msgid "00.00"
 msgstr ""
 
 #: tfrm_main.lbl_ele_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_ele_deg.caption"
 msgid "°"
 msgstr "°"
 
 #: tfrm_main.lbl_ele_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_ele_title.caption"
 msgid "Elevation"
 msgstr "Elevation"
 
 #: tfrm_main.lbl_gmt_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_gmt_title.caption"
 msgid "GMT"
 msgstr "GMT"
 
 #: tfrm_main.lbl_grt_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_grt_title.caption"
 msgid "GrT"
 msgstr "GrT"
@@ -710,7 +704,6 @@ msgid "ZeitWinkel"
 msgstr ""
 
 #: tfrm_main.lbl_lat_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_lat_deg.caption"
 msgid "°"
 msgstr "°"
@@ -721,7 +714,6 @@ msgid "'"
 msgstr ""
 
 #: tfrm_main.lbl_lat_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_lat_title.caption"
 msgid "Latitude"
 msgstr "Latitude"
@@ -730,10 +722,9 @@ msgstr "Latitude"
 msgid ""
 "Ortszeit\n"
 " in UT\n"
-msgstr ""
+msgstr "Local time UTC"
 
 #: tfrm_main.lbl_long_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_long_deg.caption"
 msgid "°"
 msgstr "°"
@@ -744,13 +735,11 @@ msgid "'"
 msgstr ""
 
 #: tfrm_main.lbl_long_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_long_title.caption"
 msgid "Longitude"
 msgstr "Longitude"
 
 #: tfrm_main.lbl_magdvtn_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_magdvtn_deg.caption"
 msgid "°"
 msgstr "°"
@@ -769,7 +758,6 @@ msgid "Ort:"
 msgstr "Location:"
 
 #: tfrm_main.lbl_rightac_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_rightac_deg.caption"
 msgid "°"
 msgstr "°"
@@ -777,7 +765,7 @@ msgstr "°"
 #: tfrm_main.lbl_rightac_min.caption
 msgctxt "tfrm_main.lbl_rightac_min.caption"
 msgid "min"
-msgstr ""
+msgstr "min"
 
 #: tfrm_main.lbl_rightac_title.caption
 msgid "Rekta"
@@ -789,7 +777,6 @@ msgid "Einstellungen"
 msgstr "Settings"
 
 #: tfrm_main.lbl_starangle_deg.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_starangle_deg.caption"
 msgid "°"
 msgstr "°"
@@ -805,10 +792,9 @@ msgstr "Sidereal hour angle"
 
 #: tfrm_main.lbl_tz_title.caption
 msgid "TZ"
-msgstr ""
+msgstr "TZ"
 
 #: tfrm_main.lbl_t_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_t_title.caption"
 msgid "T"
 msgstr "T"
@@ -818,13 +804,11 @@ msgid "Update!"
 msgstr "Update!"
 
 #: tfrm_main.lbl_utc1_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_utc1_title.caption"
 msgid "UTC1"
 msgstr "UTC1"
 
 #: tfrm_main.lbl_utc2_title.caption
-#, fuzzy
 msgctxt "tfrm_main.lbl_utc2_title.caption"
 msgid "UTC2"
 msgstr "UTC2"
@@ -833,14 +817,12 @@ msgstr "UTC2"
 msgid ""
 "Frühlingspunkt\n"
 "aktuell\n"
-msgstr ""
+msgstr "Vernal point now"
 
 #: tfrm_main.lbl_vernalp_title.caption
-#, fuzzy
-#| msgid "Frühjahrspunkt"
 msgctxt "tfrm_main.lbl_vernalp_title.caption"
 msgid "Frühlingspunkt"
-msgstr "First Point of Aries"
+msgstr "Vernal point"
 
 #: tfrm_main.lv_bodylist.columns[0].caption
 msgctxt "tfrm_main.lv_bodylist.columns[0].caption"
@@ -863,11 +845,9 @@ msgid "Eigenschaften"
 msgstr "Properties"
 
 #: tfrm_main.lv_bodylist.columns[4].caption
-#, fuzzy
-#| msgid "Eigenschaften"
 msgctxt "tfrm_main.lv_bodylist.columns[4].caption"
 msgid "Sternbild"
-msgstr "Properties"
+msgstr "Constellation"
 
 #: tfrm_main.lv_bodylist.columns[5].caption
 msgctxt "tfrm_main.lv_bodylist.columns[5].caption"
@@ -880,13 +860,11 @@ msgid "Rezi Min"
 msgstr "RAscn Min"
 
 #: tfrm_main.lv_bodylist.columns[7].caption
-#, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[7].caption"
 msgid "Dekli °"
 msgstr "Decli °"
 
 #: tfrm_main.lv_bodylist.columns[8].caption
-#, fuzzy
 msgctxt "tfrm_main.lv_bodylist.columns[8].caption"
 msgid "Dekli Min"
 msgstr "Decli Min"

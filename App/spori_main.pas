@@ -709,7 +709,9 @@ function TArmConnect.ReceiveData (): Boolean; //Done
         //Result is only true, if we got both: elevation and azimuth
         //So we will know if we got valid data
         Result := Result and TryStrToFloat(StrVal, FReceiveAzimuth);
-      end;
+      end
+    else
+      Result := false;
   end;
 
 procedure TArmConnect.SendData (); //Done
@@ -1333,7 +1335,7 @@ function  TFrm_Main.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; 
          Result :=  OptionsEnumToStr(Where) + '-' + MLS_Error_Loading + ': ' + Why;
        end;
 
-     function ThrowError (const Name: TOptionNames): Boolean;
+     function ThrowError (const Name: TOptionNames; const LastResult: Boolean): Boolean;
        begin
         // Let the User decide if we retry, reset or abort
          case MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + Slinebreak +
@@ -1350,7 +1352,7 @@ function  TFrm_Main.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; 
              begin
               DefaultOptions();
 
-               Result := Result and LoadOptions(false);
+               Result := LastResult and LoadOptions(false);
              end;
            mrCancel:
              Result := false;
@@ -1405,7 +1407,7 @@ function  TFrm_Main.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; 
             end
           else
             begin
-              Result := ThrowError (On_Langue);
+              Result := ThrowError (On_Langue, Result);
               exit;
             end;
 
@@ -1703,10 +1705,10 @@ function  TFrm_Main.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; 
 
               if (ErrorMessage <> '') then
                 begin
-                  Result := ThrowError (j);
+                  Result := ThrowError (j, Result);
                   exit;
                 end;
-           end; //End for loop
+           end; //End for-loop
 
           if Result then
             begin
@@ -2245,7 +2247,7 @@ procedure TFrm_Main.SetShapePos (const ShapeNum: TShapeNums; Angle: Real); //ToD
 
     function FImod(const ValLeft,  ValRhight: Real): Real; inline;
       begin
-        FImod := ValLeft - ValRhight * Int(ValLeft / ValRhight);
+        FImod := ValLeft - ValRhight * trunc(ValLeft / ValRhight);
       end;
 
     function Sign_custom (const Value: Real): ShortInt; inline;
