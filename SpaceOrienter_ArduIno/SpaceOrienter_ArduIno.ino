@@ -1,4 +1,4 @@
-// set Serial Monitor to 9600 Baud, insert values "<elevation>;<azimuth>;" and the Space Orienter will direct the beam
+// set Serial Monitor to 9600 Baud, insert values <elevation> ; <azimuth> and the Space Orienter will direct the beam
 #include <Wire.h> //I2C Arduino Library
 #include "Print.h"
 
@@ -24,7 +24,7 @@ float mx = 0, mz = 0;
 #define xm 690
 #define yp 750
 #define ym 720
-#define cpemf 543
+#define cpemf 543 //Earthmagnetic field in counts (vaulue here in Berlin).
 
 float sx = 0, sy = 0;// scaled sensor values
 
@@ -53,9 +53,10 @@ long oldtime = 0;
 
 
 /* ----------------- { setup } ----------------- */
+
 void setup() {
   oldtime = millis();
-  
+
   Serial.begin(9600);
 
   // Enable I2C
@@ -102,42 +103,40 @@ void setup() {
 
 }
 
+
 /* ----------------- { loop } ----------------- */
-
-
 
 void loop()
 {
   float elevation, azimuth;
- 
-    //Get value from MMA
-    MMAread ();
-    Raw_elevation = (atan2(mz, -mx) * 180 / M_PI);
-    // atan2 runs from -180 to 180 degrees, Raw_elevation theoretically from -90 to 270 degrees
-    if (Raw_elevation < -90) Raw_elevation += 360;
-    elevation = Raw_elevation;
 
-    if (Raw_elevation >= 90) elevation = 180 - Raw_elevation;
+  //Get value from MMA
+  MMAread ();
+  Raw_elevation = (atan2(mz, -mx) * 180 / M_PI);
+  // atan2 runs from -180 to 180 degrees, Raw_elevation theoretically from -90 to 270 degrees
+  if (Raw_elevation < -90) Raw_elevation += 360;
+  elevation = Raw_elevation;
+
+  if (Raw_elevation >= 90) elevation = 180 - Raw_elevation;
 
 
-    //Get values from HMC
-    HMCread();
-    Raw_azimuth = atan2(-sx, sy) * 180 / M_PI;
-    // atan2 runs from -180 to 180 degrees, Raw_azimuth theoretically from -90 to 270 degrees
-    if (Raw_azimuth < -90) Raw_azimuth += 360;
+  //Get values from HMC
+  HMCread();
+  Raw_azimuth = atan2(-sx, sy) * 180 / M_PI;
+  // atan2 runs from -180 to 180 degrees, Raw_azimuth theoretically from -90 to 270 degrees
+  if (Raw_azimuth < -90) Raw_azimuth += 360;
 
-    azimuth = Raw_azimuth;
-    // restore azimuth with 0 to 360 degrees
-    if (Raw_elevation > 90) azimuth += 180;
-    if (azimuth < 0) azimuth += 360;
-    if (azimuth > 360) azimuth -= 360;
-  
+  azimuth = Raw_azimuth;
+  // restore azimuth with 0 to 360 degrees
+  if (Raw_elevation > 90) azimuth += 180;
+  if (azimuth < 0) azimuth += 360;
+  if (azimuth > 360) azimuth -= 360;
+
 
   if (((millis() - oldtime) > 700) || NewInput) {
     Serial.println (String(elevation) + ";" + String(azimuth/* + 15*/) + ";");// + String(Raw_elevation) + ";" + String(Raw_azimuth));
     oldtime = millis();
   }
-
 
 
   //progress input from the manual control
@@ -281,46 +280,49 @@ void ProgressInput ()// reads new input from Serial Monitor and regulates on thi
     float elevationIn, azimuthIn;
 
     StrIn = Serial.readString();
-    //Serial.println(StrIn);
-    if ((StrIn != "")) {
-      // get rid of NL if activated in Serial Monitor
-      if (StrIn.endsWith("\n"))StrIn = StrIn.substring(0, StrIn.length() - 1);
-      // get rid of CR if activated in Serial Monitor
-      if (StrIn.endsWith("\r"))StrIn = StrIn.substring(0, StrIn.length() - 1);
-      // the syntax of the input is: <elevationIn> ; <azimuthIn> ;
-      if (StrIn.endsWith(";"))
+
+    //LastStrIn is needed for working with Twedge
+    if ((StrIn != "") /* && (StrIn != LastStrIn)*/) {
+
+      // the syntax of the input is: <elevationIn> ; <azimuthIn>
+      // try to find elevation
+      // please note: the implementation of .toFloat allows to get all digets until somthing non numerical appears
+      Start = 0;
+      while (!(isDigit(StrIn[Start])) && (Start < StrIn.length())) // skip all non digit chars
+        Start++;        
+      End = StrIn.indexOf(";", Start);
+      // elevationIn as float
+      elevationIn = (StrIn.substring(Start, End)).toFloat();
+
+      //ensure at least one diget of elevation was given
+      NewInput = (End - Start >= 1);
+
+      // try to find azimuth
+      Start = End;
+      while (!(isDigit(StrIn[Start])) && (Start < StrIn.length())) // skip all non digit chars (jumps over the semicolon)
+        Start++;
+      End = StrIn.length() - 1;
+      // azimuthIn as float, 15.0 degrees is the misswise of magnetic field seen practically, theoretically it should be ~ 4 degrees
+      azimuthIn   = (StrIn.substring(Start, End)).toFloat();// - 15.0L;
+
+      //ensure correct ranges
+      Raw_elevationIn = fmod(elevationIn, 180);
+      Raw_azimuthIn   = abs(fmod(azimuthIn, 360));
+
+      while (azimuthIn >= 180)
       {
-        Start = 0;
-        End   = StrIn.indexOf(";", Start);
-        // elevationIn as float
-        elevationIn = (StrIn.substring(Start, End)).toFloat();
-
-        //jump over ";"
-        Start = End + 1;
-        End   = StrIn.indexOf(";", Start);
-        // azimuthIn as float, 15.0 degrees is the misswise of magnetic field seen practically, theoretically it should be 4 degrees
-        azimuthIn   = (StrIn.substring(Start, End)).toFloat();// - 15.0L;
-
-        Raw_elevationIn = elevationIn;
-        Raw_azimuthIn = azimuthIn;
-
-        if (azimuthIn >= 180)
-        {
-          Raw_elevationIn = 180 - elevationIn; //if the given azimuthIn is greater than 180 degrees, the elevation flips to the other side
-          Raw_azimuthIn  -= 180;//the Raw_azimuth knows values between -20 up to 200 degrees only
-        }
+        Raw_elevationIn = 180 - elevationIn; //if the given azimuthIn is greater than 180 degrees, the elevation flips to the other side
+        Raw_azimuthIn  -= 180;//the Raw_azimuth knows values between -20 up to 200 degrees only
       }
 
-      //We got valid input
-      NewInput = true;
+      // Did we got valid input?
+      // It's true, if we got at least 1 digit of azimuth and elevation (testet above)
+      NewInput &= (End - Start >= 1);
     }
-    //Serial.println((String)elevationIn + "   " + (String)azimuthIn);
-    //Serial.println((String)Raw_elevationIn + "   " + (String)Raw_azimuthIn);
   }// end of Serial available
 
+
   // what follows is the position regulator
-
-
   if (NewInput)
   {
     float Movement;
@@ -336,7 +338,7 @@ void ProgressInput ()// reads new input from Serial Monitor and regulates on thi
     else
     {
       //the minimum step width is limited to 20
-      if (abs(Movement) < 20)
+      if (abs(Movement) < 1)
         Movement = sign(Movement) * 20.0;
       else
         Movement *= 20.0;
@@ -358,7 +360,7 @@ void ProgressInput ()// reads new input from Serial Monitor and regulates on thi
     else
     {
       //the minimum step width is limited to 20
-      if (abs(Movement) < 20)
+      if (abs(Movement) < 1)
         Movement = sign(Movement) * 20.0;
       else
         Movement *= 20.0;
@@ -370,9 +372,9 @@ void ProgressInput ()// reads new input from Serial Monitor and regulates on thi
       MoveElevation(stepsize, true); //Inc
     else if (Movement < 0)
       MoveElevation(stepsize, false); //Dec
-      delay(elapse);
+    delay(elapse);
 
-    if (abs(Raw_azimuthIn - Raw_azimuth) <= 1 && abs(Raw_elevationIn - Raw_elevation) <= 1)
+    if (abs(Raw_azimuthIn - Raw_azimuth) <= 2 && abs(Raw_elevationIn - Raw_elevation) <= 2)
     {
       NewInput = false;
 
