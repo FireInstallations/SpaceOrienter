@@ -29,13 +29,22 @@ float mx = 0, mz = 0;
 float sx = 0, sy = 0;// scaled sensor values
 
 
-/* ----------------- { general } ----------------- */
 
+/* ----------------- { general } ----------------- */
+//delay time
 #define backlash_motor 8
 #define elapse         60
 
+//Lasertype
 #define LaserWeak   12
 #define LaserStrong 11
+
+//possible movements
+//clockwise means increasing and counter clockwise means decreasing
+#define EleClockwise 0
+#define EleCounterClockwise 1
+#define AziClockwise 2
+#define AziCounterClockwise 3
 
 bool LaserIsRunning = false;
 bool NewInput       = false;
@@ -46,7 +55,13 @@ bool NewInput       = false;
 float Raw_azimuth,   Raw_elevation;
 float Raw_azimuthIn, Raw_elevationIn;
 
-long oldtime = 0;
+//for a stepsize of 120 the motor moves about 10 degrees
+byte stepsize;
+byte State = 255;
+byte Direction = 155;
+long Movetime;
+
+long oldtime;
 
 //If you want to run whith Twedge decomment this and in ProgressInput too!
 //String LastStrIn;
@@ -138,31 +153,51 @@ void loop()
     oldtime = millis();
   }
 
-
-  //progress input from the manual control
-  if (digitalRead(0) == LOW & digitalRead(1) == HIGH  ) //decrease azimuth
+  if (State = 255)
   {
-    MoveAzimuth (120, true);
-    NewInput = false;
-  }
+    //progress input from the manual control
+    if (digitalRead(0) == LOW & digitalRead(1) == HIGH  ) //decrease azimuth
+    {
+      stepsize = 120;
+      State = 0;
+      Direction = AziClockwise;
 
-  if (digitalRead(0) == HIGH & digitalRead(1) == LOW ) //increase azimuth
-  {
-    MoveAzimuth (120, false);
-    NewInput = false;
-  }
+      NewInput = false;
+    }
 
-  if (digitalRead(4) == LOW & digitalRead(5) == HIGH ) //increase elevation
-  {
-    MoveElevation (120, true);
-    NewInput = false;
-  }
+    if (digitalRead(0) == HIGH & digitalRead(1) == LOW ) //increase azimuth
+    {
+      stepsize = 120;
+      State = 0;
+      Direction = AziCounterClockwise;
 
-  if (digitalRead(4) == HIGH & digitalRead(5) == LOW ) //decrease elevation
-  {
-    MoveElevation (120, false);
-    NewInput = false;
+      NewInput = false;
+    }
+
+    if (digitalRead(4) == LOW & digitalRead(5) == HIGH ) //increase elevation
+    {
+      stepsize = 120;
+      State = 0;
+      Direction = EleClockwise;
+
+      NewInput = false;
+    }
+
+    if (digitalRead(4) == HIGH & digitalRead(5) == LOW ) //decrease elevation
+    {
+      stepsize = 120;
+      State = 0;
+      Direction = EleCounterClockwise;
+
+      NewInput = false;
+    }
+
+    //progress input from the serial port
+    ProgressInput ();
+
   }
+  else
+    MoveMotor ();
 
   //Laser with warning tone
   if (digitalRead(6) == HIGH)
@@ -170,70 +205,86 @@ void loop()
   else
     PutLaserOff (LaserStrong);// end of manual control
 
-  //progress input from the serial port
-  ProgressInput ();
-
 
 }
 //-------------------- Subroutines ----------------
-//clockwise means increasing and counter clockwise means decreasing
-void MoveAzimuth (byte stepsize, bool clockwise)
-
-{
-  byte backward = 7;
-  byte forward = 8;
-
-  //counter clockwise is default
-  if (clockwise)
+void MoveMotor () {
+  if (((Raw_elevation >= -10 || Direction == EleClockwise) && (Raw_elevation <= 190 || Direction == EleCounterClockwise)) ||
+      (Raw_azimuth   >= -20 || Direction == AziClockwise) && (Raw_azimuth   <= 200 || Direction == AziCounterClockwise))
   {
-    backward = 8;
-    forward = 7;
-  }
+    byte backward;
+    byte forward;
 
-  if ((Raw_azimuth >= -20 || clockwise) && (Raw_azimuth <= 200 || !clockwise))
-  {
-    digitalWrite(forward, LOW); //remove backlash
+    //use the right moter and rotate dicection
+    switch (Direction)
+    {
+      case EleClockwise:
+        backward = 9;
+        forward = 10;
+        break;
 
-    digitalWrite(backward, HIGH); //moves in opposit direction
-    delay(backlash_motor);
-    digitalWrite(backward, LOW); //the motor is stopped
+      case EleCounterClockwise:
+        backward = 10;
+        forward = 9;
+        break;
 
-    digitalWrite(forward, HIGH); //forward movement
-    delay(stepsize);
-    digitalWrite(forward, LOW); ////the motor is stopped
-    delay(elapse);
+      case AziClockwise:
+        backward = 8;
+        forward = 7;
+        break;
 
-    tone(13, 600, 10);
-  }
-}
+      case AziCounterClockwise:
+        backward = 7;
+        forward = 8;
+        break;
+    }
 
-//clockwise means increasing and counter clockwise means decreasing
-void MoveElevation (byte stepsize, bool clockwise)
-{
-  byte backward = 10;
-  byte forward = 9;
+    //while we got a delay let the loop read position information from the sensors
+    switch (State) {
+      case 0:
+        digitalWrite(forward, LOW); //remove backlash
+        digitalWrite(backward, HIGH); //moves in opposit Direction
+        
+        Movetime = millis();
+        State++;
+        break;
 
-  //counter clockwise is default
-  if (clockwise)
-  {
-    backward = 9;
-    forward  = 10;
-  }
+      case 1:
+        if (millis() - Movetime >= backlash_motor)
+        {
+          digitalWrite(backward, LOW); //the motor is stopped
+          digitalWrite(forward, HIGH); //forwad movement
+          
+          Movetime = millis();
+          State++;
+        }
+        break;
 
-  if ((Raw_elevation >= -10 || clockwise) && (Raw_elevation <= 190 || !clockwise))
-  {
-    digitalWrite(forward, LOW); //remove backlash
+      case 2:
+        if (millis() - Movetime >= stepsize)
+        {
+          digitalWrite(forward, LOW); ////the motor is stopped
 
-    digitalWrite(backward, HIGH); //moves in opposit direction
-    delay(backlash_motor);
-    digitalWrite(backward, LOW); //the motor is stopped
+          Movetime = millis();
+          State++;
+        }
+        break;
+        
+      case 3:
+        if (millis() - Movetime >= elapse) {
+          tone(13, 600);
 
-    digitalWrite(forward, HIGH); //forwad movement
-    delay(stepsize);
-    digitalWrite(forward, LOW); ////the motor is stopped
-    delay(elapse);
+          State++;
+        }
+        break;
+      case 4:
+        if (millis() - Movetime >= 10) {
+          noTone(13);
 
-    tone(13, 600, 10);
+          State = 255;
+        }
+        break;
+    }
   }
 }
 
@@ -289,7 +340,7 @@ void ProgressInput ()// reads new input from Serial Monitor and regulates on thi
       // please note: the implementation of .toFloat allows to get all digets until somthing non numerical appears
       Start = 0;
       while (!(isDigit(StrIn[Start])) && (Start < StrIn.length())) // skip all non digit chars
-        Start++;        
+        Start++;
       End = StrIn.indexOf(";", Start);
       // elevationIn as float
       elevationIn = (StrIn.substring(Start, End)).toFloat();
@@ -326,53 +377,69 @@ void ProgressInput ()// reads new input from Serial Monitor and regulates on thi
   if (NewInput)
   {
     float Movement;
-    //for a stepsize of 120 the motor moves about 10 degrees
-    byte  stepsize;
 
-    //----- { Azimuth } -----
-    Movement = Raw_azimuthIn - Raw_azimuth;
 
-    //the maximum step width is limited to 120
-    if (Movement >= 6)
-      Movement = 120 * sign(Movement);
+    if (Direction == EleCounterClockwise || Direction == EleClockwise) //use the moter that wasn't the last used
+    {
+      //----- { Azimuth } -----
+      Movement = Raw_azimuthIn - Raw_azimuth;
+
+      //the maximum step width is limited to 120
+      if (Movement >= 6)
+        Movement = 120 * sign(Movement);
+      else
+      {
+        //the minimum step width is limited to 20
+        if (abs(Movement) < 1)
+          Movement = sign(Movement) * 20.0;
+        else
+          Movement *= 20.0;
+      }
+
+      stepsize = round(abs(Movement));
+      //movement of the motor to compensate the azimuth difference
+      if (Movement > 0)
+      {
+        State = 0;
+        Direction = AziClockwise; //Inc
+      }
+      else if (Movement < 0)
+      {
+        State = 0;
+        Direction = AziCounterClockwise; //Dec
+      }
+    }
     else
     {
-      //the minimum step width is limited to 20
-      if (abs(Movement) < 1)
-        Movement = sign(Movement) * 20.0;
+
+      //----- { Elevation } -----
+      Movement = Raw_elevationIn - Raw_elevation;
+
+      //the maximum step width is limited to 120
+      if (Movement >= 6)
+        Movement = 120 * sign(Movement);
       else
-        Movement *= 20.0;
+      {
+        //the minimum step width is limited to 20
+        if (abs(Movement) < 1)
+          Movement = sign(Movement) * 20.0;
+        else
+          Movement *= 20.0;
+      }
+
+      stepsize = round(abs(Movement));
+      //movement of the motor to compensate the elevation difference
+      if (Movement > 0)
+      {
+        State = 0;
+        Direction = EleClockwise; //Inc
+      }
+      else if (Movement < 0)
+      {
+        State = 0;
+        Direction = EleCounterClockwise; //Dec
+      }
     }
-
-    stepsize = round(abs(Movement));
-    //movement of the motor to compensate the azimuth difference
-    if (Movement > 0)
-      MoveAzimuth(stepsize, true); //Inc
-    else if (Movement < 0)
-      MoveAzimuth(stepsize, false); //Dec
-
-    //----- { Elevation } -----
-    Movement = Raw_elevationIn - Raw_elevation;
-
-    //the maximum step width is limited to 120
-    if (Movement >= 6)
-      Movement = 120 * sign(Movement);
-    else
-    {
-      //the minimum step width is limited to 20
-      if (abs(Movement) < 1)
-        Movement = sign(Movement) * 20.0;
-      else
-        Movement *= 20.0;
-    }
-
-    stepsize = round(abs(Movement));
-    //movement of the motor to compensate the elevation difference
-    if (Movement > 0)
-      MoveElevation(stepsize, true); //Inc
-    else if (Movement < 0)
-      MoveElevation(stepsize, false); //Dec
-    delay(elapse);
 
     if (abs(Raw_azimuthIn - Raw_azimuth) <= 2 && abs(Raw_elevationIn - Raw_elevation) <= 2)
     {
