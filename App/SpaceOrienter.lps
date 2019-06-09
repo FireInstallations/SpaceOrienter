@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectSession>
-    <Version Value="10"/>
+    <Version Value="11"/>
     <BuildModes Count="4" Active="Debug">
       <Item1 Name="Linux32_Release">
         <MacroValues Count="1">
@@ -720,8 +720,9 @@
         <UnitName Value="SpOri_Main"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <CursorPos X="27" Y="1711"/>
-        <FoldState Value=" TL20F1 T7lSGt]83uO0Q31113 pjZoK0h1 pk0l40B4]I8jT0R]d0i!T2D$"/>
+        <TopLine Value="1359"/>
+        <CursorPos X="44" Y="1359"/>
+        <FoldState Value=" TL20F1 T7lSGt]83uO0Q4 pjBk40W411 pk0pK0B[K48jT0R]b0i!T2D#"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -1068,12 +1069,20 @@
         <Caret Line="1410" Column="54" TopLine="1387"/>
       </Position30>
     </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes Count="0" ActiveMode="default"/>
+    </RunParams>
   </ProjectSession>
   <Debugging>
-    <Watches Count="1">
+    <BreakPoints Count="1">
       <Item1>
-        <Expression Value="while"/>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="spori_main.pas"/>
+        <Line Value="1364"/>
       </Item1>
-    </Watches>
+    </BreakPoints>
   </Debugging>
 </CONFIG>

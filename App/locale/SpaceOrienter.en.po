@@ -874,12 +874,3 @@ msgctxt "tfrm_main.pnl_header.caption"
 msgid "SpaceOrienter"
 msgstr "SpaceOrienter"
 
-#: tfrm_spori.bt_main_temp.caption
-msgid "Get me to the new main Form!"
-msgstr "Get me to the new main Form!"
-
-#: tfrm_spori.caption
-msgctxt "tfrm_spori.caption"
-msgid "SpaceOrienter"
-msgstr "SpaceOrienter"
-
