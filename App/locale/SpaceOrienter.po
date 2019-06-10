@@ -484,11 +484,6 @@ msgctxt "tfrm_main.lbl_azicalc_title.caption"
 msgid "Soll:"
 msgstr ""
 
-#: tfrm_main.lbl_azicalc_val.caption
-msgctxt "tfrm_main.lbl_azicalc_val.caption"
-msgid "89.00"
-msgstr ""
-
 #: tfrm_main.lbl_azichart_title.caption
 msgctxt "tfrm_main.lbl_azichart_title.caption"
 msgid "Azimut"
@@ -507,11 +502,6 @@ msgstr ""
 #: tfrm_main.lbl_azinow_title.caption
 msgctxt "tfrm_main.lbl_azinow_title.caption"
 msgid "Jetzt:"
-msgstr ""
-
-#: tfrm_main.lbl_azinow_val.caption
-msgctxt "tfrm_main.lbl_azinow_val.caption"
-msgid "00.00"
 msgstr ""
 
 #: tfrm_main.lbl_azinum_title.caption
@@ -635,11 +625,6 @@ msgctxt "tfrm_main.lbl_elecalc_title.caption"
 msgid "Soll:"
 msgstr ""
 
-#: tfrm_main.lbl_elecalc_val.caption
-msgctxt "tfrm_main.lbl_elecalc_val.caption"
-msgid "89.00"
-msgstr ""
-
 #: tfrm_main.lbl_elechart_title.caption
 msgctxt "tfrm_main.lbl_elechart_title.caption"
 msgid "Elevation"
@@ -653,11 +638,6 @@ msgstr ""
 #: tfrm_main.lbl_elenow_title.caption
 msgctxt "tfrm_main.lbl_elenow_title.caption"
 msgid "Jetzt:"
-msgstr ""
-
-#: tfrm_main.lbl_elenow_val.caption
-msgctxt "tfrm_main.lbl_elenow_val.caption"
-msgid "00.00"
 msgstr ""
 
 #: tfrm_main.lbl_ele_deg.caption

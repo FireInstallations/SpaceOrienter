@@ -33,7 +33,9 @@ unit SpOri_Main;
   //DiffD und DiffT können zu einer DateTime zusemmengefasst werden. Siehe replace time functionen
   //Schreibe berechnete zahlen nur auf pages die gereade gezeigt werden
   //Try to load mo file befor trying to load po file
-  //Fix Comport
+  //Fix Comport loading /saving
+  //Fix heap dump error when application stopps
+
 {ToDo List:
     Add Compas to charts in (new) main from, so it becomes more clear Up means Up / North and down mean Dorn / South
     Range check while reading from config file (is it greater then a possible string / memory?
@@ -454,6 +456,8 @@ type
     {Collect every ne pressed key and add them to the set KeysPressed.
      Also increases KeyCount, wich has a value above 0 as long as some keys are still pressed}
     procedure FormKeyUp(Sender: TObject; var {%H-}Key: Word; {%H-}Shift: TShiftState);
+    //set the shapes at the right positions again.
+    procedure FormResize(Sender: TObject);
     {Main Menue change --> show a different page}
     procedure ImgMn_MenueSelectionChange(Sender: TObject; {%H-}User: boolean);
     {Get the user to the confing form}
@@ -1260,8 +1264,8 @@ function  TFrm_Main.GetOSLanguage (): string; //Done
     //Removed Linux extra since GetLangueIDs does exacly the same
     GetLanguageIDs(l{%H-}, fbl{%H-});
     {$ENDIF}
-    Result := 'de';
-    //Result := fbl;
+    //Result := 'de';
+    Result := fbl;
   end;
 
 function  TFrm_Main.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Version; Chack if Langue was loaded; Comments; Errorhandeling if the Item doesnt exits; first Item doesn't have to be 0!
@@ -2605,7 +2609,7 @@ procedure TFrm_Main.FndDFind (Sender: TObject); //ToDo: Comments; ErrorHandeling
 
   end;
 
-procedure TFrm_Main.FormCreate(Sender: TObject); //ToDo: move Connect to LoadOptions and use Connact to all just if no vailid port was found; Update
+procedure TFrm_Main.FormCreate(Sender: TObject); //ToDo: move Connect to LoadOptions and use Connact to all just if no vailid port was found; Update; get defaultvalues from last points
   begin
     //initialize Own path
     OwnDir :=  ExtractFilePath(ParamStrUTF8(0));
@@ -2619,6 +2623,13 @@ procedure TFrm_Main.FormCreate(Sender: TObject); //ToDo: move Connect to LoadOpt
     KeyCount    := 0;
     PressedKeys := [];
     HotKey      := [];
+
+    //set default vaulues
+    Lbl_AziNow_Val.Caption := '00,00';
+    Lbl_EleNow_Val.Caption := '00,00';
+
+    Lbl_AziCalc_Val.Caption := '89,99';
+    Lbl_EleCalc_Val.Caption := '89,99';
 
     //Display everything in the OS langue until a choosen langue was loaded
     SetDefaultLang(GetOSLanguage());
@@ -2817,6 +2828,17 @@ procedure TFrm_Main.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState
             PressedKeys := [];
           end;
       //end;
+  end;
+
+procedure TFrm_Main.FormResize(Sender: TObject);  //Done
+  begin
+    //set the shapes to the right position after resizing the form
+
+    SetShapePos (ShpN_AziNow, StrToFloat(Lbl_AziNow_Val.Caption) );
+    SetShapePos (ShpN_EleNow, StrToFloat(Lbl_EleNow_Val.Caption) );
+
+    SetShapePos (ShpN_AziCalc, StrToFloat(Lbl_AziCalc_Val.Caption) );
+    SetShapePos (ShpN_EleCalc, StrToFloat(Lbl_EleCalc_Val.Caption) );
   end;
 
 procedure TFrm_Main.ImgMn_MenueSelectionChange(Sender: TObject; User: boolean); //Done

@@ -1,11 +1,11 @@
 object Frm_Main: TFrm_Main
-  Left = 271
-  Height = 750
-  Top = 143
+  Left = 411
+  Height = 719
+  Top = 97
   Width = 1206
   Caption = 'SpaceOrienter'
-  ClientHeight = 0
-  ClientWidth = 0
+  ClientHeight = 719
+  ClientWidth = 1206
   Color = 2818816
   Constraints.MinHeight = 719
   Constraints.MinWidth = 1206
@@ -2133,6 +2133,7 @@ object Frm_Main: TFrm_Main
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
+  OnResize = FormResize
   Position = poMainFormCenter
   LCLVersion = '2.0.2.0'
   object PgCtrl_Menue: TPageControl
@@ -2145,7 +2146,7 @@ object Frm_Main: TFrm_Main
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 242
-    Height = 652
+    Height = 621
     Top = 98
     Width = 964
     TabStop = False
@@ -2158,7 +2159,7 @@ object Frm_Main: TFrm_Main
     TabPosition = tpLeft
     Options = [nboHidePageListPopup, nboKeyboardTabSwitch, nboDoChangeOnSetIndex]
     object TabSht_DashBord: TTabSheet
-      ClientHeight = 644
+      ClientHeight = 613
       ClientWidth = 956
       Font.Color = clWhite
       Font.Height = 26
@@ -2170,13 +2171,13 @@ object Frm_Main: TFrm_Main
         AnchorSideBottom.Control = TabSht_DashBord
         AnchorSideBottom.Side = asrBottom
         Left = 718
-        Height = 644
+        Height = 613
         Top = 0
         Width = 238
         Anchors = [akTop, akRight, akBottom]
         BevelColor = clNone
         BevelOuter = bvNone
-        ClientHeight = 644
+        ClientHeight = 613
         ClientWidth = 238
         Color = 3866624
         Font.Color = clWhite
@@ -2269,7 +2270,7 @@ object Frm_Main: TFrm_Main
           AnchorSideBottom.Side = asrBottom
           Left = 24
           Height = 20
-          Top = 570
+          Top = 539
           Width = 83
           Anchors = [akLeft, akBottom]
           BorderSpacing.Bottom = 54
@@ -2353,7 +2354,7 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Control = Lbl_MagDvtn_Title
           Left = 40
           Height = 1
-          Top = 600
+          Top = 569
           Width = 1
           BorderSpacing.Left = 16
           BorderSpacing.Top = 30
@@ -2920,7 +2921,7 @@ object Frm_Main: TFrm_Main
           AnchorSideBottom.Control = Lbl_MagDvtn_Title
           Left = 207
           Height = 16
-          Top = 554
+          Top = 523
           Width = 16
           Anchors = [akRight, akBottom]
           AutoSize = True
@@ -3037,7 +3038,7 @@ object Frm_Main: TFrm_Main
           AnchorSideTop.Control = Lbl_MagDvtn_Val
           Left = 47
           Height = 20
-          Top = 600
+          Top = 569
           Width = 6
           BorderSpacing.Left = 6
           Caption = '°'
@@ -3180,7 +3181,7 @@ object Frm_Main: TFrm_Main
         AnchorSideBottom.Side = asrBottom
         Left = 503
         Height = 42
-        Top = 571
+        Top = 540
         Width = 165
         Anchors = [akRight, akBottom]
         BorderSpacing.Right = 50
@@ -3205,7 +3206,7 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = Pnl_Status
         AnchorSideBottom.Side = asrBottom
         Left = 553
-        Height = 39
+        Height = 31
         Top = 19
         Width = 149
         Anchors = [akTop, akRight]
@@ -3248,7 +3249,7 @@ object Frm_Main: TFrm_Main
         AnchorSideBottom.Side = asrBottom
         Left = 302
         Height = 31
-        Top = 582
+        Top = 551
         Width = 170
         Anchors = [akRight, akBottom]
         AutoSize = False
@@ -3273,10 +3274,11 @@ object Frm_Main: TFrm_Main
         Text = 'Normal'
       end
       object Img_ChartEle: TImage
-        Left = 60
-        Height = 288
-        Top = 192
-        Width = 288
+        Left = 80
+        Height = 230
+        Top = 176
+        Width = 230
+        KeepOriginYWhenClipped = True
         Picture.Data = {
           1754506F727461626C654E6574776F726B47726170686963742E000089504E47
           0D0A1A0A0000000D49484452000000E6000000E60806000000C16AF9BB000000
@@ -3655,10 +3657,10 @@ object Frm_Main: TFrm_Main
       end
       object Img_ChartAzi: TImage
         AnchorSideTop.Control = Img_ChartEle
-        Left = 381
-        Height = 288
-        Top = 192
-        Width = 288
+        Left = 424
+        Height = 230
+        Top = 176
+        Width = 230
         Picture.Data = {
           1754506F727461626C654E6574776F726B47726170686963742E000089504E47
           0D0A1A0A0000000D49484452000000E6000000E60806000000C16AF9BB000000
@@ -4038,12 +4040,11 @@ object Frm_Main: TFrm_Main
       object Lbl_EleNow_Val: TLabel
         AnchorSideTop.Control = Lbl_Compas_UpTitle
         AnchorSideRight.Control = Lbl_EleNow_Deg
-        Left = 263
-        Height = 25
-        Top = 279
-        Width = 45
+        Left = 269
+        Height = 1
+        Top = 234
+        Width = 1
         Anchors = [akTop, akRight]
-        Caption = '00.00'
         Font.Color = clWhite
         Font.Height = 25
         Font.Style = [fsBold]
@@ -4054,9 +4055,9 @@ object Frm_Main: TFrm_Main
         AnchorSideTop.Control = Lbl_EleNow_Val
         AnchorSideRight.Control = Img_ChartEle
         AnchorSideRight.Side = asrBottom
-        Left = 308
+        Left = 270
         Height = 31
-        Top = 279
+        Top = 234
         Width = 9
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 31
@@ -4069,12 +4070,11 @@ object Frm_Main: TFrm_Main
       object Lbl_AziNow_Val: TLabel
         AnchorSideTop.Control = Lbl_Compas_NorthTitle
         AnchorSideRight.Control = Lbl_AziNow_Deg
-        Left = 587
-        Height = 25
-        Top = 272
-        Width = 45
+        Left = 616
+        Height = 1
+        Top = 234
+        Width = 1
         Anchors = [akTop, akRight]
-        Caption = '00.00'
         Font.Color = clWhite
         Font.Height = 25
         Font.Style = [fsBold]
@@ -4086,9 +4086,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = Img_ChartAzi
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Side = asrBottom
-        Left = 632
+        Left = 617
         Height = 23
-        Top = 272
+        Top = 234
         Width = 6
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 31
@@ -4101,9 +4101,9 @@ object Frm_Main: TFrm_Main
       object Lbl_EleNow_Title: TLabel
         AnchorSideTop.Control = Lbl_Compas_UpTitle
         AnchorSideRight.Control = Img_Compas_Ele
-        Left = 133
+        Left = 124
         Height = 25
-        Top = 279
+        Top = 234
         Width = 39
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 2
@@ -4116,9 +4116,9 @@ object Frm_Main: TFrm_Main
       object Lbl_AziNow_Title: TLabel
         AnchorSideTop.Control = Lbl_Compas_NorthTitle
         AnchorSideRight.Control = Img_Compas_Azi
-        Left = 447
+        Left = 468
         Height = 25
-        Top = 272
+        Top = 234
         Width = 39
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 2
@@ -4132,9 +4132,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrBottom
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = Lbl_EleNow_Deg
-        Left = 270
+        Left = 224
         Height = 16
-        Top = 259
+        Top = 214
         Width = 16
         Anchors = [akLeft, akBottom]
         AutoSize = True
@@ -4253,7 +4253,7 @@ object Frm_Main: TFrm_Main
         AnchorSideBottom.Control = Lbl_AziNow_Deg
         Left = 590
         Height = 16
-        Top = 252
+        Top = 214
         Width = 16
         Anchors = [akLeft, akBottom]
         AutoSize = True
@@ -4371,9 +4371,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Side = asrCenter
         AnchorSideBottom.Control = Lbl_Compas_SouthTitle
         AnchorSideBottom.Side = asrBottom
-        Left = 447
+        Left = 468
         Height = 25
-        Top = 376
+        Top = 323
         Width = 35
         Anchors = [akLeft, akBottom]
         Caption = 'Soll:'
@@ -4388,9 +4388,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Side = asrCenter
         AnchorSideBottom.Control = Lbl_Compas_DownTitle
         AnchorSideBottom.Side = asrBottom
-        Left = 133
+        Left = 124
         Height = 25
-        Top = 368
+        Top = 323
         Width = 35
         Anchors = [akLeft, akBottom]
         Caption = 'Soll:'
@@ -4406,9 +4406,9 @@ object Frm_Main: TFrm_Main
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Side = asrBottom
-        Left = 123
+        Left = 114
         Height = 33
-        Top = 496
+        Top = 422
         Width = 162
         BorderSpacing.Top = 16
         DecimalPlaces = 5
@@ -4428,9 +4428,9 @@ object Frm_Main: TFrm_Main
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Side = asrBottom
-        Left = 444
+        Left = 458
         Height = 33
-        Top = 496
+        Top = 422
         Width = 162
         BorderSpacing.Top = 16
         DecimalPlaces = 5
@@ -4446,12 +4446,11 @@ object Frm_Main: TFrm_Main
       object Lbl_AziCalc_Val: TLabel
         AnchorSideTop.Control = Lbl_AziCalc_Title
         AnchorSideRight.Control = Lbl_AziCalc_Deg
-        Left = 583
-        Height = 25
-        Top = 376
-        Width = 49
+        Left = 616
+        Height = 1
+        Top = 323
+        Width = 1
         Anchors = [akTop, akRight]
-        Caption = '89.00'
         Font.Color = clWhite
         Font.Height = 26
         Font.Style = [fsBold]
@@ -4462,9 +4461,9 @@ object Frm_Main: TFrm_Main
         AnchorSideTop.Control = Lbl_AziCalc_Val
         AnchorSideRight.Control = Img_ChartAzi
         AnchorSideRight.Side = asrBottom
-        Left = 632
+        Left = 617
         Height = 23
-        Top = 376
+        Top = 323
         Width = 6
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 31
@@ -4477,12 +4476,10 @@ object Frm_Main: TFrm_Main
       object Lbl_EleCalc_Val: TLabel
         AnchorSideTop.Control = Lbl_EleCalc_Title
         AnchorSideRight.Control = Lbl_EleCalc_Deg
-        Left = 240
-        Height = 25
-        Top = 368
-        Width = 49
-        Anchors = [akTop]
-        Caption = '89.00'
+        Left = 224
+        Height = 1
+        Top = 323
+        Width = 1
         Font.Color = clWhite
         Font.Height = 26
         Font.Style = [fsBold]
@@ -4493,9 +4490,9 @@ object Frm_Main: TFrm_Main
         AnchorSideTop.Control = Lbl_EleCalc_Val
         AnchorSideRight.Control = Img_ChartEle
         AnchorSideRight.Side = asrBottom
-        Left = 311
+        Left = 273
         Height = 23
-        Top = 368
+        Top = 323
         Width = 6
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 31
@@ -4509,9 +4506,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Img_ChartEle
         AnchorSideTop.Side = asrBottom
         AnchorSideBottom.Control = Img_ChartEle
-        Left = 86
+        Left = 106
         Height = 25
-        Top = 161
+        Top = 145
         Width = 77
         Anchors = [akLeft, akBottom]
         BorderSpacing.Left = 26
@@ -4525,9 +4522,9 @@ object Frm_Main: TFrm_Main
       object Lbl_AziChart_Title: TLabel
         AnchorSideLeft.Control = Img_ChartAzi
         AnchorSideBottom.Control = Img_ChartAzi
-        Left = 406
+        Left = 449
         Height = 25
-        Top = 161
+        Top = 145
         Width = 59
         Anchors = [akLeft, akBottom]
         BorderSpacing.Left = 25
@@ -4539,9 +4536,9 @@ object Frm_Main: TFrm_Main
         ParentFont = False
       end
       object Shape_EleCalc: TShape
-        Left = 191
+        Left = 192
         Height = 14
-        Top = 184
+        Top = 168
         Width = 14
         Brush.Color = clGreen
         ParentShowHint = False
@@ -4549,9 +4546,9 @@ object Frm_Main: TFrm_Main
         Shape = stTriangle
       end
       object Shape_AziCalc: TShape
-        Left = 518
+        Left = 533
         Height = 14
-        Top = 470
+        Top = 400
         Width = 14
         Anchors = [akTop]
         Brush.Color = clGreen
@@ -4561,9 +4558,9 @@ object Frm_Main: TFrm_Main
       end
       object Shape_AziNow: TShape
         AnchorSideRight.Side = asrBottom
-        Left = 661
+        Left = 648
         Height = 14
-        Top = 328
+        Top = 288
         Width = 14
         Brush.Color = clBlue
         ParentShowHint = False
@@ -4574,9 +4571,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = Lbl_EleCalc_Title
         AnchorSideBottom.Control = Lbl_EleCalc_Title
         AnchorSideBottom.Side = asrBottom
-        Left = 109
+        Left = 100
         Height = 14
-        Top = 371
+        Top = 326
         Width = 14
         Anchors = [akRight, akBottom]
         BorderSpacing.Right = 10
@@ -4590,9 +4587,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = Lbl_AziCalc_Title
         AnchorSideBottom.Control = Lbl_AziCalc_Title
         AnchorSideBottom.Side = asrBottom
-        Left = 423
+        Left = 444
         Height = 14
-        Top = 379
+        Top = 326
         Width = 14
         Anchors = [akRight, akBottom]
         BorderSpacing.Right = 10
@@ -4606,9 +4603,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = Lbl_AziNow_Title
         AnchorSideBottom.Control = Lbl_AziNow_Title
         AnchorSideBottom.Side = asrBottom
-        Left = 423
+        Left = 444
         Height = 14
-        Top = 277
+        Top = 239
         Width = 14
         Anchors = [akRight, akBottom]
         BorderSpacing.Right = 10
@@ -4620,9 +4617,9 @@ object Frm_Main: TFrm_Main
       end
       object Shape_EleNow: TShape
         AnchorSideRight.Side = asrBottom
-        Left = 335
+        Left = 304
         Height = 14
-        Top = 328
+        Top = 288
         Width = 14
         Brush.Color = clBlue
         ParentShowHint = False
@@ -4633,9 +4630,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = Lbl_EleNow_Title
         AnchorSideBottom.Control = Lbl_EleNow_Title
         AnchorSideBottom.Side = asrBottom
-        Left = 109
+        Left = 100
         Height = 14
-        Top = 284
+        Top = 239
         Width = 14
         Anchors = [akRight, akBottom]
         BorderSpacing.Right = 10
@@ -4650,9 +4647,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = Img_ChartEle
         AnchorSideBottom.Control = Img_Compas_Ele
-        Left = 193
+        Left = 184
         Height = 21
-        Top = 279
+        Top = 234
         Width = 23
         Anchors = [akLeft, akBottom]
         BorderSpacing.Top = 19
@@ -4669,9 +4666,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = Img_ChartAzi
         AnchorSideBottom.Control = Img_Compas_Azi
-        Left = 519
+        Left = 533
         Height = 21
-        Top = 272
+        Top = 234
         Width = 13
         Anchors = [akLeft, akBottom]
         BorderSpacing.Top = 19
@@ -4690,9 +4687,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Side = asrCenter
         AnchorSideBottom.Control = Img_ChartEle
         AnchorSideBottom.Side = asrBottom
-        Left = 181
+        Left = 172
         Height = 21
-        Top = 372
+        Top = 327
         Width = 46
         Anchors = [akTop, akRight]
         BorderSpacing.Top = 6
@@ -4711,9 +4708,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Side = asrCenter
         AnchorSideBottom.Control = Img_ChartAzi
         AnchorSideBottom.Side = asrBottom
-        Left = 519
+        Left = 533
         Height = 21
-        Top = 380
+        Top = 327
         Width = 12
         Anchors = [akTop, akRight]
         BorderSpacing.Top = 6
@@ -4733,9 +4730,9 @@ object Frm_Main: TFrm_Main
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = Img_ChartAzi
         AnchorSideRight.Side = asrBottom
-        Left = 569
+        Left = 575
         Height = 21
-        Top = 326
+        Top = 281
         Width = 12
         BorderSpacing.Left = 6
         BorderSpacing.Right = 19
@@ -4751,9 +4748,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = Img_Compas_Azi
         AnchorSideBottom.Control = Img_ChartAzi
         AnchorSideBottom.Side = asrCenter
-        Left = 465
+        Left = 486
         Height = 21
-        Top = 325
+        Top = 280
         Width = 17
         Anchors = [akRight, akBottom]
         BorderSpacing.Left = 19
@@ -4771,9 +4768,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = Img_ChartEle
         AnchorSideTop.Side = asrCenter
-        Left = 174
+        Left = 165
         Height = 60
-        Top = 306
+        Top = 261
         Width = 60
         AutoSize = True
         Picture.Data = {
@@ -5242,10 +5239,10 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = Img_ChartAzi
         AnchorSideTop.Side = asrCenter
-        Left = 488
-        Height = 75
-        Top = 299
-        Width = 75
+        Left = 509
+        Height = 60
+        Top = 261
+        Width = 60
         Picture.Data = {
           1754506F727461626C654E6574776F726B477261706869630639000089504E47
           0D0A1A0A0000000D494844520000003C0000003C08060000003AFCD972000000
@@ -5709,8 +5706,8 @@ object Frm_Main: TFrm_Main
       end
     end
     object TabSht_BodyList: TTabSheet
-      ClientHeight = 520
-      ClientWidth = 769
+      ClientHeight = 613
+      ClientWidth = 956
       ParentFont = False
       object Ed_Search4Bdy_List: TEdit
         AnchorSideLeft.Side = asrBottom
@@ -5718,7 +5715,7 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = TabSht_BodyList
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Side = asrBottom
-        Left = 585
+        Left = 763
         Height = 39
         Top = 25
         Width = 149
@@ -5744,9 +5741,9 @@ object Frm_Main: TFrm_Main
         AnchorSideBottom.Control = TabSht_BodyList
         AnchorSideBottom.Side = asrBottom
         Left = 4
-        Height = 444
+        Height = 518
         Top = 89
-        Width = 762
+        Width = 947
         Anchors = [akTop, akLeft, akRight, akBottom]
         AutoSort = False
         BorderSpacing.Left = 4
@@ -5825,15 +5822,15 @@ object Frm_Main: TFrm_Main
       end
     end
     object TabSht_Calculation: TTabSheet
-      ClientHeight = 520
-      ClientWidth = 769
+      ClientHeight = 613
+      ClientWidth = 956
       Font.Color = clWhite
       ParentFont = False
       object Lbl_Long_Title: TLabel
-        Left = 56
-        Height = 19
-        Top = 540
-        Width = 79
+        Left = 80
+        Height = 23
+        Top = 529
+        Width = 85
         Anchors = [akTop]
         Caption = 'Longitude'
         Font.Color = clWhite
@@ -5846,10 +5843,10 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Long_Title
         AnchorSideTop.Control = Lbl_Long_Title
         AnchorSideTop.Side = asrBottom
-        Left = 70
-        Height = 19
-        Top = 595
-        Width = 65
+        Left = 80
+        Height = 23
+        Top = 583
+        Width = 70
         BorderSpacing.Top = 31
         Caption = 'Latitude'
         Font.Color = clWhite
@@ -5862,9 +5859,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrCenter
         AnchorSideTop.Control = Lbl_Long_Title
         Left = 369
-        Height = 19
-        Top = 540
-        Width = 112
+        Height = 23
+        Top = 529
+        Width = 119
         Caption = 'Azimut Zähler'
         Font.Color = clWhite
         Font.Height = -20
@@ -5876,9 +5873,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_AziNum_Title
         AnchorSideTop.Control = Lbl_Lat_Title
         Left = 369
-        Height = 19
-        Top = 595
-        Width = 119
+        Height = 23
+        Top = 583
+        Width = 126
         Caption = 'Azimut Nenner'
         Font.Color = clWhite
         Font.Height = -20
@@ -5889,9 +5886,9 @@ object Frm_Main: TFrm_Main
       object Lbl_Azi_Title: TLabel
         AnchorSideTop.Control = Lbl_Long_Title
         Left = 690
-        Height = 19
-        Top = 540
-        Width = 62
+        Height = 24
+        Top = 529
+        Width = 64
         BorderSpacing.Left = 31
         Caption = 'Azimut'
         Font.Color = clWhite
@@ -5905,9 +5902,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Azi_Title
         AnchorSideTop.Control = Lbl_Lat_Title
         Left = 690
-        Height = 19
-        Top = 595
-        Width = 83
+        Height = 24
+        Top = 583
+        Width = 87
         Caption = 'Elevation'
         Font.Color = clWhite
         Font.Height = -20
@@ -5921,9 +5918,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Long_Title
         AnchorSideTop.Side = asrCenter
-        Left = 191
+        Left = 187
         Height = 1
-        Top = 551
+        Top = 540
         Width = 1
         BorderSpacing.Left = 22
         Font.Color = clWhite
@@ -5933,9 +5930,9 @@ object Frm_Main: TFrm_Main
       object Lbl_Long_ValRad: TLabel
         AnchorSideLeft.Control = Lbl_Long_Deg
         AnchorSideTop.Control = Lbl_Long_ValDeg
-        Left = 221
+        Left = 216
         Height = 1
-        Top = 551
+        Top = 540
         Width = 1
         BorderSpacing.Left = 22
         Font.Color = clWhite
@@ -5946,9 +5943,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Long_ValDeg
         AnchorSideTop.Control = Lbl_Lat_Title
         AnchorSideTop.Side = asrCenter
-        Left = 191
+        Left = 187
         Height = 1
-        Top = 606
+        Top = 594
         Width = 1
         Font.Color = clWhite
         ParentColor = False
@@ -5957,9 +5954,9 @@ object Frm_Main: TFrm_Main
       object Lbl_Lat_ValRad: TLabel
         AnchorSideLeft.Control = Lbl_Lat_Deg
         AnchorSideTop.Control = Lbl_Lat_ValDeg
-        Left = 221
+        Left = 216
         Height = 1
-        Top = 606
+        Top = 594
         Width = 1
         BorderSpacing.Left = 22
         Font.Color = clWhite
@@ -5970,9 +5967,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Long_ValDeg
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Long_ValDeg
-        Left = 199
-        Height = 19
-        Top = 551
+        Left = 194
+        Height = 20
+        Top = 540
         Width = 6
         BorderSpacing.Left = 6
         Caption = '°'
@@ -5984,9 +5981,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Long_ValRad
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Long_ValRad
-        Left = 229
-        Height = 19
-        Top = 551
+        Left = 223
+        Height = 20
+        Top = 540
         Width = 3
         BorderSpacing.Left = 6
         Caption = ''''
@@ -5998,9 +5995,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Lat_ValDeg
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Lat_ValDeg
-        Left = 199
-        Height = 19
-        Top = 606
+        Left = 194
+        Height = 20
+        Top = 594
         Width = 6
         BorderSpacing.Left = 6
         Caption = '°'
@@ -6012,9 +6009,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Lat_ValRad
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Lat_ValRad
-        Left = 229
-        Height = 19
-        Top = 606
+        Left = 223
+        Height = 20
+        Top = 594
         Width = 3
         BorderSpacing.Left = 6
         Caption = ''''
@@ -6026,9 +6023,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_AziDeNom_Val
         AnchorSideTop.Control = Lbl_AziNum_Title
         AnchorSideTop.Side = asrCenter
-        Left = 540
+        Left = 517
         Height = 1
-        Top = 551
+        Top = 540
         Width = 1
         Font.Color = clWhite
         ParentColor = False
@@ -6039,9 +6036,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_AziDeNom_Title
         AnchorSideTop.Side = asrCenter
-        Left = 540
+        Left = 517
         Height = 1
-        Top = 606
+        Top = 594
         Width = 1
         BorderSpacing.Left = 22
         Font.Color = clWhite
@@ -6052,9 +6049,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Ele_Val
         AnchorSideTop.Control = Lbl_Azi_Title
         AnchorSideTop.Side = asrCenter
-        Left = 825
+        Left = 808
         Height = 1
-        Top = 551
+        Top = 541
         Width = 1
         Font.Color = clWhite
         Font.Style = [fsBold]
@@ -6066,9 +6063,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Ele_Title
         AnchorSideTop.Side = asrCenter
-        Left = 825
+        Left = 808
         Height = 1
-        Top = 606
+        Top = 595
         Width = 1
         BorderSpacing.Left = 31
         Font.Color = clWhite
@@ -6080,9 +6077,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Azi_Val
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Azi_Val
-        Left = 832
-        Height = 19
-        Top = 551
+        Left = 815
+        Height = 20
+        Top = 541
         Width = 6
         BorderSpacing.Left = 6
         Caption = '°'
@@ -6094,9 +6091,9 @@ object Frm_Main: TFrm_Main
         AnchorSideLeft.Control = Lbl_Ele_Val
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = Lbl_Ele_Val
-        Left = 832
-        Height = 19
-        Top = 606
+        Left = 815
+        Height = 20
+        Top = 595
         Width = 6
         BorderSpacing.Left = 6
         Caption = '°'
@@ -6110,9 +6107,9 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Control = TabSht_Calculation
         AnchorSideRight.Side = asrBottom
         Left = 0
-        Height = 29
+        Height = 30
         Top = 1
-        Width = 768
+        Width = 955
         Alignment = taCenter
         Anchors = [akTop, akLeft, akRight]
         BorderSpacing.Top = 1
@@ -6126,6 +6123,7 @@ object Frm_Main: TFrm_Main
         TabActiveRise = 2
         TabClosing = etcPrevious
         TabFixedWidth = 120
+        TabHeight = 26
         TabIndex = 0
         TabMinWidth = 90
         TabOrder = 0
@@ -6154,33 +6152,33 @@ object Frm_Main: TFrm_Main
         AnchorSideRight.Side = asrBottom
         Left = 0
         Height = 472
-        Top = 38
-        Width = 769
+        Top = 31
+        Width = 956
         TabStop = False
-        ActivePage = TabSht_VernalP
+        ActivePage = TabSht_Time
         Anchors = [akTop, akLeft, akRight]
         Font.Color = clWhite
         ParentFont = False
         ShowTabs = False
-        TabIndex = 1
+        TabIndex = 0
         TabOrder = 1
         Options = [nboHidePageListPopup]
         object TabSht_Time: TTabSheet
-          ClientHeight = 374
-          ClientWidth = 765
+          ClientHeight = 464
+          ClientWidth = 948
           Font.Color = clWhite
           ParentFont = False
           object Lbl_UTC1_Title: TLabel
             AnchorSideLeft.Control = TabSht_Time
             AnchorSideTop.Control = TabSht_Time
             Left = 75
-            Height = 23
+            Height = 27
             Top = 50
-            Width = 50
+            Width = 61
             BorderSpacing.Left = 75
             BorderSpacing.Top = 50
             Caption = 'UTC1'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6191,12 +6189,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_UTC1_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 104
-            Width = 50
+            Height = 27
+            Top = 102
+            Width = 61
             BorderSpacing.Top = 25
             Caption = 'UTC2'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6207,12 +6205,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_UTC2_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 158
-            Width = 25
+            Height = 27
+            Top = 154
+            Width = 29
             BorderSpacing.Top = 25
             Caption = 'TZ'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6223,12 +6221,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_TZ_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 211
-            Width = 41
+            Height = 27
+            Top = 206
+            Width = 50
             BorderSpacing.Top = 25
             Caption = 'MEZ'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6239,12 +6237,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_CET_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 265
-            Width = 43
+            Height = 27
+            Top = 258
+            Width = 52
             BorderSpacing.Top = 25
             Caption = 'GMT'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6255,12 +6253,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_GMT_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 46
-            Top = 319
-            Width = 74
+            Height = 54
+            Top = 310
+            Width = 83
             BorderSpacing.Top = 25
             Caption = 'Ortszeit'#10' in UT'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6271,12 +6269,12 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = Lbl_LocalUT_Title
             AnchorSideTop.Side = asrCenter
-            Left = 190
+            Left = 180
             Height = 1
-            Top = 348
+            Top = 337
             Width = 1
             BorderSpacing.Left = 22
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6284,11 +6282,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_LocalUT_Val
             AnchorSideTop.Control = Lbl_UTC2_Title
             AnchorSideTop.Side = asrCenter
-            Left = 190
+            Left = 180
             Height = 1
-            Top = 118
+            Top = 115
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6296,11 +6294,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_LocalUT_Val
             AnchorSideTop.Control = Lbl_UTC1_Title
             AnchorSideTop.Side = asrCenter
-            Left = 190
+            Left = 180
             Height = 1
-            Top = 64
+            Top = 63
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6308,11 +6306,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_LocalUT_Val
             AnchorSideTop.Control = Lbl_TZ_Title
             AnchorSideTop.Side = asrCenter
-            Left = 190
+            Left = 180
             Height = 1
-            Top = 171
+            Top = 167
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6320,11 +6318,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_LocalUT_Val
             AnchorSideTop.Control = Lbl_CET_Title
             AnchorSideTop.Side = asrCenter
-            Left = 190
+            Left = 180
             Height = 1
-            Top = 225
+            Top = 219
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6332,31 +6330,31 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_LocalUT_Val
             AnchorSideTop.Control = Lbl_GMT_Title
             AnchorSideTop.Side = asrCenter
-            Left = 190
+            Left = 180
             Height = 1
-            Top = 279
+            Top = 271
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
         end
         object TabSht_VernalP: TTabSheet
-          ClientHeight = 374
-          ClientWidth = 765
+          ClientHeight = 464
+          ClientWidth = 948
           Font.Color = clWhite
           ParentFont = False
           object Lbl_Aries1P_Title: TLabel
             AnchorSideLeft.Control = TabSht_VernalP
             AnchorSideTop.Control = TabSht_VernalP
             Left = 75
-            Height = 23
+            Height = 27
             Top = 50
-            Width = 153
+            Width = 177
             BorderSpacing.Left = 75
             BorderSpacing.Top = 50
             Caption = 'Frühlingsanfang'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6367,12 +6365,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_Aries1P_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 104
-            Width = 87
+            Height = 27
+            Top = 102
+            Width = 96
             BorderSpacing.Top = 25
             Caption = 'Differenz'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6383,12 +6381,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_Diff_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 158
-            Width = 90
+            Height = 27
+            Top = 154
+            Width = 103
             BorderSpacing.Top = 25
             Caption = 'GradShift'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6399,12 +6397,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_DegShift_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 211
-            Width = 140
+            Height = 27
+            Top = 206
+            Width = 163
             BorderSpacing.Top = 25
             Caption = 'Frühlingspunkt'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6415,12 +6413,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_VernalP_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 265
-            Width = 100
+            Height = 27
+            Top = 258
+            Width = 113
             BorderSpacing.Top = 25
             Caption = 'ZeitWinkel'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6431,12 +6429,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_HourAngle_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 46
-            Top = 319
-            Width = 140
+            Height = 54
+            Top = 310
+            Width = 163
             BorderSpacing.Top = 25
             Caption = 'Frühlingspunkt'#10'aktuell'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6447,12 +6445,12 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = Lbl_Aries1P_Title
             AnchorSideTop.Side = asrCenter
-            Left = 289
+            Left = 274
             Height = 1
-            Top = 64
+            Top = 63
             Width = 1
             BorderSpacing.Left = 22
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6460,33 +6458,33 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_Aries1P_Val
             AnchorSideTop.Control = Lbl_Diff_Title
             AnchorSideTop.Side = asrCenter
-            Left = 289
+            Left = 274
             Height = 1
-            Top = 118
+            Top = 115
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
           object Lbl_DegShift_Val: TLabel
             AnchorSideLeft.Control = Lbl_Aries1P_Val
             AnchorSideTop.Control = Lbl_DegShift_Title
-            Left = 289
+            Left = 274
             Height = 1
-            Top = 158
+            Top = 154
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
           object Lbl_VernalP_Val: TLabel
             AnchorSideLeft.Control = Lbl_Aries1P_Val
             AnchorSideTop.Control = Lbl_VernalP_Title
-            Left = 289
+            Left = 274
             Height = 1
-            Top = 211
+            Top = 206
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6494,11 +6492,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_Aries1P_Val
             AnchorSideTop.Control = Lbl_HourAngle_Title
             AnchorSideTop.Side = asrCenter
-            Left = 289
+            Left = 274
             Height = 1
-            Top = 279
+            Top = 271
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6506,31 +6504,31 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_Aries1P_Val
             AnchorSideTop.Control = Lbl_VernalPNow_Title
             AnchorSideTop.Side = asrCenter
-            Left = 289
+            Left = 274
             Height = 1
-            Top = 348
+            Top = 337
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
         end
         object TabSht_StarCalc: TTabSheet
-          ClientHeight = 374
-          ClientWidth = 765
+          ClientHeight = 464
+          ClientWidth = 948
           Font.Color = clWhite
           ParentFont = False
           object Lbl_RightAc_Title: TLabel
             AnchorSideLeft.Control = TabSht_StarCalc
             AnchorSideTop.Control = TabSht_StarCalc
             Left = 75
-            Height = 23
+            Height = 27
             Top = 50
-            Width = 54
+            Width = 62
             BorderSpacing.Left = 75
             BorderSpacing.Top = 50
             Caption = 'Rekta'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6541,12 +6539,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_RightAc_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 126
-            Width = 48
+            Height = 27
+            Top = 125
+            Width = 53
             BorderSpacing.Top = 48
             Caption = 'Dekli'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6557,12 +6555,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_Decli_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 27
-            Top = 202
-            Width = 132
+            Height = 32
+            Top = 200
+            Width = 155
             BorderSpacing.Top = 48
             Caption = 'SternenWinkel'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             ParentColor = False
             ParentFont = False
@@ -6572,12 +6570,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_StarAngle_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 261
-            Width = 12
+            Height = 27
+            Top = 257
+            Width = 13
             BorderSpacing.Top = 25
             Caption = 'δ'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6588,12 +6586,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_Delta_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 315
-            Width = 12
+            Height = 27
+            Top = 309
+            Width = 14
             BorderSpacing.Top = 25
             Caption = 'β'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6604,12 +6602,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_Beta_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 369
-            Width = 35
+            Height = 27
+            Top = 361
+            Width = 41
             BorderSpacing.Top = 25
             Caption = 'GrT'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6620,12 +6618,12 @@ object Frm_Main: TFrm_Main
             AnchorSideTop.Control = Lbl_GrT_Title
             AnchorSideTop.Side = asrBottom
             Left = 75
-            Height = 23
-            Top = 422
-            Width = 12
+            Height = 27
+            Top = 413
+            Width = 14
             BorderSpacing.Top = 25
             Caption = 'T'
-            Font.Color = clWhite
+            Font.Color = clBlack
             Font.Height = -24
             Font.Name = 'Sans'
             ParentColor = False
@@ -6635,13 +6633,13 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_Beta_Val
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = Lbl_Beta_Val
-            Left = 270
-            Height = 19
-            Top = 329
+            Left = 259
+            Height = 20
+            Top = 322
             Width = 6
             BorderSpacing.Left = 6
             Caption = '°'
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6649,13 +6647,13 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_Delta_Val
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = Lbl_Delta_Val
-            Left = 270
-            Height = 19
-            Top = 275
+            Left = 259
+            Height = 20
+            Top = 270
             Width = 6
             BorderSpacing.Left = 6
             Caption = '°'
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6663,13 +6661,13 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_StarAngle_Val
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = Lbl_StarAngle_Val
-            Left = 270
-            Height = 19
-            Top = 219
+            Left = 259
+            Height = 20
+            Top = 216
             Width = 6
             BorderSpacing.Left = 6
             Caption = '°'
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6677,13 +6675,13 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_Decli_ValMin
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = Lbl_Decli_ValMin
-            Left = 270
-            Height = 19
-            Top = 148
-            Width = 24
+            Left = 259
+            Height = 20
+            Top = 145
+            Width = 25
             BorderSpacing.Left = 6
             Caption = 'min'
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6691,13 +6689,13 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_Decli_ValDeg
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = Lbl_Decli_ValDeg
-            Left = 270
-            Height = 19
-            Top = 140
+            Left = 259
+            Height = 20
+            Top = 138
             Width = 6
             BorderSpacing.Left = 6
             Caption = '°'
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6705,13 +6703,13 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_RightAc_ValMin
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = Lbl_RightAc_ValMin
-            Left = 270
-            Height = 19
-            Top = 78
-            Width = 24
+            Left = 259
+            Height = 20
+            Top = 76
+            Width = 25
             BorderSpacing.Left = 6
             Caption = 'min'
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6719,13 +6717,13 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_RightAc_ValDeg
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = Lbl_RightAc_ValDeg
-            Left = 270
-            Height = 19
-            Top = 64
+            Left = 259
+            Height = 20
+            Top = 63
             Width = 6
             BorderSpacing.Left = 6
             Caption = '°'
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6733,11 +6731,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_StarAngle_Val
             AnchorSideTop.Control = Lbl_RightAc_Title
             AnchorSideTop.Side = asrCenter
-            Left = 262
+            Left = 252
             Height = 1
-            Top = 64
+            Top = 63
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6745,11 +6743,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_RightAc_ValDeg
             AnchorSideTop.Control = Lbl_Decli_Title
             AnchorSideTop.Side = asrCenter
-            Left = 262
+            Left = 252
             Height = 1
-            Top = 140
+            Top = 138
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6757,11 +6755,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_RightAc_ValDeg
             AnchorSideTop.Control = Lbl_Delta_Title
             AnchorSideTop.Side = asrCenter
-            Left = 262
+            Left = 252
             Height = 1
-            Top = 275
+            Top = 270
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6769,11 +6767,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_RightAc_ValDeg
             AnchorSideTop.Control = Lbl_Beta_Title
             AnchorSideTop.Side = asrCenter
-            Left = 262
+            Left = 252
             Height = 1
-            Top = 329
+            Top = 322
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6781,11 +6779,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_RightAc_ValDeg
             AnchorSideTop.Control = Lbl_GrT_Title
             AnchorSideTop.Side = asrCenter
-            Left = 262
+            Left = 252
             Height = 1
-            Top = 382
+            Top = 374
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6793,11 +6791,11 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_RightAc_ValDeg
             AnchorSideTop.Control = Lbl_T_Title
             AnchorSideTop.Side = asrCenter
-            Left = 262
+            Left = 252
             Height = 1
-            Top = 436
+            Top = 426
             Width = 1
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6805,12 +6803,12 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_RightAc_ValDeg
             AnchorSideTop.Control = Lbl_RightAc_ValDeg
             AnchorSideTop.Side = asrBottom
-            Left = 262
+            Left = 252
             Height = 1
-            Top = 78
+            Top = 76
             Width = 1
             BorderSpacing.Top = 12
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6818,12 +6816,12 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Control = Lbl_RightAc_ValDeg
             AnchorSideTop.Control = Lbl_Decli_ValDeg
             AnchorSideTop.Side = asrBottom
-            Left = 262
+            Left = 252
             Height = 1
-            Top = 148
+            Top = 145
             Width = 1
             BorderSpacing.Top = 6
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -6832,12 +6830,12 @@ object Frm_Main: TFrm_Main
             AnchorSideLeft.Side = asrBottom
             AnchorSideTop.Control = Lbl_StarAngle_Title
             AnchorSideTop.Side = asrCenter
-            Left = 262
+            Left = 252
             Height = 1
-            Top = 219
+            Top = 216
             Width = 1
             BorderSpacing.Left = 22
-            Font.Color = clWhite
+            Font.Color = clBlack
             ParentColor = False
             ParentFont = False
           end
@@ -7473,7 +7471,7 @@ object Frm_Main: TFrm_Main
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 652
+    Height = 621
     Top = 98
     Width = 242
     Anchors = [akTop, akLeft, akBottom]
