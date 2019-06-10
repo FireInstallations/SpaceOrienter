@@ -18,7 +18,7 @@ unit SpOri_Main;
     }
 
   //Store StarList in own Array and supply it using OnData event ?
-  //Mondphasen
+  //phases of the moon
   //Correct UT (leap secounds)
   //Online dienst für Höhe, lage, Offset einer stadt
   //Onlinedienst wetter
@@ -33,6 +33,7 @@ unit SpOri_Main;
   //DiffD und DiffT können zu einer DateTime zusemmengefasst werden. Siehe replace time functionen
   //Schreibe berechnete zahlen nur auf pages die gereade gezeigt werden
   //Try to load mo file befor trying to load po file
+  //Fix Comport
 {ToDo List:
     Add Compas to charts in (new) main from, so it becomes more clear Up means Up / North and down mean Dorn / South
     Range check while reading from config file (is it greater then a possible string / memory?
@@ -194,10 +195,15 @@ type
     BMd_Search
     );
 
-  TShapeNums = (ShpN_EleNow, ShpN_EleCalc, ShpN_AziNow, ShpN_AziCalc);
+  TShapeNums = (
+    ShpN_EleNow,
+    ShpN_EleCalc,
+    ShpN_AziNow,
+    ShpN_AziCalc
+    );
 
   { TArmConnect }
-  
+
   TArmConnect = class(TThread)
     //General: Using a Delay is pritty importend, the app would lag if sleep was used
     private
@@ -432,7 +438,7 @@ type
       {%H-}Shift: TShiftState);
     {Manuel azimut / elevation from the user}
     procedure FltSpnEd_AziCalcManuChange(Sender: TObject);
-    procedure FltSpnEd_EleCalcManuChange(Sender: TObject);   
+    procedure FltSpnEd_EleCalcManuChange(Sender: TObject);
     {Opens a FindDialog and searches for the given String in our StarList}
     procedure FndDFind(Sender: TObject);
     {Detect PortableMode and initialize importend global vairiables like the paths.
@@ -466,7 +472,7 @@ type
     procedure LV_BodyListKeyPress(Sender: TObject; var Key: char);
     {sets the width of the colums of the LV_BodyLst fittig to the
     avaible Space}
-    procedure LV_BodyListResize(Sender: TObject);      
+    procedure LV_BodyListResize(Sender: TObject);
     {calculation Timer, Heart of SpaceOrienter,
      where Star, ehem location calculating is called}
     procedure Tmr_CalcAllOnTimer(Sender: TObject);
@@ -494,7 +500,7 @@ type
       Time goes on like expected but from point in time choosen by the user}
       FDiffD:       System.TDate;
       FDiffT:       System.TTime;  //Don't use Unix TTime
-              
+
     {Resets the OptionsFile}
     procedure DefaultOptions ();
     {Find the Optionsname in a Sting, if there is none then nothig is returned}
@@ -515,17 +521,17 @@ type
     {Transform the given OptionsName to a String and get rid of starting "ON_"}
     function OptionsEnumToStr(EnumVal: TOptionNames): String;
     {Tell the mainform what BodyMode was selected}
-    procedure ProgressBodyMode (const Mode: TBodyMode; Save: Boolean = true);  
+    procedure ProgressBodyMode (const Mode: TBodyMode; Save: Boolean = true);
     {Try to tell the Rest of the mainform what star was selecet by a given Item}
     procedure ProgressList (const Item:TListItem);
     {Seaches for a given Body in Bodylist}
-    function Search4Body (SerchFor: String): TListItem;   
+    function Search4Body (SerchFor: String): TListItem;
     {Set the  pos of shape nr. at the  main page to the right angle on the chart}
-    procedure SetShapePos (const ShapeNum: TShapeNums; Angle: Real); 
+    procedure SetShapePos (const ShapeNum: TShapeNums; Angle: Real);
     {Sends Data to the Arduino}
     procedure SendData ();
     {If a Input was given search for it in LV_BodyList}
-    procedure SearchInputEdit(); 
+    procedure SearchInputEdit();
     {Compaires two strings and compute the sameness in percent
     The boolean  does that what it's name say: it determine if StrCompaire is casesensitive}
     function  StrCompaire(str1, str2: String; const CaseSensitive: Boolean = true): Real;
@@ -556,10 +562,10 @@ type
     {Resets the StarListFile}
     procedure DefaultList ();
     {Does what it say, progress messages until the time is over}
-    procedure Delay(Milliseconds: DWORD);       
+    procedure Delay(Milliseconds: DWORD);
     {Result is the DefaultValue of the given OptionName.
      Warning: every new Option have to be listed here!}
-    function  GetDefaultOption (const OptnName: TOptionNames): String; 
+    function  GetDefaultOption (const OptnName: TOptionNames): String;
     {Load the Starlist by a given path}
     function  LoadStarList (const Path: String): Boolean;
     {Tell the forms, if ExpertMode was activated}
@@ -1180,7 +1186,7 @@ function  TFrm_Main.GetDefaultOption (const OptnName: TOptionNames): String; //D
       ON_Date:          Result := formatdatetime('dd/mm/yyyy', Now);
       ON_Time:          Result := formatdatetime('hh:nn:ss', Now);
       ON_AutoComMode:   Result := 'False';
-      ON_ComPort:       Result := 'Com0';
+      ON_ComPort:       Result := '0';
       ON_BaudRate:      Result := '9600';
       ON_AutoValueMode: Result := 'True';
       ON_UseHotkey:     Result := 'False';
@@ -1278,40 +1284,40 @@ function  TFrm_Main.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; 
 
     { ------------------------- }
 
-    procedure LoadAndList ();
-      var
-         //just Because we can't use the orginal i
-         i: integer;
+     procedure LoadAndList ();
+       var
+          //just Because we can't use the orginal i
+          i: integer;
 
-         LoadList: Tstringlist;
-      begin
-        LoadList := Tstringlist.Create;
+          LoadList: Tstringlist;
+       begin
+         LoadList := Tstringlist.Create;
 
-        if not FileExists (DefaultOptionsPath) then
-          DefaultOptions();
+         if not FileExists (DefaultOptionsPath) then
+           DefaultOptions();
 
-          try
-            LoadList.LoadFromFile(DefaultOptionsPath);
+           try
+             LoadList.LoadFromFile(DefaultOptionsPath);
 
-            for i := pred(LoadList.count) downto 0 do //Ignore commants and empty lines
-              if (LoadList[i] = '') or (Trim(LoadList[i])[1] = '#') then
-                LoadList.Delete(i);
+             for i := pred(LoadList.count) downto 0 do //Ignore commants and empty lines
+               if (LoadList[i] = '') or (Trim(LoadList[i])[1] = '#') then
+                 LoadList.Delete(i);
 
-            for i := 0 to pred(LoadList.count) do
-              begin
-                Index := GetOptionIndex(FindOptionName(LoadList[i])); //Find the Index of a possible Optionname
+             for i := 0 to pred(LoadList.count) do
+               begin
+                 Index := GetOptionIndex(FindOptionName(LoadList[i])); //Find the Index of a possible Optionname
 
-                if (Index >= 0) then  // if no valid name was fond, -1 was returned
-                  begin
-                    Options[ToptionNames(Index)] := FindOptionValue(LoadList[i]);
-                    Exclude(NotGottenOptions, ToptionNames(Index));  //we want to test, if every Option got min. one time a value.
-                  end;
-              end;
+                 if (Index >= 0) then  // if no valid name was fond, -1 was returned
+                   begin
+                     Options[ToptionNames(Index)] := FindOptionValue(LoadList[i]);
+                     Exclude(NotGottenOptions, ToptionNames(Index));  //we want to test, if every Option got min. one time a value.
+                   end;
+               end;
 
-         finally
-           FreeAndNil(LoadList);
-         end;
-      end;
+          finally
+            FreeAndNil(LoadList);
+          end;
+       end;
 
      function RightPath (): Boolean; inline;
        begin
@@ -1596,11 +1602,11 @@ function  TFrm_Main.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; 
                         //If we should automatily reconnect
                         ARMConnection.Reconnect := Tempbool;
 
-                        if not Tempbool then
-                          if TryStrToInt(Options[ON_ComPort], i) then
+                        if not Tempbool then      //[length(Options[ON_ComPort]) -1]
+                          if TryStrToInt(Options[ON_ComPort] , i) then
                             Frm_Config.CmbBx_ComPort.Caption := Options[ON_ComPort]
                           else
-                            ErrorMessage := MakeErrorMsg (j, MLS_Error_WrongType);
+                            ErrorMessage := MakeErrorMsg (ON_ComPort, MLS_Error_WrongType);
                         //Inc(j);
                       end
                     else
@@ -2192,7 +2198,7 @@ procedure TFrm_Main.SendData (); //Done?
         SendAzimuth   := FltSpnEd_AziCalcManu.Value;
       end;
   end;
-                
+
 procedure TFrm_Main.SetPortableMode (IsActive: Boolean); //ToDo: CleanUp after Mode has changed
   {$IfDef Windows}
   var
@@ -2312,7 +2318,7 @@ procedure TFrm_Main.SetShapePos (const ShapeNum: TShapeNums; Angle: Real); //ToD
     case ShapeNum of
       ShpN_EleNow:
         begin
-          Shape_EleNow.Left  := CalcLeft; 
+          Shape_EleNow.Left  := CalcLeft;
           Shape_EleNow.Top   := CalcTop;
           Shape_EleNow.Shape := TempShpeType;
         end;
@@ -2323,7 +2329,7 @@ procedure TFrm_Main.SetShapePos (const ShapeNum: TShapeNums; Angle: Real); //ToD
           Shape_EleCalc.Shape := TempShpeType;
         end;
       ShpN_AziNow:
-        begin    
+        begin
           Shape_AziNow.Left   := CalcLeft;
           Shape_AziCalc.Top   := CalcTop;
           Shape_AziCalc.Shape := TempShpeType;
@@ -2665,6 +2671,7 @@ procedure TFrm_Main.FormDestroy(Sender: TObject);   //Version Dynamic; Comments
      Line: String;
      OptionName: TOptionNames;
      TempValue: String;
+     TempLine: String;
 
      Index: Integer;
      SaveStrings, LoadStrings: TStringList;
@@ -2716,7 +2723,9 @@ procedure TFrm_Main.FormDestroy(Sender: TObject);   //Version Dynamic; Comments
            for Line in LoadStrings do
              begin
                Index := 0;
-               if not (Trim(Line)[1] = '#') or (Trim(Line) = '')  then  //Skip comments and free lines
+               TempLine := Trim(Line);
+
+               if not ((TempLine = '') or (TempLine[1] = '#'))  then  //Skip comments and free lines
                  begin
                    Index := GetOptionIndex(FindOptionName(Line));
 
