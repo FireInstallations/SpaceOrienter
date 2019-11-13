@@ -793,6 +793,7 @@ function LineSplit(line: string; const sep: char): TStringArray;
 
 function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels: MAGtype_MagneticModel; array_size: integer): integer; {$IfDef FPC} inline {$EndIf};
   var
+    TempDecimalSeparator: char;
     paramkeys: TSArrayParam = (
       'SHDF ',
       'ModelName: ',
@@ -962,41 +963,49 @@ function MAG_readMagneticModel_SHDF (const filename: string; var magneticmodels:
                     end;
                 end;
             end
-          else if (GetVal3(Lines[j])) then
+          else
             begin
-              if (m = 0) then
-                begin
-                  GetVal5(Lines[j]);
+              //to ensure to get the right DecimalSeparator.
+              TempDecimalSeparator := {$IfDef FPC}DefaultFormatSettings.{$EndIf}DecimalSeparator;
+              {$IfDef FPC}DefaultFormatSettings.{$EndIf}DecimalSeparator := '.';
 
-                  hnm := 0;
-                  dhnm := 0;
+              if (GetVal3(Lines[j])) then
+                begin
+                  if (m = 0) then
+                    begin
+                      GetVal5(Lines[j]);
+
+                      hnm := 0;
+                      dhnm := 0;
+                    end
+                  else
+                    GetVal7(Lines[j]);
+
+                  newrecord := True;
+
+                  if not (allocationflag) then
+                    begin
+                     Lines.Free;
+                     exit (_DEGREE_NOT_FOUND);
+                    end;
+
+                  if (m <= n) then
+                    begin
+                     index := (n * (n + 1) div 2 + m);
+
+                     with magneticmodels do
+                       begin
+                         Main_Field_Coeff_G[index] := gnm;
+                         Secular_Var_Coeff_G[index] := dgnm;
+                         Main_Field_Coeff_H[index] := hnm;
+                         Secular_Var_Coeff_H[index] := dhnm;
+                       end;
+                    end;
                 end
               else
-                GetVal7(Lines[j]);
-
-              newrecord := True;
-
-              if not (allocationflag) then
-                begin
-                 Lines.Free;
-                 exit (_DEGREE_NOT_FOUND);
-                end;
-
-              if (m <= n) then
-                begin
-                 index := (n * (n + 1) div 2 + m);
-
-                 with magneticmodels do
-                   begin
-                     Main_Field_Coeff_G[index] := gnm;
-                     Secular_Var_Coeff_G[index] := dgnm;
-                     Main_Field_Coeff_H[index] := hnm;
-                     Secular_Var_Coeff_H[index] := dhnm;
-                   end;
-                end;
-            end
-        else
-        ; //process comments
+                ; //process comments
+              {$IfDef FPC}DefaultFormatSettings.{$EndIf}DecimalSeparator := TempDecimalSeparator;
+            end;
         end;
 
       if (header_index > -1) then
@@ -1154,55 +1163,59 @@ function MAG_robustReadMagModels (const filename: string; var magneticmodels: MA
     Result := False;
 
     try
-      Lines.loadFromFile (filename);
-      if not (Lines.Count > 0) then
+      if FileExists(filename) then
         begin
-          Lines.Free;
-          exit (False);
-        end;
+          Lines.loadFromFile (filename);
+          if not (Lines.Count > 0) then
+            begin
+              Lines.Free;
+              exit (False);
+            end;
 
-      if (Trim(Lines[0])[1] = '%') then
-        MAG_readMagneticModel_SHDF (filename, magneticmodels, array_size)
-      else
-        if (array_size = 1) then
-          begin
-            for i := 1 to Lines.Count - 1 do
+          if (Trim(Lines[0])[1] = '%') then
+            MAG_readMagneticModel_SHDF (filename, magneticmodels, array_size)
+          else
+            if (array_size = 1) then
               begin
+                for i := 1 to Lines.Count - 1 do
+                  begin
 
-                if copy(Lines[i], 1, 5) = '99999' then //end of file
-                  break;
+                    if copy(Lines[i], 1, 5) = '99999' then //end of file
+                      break;
 
-                {$IfDef FPC}
-                if (sscanf (Lines[i], '%d', [@n]) <> 1) then
-                {$Else}
-                Lines[i] := Trim(Lines[i]);
-                n := Pos(' ', Lines[i]);
+                    {$IfDef FPC}
+                    if (sscanf (Lines[i], '%d', [@n]) <> 1) then
+                    {$Else}
+                    Lines[i] := Trim(Lines[i]);
+                    n := Pos(' ', Lines[i]);
 
-                if not TryStrToInt(Copy(Lines[i], 1, n - 1), n) then
-                {$EndIf}
-                  break;
+                    if not TryStrToInt(Copy(Lines[i], 1, n - 1), n) then
+                    {$EndIf}
+                      break;
 
-                if ((n > nMax) and (n > 0)) then
-                  nMax := n;
+                    if ((n > nMax) and (n > 0)) then
+                      nMax := n;
 
-              end;
+                  end;
 
-            MAG_AllocateModelMemory (magneticmodels);
-            magneticmodels.nMax := nMax;
-            magneticmodels.nMaxSecVar := nMax;
+                MAG_AllocateModelMemory (magneticmodels);
+                magneticmodels.nMax := nMax;
+                magneticmodels.nMaxSecVar := nMax;
 
-            MAG_readMagneticModel (filename, magneticmodels);
+                MAG_readMagneticModel (filename, magneticmodels);
 
-            magneticmodels.CoefficientFileEndDate := magneticmodels.epoch + 5;
-          end
-      else
-        begin
-          Lines.Free;
-          exit (False);
+                magneticmodels.CoefficientFileEndDate := magneticmodels.epoch + 5;
+              end
+          else
+            begin
+              Lines.Free;
+              exit (False);
+            end;
+
+          GeomagMagneticModel := magneticmodels; //Rückgabe
+          Result := True;
+
         end;
-
-      GeomagMagneticModel := magneticmodels; //Rückgabe
-      Result := True;
     finally;
       Lines.Free;
     end;

@@ -63,6 +63,7 @@ SpaceOrienter
 __history/
 __recovery/
 *.~*
+backup/
 
 # Castalia statistics file (since XE7 Castalia is distributed with Delphi)
 *.stat
@@ -80,3 +81,5 @@ Release/
 #App/*COF
 
 
+
+*.ppu

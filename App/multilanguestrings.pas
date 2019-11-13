@@ -5,7 +5,7 @@ unit MultiLangueStrings;
 
 interface
 
-  {Copyright (C) <2018> <FireInstallations> <kettnerl [at] hu-berlin.de>
+  {Copyright (C) <2019> <FireInstallations> <kettnerl [at] hu-berlin.de>
 
    This programm is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published by
@@ -45,6 +45,7 @@ Resourcestring
 
   MLS_Error_Caption      = 'ERROR';
   MLS_Error_MsgCaption   = 'Error:';
+  MLS_Error_Id           = 'Fehlernummer: ';
   MLS_Error_ErrorWhile   = 'Fehler in';
   MLS_Error_Loading      = 'Ladevorgang';
   MLS_Error_AtSubItem    = 'während laden von SupItem';
@@ -61,6 +62,8 @@ Resourcestring
   MLS_Error_WrongType    = 'Falscher Datentyp';
   MLS_Error_OutOFRange   = 'Out of range';
   MLS_Error_UnnownFormat = 'Unbekanntes Format';
+  MLS_Error_PlanEpeh     = 'Während der Rechnung ist ein Fehler aufgetreten.';
+  MLS_Error_TurnEphOff   = 'Wechsle in Ruheposition.';
 
 implementation
 

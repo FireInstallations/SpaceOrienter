@@ -1,6 +1,6 @@
 unit SpOri_Main;
 
-{Copyright (C) <2018> <FireInstallations> <kettnerl [at] hu-berlin.de>
+{Copyright (C) <2019> <FireInstallations> <kettnerl [at] hu-berlin.de>
 
    This programm is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published by
@@ -22,10 +22,10 @@ unit SpOri_Main;
   //Correct UT (leap secounds)
   //Online dienst für Höhe, lage, Offset einer stadt
   //Onlinedienst wetter
-  //set StarCalc values to 0 wihl Eph is calculated
+  //set StarCalc values to 0 wihle Eph is calculated
   //initalisiere werte auf 0 bei start
   //Bug report
-  //Help Off / On-Line
+  //Help Off / OnLine
   //PopUpMenus
   //Shortcut Ctrl+f doesn't work becourse TCustomListBox (please use Alt+f instead)
   //Make navigate shortcut work
@@ -34,10 +34,13 @@ unit SpOri_Main;
   //Schreibe berechnete zahlen nur auf pages die gereade gezeigt werden
   //Try to load mo file befor trying to load po file
   //Fix Comport loading /saving
-  //Fix heap dump error when application stopps
+  //Eph calculation seems unaccurate
+  //Error handeling in wmmm  --> decimalsep in wmm or is  format settings in delphi supported?
+  //DefaultFormat is not Delphi friendly
+  //Body list search is broken
+  //handeling error in clac timer
 
 {ToDo List:
-    Add Compas to charts in (new) main from, so it becomes more clear Up means Up / North and down mean Dorn / South
     Range check while reading from config file (is it greater then a possible string / memory?
     Keep in mind: http://wiki.freepascal.org/Secure_programming
     Use http://wiki.freepascal.org/TTaskDialog for custom buttons
@@ -150,7 +153,7 @@ uses
   {$EndIf}
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, ComCtrls, Buttons, Spin, ECImageMenu, ECTabCtrl, LCLType, Menus,
-  Math, StrUtils, Types, typinfo, gettext, LazUTF8,   //DateUtils,
+  Math, StrUtils, Types, typinfo, gettext, LazUTF8, DateTimePicker,   //DateUtils,
   LCLTranslator,  //Be carefull, since it adds all kind of number displaying stuff too --> makes messy .po files
   synaser, PlanEph, Utils, Config, GetHotkey, MultiLangueStrings;
 
@@ -535,7 +538,7 @@ type
     {Sends Data to the Arduino}
     procedure SendData ();
     {If a Input was given search for it in LV_BodyList}
-    procedure SearchInputEdit();
+    procedure SearchInputEdit(Sender:TObject);
     {Compaires two strings and compute the sameness in percent
     The boolean  does that what it's name say: it determine if StrCompaire is casesensitive}
     function  StrCompaire(str1, str2: String; const CaseSensitive: Boolean = true): Real;
@@ -703,7 +706,8 @@ function TArmConnect.ReceiveData (): Boolean; //Done
         StrIn := ser.Recvstring (20);
 
         //Make sure we can find the given floats
-        StrIn := StringReplace (StrIn, '.', DefaultFormatSettings.DecimalSeparator, [rfReplaceAll]);
+        if ('.' <> DefaultFormatSettings.DecimalSeparator) then
+           StrIn := StringReplace (StrIn, '.', DefaultFormatSettings.DecimalSeparator, [rfReplaceAll]);
 
         //Message from ArduIno: >>ElevationNow;AzimuthNow;<<
         //Get Elevation (Altitude)
@@ -724,7 +728,7 @@ function TArmConnect.ReceiveData (): Boolean; //Done
       Result := false;
   end;
 
-procedure TArmConnect.SendData (); //Done
+procedure TArmConnect.SendData (); //Point
   var
     PointAsSep: TFormatSettings;
     EleStr, AzStr: String;
@@ -786,7 +790,6 @@ procedure TArmConnect.Execute; //Done?
     //Start Timer
     Loop.Enabled := true;
   end;
-
 
 
 { TFrm_Main }
@@ -977,12 +980,12 @@ procedure TFrm_Main.DefaultList ();  //ToDo: put this into it's own File (englis
       List.Add('1;Fruehlingspunkt;-;-;Keine;0;0;0;0;');
       List.Add('2;Sirrah;Alpheratz;Pegasus;Keine;357;41,3;29;10,9;');
       List.Add('3;Algenib;Algenib;Pegasus;Keine;356;28,7;15;16,5;');
-      List.Add('4;Alpha Phoenicis;;unsichtbar;Keine;353;13,8;-42;-13,0;');
+      List.Add('4;Alpha Phoenicis;;-;unsichtbar;353;13,8;-42;-13,0;');
       List.Add('5;Schedir;Schedir;Kassiopeia;Keine;349;38,1;56;37,6;');
       List.Add('6;Daneb Kaitos;;Walfisch;Keine;348;53,9;-17;-53,8;');
       List.Add('7;Tsi;Cih;Kassiopeia;Keine;345;34,1;60;48,3;');
       List.Add('8;Mirach;Mirach;Andromeda;Keine;342;20,1;35;42,4;');
-      List.Add('9;Achernar;Achernar;unsichtbar;Keine;335;25,4;-57;-9,3;');
+      List.Add('9;Achernar;Achernar;-;unsichtbar;335;25,4;-57;-9,3;');
       List.Add('10;Polarstern;Polaris;Kleiner Wagen;Keine;316;48,7;89;19,9;');
       List.Add('11;Alamak;;Andromeda;Keine;328;46,2;42;24,4;');
       List.Add('12;Hamal;Hamal;Widder;Tierkreis;327;58,4;23;32,3;');
@@ -1001,7 +1004,7 @@ procedure TFrm_Main.DefaultList ();  //ToDo: put this into it's own File (englis
       List.Add('25;Beteigeuze;Beteigeuze;Orion;Keine;270;59,1;7;24,4;');
       List.Add('26;Menkalinan;Menkalinan;Fuhrmann;Keine;269;49,0;44;56,7;');
       List.Add('27;Murzim;Mirzam;Grosser Hund;Keine;264;8,7;-17;-58,1;');
-      List.Add('28;Canopus;Canopus;unsichtbar;Keine;263;55,2;52;42,5;');
+      List.Add('28;Canopus;Canopus;-;unsichtbar;263;55,2;52;42,5;');
       List.Add('29;Alena;Alphena;Zwillinge;Tierkreis;260;20,1;16;22,9;');
       List.Add('30;Sirius;Sirius;Grosser Hund;Keine;258;31,9;-16;-44,5;');
       List.Add('31;Adhara;Adora;Grosser Hund;Keine;255;10,9;-28;-59,9;');
@@ -1009,26 +1012,26 @@ procedure TFrm_Main.DefaultList ();  //ToDo: put this into it's own File (englis
       List.Add('33;Castor;Castor;Zwillinge;Tierkreis;246;5,4;31;50,9;');
       List.Add('34;Prokyon;Procyon;Kleiner Hund;Keine;244;57,6;5;10,8;');
       List.Add('35;Pollux;Pollux;Zwillinge;Tierkreis;243;25,3;27;59,0;');
-      List.Add('36;Epsilon Carinae;Epsilon Carinae;unsichtbar;Keine;234;17,1;-59;-33,9;');
-      List.Add('37;Lambda Velorum;Alsuhail;unsichtbar;Keine;222;50,9;-43;-30,1;');
-      List.Add('38;Miaplacidus;Miaplacidus;unsichtbar;Keine;221;39,1;-69;-47,2;');
+      List.Add('36;Epsilon Carinae;Epsilon Carinae;-;unsichtbar;234;17,1;-59;-33,9;');
+      List.Add('37;Lambda Velorum;Alsuhail;-;unsichtbar;222;50,9;-43;-30,1;');
+      List.Add('38;Miaplacidus;Miaplacidus;-;unsichtbar;221;39,1;-69;-47,2;');
       List.Add('39;Alphard;Alphard;Wasserschlange;Keine;217;54,1;-8;-43,9;');
       List.Add('40;Regulus;Regulus;Loewe;Tierkreis;207;41,4;11;53,1;');
-      List.Add('41;;Nue Carinae;unsichtbar;Keine;199;6,5;-64;-28,9;');
+      List.Add('41;;Nue Carinae;-;unsichtbar;199;6,5;-64;-28,9;');
       List.Add('42;Dubhe;Dubhe;Grosser Wagen;Keine;193;49,3;61;39,7;');
       List.Add('43;Denebola;Denebola;Loewe;Tierkreis;182;31,6;14;28,8;');
-      List.Add('44;Acrux;Acrux;unsichtbar;Keine;173;6,8;-63;-11,4;');
-      List.Add('45;Gamma Crucis;Gamma Crucis;unsichtbar;Keine;171;58,5;-57;-12,3;');
-      List.Add('46;Beta Crucis;Beta Crucis;unsichtbar;Keine;167;49,4;-59;-46,7;');
+      List.Add('44;Acrux;Acrux;-;unsichtbar;173;6,8;-63;-11,4;');
+      List.Add('45;Gamma Crucis;Gamma Crucis;-;unsichtbar;171;58,5;-57;-12,3;');
+      List.Add('46;Beta Crucis;Beta Crucis;-;unsichtbar;167;49,4;-59;-46,7;');
       List.Add('47;Alioth;Alioth;Grosser Wagen;Keine;166;19,0;55;52,3;');
       List.Add('48;Vindemiatrix;Vindemiatrix;Jungfrau;Tierkreis;164;15,1;10;52,3;');
       List.Add('49;Mizar;Mizar;Grosser Wagen;Keine;158;51,4;54;50,5;');
       List.Add('50;Spica;Spica;Jungfrau;Tierkreis;158;29,1;-11;-14,7; ');
       List.Add('51;Benetnash;Benetnasch;Grosser Wagen;Keine;152;57,4;49;14,0;');
-      List.Add('52;Agena;Agena;unsichtbar;Keine;148;44,8;-60;-27,0;');
-      List.Add('53;Nu Centauri;Nue Centauri;unsichtbar;Keine;148;5,1;-36;-26,9;');
+      List.Add('52;Agena;Agena;-;unsichtbar;148;44,8;-60;-27,0;');
+      List.Add('53;Nu Centauri;Nue Centauri;-;unsichtbar;148;5,1;-36;-26,9;');
       List.Add('54;Arktur;Arcturus;Baerenhueter;Keine;145;53,9;19;5,9;');
-      List.Add('55;Toliman;Toliman;unsichtbar;Keine;139;48,8;-60;-54,0;');
+      List.Add('55;Toliman;Toliman;-;unsichtbar;139;48,8;-60;-54,0;');
       List.Add('56;Izar;Epsilon Bootis;Baerenhueter;Keine;138;34,5;27;0,5;');
       List.Add('57;Zuben-el-tschenubi;Zubeneigenubi;Waage;Tierkreis;137;3,1;-16;-6,4;');
       List.Add('58;Kochab;Kochab;Kleiner Wagen;Keine;137;20,3;74;5,4;');
@@ -1036,8 +1039,8 @@ procedure TFrm_Main.DefaultList ();  //ToDo: put this into it's own File (englis
       List.Add('60;Gemma;Alphecca;Noerdliche Krone;Keine;126;9,3;26;39,7;');
       List.Add('61;Unukalhai;Unuk;Schlange;Keine;123;43,8;6;22,6;');
       List.Add('62;Antares;Antares;Skorpion;Tierkreis;112;23,7;-26;-27,9;');
-      List.Add('63;Atria;Atria;unsichtbar;Keine;107;23,7;-69;-3,2;');
-      List.Add('64;Eta Scorpii;Eta Scorpii;unsichtbar;Keine;107;11,6;-34;-19,1;');
+      List.Add('63;Atria;Atria;-;unsichtbar;107;23,7;-69;-3,2;');
+      List.Add('64;Eta Scorpii;Eta Scorpii;-;unsichtbar;107;11,6;-34;-19,1;');
       List.Add('65;Shaula;Shaula;Skorpion;Tierkreis;96;19,1;-37;-6,7;');
       List.Add('66;Ras Alhague;Ras Alhagus;Schlangentraeger;Keine;96;4,5;12;33,1;');
       List.Add('67;Jabbha;Nue Scorpii;Skorpion;Tierkreis;95;22,5;-43;-0,3;');
@@ -1046,12 +1049,12 @@ procedure TFrm_Main.DefaultList ();  //ToDo: put this into it's own File (englis
       List.Add('70;Wega;Wega;Leier;Keine;80;37,6;38;48,1;');
       List.Add('71;Nunki;Nunki;Schuetze;Tierkreis;75;55,8;-26;-16,4;');
       List.Add('72;Atair;Atair;Adler;Keine;62;6,2;8;54,9;');
-      List.Add('73;Peacock;Peacock;unsichtbar;Keine;53;16,1;-56;-40,7;');
+      List.Add('73;Peacock;Peacock;-;unsichtbar;53;16,1;-56;-40,7;');
       List.Add('74;Deneb;Deneb;Schwan;Keine;49;30,0;45;20,5;');
       List.Add('75;Alderamin;Alderamin;Kepheus;Keine;40;15,2;62;39,4;');
       List.Add('76;Enif;Enif;Pegasus;Keine;33;45,1;9;57,1;');
-      List.Add('77;Al Nair;Al Nair;unsichtbar;Keine;27;41,2;-46;-52,8;');
-      List.Add('78;Beta Gruis;Beta Gruis;unsichtbar;Keine;19;5,5;-46;-47,9;');
+      List.Add('77;Al Nair;Al Nair;-;unsichtbar;27;41,2;-46;-52,8;');
+      List.Add('78;Beta Gruis;Beta Gruis;-;unsichtbar;19;5,5;-46;-47,9;');
       List.Add('79;Fomalhaut;Fomalhaut;Suedlicher Fisch;Keine;15;21,8;-29;-32,1;');
       List.Add('80;Scheat;Scheat;Pegasus;Keine;13;51,4;28;10,4;');
       List.Add('81;Markab;Markab;Pegasus;Keine;13;36,3;15;17,7;');
@@ -1268,7 +1271,7 @@ function  TFrm_Main.GetOSLanguage (): string; //Done
     Result := fbl;
   end;
 
-function  TFrm_Main.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Version; Chack if Langue was loaded; Comments; Errorhandeling if the Item doesnt exits; first Item doesn't have to be 0!
+function  TFrm_Main.LoadOptions (const LoadFromFile: Boolean  = true): Boolean; //ToDo: Version; Chack if Langue was loaded; comma as dec; Comments; Errorhandeling if the Item doesnt exits; first Item doesn't have to be 0!
   var
     i: integer;
     Index: Shortint;
@@ -2004,10 +2007,13 @@ procedure TFrm_Main.ProgressBodyMode (const Mode: TBodyMode; Save: Boolean = tru
       BMd_Constellation:
         begin
           //'Fährt ein Sternbild nach und verfolgt dieses.';
-          Tmr_Follow.Enabled := true;
+          if ((Trim(Lbl_BdyPrpty_Val1.Caption) <> '-') and (Trim(Lbl_BdyPrpty_Val1.Caption) <> '')) then
+             Tmr_Follow.Enabled := true
+          else
+            ProgressBodyMode(BMd_Normal, Save);
         end;
       BMd_Search:
-        ProgressBodyMode(BMd_Normal);
+        ProgressBodyMode(BMd_Normal, Save);
      else
       begin
         raise Exception.Create('Fehler in Change-Mode-Vorgang: Unbekannter Mode:' + IntToStr(Ord(Mode)));
@@ -2046,6 +2052,7 @@ procedure TFrm_Main.ProgressList (const Item: TListItem); //ToDo: Test if the It
   var
      TestFloat: Float;
      i: Integer;
+     CammaAsSep: TFormatSettings;
 
     {Ask the User if we shoud reset the StarList}
     function ProgressError (const Number, SubItem: String): boolean;
@@ -2073,6 +2080,10 @@ procedure TFrm_Main.ProgressList (const Item: TListItem); //ToDo: Test if the It
      end;
 
   begin
+     //Bodylist uses ',' as Separator.
+    CammaAsSep := DefaultFormatSettings;
+    CammaAsSep.DecimalSeparator := ',';
+
     Options[ON_Body] := Item.Caption; //Save the current item as seleced
 
     for i := 0 to LV_BodyList.Items.Count-1 do  //Uncheck all the other items
@@ -2100,7 +2111,7 @@ procedure TFrm_Main.ProgressList (const Item: TListItem); //ToDo: Test if the It
    //But show it anyway if body property 1 wasn't useful
     with Lbl_BdyPrpty_Val2 do
       begin
-        if Lbl_BdyPrpty_Val1.Visible and (Item.SubItems[3] = 'Keine') then
+        if (Lbl_BdyPrpty_Val1.Visible and (Item.SubItems[3] = 'Keine')) then
           Visible := false
         else
           Visible := true;
@@ -2111,25 +2122,25 @@ procedure TFrm_Main.ProgressList (const Item: TListItem); //ToDo: Test if the It
     if not (AnsiLowerCase(Item.SubItems[0]) = 'ruheposition') and  //Try to tell Star calculate page where to find the star
        not (AnsiLowerCase(Item.SubItems[3]) = 'ephemeride' ) then
       begin
-        if TryStrToFloat (Item.SubItems[4], TestFloat) then
+        if TryStrToFloat (Item.SubItems[4], TestFloat, CammaAsSep) then
           Lbl_RightAc_ValDeg.Caption := Item.SubItems[4]
          else
           if ProgressError ('4', Item.SubItems[4]) then
             exit;
 
-        if TryStrToFloat (Item.SubItems[5], TestFloat) then
+        if TryStrToFloat (Item.SubItems[5], TestFloat, CammaAsSep) then
           Lbl_RightAc_ValMin.Caption := Item.SubItems[5]
          else
           if ProgressError ('5', Item.SubItems[5]) then
             exit;
 
-        if TryStrToFloat (Item.SubItems[6], TestFloat) then
+        if TryStrToFloat (Item.SubItems[6], TestFloat, CammaAsSep) then
             Lbl_Decli_ValDeg.Caption := Item.SubItems[6]
          else
           if ProgressError ('6', Item.SubItems[6]) then
             exit;
 
-        if TryStrToFloat (Item.SubItems[7], TestFloat) then
+        if TryStrToFloat (Item.SubItems[7], TestFloat, CammaAsSep) then
             Lbl_Decli_ValMin.Caption := Item.SubItems[7]
          else
           if ProgressError ('7', Item.SubItems[7]) then
@@ -2154,6 +2165,29 @@ procedure TFrm_Main.ProgressList (const Item: TListItem); //ToDo: Test if the It
             end;
          end;
    end;
+
+procedure TFrm_Main.SearchInputEdit (Sender: TObject);  //ToDo: Error handeling (Item not found)
+  var
+    TempItem: TListItem;
+  begin
+    //if there was vailid input
+    with Sender as TEdit do
+      if not (Text = MLS_Search_Default) and not (Text = '') then
+        begin
+          TempItem := Search4Body (Trim(Text)); //serch for the input
+
+          if Assigned(TempItem) then
+            begin
+              ProgressList(TempItem);
+
+              //If the user searched for a constellation, change Bodymode
+              if ((Trim(Text) <> '-') and (StrCompaire(Text, TempItem.SubItems[2] , false) > 75)) then
+                ProgressBodyMode(BMd_Constellation);
+            end
+          else
+          ; //Item not found
+        end;
+  end;
 
 function  TFrm_Main.Search4Body (SerchFor: String): TListItem;  //ToDo: Comments; better error handleling
   var
@@ -2240,6 +2274,10 @@ procedure TFrm_Main.SetPortableMode (IsActive: Boolean); //ToDo: CleanUp after M
 
     {Sets all the pathes where DefaultPath is used}
     //ConfigExtension
+
+    if (DefaultPath[DefaultPath.length] = PathDelim) then
+       DefaultPath := Copy(DefaultPath, 1, length(DefaultPath)-1);
+
     DefaultOptionsPath    := DefaultPath + PathDelim + 'Options.Space';
     DefaultOldOptionsPath := DefaultPath + PathDelim + 'OldOptions';
     DefaultListPath       := DefaultPath + PathDelim + 'StarList.Space';
@@ -2275,14 +2313,14 @@ procedure TFrm_Main.SetShapePos (const ShapeNum: TShapeNums; Angle: Real); //ToD
         CalcTop  := Img_ChartAzi.Top  + round(R) - Shape_Height;
         CalcLeft := Img_ChartAzi.Left + round(R) - Shape_Height;
 
-        CalcTop  += Round(R * sin(Angle * Pi/180));
-        CalcLeft += Round(R * cos(Angle * Pi/180));
+        CalcTop  += Round(-R * cos(Angle * Pi/180));
+        CalcLeft += Round(-R * sin(Angle * Pi/180));
 
         case Round(Angle) of
-          226..315:        TempShpeType := stTriangle;
-          316..359, 0..45: TempShpeType := stTriangleRight;
-          46..135:         TempShpeType := stTriangleDown;
-          136..225:        TempShpeType := stTriangleLeft;
+          226..315:        TempShpeType := stTriangleRight;
+          316..359, 0..45: TempShpeType := stTriangle;
+          46..135:         TempShpeType := stTriangleLeft;
+          136..225:        TempShpeType := stTriangleDown;
         end;
       end;
 
@@ -2335,8 +2373,8 @@ procedure TFrm_Main.SetShapePos (const ShapeNum: TShapeNums; Angle: Real); //ToD
       ShpN_AziNow:
         begin
           Shape_AziNow.Left   := CalcLeft;
-          Shape_AziCalc.Top   := CalcTop;
-          Shape_AziCalc.Shape := TempShpeType;
+          Shape_AziNow.Top   := CalcTop;
+          Shape_AziNow.Shape := TempShpeType;
         end;
       ShpN_AziCalc:
         begin
@@ -2358,18 +2396,18 @@ function  TFrm_Main.StrCompaire (str1, str2: String; const CaseSensitive: Boolea
      NumberofChar1, NumberofChar2: Array of TCharList;
      i, j: Integer;
      MinLength, Maxlength: integer;
-     SaneNrChr: Integer = 0;
+     SameNrChr: Integer = 0;
      SameChar: integer = -1;
      Found: Boolean;
   begin
     //initialize
-    Setlength(NumberofChar1, 0);
-    Setlength(NumberofChar2, 0);
+    Setlength(NumberofChar1{%H-}, 0);
+    Setlength(NumberofChar2{%H-}, 0);
 
     Maxlength   := Max(Length(str1), Length(str2));
     MinLength   := Min(Length(str1), Length(str2));
 
-    if not CaseSensitive  then
+    if not CaseSensitive then
       begin
        Str1 := AnsiLowerCase(Str1);
        Str2 := AnsiLowerCase(Str2);
@@ -2387,7 +2425,7 @@ function  TFrm_Main.StrCompaire (str1, str2: String; const CaseSensitive: Boolea
            end;
 
         //look for same chararkters around of i
-        //SameChar samechar will be diveded by 4 so if the char appiers 2 places away it's just 1/4 of the same place
+        //SameChar will be diveded by 4 so if the char appiers 2 places away it's just 1/4 of the same place
         for i := low(str1) to pred(MinLength) do
           if (str1[i] = str2[i]) then
             Inc(SameChar, 4)
@@ -2454,13 +2492,13 @@ function  TFrm_Main.StrCompaire (str1, str2: String; const CaseSensitive: Boolea
           for j := 0 to high(NumberofChar2) do
             if NumberOfChar1[i].Chara = NumberOfChar2[j].Chara then
               if NumberOfChar1[i].Count = NumberOfChar2[j].Count then
-                Inc(SaneNrChr);
+                Inc(SameNrChr);
 
         MinLength := Max(length(NumberOfChar1), length(NumberOfChar2));
        end;
 
-    if SaneNrChr > 0 then
-      Result := (((SameChar/(Maxlength*4)) * (2/5))  + ((SaneNrChr/MinLength) * (3/5))) * 100
+    if SameNrChr > 0 then
+      Result := (((SameChar/(Maxlength*4)) * (2/5))  + ((SameNrChr/MinLength) * (3/5))) * 100
      else
       Result := 0.00;
 
@@ -2486,28 +2524,6 @@ procedure TFrm_Main.BitBtn_Navigate_MainClick(Sender: TObject);  //Done
     SendData ();
   end;
 
-procedure TFrm_Main.SearchInputEdit ();  //ToDo: Error handeling (Item not found)
-  var
-    TempItem: TListItem;
-  begin
-    //if there was vailid input
-    if not (Ed_Search4Bdy_Main.Text = MLS_Search_Default) and not (Ed_Search4Bdy_Main.Text = '') then
-      begin
-        TempItem := Search4Body (Trim(Ed_Search4Bdy_Main.Text)); //serch for the input
-
-        if Assigned(TempItem) then
-          begin
-            ProgressList(TempItem);
-
-            //If the user searched for a constellation, change Bodymode
-            if (StrCompaire(Ed_Search4Bdy_Main.Text, TempItem.SubItems[2] , false) > 75) then
-              ProgressBodyMode(BMd_Constellation);
-          end
-        else
-        ; //Item not found
-      end;
-  end;
-
 procedure TFrm_Main.CmbBx_ModeChange(Sender: TObject); //Done
   begin
     //Tell what Mode was selected
@@ -2524,27 +2540,37 @@ procedure TFrm_Main.ECTabCtrl_CalcSectionsChange(Sender: TObject); //Done
 
 procedure TFrm_Main.Ed_Search4Bdy_Enter(Sender: TObject);  //Buggy
   begin
-    if Ed_Search4Bdy_Main.Text = MLS_Search_Default then
-      Ed_Search4Bdy_Main.Clear  //nothing was typed yet, so clear up the default value
-     else
-      begin
-        //Ed_Search4Bdy_Main.SetFocus;
-        Ed_Search4Bdy_Main.HideSelection := false;
-        //should select the last typed text.. but it doesn't work. nether do the following ones, with or whithout autoselect
-        Ed_Search4Bdy_Main.SelectAll;
 
-        //Ed_Search4Bdy_Main.SelStart := 0;
-        //Ed_Search4Bdy_Main.SelLength := 2;
-        //Ed_Search4Bdy_Main.SelText := Ed_Such.Text;
-      end;
+    With Sender as TEdit do
+      if Text = MLS_Search_Default then
+        Clear  //nothing was typed yet, so clear up the default value
+       else
+        begin
+          //Ed_Search4Bdy_Main.SetFocus;
+          HideSelection := false;
+          //should select the last typed text.. but it doesn't work. nether do the following ones, with or whithout autoselect
+          SelectAll;
+
+          //Ed_Search4Bdy_Main.SelStart := 0;
+          //Ed_Search4Bdy_Main.SelLength := 2;
+          //Ed_Search4Bdy_Main.SelText := Ed_Such.Text;
+        end;
 
   end;
 
 procedure TFrm_Main.Ed_Search4Bdy_Exit(Sender: TObject); //Done
   begin
+
+    With Sender as TEdit do
     //Reset to default if no text was given
-    if (Ed_Search4Bdy_Main.Text = '') then
-      Ed_Search4Bdy_Main.Text  := MLS_Search_Default;
+    if (Text = '') then
+      Text  := MLS_Search_Default;
+
+    //Reset the other one
+    if (Sender = Ed_Search4Bdy_List) then
+      Ed_Search4Bdy_Main.Text := MLS_Search_Default
+     else
+      Ed_Search4Bdy_List.Text := MLS_Search_Default;
 
   end;
 
@@ -2553,7 +2579,7 @@ procedure TFrm_Main.Ed_Search4Bdy_KeyDown(Sender: TObject; var Key: Word; //Done
   begin
     //If Enter was pressed search for the given text
     if Key = VK_RETURN then
-      SearchInputEdit();
+      SearchInputEdit(Sender)
   end;
 
 procedure TFrm_Main.FltSpnEd_AziCalcManuChange(Sender: TObject); //ToDo: Comments
@@ -2609,8 +2635,9 @@ procedure TFrm_Main.FndDFind (Sender: TObject); //ToDo: Comments; ErrorHandeling
 
   end;
 
-procedure TFrm_Main.FormCreate(Sender: TObject); //ToDo: move Connect to LoadOptions and use Connact to all just if no vailid port was found; Update; get defaultvalues from last points
+procedure TFrm_Main.FormCreate(Sender: TObject); //ToDo: use seeparator in Loadoptions; move Connect to LoadOptions and use Connact to all just if no vailid port was found; Update; get defaultvalues from last points
   begin
+
     //initialize Own path
     OwnDir :=  ExtractFilePath(ParamStrUTF8(0));
     //old way:
@@ -2625,11 +2652,11 @@ procedure TFrm_Main.FormCreate(Sender: TObject); //ToDo: move Connect to LoadOpt
     HotKey      := [];
 
     //set default vaulues
-    Lbl_AziNow_Val.Caption := '00,00';
-    Lbl_EleNow_Val.Caption := '00,00';
+    Lbl_AziNow_Val.Caption := FloatToStrF(0, ffFixed, 2, 2);
+    Lbl_EleNow_Val.Caption := FloatToStrF(0, ffFixed, 2, 2);
 
-    Lbl_AziCalc_Val.Caption := '89,99';
-    Lbl_EleCalc_Val.Caption := '89,99';
+    Lbl_AziCalc_Val.Caption := FloatToStrF(89.99, ffFixed, 2, 2);
+    Lbl_EleCalc_Val.Caption := FloatToStrF(89.99, ffFixed, 2, 2);
 
     //Display everything in the OS langue until a choosen langue was loaded
     SetDefaultLang(GetOSLanguage());
@@ -2688,6 +2715,9 @@ procedure TFrm_Main.FormDestroy(Sender: TObject);   //Version Dynamic; Comments
      SaveStrings, LoadStrings: TStringList;
   begin
     EndPlanetEphem();
+
+    Tmr_CalcAll.Enabled := false;
+    Tmr_Follow.Enabled := false;
 
     SaveStrings := TStringlist.create;
 
@@ -2802,12 +2832,11 @@ procedure TFrm_Main.FormKeyDown(Sender: TObject; var Key: Word; //Done
       end;
   end;
 
-procedure TFrm_Main.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState //Done
-  );
+procedure TFrm_Main.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState ); //Done?
   begin
-        //If UseHotkey is active
-    {if StrToBool(Frm_Spori.Options[ON_UseHotkey]) then
-      begin }
+    //If UseHotkey is active
+    if StrToBool(Options[ON_UseHotkey]) then
+      begin
         //one button less is pressed
         Dec(KeyCount);
 
@@ -2827,10 +2856,10 @@ procedure TFrm_Main.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState
             //reset the set, ready for next row
             PressedKeys := [];
           end;
-      //end;
+      end;
   end;
 
-procedure TFrm_Main.FormResize(Sender: TObject);  //Done
+procedure TFrm_Main.FormResize(Sender: TObject);  //ToDo
   begin
     //set the shapes to the right position after resizing the form
 
@@ -2908,7 +2937,7 @@ procedure TFrm_Main.LV_BodyListResize(Sender: TObject); //Done
           Width := Trunc((length(Caption) / WidthOfAll) * (LV_BodyList.Width -20));
   end;
 
-procedure TFrm_Main.Tmr_CalcAllOnTimer (Sender: TObject);   //ToDo: comments; Lb_Gmt = UTC0; CET Summertime; LocalTime in UT is false!; Reset static values like "ruhelage" if manu mode was active
+procedure TFrm_Main.Tmr_CalcAllOnTimer (Sender: TObject);   //ToDo: better Error handeling; comments; Lb_Gmt = UTC0; CET Summertime; LocalTime in UT is false!; Reset static values like "ruhelage" if manu mode was active
   var
     TimeToUse: TDateTime;
     TZ: integer;
@@ -2917,6 +2946,62 @@ procedure TFrm_Main.Tmr_CalcAllOnTimer (Sender: TObject);   //ToDo: comments; Lb
     TempMagDvtn: Real;
     Year, Month, Day, Hour, Minute, Second, MilliSecond: Word; //Millisec is unused
     VernalPointNow : Real;
+
+    procedure ThrowError(Id: Real; IsEph: boolean = True); //don't use hardcodet name
+      var
+        TempListItem: TListItem;
+      begin
+        // halt Timer to let the User react.
+        // If we didn't the timer would thow more Errors.
+        Tmr_CalcAll.Enabled := false;
+
+        If (IsEph) then
+          begin
+            MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + Slinebreak +
+                             '  ' + MLS_Error_PlanEpeh  + slinebreak +
+                             '  ' + MLS_Error_Id + ' ' + FloatToStr(Id) + slinebreak +
+                             '  ' + MLS_Error_TurnEphOff,
+                             mtError, [mbOK], 0, mbOK);
+
+
+            //resett Body + mode
+            TempListItem := Search4Body ('Ruheposition'); //serch for the input
+
+            if Assigned(TempListItem) then
+              begin
+                ProgressList(TempListItem);
+                ProgressBodyMode(BMd_Normal);
+              end
+            else
+            ; //Item not found
+          end
+        else
+          MessageDlg(MLS_Error_Caption, MLS_Error_MsgCaption + Slinebreak +
+                             '  ' + MLS_Error_PlanEpeh  + slinebreak +
+                             '  ' + MLS_Error_Id + ' ' + FloatToStr(Id),
+                             mtError, [mbOK], 0, mbOK);
+
+        // reenable timer
+        Tmr_CalcAll.Enabled := true;
+
+        //possible error codes
+        {PLERR_NOFILE = -10000;
+        PLERR_OUTOFRANGE = -10001;
+        PLERR_UNKNOWNSOLUTION = -10002;
+        PLERR_WRONGFRAME = -10003;
+        PLERR_WRONGOBJECT = -10004;
+        PLERR_WRONGCENTER = -10005;
+        PLERR_WRONGVALUE = -10006;
+        PLERR_NONUTATIONS = -10007;
+        PLERR_NOLIBRATIONS = -10008;
+        PLERR_NOLUNARANGLES = -10009;
+        PLERR_NOTTMTDB = -10010;
+        PLERR_WRONGDATE = -10011;
+        PLERR_WRONGMODEL = -10012;
+        PLERR_GENERALERROR = -10013;
+        PLERR_ATAN2ERROR = -10100;}
+
+      end;
 
     procedure CalcFirstPointOfAries ();
       var
@@ -2957,7 +3042,7 @@ procedure TFrm_Main.Tmr_CalcAllOnTimer (Sender: TObject);   //ToDo: comments; Lb
 
       end;
 
-    procedure CalculateStarLoc ();  //ToDo: comments; Rename StWk, AkFrPnk, Dekli_Grd, Lat_R, Ele, Az_Z, Az_N; get  Values from global variables instad of Labels
+    procedure CalculateStarLoc ();  //ToDo: Errorhandeling; comments; Rename StWk, AkFrPnk, Dekli_Grd, Lat_R, Ele, Az_Z, Az_N; get  Values from global variables instad of Labels
       var
         Lon_Deg: Real;
         Lat_R: Real;
@@ -3068,24 +3153,45 @@ procedure TFrm_Main.Tmr_CalcAllOnTimer (Sender: TObject);   //ToDo: comments; Lb
          end;
 
         UTC1 := StrToFloat(Lbl_UTC1_Val.Caption);
-        UTC2 := StrToFloat(Lbl_UTC1_Val.Caption);
+        UTC2 := StrToFloat(Lbl_UTC2_Val.Caption);
 
-        Ele := Ephem(0, FR_ICRS, Body, GV_ELEVATION, AD_LIGHTTIME, UTC1,  UTC2,
-               Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb);
-        Azi := Ephem(0, FR_ICRS, Body, GV_AZIMUTH, AD_LIGHTTIME, UTC1,  UTC2,
-               Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb);
+        if(Body = BN_EARTH) then
+          Ele := -90
+         else
+          Ele := Ephem(0, FR_ICRS, Body, GV_ELEVATION, AD_LIGHTTIME, UTC1,  UTC2,
+                       Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb);
 
-        SetShapePos (ShpN_EleCalc, Ele);
-        SetShapePos (ShpN_AziCalc, Azi);
 
-        FltSpnEd_EleCalcManu.Value := Ele;
-        FltSpnEd_AziCalcManu.Value := Azi;
+       if (InRange(Ele, PLERR_ATAN2ERROR, PLERR_NOFILE)) then
+         ThrowError(Ele)  //Errorhandeling
+        else
+          begin
+            if(Body = BN_EARTH) then
+              Azi := 0
+             else
+              Azi := Ephem(0, FR_ICRS, Body, GV_AZIMUTH, AD_LIGHTTIME, UTC1,  UTC2,
+                           Lon, Lat, TZ, xp, yp, dut1, hm, ra, rb);
 
-        Lbl_EleCalc_Val.Caption := FloatToStrF(Ele, ffFixed, 3, 2);
-        Lbl_AziCalc_Val.Caption := FloatToStrF(Azi, ffFixed, 3, 2);
 
-        Lbl_Ele_Val.Caption := FloatToStrF(Ele, ffFixed, 4, 4);
-        Lbl_Azi_Val.Caption := FloatToStrF(Azi, ffFixed, 4, 4);
+            if (InRange(Azi, PLERR_ATAN2ERROR, PLERR_NOFILE)) then
+              ThrowError(Azi)
+            else
+             begin
+               //values seem to be good
+
+               SetShapePos (ShpN_EleCalc, Ele);
+               SetShapePos (ShpN_AziCalc, Azi);
+
+               FltSpnEd_EleCalcManu.Value := Ele;
+               FltSpnEd_AziCalcManu.Value := Azi;
+
+               Lbl_EleCalc_Val.Caption := FloatToStrF(Ele, ffFixed, 3, 2);
+               Lbl_AziCalc_Val.Caption := FloatToStrF(Azi, ffFixed, 3, 2);
+
+               Lbl_Ele_Val.Caption := FloatToStrF(Ele, ffFixed, 4, 4);
+               Lbl_Azi_Val.Caption := FloatToStrF(Azi, ffFixed, 4, 4);
+             end;
+           end;
        end;
 
 
@@ -3124,16 +3230,20 @@ procedure TFrm_Main.Tmr_CalcAllOnTimer (Sender: TObject);   //ToDo: comments; Lb
     Lbl_UTC2_Val.Caption := FloatToStrF(
                            (Hour + Minute/60 + Second/3600)/24, ffFixed, 4, 4);
 
-    TempMagDvtn :=  wmmGeomag(1, Year, Month, Day,
+    TempMagDvtn :=  wmmGeomag(1, Year, Month, Day,   //ToDo: don't change DefaultFormatsettings here! //var in function header doesnt work!
                     Frm_Config.FlSpEd_Lon.Value, Frm_Config.FlSpEd_Lat.Value, 0);
 
-    Lbl_MagDvtn_Val.Caption := FloatToStrF(TempMagDvtn, ffFixed, 3, 4);
+    if (InRange(TempMagDvtn, PLERR_ATAN2ERROR, PLERR_NOFILE)) then
+      ThrowError(TempMagDvtn, False)
+     else
+       Lbl_MagDvtn_Val.Caption := FloatToStrF(TempMagDvtn, ffFixed, 3, 4);
 
     if (AnsiLowerCase(Lbl_BdyPrpty_Val2.Caption) = 'ephemeride') then
       CalculateEphemerisLoc ()
     else
      if not (AnsiLowerCase(Lbl_Bdy_Name.Caption) = 'ruheposition') then
       CalculateStarLoc () ;
+
    end;
 
 procedure TFrm_Main.Tmr_FollowOnTimer (Sender: TObject); //Don't use hardcoded "Sternbild" (= constellation)
@@ -3146,19 +3256,21 @@ procedure TFrm_Main.Tmr_FollowOnTimer (Sender: TObject); //Don't use hardcoded "
      Constellation: Array of TListItem;
   begin
     //If Mode was set to Constellation
-    if CmbBx_Mode.Text = 'Sternbild' then
+    if ((CmbBx_Mode.Text = 'Sternbild') and (Trim(Lbl_BdyPrpty_Val1.Caption) <> '-') and
+         (Trim(Lbl_BdyPrpty_Val1.Caption) <> '')) then
       begin
         // initialize
-        Setlength(Constellation, 0);
+        Setlength(Constellation{%H-}, 0);
         InConstellation  := false;
 
         //Find all stars in the given Constellation
         for Index := 0 to LV_BodyList.Items.Count-1 do
-          if AnsiLowerCase(Trim(Lbl_BdyPrpty_Val2.Caption)) = AnsiLowerCase(LV_BodyList.Items[Index].SubItems[2]) then
+          if AnsiLowerCase(Trim(Lbl_BdyPrpty_Val1.Caption)) = AnsiLowerCase(LV_BodyList.Items[Index].SubItems[2]) then
             begin
               setlength(Constellation, length(Constellation)+1);
               Constellation[high(Constellation)] := LV_BodyList.Items[Index];
              end;
+
 
         //Find the Index of the selected star
         for Index := 0 to high(Constellation) do

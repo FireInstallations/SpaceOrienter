@@ -49,6 +49,11 @@ msgstr ""
 msgid " Konnte nicht alle Optionen finden."
 msgstr ""
 
+#: multilanguestrings.mls_error_id
+msgctxt "multilanguestrings.mls_error_id"
+msgid "Fehlernummer: "
+msgstr ""
+
 #: multilanguestrings.mls_error_invalidline
 msgid " Ungültige Zeile in SternenListe gefunden Nr:"
 msgstr ""
@@ -69,12 +74,20 @@ msgstr ""
 msgid "Out of range"
 msgstr ""
 
+#: multilanguestrings.mls_error_planepeh
+msgid "Während der Rechnung ist ein Fehler aufgetreten."
+msgstr ""
+
 #: multilanguestrings.mls_error_starsubitem
 msgid " Laden des Sterns gescheitert bei SubItem:"
 msgstr ""
 
 #: multilanguestrings.mls_error_starwrite
 msgid " Fehler beim schreiben der SternenListe!"
+msgstr ""
+
+#: multilanguestrings.mls_error_turnephoff
+msgid "Wechsle in Ruheposition."
 msgstr ""
 
 #: multilanguestrings.mls_error_unnownformat
@@ -798,12 +811,12 @@ msgstr ""
 
 #: tfrm_main.lv_bodylist.columns[3].caption
 msgctxt "tfrm_main.lv_bodylist.columns[3].caption"
-msgid "Eigenschaften"
+msgid "Sternbild"
 msgstr ""
 
 #: tfrm_main.lv_bodylist.columns[4].caption
 msgctxt "tfrm_main.lv_bodylist.columns[4].caption"
-msgid "Sternbild"
+msgid "Eigenschaften"
 msgstr ""
 
 #: tfrm_main.lv_bodylist.columns[5].caption

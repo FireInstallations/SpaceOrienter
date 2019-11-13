@@ -1,6 +1,6 @@
 unit Config;
 
-  {Copyright (C) <2018> <FireInstallations> <kettnerl [at] hu-berlin.de>
+  {Copyright (C) <2019> <FireInstallations> <kettnerl [at] hu-berlin.de>
 
    This programm is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published by
@@ -438,7 +438,7 @@ function TFrm_Config.KeyToStr (Key: Word): String; //Label for virtuel; Array 4 
     end;
   end;
 
-function TFrm_Config.Koordinaten (Place: String):TCoord; //Dynamicly; make loading / saving happen; default into own file
+function TFrm_Config.Koordinaten (Place: String):TCoord; //Dynamicly; make loading / saving happen; default into own file; rename
   begin
     case (Trim(AnsiLowerCase(Place))) of
       'none':

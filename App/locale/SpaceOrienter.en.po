@@ -60,6 +60,11 @@ msgstr "Error while"
 msgid " Konnte nicht alle Optionen finden."
 msgstr " Couldn't find all Settings."
 
+#: multilanguestrings.mls_error_id
+msgctxt "multilanguestrings.mls_error_id"
+msgid "Fehlernummer: "
+msgstr ""
+
 #: multilanguestrings.mls_error_invalidline
 msgid " Ungültige Zeile in SternenListe gefunden Nr:"
 msgstr ""
@@ -80,6 +85,10 @@ msgstr " (No = reset Settings)"
 msgid "Out of range"
 msgstr "Out of range"
 
+#: multilanguestrings.mls_error_planepeh
+msgid "Während der Rechnung ist ein Fehler aufgetreten."
+msgstr ""
+
 #: multilanguestrings.mls_error_starsubitem
 msgid " Laden des Sterns gescheitert bei SubItem:"
 msgstr " Loading the body failed at sub item:"
@@ -87,6 +96,10 @@ msgstr " Loading the body failed at sub item:"
 #: multilanguestrings.mls_error_starwrite
 msgid " Fehler beim schreiben der SternenListe!"
 msgstr " Error while writing the BodyList!"
+
+#: multilanguestrings.mls_error_turnephoff
+msgid "Wechsle in Ruheposition."
+msgstr ""
 
 #: multilanguestrings.mls_error_unnownformat
 msgid "Unbekanntes Format"
@@ -820,13 +833,17 @@ msgid "Latein"
 msgstr "Latin"
 
 #: tfrm_main.lv_bodylist.columns[3].caption
+#, fuzzy
+#| msgid "Eigenschaften"
 msgctxt "tfrm_main.lv_bodylist.columns[3].caption"
-msgid "Eigenschaften"
+msgid "Sternbild"
 msgstr "Properties"
 
 #: tfrm_main.lv_bodylist.columns[4].caption
+#, fuzzy
+#| msgid "Sternbild"
 msgctxt "tfrm_main.lv_bodylist.columns[4].caption"
-msgid "Sternbild"
+msgid "Eigenschaften"
 msgstr "Constellation"
 
 #: tfrm_main.lv_bodylist.columns[5].caption

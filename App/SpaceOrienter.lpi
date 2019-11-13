@@ -22,7 +22,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <RevisionNr Value="4"/>
-      <BuildNr Value="5"/>
+      <BuildNr Value="6"/>
       <Language Value="0407"/>
       <Attributes pvaPreRelease="True" pvaPatched="True"/>
       <StringTable CompanyName="FireInstallations" FileDescription="Finding all kinds of heavenly bodies at the sky" InternalName="SpaceOrienter" LegalCopyright="GNU Lesser General Public License v3.0" ProductName="SpaceOrienter" ProductVersion="0.0.3.4"/>
@@ -87,16 +87,19 @@
         <Mode0 Name="default"/>
       </Modes>
     </RunParams>
-    <RequiredPackages Count="3">
+    <RequiredPackages Count="4">
       <Item1>
-        <PackageName Value="RunTimeTypeInfoControls"/>
+        <PackageName Value="LazControls"/>
       </Item1>
       <Item2>
-        <PackageName Value="FCL"/>
+        <PackageName Value="DateTimeCtrls"/>
       </Item2>
       <Item3>
-        <PackageName Value="LCL"/>
+        <PackageName Value="eccontrols"/>
       </Item3>
+      <Item4>
+        <PackageName Value="LCL"/>
+      </Item4>
     </RequiredPackages>
     <Units Count="64">
       <Unit0>
@@ -374,7 +377,6 @@
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>
-    <PathDelim Value="\"/>
     <Target>
       <Filename Value="Debug/SpaceOrienter"/>
     </Target>
